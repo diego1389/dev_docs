@@ -1,0 +1,455 @@
+Introduction to series
+__________________________________
+
+
+Asp.net MVC is a web development framework. Design pattern: a solution for a common problem.
+Separate the presentation from the development to avoid mantaining of the application for difficult. 
+
+Building our First ASP.NET MVC Application
+__________________________________
+
+New project -> Web Application -> Empty -> MVC
+
+Global.ascx: to handle key events in the lifecycle of the application.
+Controller: an orchestator, a manager in the application. It decides which data is received from the end user and show and what view to render or to redirect it. 
+
+Convention over configuration. 
+New controller -> HomeController.cs
+
+namespace HelloMVC.Controllers
+{
+    public class HomeController : Controller
+    {
+        // GET: Home
+        //Object of type ActionResult
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+    }
+}
+
+Right click in the method -> Add View -> Creates an Index.cshtml
+cshtml is combined C# and HTML code. 
+
+//@For razor view engine sintax.  
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div> 
+    </div>
+</body>
+</html>
+
+
+If you add a view with layout it creates a View folder and a Shared folder and a viewstart.cshtml
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+in the _Layout.cshtml you get:
+
+   <title>@ViewBag.Title - My ASP.NET Application</title>
+   @Html.ActionLink(...
+   @RenderBody()
+   <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+
+
+   In the index.cshtml (less html than in the layout)
+
+   @{
+    ViewBag.Title = "Index";
+	}
+
+
+Controller: 
+
+ public ActionResult Index()
+        {
+            ViewBag.DiegoCreatedThisValue = "I created this value";
+            return View();
+        }
+
+View:
+
+
+<h2>Index</h2>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>@ViewBag.DiegoCreatedThisValue</h2>
+
+
+Create a model (.cs file)
+
+	namespace HelloMVC.Models
+	{
+	    public class HelloModel
+	    {
+	        public static List<Car> GetCars()
+	        {
+	            var cars = new List<Car>()
+	            {
+	                new Car(){Id = 1, Make = "Hyunday", Model= "Accent"},
+	                new Car(){Id=2, Make = "Toyota", Model="Yaris"},
+	                new Car(){Id=3, Make = "Suzuki", Model = "Vitara"}
+	            };
+
+	        return cars;
+	        }
+	    }
+
+	    public class Car
+	    {
+	        public int Id { get; set; }
+	        public string Make { get; set; }
+	        public string Model { get; set; }
+	    }
+	}
+
+Get it in the controller: 
+
+    public ActionResult Index()
+        {
+            var cars = HelloModel.GetCars();
+
+            return View(cars); //pass the model to the vie
+        }
+
+Display the info in the view (index.cshtml)
+
+@model List<HelloMVC.Models.Car>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Cars</h2>
+@foreach (var car in Model)
+{
+    <p>@car.Id  - @car.Make  - @car.Model</p>
+}
+
+The model is central to the application. 
+Testability: ability to isolate each concern, each unit, each use case and test separately. 
+Plugability
+Obvious home for all the concerns in the presentation layer.
+
+    Iterate through a list of objects inside a list of objects Razor:
+
+     @foreach (var comic in Model)
+{
+
+    <h3>@Html.ActionLink(comic.ComicTitle, "Details", new { id = comic.ComicBookId })</h3>
+    <h5>#@comic.EpisodeNumber - @comic.EpisodeTitle</h5>
+    var characters = comic.Characters.Select(p => p.Name).ToArray();
+    var charactersString = String.Join(", ", characters);
+
+    <p><strong>Starring: </strong>@charactersString</p>
+
+}
+
+
+Passing Data from the Controller to the View
+__________________________________
+
+@model: as a directive, 
+Model: accessor to the model that you passed in. 
+
+
+you cannot directly access files in MVC (the folder contents)
+
+
+Helper Methods in the View
+__________________________________
+
+@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+=
+<a class="navbar-brand" href="/">Application name</a>
+Html helper class (ActionLink) it will consider customized routes prior to create the hiperlink. If we move the pages around it will create the correct link. 
+
+
+@Html.Helperclass
+
+
+Understanding Razor Syntax Basics
+__________________________________ 
+
+Three approaches to go from c# to html:
+
+1. Inline expressions:
+
+<h2>@ViewBag.DiegoCreatedThisValue</h2>
+You dont have to use a semicolon. 
+
+2. Code block expressions
+
+@{
+    ViewBag.Title = "Index";
+}
+
+you can write regular C# code. 
+
+@{
+    ViewBag.Title = "Index";
+    var value = 9;
+}
+
+@{ 
+    value += 1;
+}
+
+
+<h3>@value</h3>
+
+3. Mixed expression. 
+
+@{
+    value += 1;
+    <h3>@value</h3>
+}
+
+To force Razor to understand an explicit expression with ():
+
+<h1>Arent @(day)s great?</h1>
+
+
+@helper pluralizeChildren(int childrenCount) { 
+    @(childrenCount == 1 ? "child" : "children");
+}
+
+@{
+    var childrenCount = 2;
+
+    <p>I have @childrenCount @pluralizeChildren(childrenCount)</p>
+}
+
+@helper methods for quick formating. 
+
+
+Commenting 
+
+@* *@
+
+Everything after the @ is considered to be C# unless you use HTML tags: 
+
+@if (childrenCount == 1)
+{
+    <h2>I have one child</h2>
+}
+else
+{
+    <h2>I have @childrenCount children</h2>
+}
+
+Display info without html tags:
+
+@{ 
+	@:Display this text in a p tag
+}
+
+code snippets like for, while, switch, if, foreach, etc...
+
+To escape the @symbol, for example a twitter account:
+
+@@dguil13
+
+KEEP THE BUSINESS RULES IN THE DOMAIN LAYER, ONLY USE PRESENTATION LOGIC.
+
+Introduction to routing
+__________________________________ 
+
+URL structure:
+
+http://localhost:62268/Products/Edit/2
+
+RESTful URLs, the desired state of an entity. 
+
+Index view:
+
+Anchor tag with the text: "Create New": 
+ @Html.ActionLink("Create New", "Create")
+
+It takes you to http://localhost:62268/Products/Create because of the ASP.NET routing. 
+The routing system will route the request to the correct Controller and View. With @Html.Action link you can change the structure 
+of your whole project and the reference will remain intact and you only will have to change one place: the route. 
+
+File AppStart/RouteConfig.cs
+
+ public class RouteConfig
+    {
+        public static void RegisterRoutes(RouteCollection routes)
+        {
+            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+            routes.MapRoute(
+                name: "Default",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
+        }
+    }
+
+    You can change the default from Home to Products or any other controller. 
+
+    Maproute is handling for incoming requests and also to create outgoing urls.
+    The ActionLink will take into consideration all the routes. 
+
+
+      @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |  //new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+      @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+      @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+
+
+MVC5_011 – Working with RouteValueDictionary in HTML Helper Navigation Methods
+__________________________________ 
+
+  @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+  @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+  @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+
+  new { id=item.Id } //anonymous object, you can create it on the fly. RouteValues. It is weakly typed. 
+
+  To pass extra values, like querystring:
+
+    @Html.ActionLink("Delete", "Delete", new { id=item.Id, somesuch=456 })
+
+
+    You can get and use those query string in the ActionResult method in the Controller. 
+
+    You can also pass a dictionary like this: 
+    @{ 
+        var myDictionary = new Dictionary<string, object>();
+        myDictionary.Add("First", "A");
+        myDictionary.Add("Second", "B");
+        myDictionary.Add("Third", "C");
+        myDictionary.Add("Fourth", "D");
+    }
+
+    @Html.ActionLink("Create New 3", "Create", new RouteValueDictionary(myDictionary))
+
+    http://localhost:62268/Products/Create?First=A&Second=B&Third=C&Fourth=D
+
+
+ Introduction to Data Annotations
+ __________________________________ 
+
+Name of the properties for header names. 
+ @Html.DisplayNameFor(model => model.Name)
+
+ Data Annotation: add metadata to a property to make it more user friendly.
+
+ using System.ComponentModel.DataAnnotations;
+
+ [Display(Name="Product Name")]
+ public string Name { get; set; }
+
+ You can use dataannotations for validation of a certain field, for naming display and for data modeling. Relationships between data classes. 
+
+  @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } }) //checks for a certain property and creates its proper html to display
+   it. 
+  You can also add display templates and editing templates and you can add it to a specific property by using DataAnnotations. 
+
+
+  Preserving Data Annotations using a Partial Metadata Class
+  __________________________________ 
+
+  partial class: we can extend this class to another class file that has the exact same name (they have to be in the same namespace).
+  Create a new class ProductMedata.cs in the model but change it to:
+
+   public partial class Product
+    {
+
+    	//View model
+        [MetadataType(typeof(Product.Metadata))]
+        sealed class Metadata
+        {
+            [Key]
+            public int Id { get; set; }
+
+            [Display(Name = "Product Name")]
+            [StringLength(10)]
+            public string Name { get; set; }
+
+            [Required]
+            public decimal Price { get; set; }
+
+            [Display(Name = "Quantity")]
+            public int Qty { get; set; }
+        }
+    }
+
+
+    Now you can regenerate the Product.cs 
+
+     public partial class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public int Qty { get; set; }
+    }
+
+
+The bult-in functionality of visual studio violates the separation of concerns by making the model and the data passed to the presentation layer the same. 
+What a model really is and what a model should be used for? 
+
+	Understanding MVC Application Architecture and the View Model
+ 	__________________________________
+
+ 	The model has two concerns: it is the persistence layer and it is also the presentation model (the view model).
+ 	The view model passes data from the controller to the view. 
+ 	There are several types of possible models within an application architecture. 
+ 	The view model (shape of the data to be presented) classes can map one to one the domain classes and the tables in the persistence layer. 
+ 	Your business rules may require that a given view include properties from multiple classes in the domain model. 
+      In this case you want to shape the view model as it is used in the View. You can combine properties from different classes in the domain layer. 
+
+ 	Controller calls the domain and gets the data that it needs, shove it into the ViewModel 
+
+ 	There is a data model, a domain model and a view model. 
+
+ 	Second approach: a separated ViewModel and a separated project for the persistence layer. 
+
+ 	If you use a separation of concerns arquitecture it wouldnt be necessary to create the Metadata classes.
+
+
+
+
+
+In ProductsController: 2 versions of the Create method. 
+ 	public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Products/Create
+
+
+        [HttpPost] //Whenver a request comes in, submision of html form this version of the method fires. 
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Id,Name,Price,Qty")] Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Product.Add(product);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(product);
+        }
+
+RESTful: comunication from the client to the server by using one of the HTTP verbs (POST, GET, PUT, DELETE)

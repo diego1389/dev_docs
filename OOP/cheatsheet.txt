@@ -1,0 +1,357 @@
+Agregation:
+
+	public class Engine
+	    {
+	        public string Size { get; set; }
+	        public int HorsePower { get; set; }
+	        public double FuelConsumption { get; set; }
+
+	    }
+
+	 public class Car
+	    {
+	        public string CarName { get; set; }
+	        public Engine Engine { get; set; }
+	    }
+
+	Car has a reference to the Engine class. 
+
+	 static void Main(string[] args)
+        {
+            Engine v6 = new Engine();
+            v6.Size = "v60";
+            v6.HorsePower = 300;
+            v6.FuelConsumption = 1.5;
+
+
+            Car myCar = new Car();
+            myCar.Engine = v6;
+
+            Console.WriteLine(myCar.Engine.HorsePower.ToString());
+            Console.Read();
+        }
+
+    Relationship between Car and Engine is an aggregation. Car object agregates another object (Engine)
+
+    Containment (class within class).
+
+    public class Car
+    {
+        public string Model{ get; set; }
+        public Engine Engine { get; set; }
+        public AutoCustomer Customer = new AutoCustomer();
+
+        public class AutoCustomer
+        {
+            public string Name { get; set; }
+            public string LastName { get; set; }
+        }
+    }
+
+      static void Main(string[] args)
+        {
+            Engine v6 = new Engine();
+            v6.Size = "v60";
+            v6.HorsePower = 300;
+            v6.FuelConsumption = 1.5;
+
+
+            AssemblyRobot robot = new AssemblyRobot();
+            Car myCar = robot.AsembleCar("745li", v6);
+            Console.WriteLine(myCar.Engine.HorsePower.ToString());
+
+            myCar.Customer.Name = "Diego";
+            myCar.Customer.LastName = "Guillen";
+
+            Console.WriteLine(String.Format("Owned by: {0} {1}", myCar.Customer.Name, myCar.Customer.LastName));
+            Console.Read();
+        }
+
+To inherite from another class:
+
+class Truck : Car
+
+To override a method
+
+Base class
+
+  public virtual void Start()
+        {
+            Console.WriteLine("Starting...");
+        }
+
+Inherited class
+
+	 public override void Start()
+        {
+            Console.WriteLine("Truck ignition... ");
+        }
+To use both base method and overrided method
+
+    public override void Start()
+        {
+            base.Start();
+            Console.WriteLine("Truck ignition... ");
+        }
+
+Use a static method when you need only one instance running of that particular method. For example AssembleCar, you do not one multiple instances of asembling the car. 
+
+instance class vs static class.
+
+Code to act like different things but treated the same. 
+
+1.Encapsulation
+2. Inheritance
+3. Polymorfism
+
+
+Polymorphism via inheritance:
+__________________________________
+
+public class Product
+    {
+        public int ProductId { get; set; }
+
+        public virtual void Print()
+        {
+            string message = String.Format("Product id: {0}", this.ProductId.ToString());
+            Console.Write(message);
+        }
+    }
+
+ class Auto : Product
+    {
+        public string Make { get; set; }
+        public string Model { get; set; }
+        public int Year { get; set; }
+        public string ExternalColor { get; set; }
+
+        public override void Print()
+        {
+            base.Print();
+            string message = String.Format("Make: {0} Model: {1} Year: {2} Color: {3}"
+                ,this.Make
+                ,this.Model
+                ,this.Year.ToString()
+                ,this.ExternalColor);
+        }
+    }
+
+ public class Book : Product
+    {
+        public string Author { get; set; }
+        public string Title { get; set; }
+        public string ISBN { get; set; }
+
+        public override void Print()
+        {
+            base.Print();
+            string message = String.Format("Author: {0} Title: {1} ISBN: {2}"
+                , this.Author
+                , this.Title
+                , this.ISBN);
+            Console.Write(message);
+        }
+    }
+ 
+      static void Main(string[] args)
+        {
+            List<Product> products = new List<Product>();
+
+            Auto porsche = new Auto();
+            porsche.ProductId = 1;
+            porsche.Make = "Porsche";
+            porsche.Model = "911 Targa";
+            porsche.Year = 2016;
+            porsche.ExternalColor = "Dark Red";
+
+            Book book = new Book();
+            book.ProductId = 2;
+            book.Author = "Bram Stoker";
+            book.Title = "Dracula";
+            book.ISBN = "185326086X";
+
+            products.Add(porsche);
+            products.Add(book);
+
+            foreach (var product in products)
+            {
+                product.Print();
+            }
+            Console.Read();
+
+        }
+
+Polymorphism via abstract classes:
+__________________________________
+
+abstract class Product
+    {
+        public int ProductId { get; set; }
+        public abstract void Print();
+    }
+
+Polymorphism via interfaces:
+__________________________________
+
+Previous methods required inheritance but, what happens if it doesn't make sense but you still want to use polymorphism. 
+Interface is a contract, it promises to implement all the methods of the interface. 
+
+ interface IPrintable
+    {
+        void Print();
+    }
+
+  class Auto : IPrintable
+    {
+        public string Make { get; set; }
+        public string Model { get; set; }
+        public int Year { get; set; }
+        public string ExternalColor { get; set; }
+
+        public void Print()
+        {
+            string message = String.Format("Make: {0} Model: {1} Year: {2} Color: {3}"
+                , this.Make
+                , this.Model
+                , this.Year.ToString()
+                , this.ExternalColor);
+            Console.Write(message);
+        }
+    }
+
+    class Book : IPrintable
+    {
+        public string Author { get; set; }
+        public string Title { get; set; }
+        public string ISBN { get; set; }
+
+        public void Print()
+        {
+            string message = String.Format("Author: {0} Title: {1} ISBN: {2}"
+               , this.Author
+               , this.Title
+               , this.ISBN);
+            Console.Write(message);
+        }
+    }
+
+you can implement multiple interfaces.
+
+ static void Main(string[] args)
+        {
+            List<IPrintable> products = new List<IPrintable>();
+            Auto porsche = new Auto();
+            porsche.Make = "Porsche";
+            porsche.Model = "911 Targa";
+            porsche.Year = 2016;
+            porsche.ExternalColor = "Dark Red";
+
+
+            Book book = new Book();
+            book.Author = "Bram Stoker";
+            book.Title = "Dracula";
+            book.ISBN = "185326086X";
+
+            products.Add(porsche);
+            products.Add(book);
+
+            foreach (var product in products)
+            {
+                product.Print();
+            }
+            Console.Read();
+        }
+
+        Using Interfaces for return values and input parameters.
+        ________________________________________________________
+
+         interface IProduct
+		 {
+		    void GetStorageLocation();
+		 }
+
+		class Auto : IProduct
+    	{
+	        public string Make { get; set; }
+	        public string Model { get; set; }
+	        public int Year { get; set; }
+	        public string ExternalColor { get; set; }
+
+	        public void GetStorageLocation()
+	        {
+	            Console.Write("The car {0} {1} is in warehouse A\n", this.Make, this.Model);
+	        }
+
+    	}
+
+    	class Book : IPrintable, IProduct
+    	{
+	        public string Author { get; set; }
+	        public string Title { get; set; }
+	        public string ISBN { get; set; }
+
+	        public void GetStorageLocation()
+	        {
+	            Console.Write("The book {0} is in Warehouse B\n", this.Title);
+	        }
+
+       }
+
+        class Warehouse
+	    {
+	        private Queue<IProduct> inventory;
+
+	        public Warehouse()
+	        {
+	            inventory = new Queue<IProduct>();
+	        }
+
+	        public void Add(IProduct product)
+	        {
+	            inventory.Enqueue(product);
+	        }
+
+	        public IProduct GetOldestItem()
+	        {
+	            IProduct oldestItem = inventory.First();
+	            return oldestItem;
+	        }
+
+	        public IProduct GetNewestItem()
+	        {
+	            IProduct newestItem = inventory.Last();
+	            return newestItem;
+	        }
+    }
+
+    static void Main(string[] args)
+    {
+        List<IPrintable> products = new List<IPrintable>();
+        Auto porsche = new Auto();
+        porsche.Make = "Porsche";
+        porsche.Model = "911 Targa";
+        porsche.Year = 2016;
+        porsche.ExternalColor = "Dark Red";
+
+        Book book = new Book();
+        book.Author = "Bram Stoker";
+        book.Title = "Dracula";
+        book.ISBN = "185326086X";
+
+        Console.WriteLine("Where is your older product located?");
+        Warehouse myWarehouse = new Warehouse();
+
+        myWarehouse.Add(porsche);
+        myWarehouse.Add(book);
+
+        var myOldestProduct = myWarehouse.GetOldestItem();
+        myOldestProduct.GetStorageLocation();
+
+        Console.WriteLine("Where is your newest product located?");
+
+        var myNewestProduct = myWarehouse.GetNewestItem();
+        myNewestProduct.GetStorageLocation();
+
+        Console.Read();
+    }

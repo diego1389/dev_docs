@@ -1,0 +1,56 @@
+AAF_2: What is arquitecture?
+----------------------------------
+
+Arquitecture: Decomposition of a  problem and the design of a solution to address it. Implementation.
+ 
+AAF_4: Change
+----------------------------------
+
+ Bad design to couple together two things that change for different reasons at different times. 
+ DRY: delegate a discrete responsability to a single method, class, or component or layer. 
+
+ 
+AAF_5: Layered architectural pattern
+----------------------------------
+
+High level pattern. 
+Presentation concern.
+Layers: grouping of C# classes separated by concerns. Layer = logical separation.
+Physical separation: packages.
+Tier: how a layer is deployed. 
+Abstracting the complexity of one concern away from another concern. 
+Persistence layer does not care who uses the data and what for. It is abstracted. 
+
+AAF_6: Understanding the domain layer
+----------------------------------
+
+Domain layer contains:
+Business workflow, business components, business entities (classes that represent the various aspects of the business problem, Order class for example). 
+
+Application facade: sublayer, application services layer or the orchestation layer. It should be as pure as possible, avoiding 3rd party frameworks. Only use C# classes, methods, enums, etc, nothing specific from ASP.NET. 
+Tackle the part of the application where the complexity is first (domain).
+Domain layer should be a model of the organizations processes. Least part of your application likely to change due to technology changes. It provides the most value to the business. Unit testing on front.  
+
+AAF_7: Understanding the presentation layer
+----------------------------------
+
+ Not to much logic in the presentation layer. Usability issues. UI components and presentation logic components. 
+ The area of your application that is more prone to change. 
+
+ AAF_8: Understanding the persistence layer
+----------------------------------
+
+Ideally the methods in the persistence layer provide no hint about what type of database or storage mechanism we are using. Nor leak out the vendor or the connection. Depends on the domain layer below it. 
+Inversion of control: the persistence should point to the domain layer, to avoid highly coupled projects. 
+
+
+Domain layer should provide interfaces (a contract) for the persistence layer to implement. Encapsulates the logic to retrieve the data. 
+
+To the persistence layer you can pass:
+Simple types
+POCO objects
+Generic  collections of objects
+Object graphs (relationships of objects)
+
+ORM (Object relational mappers, like Entity)
+Constraints, validations and transactions in the persistence layer

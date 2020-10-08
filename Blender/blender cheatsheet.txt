@@ -1,0 +1,543 @@
+https://cloud.blender.org/p/game-asset-creation/56041550044a2a00d0d7e06b
+
+3d cursor: universal pivot point. 
+Shift + S: Snap menu
+
+
+Lecture 5
+----------------------------------------
+
+Numeric keypad 5 = Switch to Ortho mode.
+
+Views 
+-----------------------
+
+Numeric keypad 1 = Front view
+Numeric keypad 3 = Right view
+Numeric keypad 7 = Top view
+
+Ctrl + Numeric keypad 1 = Back view
+Ctrl + Numeric keypad 3 = Left view
+Ctrl + Numeric keypad 7 = Bottom view
+
+*In ortho you can see the grid in each view but in user perspective not.
+
+Middle wheel button = to rotate around the world.
+Holding Shift + middle wheel button = you can take distance from the object.
+
+. (decimal sign) Numeric keypad =  go back to the object.
+
+Numeric keypad 4 = rotate a little to left.
+Numeric keypad 6 = rotate a little to right.
+Numeric keypad 8 = rotate a little to top.
+Numeric keypad 2 = rotate a little to bottom.
+  
+Shift + F = Fly mode.
+Fly mode + (W, D, S, A or arrow keys) = move around in fly mode.
+
+Left mouse or enter: set a position
+Right mouse button: go back
+
+*To get to a close point you can use fly mode.
+
+Lecture 7
+----------------------------------------
+
+Keyboard A = Toggle select all or unselect all.
+Lighter orange = the item in focus.
+
+*If many items are selected change focus with Shift and Right button mouse.
+
+Lecture 8
+----------------------------------------
+
+Shift + D = Duplicate.
+Ctrl + Z = Undo.
+Ctrl + Shift + Z = Redo.
+Hold it = Do it very fast.
+
+*32 steps by default in the undo buffer.
+
+*Delete in edit mode: you have to specify what to delete.
+
+X or Del = delete in object or edit mode.
+
+
+Lecture 9
+----------------------------------------
+
+Tab create = meshes or primitive objects.
+Shift + A = create primitive shapes (starting points).
+
+UV Sphere = made of squares.
+Ico Sphere = made of triangles.
+
+Lecture 10
+----------------------------------------
+
+Tab = togggle between object and edit mode.
+
+Lecture 11
+----------------------------------------
+
+
+G = Grab object
+G + X = move in the X axis. (same for Y and Z)
+G +[X, Y, Z] + Ctrl = Moves in intervals
+G + [X, Y, Z] + Number from numeric pad = moves amount of positions in that direction.
+R = Rotate
+G + [XX, YY, ZZ] + 2 = uses local axis instead of global.
+Alt + R = restore the rotation
+
+Lecture 12
+----------------------------------------
+
+S = Enter to scaling mode. 
+ 
+S + [X, Y, Z] = Scaling only the selected axis. You can also do that with S + small wheel button. 
+
+Left mouse button or Enter: to commit changes. 
+Right button or Esc: to go back from where you started scaling. 
+
+In edit mode [Tab] you can select a face, edge or vertice and scale only that specific part. 
+Ctrl + Tab = change selection face, edge or vertex. 
+Lecture 13
+----------------------------------------
+
+Extrusion tool. You have to be in Edit mode. 
+
+E -> drag [the edge, vertice or face] = extrude. 
+If you extrude and undo you get double amount of vertices. To fix that you have to select all vertices and Remove double. 
+
+E + S = Extrude and scale at the same time. 
+
+Lecture 14
+----------------------------------------
+
+R = Rotate.
+
+R + [X, Y, Z] = Rotate in particular direction with no motion. 
+
+To rotate one object around another find the center of the object you want the other object to rotate to.
+
+Ctrl A to the object you want to rotate -> location. It moves the center of the object to the center of the universe. If you rotate now it will rotate to the center. 
+
+
+Lecture 15
+----------------------------------------
+
+Subdivide: Edit mode -> Face selecting -> Tools -> Subdivide -> Number of cuts. (1 cut: one cut in every axis)
+You can also subdivide edges. 
+ 
+W -> Subdivide: Shortcut. 
+
+Subdivide smoth: every vertice gets rounded. 
+
+Lecture 16
+----------------------------------------
+
+Desolve: Select the areas and delete [X] all faces and then select the edges and press the F key.
+F: Face
+Select [Face, Edge, vertice] -> X -> Disolve [Face, Edge, vertice] = disolve.
+
+
+Lecture 17
+----------------------------------------
+
+Edge loop select tool. 
+[Edge, vertice, face] -> Alt + Right click = loop selection. If it doesnt select the edge you can use Shift + Alt + Right click
+Once you looped select you can grab or scale that part. 
+
+
+Lecture 18  
+----------------------------------------
+
+Edit mode -> Loop cut and slide -> Select the edge and the number of cuts (with the wheel or typing the number in the numeric pad of your kb) -> Left click or Enter
+ -> select where do you want the cuts + left click (you can snap the movement holding Ctrl key)(to center you can push the Right mouse button).  
+
+Ctrl + R = Loop cut and slide. 
+
+Lecture 19  
+----------------------------------------
+
+Loop tools bridge add-on.
+Manually: Select edges + F (each edge at a time).
+
+File -> User preferences -> Add-on -> Search for loop -> Check Mesh loop tools -> If you do not save settings it will be only available for this session. 
+
+Select loop the section ([Edge] + Alt + Right click) -> Loop tools -> Bridge: Create a bridge. 
+   
+ 
+Lecture 20
+----------------------------------------
+
+Edit mode
+
+K = Knife (select point with left mouse button and confirm with Enter).
+K -> Ctrl = go to the center of the geometry.
+You can select multiple point in a face to cut a figure.
+
+K + left mouse drag: continue to cut.
+
+Lecture 21
+----------------------------------------
+
+A + A: Select all -> remove doubles.
+
+Lecture 22
+----------------------------------------
+
+Blender gives us 10 layers in the left side and 10 in the right side, it is almost like a folder. 
+To select certain layer you can shift + click.
+
+Shift + D: Copy 
+
+Object mode -> M: Move (opens the move to layer dialog). 
+
+You can move multiple objects to another layer. 
+
+Lecture 23 
+----------------------------------------
+
+Join cubes.
+
+Selected link: Select a face from one side + Ctrl + "+"
+Ctrl + "-" = select less.
+Adjacent faces are conected (shared vertices are selected)
+Ctrl + L = Select all linked geometry. 
+
+Ctrl + L -> p (selection).  
+
+
+Lecture 24
+----------------------------------------
+
+The solid white circle is the origin of the geometry. 
+
+Move object's origin to the center (3d cursor): Object -> transform -> origin to 3d cursor
+
+Reset location: Ctrl + A -> To move the location of the Origin
+
+If you change the coordenates to 0 it will move the entire figure. 
+
+Snap cursor to the line: Select the line -> Mesh -> Snap -> Cursor to selected.
+ 
+To take the cursor to the selected point in object mode:
+
+Change to object -> Transform -> Object to the 3d cursor
+
+You can scale from that position. 
+
+Change size:
+
+S + X + . + 2
+
+Rotate to the Z axis: Open the door.
+
+Lecture 25
+----------------------------------------
+
+B + left mouse button: Border select, draw a rectagle.
+
+Lasso selection: Hold Ctrl and left mouse button, it will only select the objects from the origins.
+
+You can use it in Edit mode with some faces (It only select what it sees, you have to turn limit selection to visible). 
+
+Lecture 26
+----------------------------------------
+
+Ctrl + J: Join two or more figures.
+
+Edit mode: the original geometry is still there, it doesnt remove those lines. 
+
+P: Separation.
+
+Join -> Edit mode -> Select a face and select linked (Ctrl + L) -> P (separate from selection) -> Object mode: separates the joined object. 
+
+In case the cube is inside the other cube and you joined them together:
+
+If you go to Edit mode you some of the vertices have disappeared underneath inside the other mesh.
+
+Select a face -> Ctrl + L and separate.
+
+If you have four cubes joined and with many separations and they are joined together you can select one face of the first cube and another face of the second cube and Ctrl + L and you can grab those 2 cubes and separate them from the rest. 
+
+It isolates the geometry.
+
+To grab the ear of the monkey you can select an inner face of the inner and an outer part and Ctrl + "+" and it will get more and more geometry but more focused than only selecting a face and Ctrl + "+"
+
+Lecture 27
+----------------------------------------
+
+Bevel tool: smoths the geometry. 
+
+Select mesh -> Edit mode -> Ctrl + B: Bevel an object
+
+You can use the mouse wheel to add cuts and soften (round) the performance. 
+
+Bevel only one face: select the face and Ctrl + B.
+
+Same for edge
+
+Select vertice -> Ctrl + Shift + B : Bevel vertice.
+
+Lecture 28
+----------------------------------------
+
+Bending operations:
+
+Select mesh -> (simbolo de llave inglesa) -> Simple deform -> Bend tool -> 
+Edit mode (it shows what it looks like in orange and what it would look like in gray if you hit apply) 
+-> Ctrl + R (to add cuts) -> Now you can play with the default angle. 
+Thanks to the cuts it bends curvier than before. You can then go to Object mode to continue bending. 
+
+You can go to the Edit Mode and Scale it. 
+
+A -> S -> X + 3: Select the cube in edit mode, scale it in the X axis 3 times. 
+
+To make you bend around another object just go to object mode, add a new object and select the axis origin ("dropper") and put it in the new object. 
+
+If you deform the angle it will bend around the new object. 
+
+
+Lecture 29
+----------------------------------------
+
+File -> User preferences -> Add ons -> Cell Fraction -> Add a cube -> Ctrl + A (Reset location).
+
+When you click Ok all the work will be put into the next layer. 
+
+Source limit: the maximum number of objects that you will end up with. 
+
+Noise: randomization factor: between 0.01 and 0.05 is normally enough.
+
+Select random. 
+
+You can also play a little bit with the margin (a higher margin leaves the cracks in the figure). To see results go to the next layer. 
+
+When you set the margin to 0 you have also to remove the split islands. 
+
+To change the material in the inside of the split you have to select the index of the material (starting in 0)
+
+Lecture 30
+----------------------------------------
+
+S + Shift + Z = Resize.
+In edit mode Wireframe -> Z: See "inside the geometry inside".
+
+Check in wireframemode
+
+Add cube and cilinder inside and pull the cilinder a bit to the bottom. Join and go to Edit mode, with Z you see the vertices of the cilinder are not connecting to the surface of the cube.
+
+To do that:
+
+Separate objects -> 
+
+Shift + D: copy (to place in another layer)
+
+Difference modifier: Cut the cube using the cilinder form. 
+
+Select cube -> Add modifiers -> Boolean -> Operation: difference -> (Check the name of the other object: Cylinder) Object: Cylinder -> Apply and move the cube.
+
+
+
+Unit modifier: puts the geometry where it should be.
+
+Select cylinder -> Ctrl  + A -> Rotation and scale. 
+Select cube -> Add modifiers -> Boolean -> Operation: union-> (Check the name of the other object: Cylinder.001) Object: Cylinder.001 -> Apply and move the cube.
+
+
+Lecture 31
+----------------------------------------
+
+Object -> Selection to grid -> Snap (when you are in the last square zooming in)
+
+Magnet tool (CAREFUL)
+
+If you want to put two elements together
+
+Select the element you want to move -> Turn on the Magnet -> Select vertex -> Grab the red arrow (of the center of the object) and drag it to another vertex (the vertex of the second element), with the element you are moving select HOVER OVER the vertex to see the first vertex that it touches from the other figure. You can do the same with all the X, Y and Z axis.
+
+Lecture 33
+----------------------------------------
+
+Things can go wrong if you do not reset the rotation. If you do the editing in edit mode (scale, rotate, etc) it wont change the values in Rotation and Saling (selectin the little orange cube).
+
+Lecture 34
+----------------------------------------
+
+Low Poly 'Cartoony trees'
+
+Create a cone -> change vertices from 32 to 8 -> Go to ortho (5) and -> 1 -> Duplicate the cone (Shift + D) -> Scale it and place a cone in the top and another in the bottom -> Create a cilinder and change it to 8 vertices -> Snape it to the center -> Scale it S + X + .2 -> Scale it to the Z holdin Ctrl to the surface of the cones. 
+
+2nd version: Snap to the red line (Ctrl + draging the blue arrow up to the red line) -> Ctrl + A -> Location. 
+
+Scale S + X + .2
+
+Edit mode -> Ctrl + R: Add 4 > cuts -> Edge selection -> Select the new cuts with Alt -> Scale those parts, move the edge to different sides to make it look more organic 
+
+To to right ortho 3 
+
+Add icosphere -> 3 subdivisions -> Sculpt mode -> Turn off mirror editing (Simetry/Lock -> turn off mirror) -> you can also change the size of the radious of the brush and the strenght
+
+Lecture 35
+----------------------------------------
+
+Low-Poly 'Block' Characters 
+
+Extrude and Scale: E + S (holding Ctrl to do it in 0.1 amounts), you have to check one arm 0.5 and the other arm 0.5 (in X, Y and Z values.)
+
+In ortho front extrude holding CTRL for one arm to 2 Grid units. 
+
+When using the knife hold CTrl to find the exact center. 
+
+ALT + RIGHT CLICK = SELECT LOOP
+
+N -> Shading -> backface culling (it hides the non texture side, makes it invisible)
+
+To change the Texture side and the non texture side: Ctrl + F -> Flip normals. 
+
+Set the 3d cursor to center: Shift + C
+
+You can use solidify to complete the roof. Select the cube, remove the faces to leave only a roof -> Shading -> backface culling -> Go to object mode -> Solidify -> Increase thin -> Apply.
+
+Before you hit apply there is only a plane, no mesh (no vertices, edges, faces, etc).
+
+To scale everything except the Z axis: Go to ortho mode -> 5 + 7 -> S -> Shift + Z -> .3 (whatever size you want to scale).
+
+To create  a cross = Shift + D (duplicate) -> R -> 90 (Rotate in the Y axis in 90 degrees)
+
+To add texture you have to select everything and adjust Rotation & Scale.
+
+Select a plank and go to Cycles Render -> Change viewport shading to texture -> Go to the material display (cerca de la llave inglesa) -> Select custom image ->
+ Go to edit mode selecting all the plank -> Select all the plank (A) -> U -> Cube projection
+
+It has to be a seamless texture.
+
+Compositing window (to fix the texture's orientation):
+
+Go to edit mode -> Change screen layout from Default to Compositing -> Method to display texture -> Browse image to be link (Select the image) -> 
+To change the orientation by rotating go to UV Selection and display mode: Island -> Select and rotate 90
+
+
+Crates
+red x
+blue  z
+green y
+
+the side of the arrow is the positive side 
+Select a face: 
+E -> S ->  .8
+E -> Y axis -> G -> -.02 or .02 
+
+- sign works like a toggle. 
+
+Zoom for a more precise snapping (ctrl + draggin the arrows in desired  direction to move the object). snapping is in ortho mode. 
+
+Select two vertices and merge at center.
+
+When using Boolean difference use Carve.
+
+When you dont want to mess with the border you can lasso select and snap to the botton instead of scaling in edit mode. To do that make sure you have selected the vertices selection in edit mode and limit selection to visible turn off. 
+
+
+To put the cursor where you want it just go to edit mode, select the face or the vertice and mesh ->Snap -> Cursor to selected. 
+
+Before the bebel tool set rotation and scale. 
+
+
+To put the origin to the figure: transform -> origin to geometry. 
+
+For making the handle. Select the faces you want in one of the sides (3 or ctrl + 3) and delete them. Then go to front view -> Extrude -> Rotate till geting close of the other part of the handle. Then loop select both of the the edges and Loop Tools -> Bridge. Smooth the thickness selecting the "outer edges" and smooth vertex.  
+
+You can also do that by removing the top face and solidify the pot. 
+
+Before applying the cell fracture you have to adjust the rotation and scale. You have to choose the material of the cuts, which starts in an index 0.
+
+After you apply cell fracture you have to select each piece of geometry -> go to Edit mode -> Select All (A) -> U -> Cube projection to fix the texture of the cuts. 
+
+To change the orientation of the extruction you should select the face and change the transformation orientation to local.
+
+To create the intersection of the pipe, select the cilinder, add cuts (8 or something) go to modifiers -> Simple deform -> Bend -> Deform angle: 90 -> R + Y + 90 (to bend 90 degrees in the y axis).
+
+
+Snap faces to join pipes: 
+
+1. Select the face of the object that you want to move -> Snap cursor to the selection.
+2. Go to object mode -> transform -> origin to 3d cursor.
+3. Select the other object -> select the face -> Snap cursor to selected.
+4. Back to the object that you want to move -> Snap selection to cursor. 
+
+To calculate the number of stairs:
+
+Number you want * 2 - 1
+
+select every other step but not the bottom nor the top. (Seleccionar dejando una de por medio).
+
+To align the stairs use the magnet -> change the snap element to vertex and grab the selected lines to the vertex. You will get the stairs effect. Do that with the blue line. For the green line grab it and put it to the vertex of the middle of its own stair. 
+
+Shut magnet of and put it in increment. 
+
+Array modifier:
+
+Set location -> Set rotation & scale -> Select array modifier.
+
+Set relative offset:
+
+
+X: Size of the geometry will determine the distance between arrayed items (1 means next to the original geometry in the X axis, 1.1 means a little gap, 0 is inside of the object and so on). 
+
+Y: Size of the geometry will determine the distance between arrayed items (1 means next to the original geometry in the Y axis, 1.1 means a little gap, 0 is inside of the object and so on). 
+
+Z: Size of the geometry will determine the distance between arrayed items (1 means next to the original geometry in the Z axis, 1.1 means a little gap, 0 is inside of the object and so on). 
+
+Adjust the pattern and add more copies with Count: number of copies of the geometry.
+
+Change one geometry and will affect everything. 
+
+To add new geometry to work with in the array add it in Edit mode. Adjust it as you want and adjust again the Relative offset (play with the X, Y and Z).
+
+P: separate object. 
+
+If your character cannot go up in the stairs maybe you need to add a plane and make it invisible or use a collider. 
+
+Random dungeon generator. Simple rooms with connector pieces (like a doorway). Dungeon dresser. 
+
+N -> Back face culling (hide back sides of the faces).
+
+Edit mode -> Ctrl + F -> Flip normals (to see transparent walls).
+
+To animate the chest:
+
+select the line of the border of the back and snap cursor to selected -> go to object mode and select the part of the chest you want to move and transform origin to 3d cursor. 
+
+Rotation and scale to everything. Go to animation screen. Press the red buttons and all the rotation and scaling will be recorded on a timeline. Select keyframe 1 (move the green arrow to one.)
+
+You can play the animation in default mode. Save every object separately, the animation parts separated from the rest. 
+
+Ctrol + J: Join.
+
+Separate by loose parts: go to edit mode and select the faces that you need and click separate by loose parts. 
+
+In edit mode l to select the independent joined object.
+
+You can select a vertex and turn on the proportional editing mode to drag that particular vertex and you can also expand the area of editing increasing the circle with the mouse wheel. 
+
+Select mirror modifier in object mode. It will mirror your work in your selected axis. Select clipping.
+
+Make a cube round: Select the cube -> Edit mode -> W -> Smooth subdivisions -> Shift + R for repeat the process.
+
+i: insert keyframe.
+
+A transformation is any operation that changes coordinate values in some way. 
+Translation transformation: if you pick up an object and move it to a different place in the room without changing its orientation.
+
+Simply turning the object without moving it from its original location is called rotation.
+
+If the object were to get bigger or smaller, that is a scaling transformation. Scaling can be uniform or not. 
+
+
+Alt + i = delete keyframe. 
+
+To create multiple animations in an object go to Dope Sheet, then go to Action Editor and click + and swtich in the dropdown between animations. 
+

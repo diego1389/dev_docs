@@ -1,0 +1,449 @@
+You create and delete scripts in unity but edit them in mono develop. 
+A game can have multiple scenes.Game and scene pane, you can click the play button to see your game. 
+Maximize on play. 
+
+Change playmode tint color to be more noticible to get when you are in play mode. 
+
+Create a new scene
+Delete camera
+You need to create a Game object for every game: Game object -> Create empty.
+
+Add script with inspector add c# script. Put in Scripts folder, edit it in mono:
+
+public class NumberWizards : MonoBehaviour {
+
+	// Use this for initialization
+	void Start () {
+		print ("Welcome to number wizards.");
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
+}
+
+	void Start () {
+		print ("Welcome to number wizards.");
+		print ("Pick a number in your head, but don't tell me!");
+		
+		int maxValue = 1000;
+		int minValue = 1;
+		
+		print ("The highest number you can pick is " + maxValue);
+		print ("The lowest number you can pick is " + minValue);
+		print ("Is the number higher or lower than 500?");
+		print ("Up arrow for higher, down for lower, return for equal");
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		if(Input.GetKeyDown(KeyCode.UpArrow)){
+			print ("Up arrow pressed");
+		} else if(Input.GetKeyDown(KeyCode.DownArrow)){
+			print ("Down arrow pressed");
+		}		
+	}
+
+Save and Run the game in unity. 
+
+Start() runs only at the beggining of your program. Updates every frame (depends of how many frames per second your game uses). 
+The update() listens constantly if you select collapse it shows you the number of times of raised the event. 
+
+If you drag an image to assets in unity make sure it says in inspector Sprite (2D and UI).
+
+Add text element:
+
+Game object -> UI -> Text 
+
+It creates a canvas for organizing the objects. Make sure the UI layer is visible. 
+Move the text element inside the canvas. 
+
+You get the color from the camera. Change the color of the main camera. 
+
+Add a new script in the text control. 
+
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+
+public Text text;
+
+Drag text from the menu to the Text Controller "Text" space
+
+public Text text;
+	// Use this for initialization
+	void Start () {
+		text.text = "Hello world";
+	}
+
+To add an image -> GameObject -> UI -> Image
+
+Adjust size of the Game and size of the text to fit in a 800 x 600 canvas. Change also the font size.
+
+Then file -> build settings. Put the game scene into the gray box -> web player -> player settings -> Black background and 800 width x 600 height
+
+It creates html file and a .unity3d file. .Zip it and send it to gamebucket.io in explorer.
+
+In the scene when you select the main camera in the hierarchy you can see the transform menu. 
+The canvas has a rect transform, it also has a render mode. 
+In the Text section you can change how the ui element is anchored to the scene. 
+
+Resize an element using the pivot point as a reference pressing the Alt key.
+
+Change the background color of the main camera. 
+
+you need an eventsystem in your scene for ui elements to work. 
+
+To convert a text element into a button click Add Component -> UI -> button
+
+Then select Color tint and the normal and highlighted colors. 
+
+You need to create a new gameobject (named levelmanager) in the hierarchy in order to add functions to the button.
+
+Create a new script for the game object and add a function:
+
+public class LevelManager : MonoBehaviour {
+
+    public void LoadLevel(string name)
+    {
+        Debug.Log("Level load requeste for: " + name);
+    }
+
+} //run in VS
+
+Go to to button add + in the onclick and drag the LevelManager (the game object not the script) where it says None add find the LoadLevel function in the 
+dropdown menu. 
+
+
+using UnityEngine.SceneManagement;
+
+ public void LoadLevel(string name)
+    {
+        Debug.Log("Level load requeste for: " + name);
+        SceneManager.LoadScene(name);
+    }
+
+    Go to File -> Build settings (Scenes in build are empty). Drag the scenes from the Assets to the empty box. The order matters. Then close and run the unity project again.
+
+    A Game Design Document is a live document. 
+
+    When loading an Script you have to create an empty object and include it as with the LevelManager.
+
+    You have to create a Text variable in the script and set its .text property:
+
+      public Text text;
+
+      	void NextGuess(){	
+		guess = (maxValue + minValue)/2;
+        text.text = guess.ToString();
+        maxGuessesAllowed--;
+        if (maxGuessesAllowed <= 0)
+            SceneManager.LoadScene("Win");
+		}
+
+		Run the vs project and you will get an Empty box for the Text property in the GameObject with the NumberWizard script.
+		Drag the text UI element of Unity in the empty box to wire it with the variable.
+
+		
+
+Exports element (win menu, level manager) from Assets -> export.
+ 
+ Throw tty in the asset menu. You can find in https://www.dafont.com
+
+ Free sound para descargar sonidos.
+
+ Agregar un GameObject  y arrastrar la cancion. 
+
+ Singleton for instance music plays only once:
+
+     private static MusicPlayer _instance = null;
+
+    private void Awake()
+    {
+        if (_instance != null)
+        {
+            Destroy(_instance);
+            print("Duplicate destroyed");
+        }
+        else
+        {
+            _instance = this;  
+            GameObject.DontDestroyOnLoad(_instance);
+        }
+    }
+	
+Sprites further from the camara get rendered first.
+
+Image has to be away from the camera in the negative Z (p.e: Z = -10)
+
+Camara size means the distance between the top (and the botton and the right) and the center. 
+
+you got 800 x 600 image so to get 16 game units = 16. 800 x 600 = 1.3333...
+
+To get the exact size of the camara you get the 16 units / 800 * 600 = 12, since the camara size is the distance between the top and the center size gotta be 6. Correct coordanates to x = 8 and y = 6
+
+
+Add a ball image and place it in the center (8, 6), adjust its size and the add component -> Physics 2d -> Rigid body.
+Add mass of 1 (kg). Add physics 2d -> circle collider, fit the radious. 
+
+Colliders work by hitting other colliders. Colliders define the shape of an object for physical collisions. WHen is triggered (the box collider for the floor) the ball passes through the collider.
+
+When two colliders meet the game engine passes messages to the objects.When two colliders overlap DURING A FRAME they pass the message. 
+
+Static: has a collider but no rigid body.  
+RigidBody: it has a rigidbody component. Enables your gameobject to act under control of physics. 
+Kinematic: it doesnt move on its own. We gotta move it. Kinnematic ticked in ri
+
+Create Physics material 2d remove friction and add bounciness.
+
+Get the background image behind the ball by add a positive Z number.
+
+Bounciness: 0 no energy conserved in the collision, 1 100% of energy conserved in the collision. 
+
+To get the height of the bouniness you need to use the Square root. F.e: in order for the ball to bounce the first time to half the height you will need use Sqrt(0.5) = 0.707, so you have to set the bounciness to 0.707.
+
+Relative mouse position in x:
+
+void Update () {
+        print(Input.mousePosition.x / Screen.width);
+	}
+To pass it to game units:
+
+To move the paddle between the boundaries of the units:
+
+	// Update is called once per frame
+	void Update () {
+        Vector3 paddlePosition = new Vector3(0f, 0.5f, 0f);
+        float mousePositionInBlocks = Input.mousePosition.x / Screen.width * 16;
+        paddlePosition.x = Mathf.Clamp(mousePositionInBlocks, 0.5F, 15.5F);
+
+        this.transform.position = paddlePosition;
+	}
+
+	To get the ball attached to the paddle at the begginning of the ball. Create the Ball script
+
+
+    public Paddle paddle;
+    private Vector3 paddleToBallVector;
+	// Use this for initialization
+	void Start () {
+        paddleToBallVector = this.transform.position - paddle.transform.position;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+        this.transform.position = paddle.transform.position + paddleToBallVector;
+	}
+
+	Then edit-> project settings -> Add paddle and then ball -> apply.
+
+	THROW BALL SCRIPT
+
+	public class Ball : MonoBehaviour {
+
+    public Paddle paddle;
+    private bool _gameHasStarted = false;
+
+    private Vector3 paddleToBallVector;
+    private Rigidbody2D _ballRigidBody;
+
+    private void Awake()
+    {
+        _ballRigidBody = GetComponent<Rigidbody2D>();
+    }
+
+    // Use this for initialization
+    void Start () {
+        paddleToBallVector = this.transform.position - paddle.transform.position;
+
+    }
+	
+	// Update is called once per frame
+	void Update () {
+        if (!_gameHasStarted)
+        {
+            //Lock ball to the paddle
+            this.transform.position = paddle.transform.position + paddleToBallVector;
+            //Wait for mouse button press to launch 
+            if (Input.GetMouseButtonDown(0))
+            {
+                _gameHasStarted = true;
+                print("Mouse button pressed. Ball launched");
+                _ballRigidBody.velocity = new Vector2(2f, 10f);
+            }
+        }
+      
+	}
+}
+
+Create an empty game object and add the background to it. Change gravity of the whole game:  Project Settings -> Physics 2d 
+
+Ctrl + d = duplicate. 
+
+Snap bricks to the play zone: Edit -> Snap settings -> x 0.5 y 0.32
+Snap with ctrol key.
+
+When creating everything as prefab you gotta drag your scripts to where missing because null exception. 
+To find the Paddle dynamically:
+
+_paddle = GameObject.FindObjectOfType<Paddle>();
+
+change to next scene dynamically:
+
+SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+
+Affordance: the player should always know what to do next. 
+
+Create a sprite sheet in gimp selecting sprites multiple and changing points per pixel and edit sprites and slice.
+Change the paddle and the bricks in the prefab with the images from the ones in the sprite sheets. 
+In the brick.cs create a Sprites array that will be updated dynamically. 
+
+public Sprite[] HitSprites;
+
+In Unity add the size of the array and drag the specific image from the spride sheet (0 hit bricks break inmmediately so they they have 0 size and no image. 
+
+To dinamically update it:
+
+private void OnCollisionExit2D(Collision2D collision)
+    {
+        _timesHit++;
+        if(_timesHit >= MaxHits)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            loadSprites();
+        }   
+    }
+
+    private void loadSprites()
+    {
+        int spriteIndex = _timesHit - 1;
+        this.GetComponent<SpriteRenderer>().sprite = HitSprites[spriteIndex]; 
+    }
+
+    //SpriteRenderer is the component of the brick which updates the actual sprite
+
+    You can get a tag to an object, add new tag and set it to the prefabs. 
+
+    To check for the tag: 
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        bool isBreakable = (this.tag == "Breakable");
+        if (isBreakable)
+            HandleHits();
+    }
+
+    private void HandleHits()
+    {
+        int maxHits = HitSprites.Length + 1;
+        _timesHit++;
+        if (_timesHit >= maxHits)
+            Destroy(gameObject);
+        else
+            loadSprites();
+    }
+
+    WIN scenario:
+
+    A static variable to keep track of the number of bricks in a level. 
+       public static int BricksCounter = 0;
+
+         private bool _isBreakable; 
+    // Use this for initialization
+    void Start () {
+        _isBreakable = (this.tag == "Breakable");
+        if (_isBreakable)
+        {
+            BricksCounter++; //Set counter to the number of bricks per level
+        }
+        _timesHit = 0;
+        _levelManager = GameObject.FindObjectOfType<LevelManager>(); 
+	}
+
+	 private void OnCollisionExit2D(Collision2D collision)
+    {   
+        if (_isBreakable)
+            HandleHits();
+    }
+
+    private void HandleHits()
+    {
+        int maxHits = HitSprites.Length + 1;
+        _timesHit++;
+        if (_timesHit >= maxHits)
+        {
+            BricksCounter--; //reduces counter each time a brick is destroyed.
+            _levelManager.BrickDestroyed(); //check if has level is finished 
+            Destroy(gameObject);
+        }
+        else
+            loadSprites();
+    }
+
+Then check in the levelmanager for passing the level:
+
+ public void LoadNextLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);   
+    }
+
+    public void BrickDestroyed()
+    {
+        if(Brick.BricksCounter == 0)
+        {
+            LoadNextLevel();
+        }
+    }
+
+    Add audio source to the ball and add the song (remove on away).
+    Go to the ball script:
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        AudioSource audio = GetComponent<AudioSource>();
+        audio.Play();
+    }
+
+    TO prevent loops add the following tweak to the ball:
+
+     private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (_gameHasStarted && collision.transform.gameObject.tag != "Breakable")
+        {
+            Vector2 tweak = new Vector2(Random.Range(0f, 0.2f), Random.Range(0f, 0.2f));
+            _ballRigidBody.velocity += tweak;
+            AudioSource audio = GetComponent<AudioSource>();
+            ...
+
+Add smoke: add empty game object and add component -> particle system. 
+
+Time.deltaTime = time between frames. 
+
+How to get the dimensions of the camara:
+
+    void Start () {
+        float distance = this.transform.position.z - Camera.main.transform.position.z;
+        Vector3 leftMost = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance)); //values between 0 and 1
+        Vector3 rightMost = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance));
+        _currentShipPosition = new Vector3(this.transform.position.x, this.transform.position.y, 0.5f);
+        minXPosition = leftMost.x;
+        maxXPosition = rightMost.x;
+    }
+
+    Generate an enemy spawner game object that will create an enemy and place it as a child.
+
+    public GameObject enemyPrefab; //have to pass it through unity.
+
+	void Start () {
+        GameObject enemy = Instantiate(enemyPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+        enemy.transform.parent = transform;
+	}
+
+
+
+ Add unity to Github: https://www.youtube.com/watch?v=qpXxcvS-g3g

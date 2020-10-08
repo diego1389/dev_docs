@@ -1,0 +1,817 @@
+Xamarin
+
+1. Xamarin Forms
+______________________________
+
+Cuando la apariencia personalizada en cada dispositivo no es tan relevante. 
+
+Visual appearance
+
+XAML (lenguaje enriquecido, Microsoft 2009)
+
+Behaviour
+
+Code-behind
+
+Compilación nativa. 
+
+Cross platform -> Cross platform App -> PCL -> 
+
+Native (un proyecto diferente para cada plataforma).
+
+Proyecto portable (main)
+
+Emulador: antepenultimo visual studio android-23x86 phone.
+
+Tools -> Android emulator manager -> Start emulator manually. 
+
+Verificar que SDK Emulador tenga el Api instalado. SDK manager verificar. Probar en dispositivo mobil.
+Para elegir en que dispositivos compilar: Build -> Configuration manager (Check  deploy, build)
+App.xaml es la clase principal. 
+
+    public App()
+        {
+            InitializeComponent();
+
+            MainPage = new ExplorandoXamarin.MainPage(); //Página principal
+        }
+namespace = http://xamarin.com/schemas/2014/forms
+
+xmlns:x = instancia
+
+En el code behind
+
+namespace ExplorandoXamarin
+{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class PaginaInicial : ContentPage
+
+
+Nueva pagina
+XAML
+    <Button Text="Has Click" 
+            HorizontalOptions="Center" VerticalOptions="Center"
+            Clicked="Button_Clicked"
+            />
+
+.cs
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            DisplayAlert("Alerta", "Hola mundo", "Ok");
+        }
+
+Para configurarla como página inicial:
+
+App.cs
+
+   public App()
+        {
+            InitializeComponent();
+            MainPage = new ExplorandoXamarin.PaginaInicial();
+        }
+
+2. XAML vs Code
+______________________________
+
+Code:
+
+   Content = new Label
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                Text = "Hola a todos desde el code behind"
+            };
+
+XAML:
+
+	    <Label VerticalOptions="Center" HorizontalOptions="Center" Text="Hola a todos desde XAML"/>
+
+
+3. Content property
+______________________________
+
+Content tiene un view, view hereda visual element. Content alberga una lista de elementos. Se ocupa un contenedor para tener hijos. 
+
+Container: stacklayout
+
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+        <Label x:Name="lblValor" Text="Hola a todos"/>
+        <Slider x:Name="slider" ValueChanged="Slider_ValueChanged"/>
+    </StackLayout>
+
+4. Content property
+______________________________
+
+Acceso de los elementos desde code behind
+
+  private void Slider_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            lblValor.Text = String.Format("El valor del slider es {0:N2}", e.NewValue);
+        }
+
+
+    public PaginaInicial()
+        {
+            InitializeComponent(); //Primero crea el XAML luego ejecuta el Slider_ValueChanged
+            slider.Value = 0.5;
+        }
+
+        private void Slider_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            lblValor.Text = String.Format("El valor del slider es {0:F2}", e.NewValue);
+        }
+
+5. Databinding
+______________________________
+
+    
+    <StackLayout BindingContext="{x:Reference slider}" VerticalOptions="Center" HorizontalOptions="Center">
+        <BoxView Color="Green" Opacity="{Binding Value}"/>
+        <Label x:Name="lblValor" Text="{Binding Value, StringFormat='El valor es: {0:F2}'}"/>
+        <Slider x:Name="slider"/>
+    </StackLayout>
+
+
+
+henry.uned@gmail.com
+
+Tarea 1:
+Slider de frases.
+
+Tarea 2:
+Programa de mockups, traer ui con pantallas de una aplicación que uno quiere hacer. 
+
+Publicar aplicación.
+
+Tarjeta de crédito  + 25 dolares, cuenta de gmail.
+P.Ej:
+
+https://balsamiq.com/products/mockups/
+
+
+Content solo puede tener un hijo. 
+
+Stacklayout property spacing: espacio entre layouts. 
+
+Selección horizontal: Shift + Alt + hacia abajo
+
+Stacklayout1:
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Dia2.StackLayout1"
+             BackgroundColor="#127ac7">
+    <StackLayout VerticalOptions="Center" Spacing="20">
+
+        <Label Text="Bienvenidos a Xamarin" TextColor="White" 
+               FontSize="30" 
+               FontAttributes="Bold" 
+               HorizontalOptions="Center"/>
+        <Label Text="Cross-platform desarrollo es sencillo" TextColor="White" 
+               FontSize="18" HorizontalOptions="Center"/>
+        <Button Text="Login" TextColor="White" 
+                BackgroundColor="#1dabf0"/>
+        <Button Text="Registrarse" TextColor="White" 
+                BackgroundColor="#1dabf0"/>
+        
+    </StackLayout>
+</ContentPage>
+
+
+Stacklayout2:
+
+<ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="0,20,0,0">
+        </OnPlatform>
+    </ContentPage.Padding>
+    <StackLayout>
+        <StackLayout>
+            <Label Text="dguillen"/>
+        </StackLayout>
+        <Image Source="http://lorempixel.com/1920/1080/nature/3/"/>
+        <StackLayout Orientation="Horizontal" Spacing="10" Padding="5, 0">
+            <Button Text="Me gusta"/>
+            <Button Text="Comentar"/>
+            <Button Text="Compartir"/>
+        </StackLayout>
+        <StackLayout Padding="10">
+            <BoxView HeightRequest="1" Color="#f0f0f0"/>
+            <Label Text="700 me gusta" FontAttributes="Bold"/>
+                <Label TextColor="#444" Text="Esta es una fotografía de Skanor, Suecia."/>
+        </StackLayout>
+    </StackLayout>
+
+Grid1:
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Dia2.Grid1"
+             BackgroundColor="#354242">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.ColumnSpan="3" BackgroundColor="#354242" Text="1234" TextColor="#fff" HorizontalOptions="Center" FontSize="50"/>
+        <Button Grid.Row="1" Grid.Column="0" Text="1" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="1" Grid.Column="1" Text="2" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="1" Grid.Column="2" Text="3" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="2" Grid.Column="0" Text="4" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="2" Grid.Column="1" Text="5" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="2" Grid.Column="2" Text="6" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="3" Grid.Column="0" Text="7" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="3" Grid.Column="1" Text="8" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="3" Grid.Column="2" Text="9" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="4" Grid.Column="1" Text="0" BorderRadius="30" FontSize="30" TextColor="#28282c" BackgroundColor="#fff"/>
+        <Button Grid.Row="5" Grid.ColumnSpan="3" BorderRadius="30" FontSize="30" Text="Llamar" TextColor="#28282c" BackgroundColor="#fff"/>
+    </Grid>
+
+</ContentPage>
+
+Grid2
+
+
+
+Absolute layout: Para organizar los controles de forma proporcional. Hay que especificar si es numerico o proporcional. 
+
+Views within an AbsoluteLayout are positioned using four values:
+
+X – the x (horizontal) position of the view's anchor
+Y – the y (vertical) position of the view's anchor
+Width – the width of the view
+Height – the height of the view
+
+AbsoluteLayout.LayoutFlags="All" //Los cuatro valores son proporcionales. Puede ser todos, ninguno o alguno en especifico
+
+Carpeta de resources de ios. Hay que agregar tres imagenes con diferente dimension. La primera nombre.png
+nombre@2x.png, nombre@3x.png
+
+En android se mantiene con el mismo nombre pero en diferente carpeta para 32, 44, 64. 
+
+https://icons8.com
+
+Vista:  XAML
+Vista modelo: logica que se comunica con la vista
+Modelo: negocio.
+
+
+
+
+EDX.ORG course
+-----------------------------------------------
+
+Every single feature for each platform can be used in Xamarin using C#.
+
+Xamarin Software Development Lifecycle 
+______________________________________ 
+
+Xamarin Development platform (Visual studio or Xamarin studio).
+Xamaring Testing Cloud (testing products, new Xamarin profiler to identify hotspots in your app. It provides automated user interface scripts to run locally or upload them to the cloud and run them on hundreds of physical iOS and Android devices).
+Xamaring Insights (real time application monitoring, with detailed crash reports). 
+
+What is Xamarin.Forms?
+______________________________________ 
+
+Xamarin Forms:
+
+For data entry forms.
+Prototype or proof of concept.
+Not pixel-perfect design. 
+
+Benefits
+
+Allows you to define the UI using a common set of controls
+Modeled after WPF and Silverlight, supports XAML, Data Binding, Styles and more
+Great for data-entry (Forms) apps and for prototyping
+Provides a higher level of code sharing than the traditional approach
+Generates fully native UI so it looks and feels natural to each platform
+Can leverage platform-specific APIs when necessary
+Can customize the UI for each platform (although limited in places)
+
+Drawbacks
+
+Not all controls are available; only controls which exist in all three platforms and are defined by Xamarin.Forms are supported
+It's more difficult to leverage custom UI features
+Since layout is managed directly by Xamarin.Forms, pixel-perfect designs are hard to replicate
+
+Xamarin.Ios and Xamarin.Android:
+
+Pixel-perfect design, it is hard to customize to a great detail with Xamarin.Forms. 
+If your app will utilize specific controls unique to the platform or have a significant investment in platform-specific API's 
+
+Benefits
+
+You have complete control over the UI, animations and special effects
+Can access 100% of the platform features – even for new OS releases
+Can use native 3rd party controls written in Java (Android) or Objective-C (iOS)
+
+Drawbacks
+
+The UI definition is unique to the platform; must be written multiple times
+Requires platform-specific code to connect UI to shared code layer
+
+Development model
+______________________________________ 
+
+In traditional Xamarin development, we share our business logic in the form of a Portable Class Library (PCL) or a Shared Project (SAP). This can include:
+
+View Models
+Validation logic
+Data Models
+Data access code
+Web Service access code
+
+How much code is shared using traditional Xamarin development?
+
+In most applications you end up sharing about 75% of the code.
+
+How much code is shared using Xamarin.Forms?
+
+Using Xamarin.Forms, it is possible to share over 90% of the code.
+
+Can I define the UI in C#?
+
+Absolutely, this can be done for both the traditional approach and using Xamarin.Forms. If you're using the traditional approach, the classes you use are platform-specific. For example, to define a Button widget, in iOS you would use a UIButton, but in Android, we would use an android:Button class.
+
+Why would I choose the traditional Xamarin approach?
+Utilizing the native platform-APIs allows your application to integrate completely with the platform. This has several advantages:
+
+You can use any feature of the platform
+All of the UI widgets are available
+Your application looks, feels and behaves like any other native app
+
+MVVM Xamarin
+__________________________________
+
+View: how you display your information. It is platform specific.
+Viewmodel: what to display. It is portable
+Model: business logic. It is portable
+
+
+Data binding: connection between the presentation layer and the data layer. You can also consume APIs.
+One way data binding: from source to target.
+Two way data binding: both ways.
+One way to source databinding: from target to source. 
+
+OneWay:	Indicates that the binding should only propagates changes from source (usually the View Model) to target (the BindableObject). This is the default mode for most BindableProperty values.
+
+OneWayToSource:	Indicates that the binding should only propagates changes from target (the BindableObject) to source (usually the View Model). This is mainly used for read-only BindableProperty values.
+
+TwoWay:	Indicates that the binding should propagates changes from source (usually the View Model) to target (the BindableObject) in both directions.
+
+    <StackLayout Margin="50">
+        <Label Text="One way" FontSize="25"/>
+        <Entry Text="{Binding Text, Source={x:Reference onewaytext}, Mode=OneWay}"/>
+        <Entry x:Name="onewaytext"/>
+
+        <Label Text="Two way" FontSize="25"/>
+        <Entry Text="{Binding Text, Source={x:Reference twowaytext}, Mode=TwoWay}"/>
+        <Entry x:Name="twowaytext"/>
+
+        <Label Text="One way to source" FontSize="25"/>
+        <Entry Text="{Binding Text, Source={x:Reference onewaytosourcetext}, Mode=OneWayToSource}"/>
+        <Entry x:Name="onewaytosourcetext"/>
+    </StackLayout>
+
+
+Create three folders: Model, Views and ViewModel.
+
+Create LoginView.xaml in Views folder
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MVVM1.View.LoginView">
+    <StackLayout Margin="50">
+        <Entry Text="{Binding UserName}"/>
+        <Entry Text="{Binding Password}"/>
+        <Button Text="Login" Command="{Binding LoginCommand}"/>
+    </StackLayout>
+</ContentPage>
+
+LoginView.xaml.cs
+
+ public LoginView()
+    {
+        InitializeComponent();
+        BindingContext = new LoginViewModel();
+    }
+
+Create LoginViewModel.cs in the ViewModel folder
+
+public class LoginViewModel : INotifyPropertyChanged
+    {
+        public Command LoginCommand { get; } //Command input implementation that wraps an Action
+        private string _userName;
+        private string _password;
+
+        public string UserName
+        {
+            get { return _userName; }
+            set
+            {
+                _userName = value;
+                LoginCommand.ChangeCanExecute(); //only if LoginCanExecute = true makes button available
+            }
+        }
+
+        public string Password
+        {
+            get { return _password; }
+            set {
+                _password = value;
+                LoginCommand.ChangeCanExecute();
+            }
+        }
+
+        public LoginViewModel()
+        {
+            LoginCommand = new Command(LoginExecute, LoginCanExecute);
+        }
+
+        private void LoginExecute(object obj)
+        {
+            App.Current.MainPage.DisplayAlert("Login", "Hello " + UserName, "Ok");
+        }
+
+        //Validation
+        private bool LoginCanExecute(object obj)
+        {
+            if (!string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password))
+                return true;
+            else
+                return false;           
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+    }
+
+Navigation to go from one view to another. 
+
+Create new view WelcomeLogin.xaml 
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MVVM1.View.WelcomeLogin">
+    <StackLayout>
+        <Label Text="You logged succesfully." FontSize="25" VerticalOptions="Center"/>
+    </StackLayout>
+</ContentPage>
+
+In App.xaml.cs
+
+    public App()
+        {
+            InitializeComponent();
+            MainPage = new NavigationPage(new MVVM1.View.LoginView());
+        }
+
+In LoginViewModel.cs
+
+//create new property
+ public INavigation Navigation { get; set; }
+
+ //Pass navigation through the constructor to set the new property.
+
+   public LoginViewModel(INavigation navigation)
+   {
+        LoginCommand = new Command(LoginExecute, LoginCanExecute);
+        Navigation = navigation;
+    }
+ 
+//Redirect to new page
+
+    private void LoginExecute(object obj)
+    {
+         Navigation.PushAsync(new View.WelcomeLogin());
+    }
+
+------------------------------------------
+The => operator can be used in two ways in C#:
+As the lambda operator in a lambda expression, it separates the input variables from the lambda body.
+In an expression body definition, it separates a member name from the member implementation.
+
+An expression body definition provides a member's implementation in a highly condensed, readable form. It has the following general syntax:
+
+member => expression;
+
+public override string ToString() => $"{fname} {lname}".Trim();
+
+instead of:
+
+public override string ToString()
+{
+   return $"{fname} {lname}".Trim();
+}
+
+The ?? operator is called the null-coalescing operator and is used to define a default value for nullable value types or reference types. It returns the left-hand operand if the operand is not null; otherwise it returns the right operand.
+
+
+	ICommand getMoviesCommand;
+
+    public ICommand GetMoviesCommand => getMoviesCommand ?? 
+        (getMoviesCommand = new Command(async() => await GetMovies()));
+
+//if getMoviesCommand is null it creates a new command that recieves an action GetMovies() asynchronously and finally pass the whole thing to the property ICommand GetMoviesCommand.
+------------------------------------------
+ MoviesApp
+
+1. Install Mvvmhelpers and newstonsoft.json with Nuget package manager.
+
+2. Create View, Model, RestClient,Services and ViewModel folders
+
+3. Create RestClient.cs class in RestClient folder:
+
+public class RestClient<T> //later you have to pass the Movies class to "cast" the Json.
+    {
+        public async Task<List<T>> GetAsync(string uri)
+        {
+            using(var httpClient = new HttpClient())
+            {
+                var json = await httpClient.GetStringAsync(uri);
+                return JsonConvert.DeserializeObject<List<T>>(json); //gets json, deserialize it and place it in a list of T
+            }
+        }
+    }
+
+5. Create Movies.cs class in the model folder.
+
+6. Go to http://json2csharp.com/ and paste the API url: http://webappcinema.azurewebsites.net/api/UpComingMovies and it will return the c# properties converted from json to paste in the Movies class. 
+
+  public class Movies
+    {
+        public int MovieId { get; set; }
+        public string MovieName { get; set; }
+        public string Cast { get; set; }
+        public string Description { get; set; }
+        public string MovieLanguage { get; set; }
+        public string CinemaName { get; set; }
+        public string CinemaAddress { get; set; }
+        public string DirectorName { get; set; }
+        public string SingerName { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public DateTime ShowTime { get; set; }
+        public string Phone { get; set; }
+        public string MovieNature { get; set; }
+        public string Logo { get; set; }
+        public object LogoFile { get; set; }
+    }
+
+7. Create the class UpComingMoviesService.cs in Services
+
+	 public class UpComingMoviesService
+    {
+        public async Task<List<Movies>> GetMoviesAsync(string uri)
+        {
+            RestClient<Movies> restClient = new RestClient<Movies>();
+            var moviesList = await restClient.GetAsync(uri);
+            return moviesList;
+        }
+    }
+
+8. Create the UpComingMoviesViewModel.cs
+
+ public class UpComingMoviesViewModel : BaseViewModel
+    {
+        public ObservableCollection<Movies> UpComingMovies { get; set; }
+
+
+        private ICommand getMoviesCommand;
+
+        public ICommand GetMoviesCommand =>
+            getMoviesCommand ?? (getMoviesCommand = new Command(async () => await GetMoviesAsync()));
+
+        private bool isBusy = false;
+
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set
+            {
+                isBusy = value;
+                OnPropertyChanged();
+            }
+        }
+
+       
+        private async Task GetMoviesAsync()
+        {
+            if (IsBusy)
+            {
+                return;
+            }
+            Exception error = null;
+            try
+            {
+                IsBusy = true;
+                var moviesService = new UpComingMoviesService();
+                var items = await moviesService.GetMoviesAsync(string.Format("{0}", 
+                    Constants.Constants.MoviesEndPoint));
+                UpComingMovies.Clear();
+                foreach (var item in items)
+                {
+                    UpComingMovies.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex);
+                error = ex;
+                throw;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        public UpComingMoviesViewModel()
+        {
+            UpComingMovies = new ObservableCollection<Movies>();
+        }
+    }
+
+9. Create Movies.xaml in the view folder: 
+
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MoviesApp.View.Movies">
+    <ListView x:Name="UpcMoviesListView" HasUnevenRows="True"
+              SeparatorVisibility="None" ItemsSource="{Binding UpComingMovies}"
+              IsPullToRefreshEnabled="True" RefreshCommand="{Binding GetMoviesCommand}"
+              IsRefreshing="{Binding IsBusy, Mode=OneWay}">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <StackLayout BackgroundColor="White" Padding="10" Margin="10,10,10,10">
+                        <StackLayout>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Image HeightRequest="40" WidthRequest="80"
+                                       Grid.Row="0" Grid.Column="0"
+                                       Source="{Binding Logo}"/>
+                                <StackLayout Grid.Row="0" Grid.Column="1" 
+                                             HorizontalOptions="FillAndExpand">
+                                    <Label Text="{Binding MovieName}" TextColor="#f94d95"/>
+                                    <Label Text="{Binding Cinema}" TextColor="#f94d95"/>
+                                    <Label Text="{Binding ReleaseDate}" TextColor="#f94d95"/>
+                                </StackLayout>
+                            </Grid>   
+                        </StackLayout>      
+                    </StackLayout>    
+                </ViewCell>    
+            </DataTemplate>
+        </ListView.ItemTemplate>      
+    </ListView>
+              
+</ContentPage>
+
+10. In Movies.xaml.cs
+
+public Movies()
+        {
+            InitializeComponent();
+            BindingContext = new UpComingMoviesViewModel();
+        }
+
+
+---------------------------------CENFOTEC---------------------------------------
+
+Crear carpetas View, Model y ViewModel (lógica en el viewmodel). Base de datos del teléfono. 
+DataTemplate tipos de celdas. 
+
+Handler: hilo que maneja eventos entre clases. 
+
+Code behind de la vista, solo lógica de presentación. 
+
+View:
+
+ <Button Text="Agregar personas" Command="{Binding AddPersonCommand}}"/>
+
+ ViewModel:
+
+  public ICommand AddPersonCommand { get; set; }
+
+  Lista debe ser observable. 
+
+
+    <TextCell Text="{Binding Name}"/>
+
+    si es un objeto compuesto
+
+      <TextCell Text="{Binding Direccion.Calle}"/>
+
+live player probar.
+
+
+Recursos o imagenes debe existir tanto en Ios como en android. 
+
+Height request and width request
+
+MainPage.gcs
+
+Proyecto check sin login.
+
+App.Current.MainPage.DisplayAlert("");
+
+1. List view cargar lista de ventas, source lista de ventas
+2. Push de ventas va a cargar listview con todos los articulos y guardarlos 
+
+Trabajar en personamodel
+
+ListaArticulos PersonaViewModel
+
+//Código de la creación de la venta.
+
+#Proyecto final#
+
+Todo en el repositorio.
+
+Dos formas de navegación: master detail, carrousel, etc.
+
+Dos tipos de layout. 
+
+Que puedo editar y que no puede editar. 
+
+Manipular información entre usuarios. 
+
+Usuarios quemados.
+
+solo master page. 
+
+slack.
+
+
+fluid.com
+
+Tarea formal: mockups
+
+Realm: base de datos no relacional. Cross platform tipo objeto. 
+Add nuget package. 
+
+
+Realm.getA().getB().getF();
+
+extend de RealmObject 
+
+base de datos local para configuraciones. 
+
+indexed name.   
+
+paginación, de 100 en 100. Paginación desde base de datos. 
+
+Api dictionary. 
+public string base = "localhost..."
+
+dictionaryTest1 = base + "modelRestOfTheApi";
+
+
+Chrome extension = arc
+
+instalar mysql y workbench... 
+
+dependency service: bifuración entre iOS y Android. Utilizar un plugin. 
+Solución de Montemagno. 
+
+revisar dependencias.  
+
+crear branch antes de agregar un paquete de Nuget. 
+
+Actualizar loginviewmodel ahi no va lo de la foto, solo para pruebas!!
+
+
+usar base64, pasar la imagen como string. 
+
+* = espacio que el necesita. 
+
+Converter después del binding. Cada página puede tener un diccionario de recursos. 
+
+ Event to command behavior. COmportamiento sobre x componente. 
+
+Ir a console.developer.google.com
+
+Habilitar Google Maps API
+OBtener la llave en credenciales 
+
+dar permisos
+ 
+crear clase extendida de PIN
+pin.Clicked()
+Navigation pop async 
+
