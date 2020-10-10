@@ -626,3 +626,10 @@ END;
 - To local debug -> Tools -> Preferences -> Debugger -> Show debug options.
 - For anonymous blogs configure Start debugging option: **Step into**.
 
+# PL/SQL Bootcamp
+
+- Case insensitivity.
+- Enables object oriented programming.
+- Schema as user of database (collection of objects for each user in Oracle Database).
+- A user can only have one schema.
+- 
