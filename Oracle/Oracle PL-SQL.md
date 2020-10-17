@@ -320,6 +320,7 @@
     END;
     ```
 - Case expressions:
+    - If one matched the others are omitted.
 
     ```SQL
     DECLARE 
@@ -632,4 +633,191 @@ END;
 - Enables object oriented programming.
 - Schema as user of database (collection of objects for each user in Oracle Database).
 - A user can only have one schema.
-- 
+- Exceptions are different than compiling errors (mising semicolon f.e).
+- There are three types of blocks: anonymous blocks, procedures and functions.
+- Types of datatypes: Scalar, Reference, Large objects and Composite.
+- Naming conventions:
+    - Variable: v_variable_name
+    - Cursors: cur_cursor_name or c_cursor_name
+    - Exceptions: e_exception_name.
+    - Procedures: p_procedure_name.
+    - Bind variables: b_bind_variable_name.
+- Variables:
+    
+    Name [CONSTANT] datatype [NOT NULL] [:= DEFAULT value|expression];
+- **Bind variables:**
+    - Create in a host environment. 
+    - The scope is the whole worksheet.
+    ```SQL
+    variable var_text varchar2(30);
+    
+    declare v_text varchar2(30);
+    begin
+        :var_text := 'Hello PL/SQL';
+        v_text  := :var_text;
+        
+        dbms_output.put_line(v_text);
+    end;
+
+    ```
+    - Use them to execute a Select query:
+    ```SQL
+    variable emp_id number;
+
+    begin
+    :emp_id := 100;
+    end;
+
+    SELECT * FROM EMPLOYEES WHERE employee_id = :emp_id;
+    ```
+- False and null return false.
+- True and null return null;
+- You can use IN statement in Case expressions.
+- Basic loop must iterate at least once (do...while).
+- While loops when you dont know when it will stop.
+- **Continue:**
+
+    CONTINUE [label_name] [WHEN condition];
+    - Use when instead of If to use continue.
+    ```SQL
+    declare
+    v_inner number := 1;
+    begin
+    <<outer_loop>>
+    for v_outer in 1..10 loop
+    dbms_output.put_line('My outer value is : ' || v_outer );
+        v_inner := 1;
+        <<inner_loop>>
+        loop
+        v_inner := v_inner+1;
+        continue outer_loop when v_inner = 10;
+        dbms_output.put_line('  My inner value is : ' || v_inner );
+        end loop inner_loop;
+    end loop outer_loop;
+    end;
+    ```
+- **GOTO statement:**
+    - You cannot go to:
+        - A control structure.
+        - Into an inner block from an outer block.
+        - Out of a subprogram.
+        - In or out of an exception handler.
+    - Simulate a loop using Go to statement:
+    ```SQL
+    DECLARE
+    v_searched_number NUMBER := 32457;
+    v_is_prime boolean := true;
+    x number := 2;
+    BEGIN
+    <<start_point>>
+        IF v_searched_number MOD x = 0 THEN
+        dbms_output.put_line(v_searched_number|| ' is not a prime number..');
+        v_is_prime := false;
+        GOTO end_point;
+        END IF;
+    x := x+1;
+    if x = v_searched_number then
+    goto prime_point;
+    end if;
+    goto start_point;
+    <<prime_point>>
+    if v_is_prime then
+        dbms_output.put_line(v_searched_number|| ' is a prime number..');
+    end if;
+    <<end_point>>
+    dbms_output.put_line('Check complete..');
+    END;
+    ```
+- You cannot create DDL or DCL with PL/SQL.
+- A block is not a transaction.
+- You have to have an Into keyword when writing a Select in PL/SQL.
+    ```SQL
+    declare
+    v_name varchar2(50);
+    v_salary employees.salary%type;
+    v_employee_id employees.employee_id%type := 130;
+    begin
+    select first_name ||' '|| last_name, salary into v_name, v_salary from employees where employee_id = v_employee_id;
+    dbms_output.put_line('The salary of '|| v_name || ' is : '|| v_salary );
+    end;
+    ```
+- DML operation in PL/SQL
+    ```SQL
+    create table employees_copy as select * from employees;
+    DECLARE
+    v_employee_id pls_integer := 0;
+    v_salary_increase number := 400;
+    begin
+    for i in 217..226 loop
+            --insert into employees_copy 
+        --(employee_id,first_name,last_name,email,hire_date,job_id,salary)
+        --values 
+        --(i, 'employee#'||i,'temp_emp','abc@xmail.com',sysdate,'IT_PROG',1000);
+    --update employees_copy 
+        --set salary = salary + v_salary_increase
+        --where employee_id = i;
+        delete from employees_copy
+        where employee_id = i;
+    end loop;
+    end; 
+    ```
+- Using a sequence (nextval generates a new value every time you run it, currentval returns the current value every time).
+
+    ```SQL
+    create sequence employee_id_seq 
+    start with 207
+    increment by 1;
+    -----------------------------
+    begin
+    for i in 1..10 loop
+        insert into employees_copy 
+        (employee_id,first_name,last_name,email,hire_date,job_id,salary)
+        values 
+        (employee_id_seq.nextval, 'employee#'||employee_id_seq.nextval,'temp_emp','abc@xmail.com',sysdate,'IT_PROG',1000);
+    end loop;
+    end; 
+    ----------------------------
+    declare
+    v_seq_num number;
+    begin
+    select employee_id_seq.nextval into v_seq_num from dual;
+    dbms_output.put_line(v_seq_num);
+    end;
+    ----------------------------
+    declare
+    v_seq_num number;
+    begin
+    select employee_id_seq.nextval into v_seq_num from employees_copy where rownum = 1;
+    dbms_output.put_line(v_seq_num);
+    end;
+    ----------------------------
+    declare
+    v_seq_num number;
+    begin
+    v_seq_num := employee_id_seq.nextval; 
+    dbms_output.put_line(v_seq_num);
+    end;
+    ----------------------------
+    begin
+    dbms_output.put_line(employee_id_seq.nextval);
+    end;
+    ----------------------------
+    begin
+    dbms_output.put_line(employee_id_seq.currval);
+    end;
+    ```
+- Composite datatypes are designed for holding multiple values in one box. 
+- Record only one row value.
+    - Containers: like an object in OOP.
+    - A single row for example.
+    - %rowtype to easily create record.
+    - For custom record: 
+
+    type type_name is record (variable_name variable_type, [variable_name variable_type, ...])
+    - 
+
+- Collections multiple rows.
+    - Nested tables: key value pairs (starts from 1 and goes one to one). Unbounded.
+    - VArray: bounded (exact number of rows).
+    - Associated arrays (any number for keys, even strings).
+    - In memory tables. 
