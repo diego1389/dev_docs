@@ -807,17 +807,110 @@ END;
     end;
     ```
 - Composite datatypes are designed for holding multiple values in one box. 
-- Record only one row value.
+- *Record* only one row value.
     - Containers: like an object in OOP.
     - A single row for example.
     - %rowtype to easily create record.
     - For custom record: 
 
     type type_name is record (variable_name variable_type, [variable_name variable_type, ...])
-    - 
-
+    
+    ```SQL
+    declare
+    r_emp employees%rowtype;
+    begin
+    select * into r_emp from employees where employee_id = '101';
+    --r_emp.salary := 2000;
+    dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name|| ' earns '||r_emp.salary||
+                        ' and hired at :' || r_emp.hire_date);
+    end;
+    ------------------------------
+    declare
+    --r_emp employees%rowtype;
+    type t_emp is record (first_name varchar2(50),
+                            last_name employees.last_name%type,
+                            salary employees.salary%type,
+                            hire_date date);
+    r_emp t_emp;
+    begin
+    select first_name,last_name,salary,hire_date into r_emp 
+            from employees where employee_id = '101';
+    /* r_emp.first_name := 'Alex';
+    r_emp.salary := 2000;
+    r_emp.hire_date := '01-JAN-20'; */
+    dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name|| ' earns '||r_emp.salary||
+                        ' and hired at :' || r_emp.hire_date);
+    end;
+    -------------------------------
+    declare
+    type t_edu is record (primary_school varchar2(100),
+                            high_school varchar2(100),
+                            university varchar2(100),
+                            uni_graduate_date date
+                            );
+    type t_emp is record (first_name varchar2(50),
+                            last_name employees.last_name%type,
+                            salary employees.salary%type  NOT NULL DEFAULT 1000,
+                            hire_date date,
+                            dept_id employees.department_id%type,
+                            department departments%rowtype,
+                            education t_edu
+                            );
+    r_emp t_emp;
+    begin
+    select first_name,last_name,salary,hire_date,department_id 
+            into r_emp.first_name,r_emp.last_name,r_emp.salary,r_emp.hire_date,r_emp.dept_id 
+            from employees where employee_id = '146';
+    select * into r_emp.department from departments where department_id = r_emp.dept_id;
+    r_emp.education.high_school := 'Beverly Hills';
+    r_emp.education.university := 'Oxford';
+    r_emp.education.uni_graduate_date := '01-JAN-13'; 
+    
+    dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name|| ' earns '||r_emp.salary||
+                        ' and hired at :' || r_emp.hire_date);
+    dbms_output.put_line('She graduated from '|| r_emp.education.university|| ' at '||  r_emp.education.uni_graduate_date);
+    dbms_output.put_line('Her Department Name is : '|| r_emp.department.department_name);
+    end;
+    ```
+    - When you have to insert a row from a table in another table and you have to modify the data you can use a recorder. Otherwise just use Insert into with select. 
+    - Record must have the same structure of the table to user update and delete operators.
+    - Row keyword for updating!
+    ```SQL
+    create table retired_employees as select * from employees where 1=2;
+    select * from retired_employees;
+    /
+    declare
+        r_emp employees%rowtype;
+    begin
+        select * into r_emp from employees where employee_id = 104;
+    r_emp.salary := 0;
+        r_emp.commission_pct := 0;
+        insert into retired_employees values r_emp;
+    end;
+    -----------------------------------------
+    declare
+        r_emp employees%rowtype;
+    begin
+        select * into r_emp from employees where employee_id = 104;
+        r_emp.salary := 10;
+        r_emp.commission_pct := 0;
+        --insert into retired_employees values r_emp;
+        update retired_employees set row = r_emp where employee_id = 104;
+    end;
+    /
+    delete from retired_employees;
+    ```
 - Collections multiple rows.
     - Nested tables: key value pairs (starts from 1 and goes one to one). Unbounded.
     - VArray: bounded (exact number of rows).
+        - Index starts from 1.
+        - 1 dimmension array.
+        - Null by default.
+        - firt(): first index value.
+        - last(): last  index value.
+        - count(): amount of elements in the varray.
+        - exists(): if index exists returns true.
+        - We cannot create and initialize at the same time.
+        
     - Associated arrays (any number for keys, even strings).
     - In memory tables. 
