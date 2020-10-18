@@ -901,8 +901,7 @@ END;
     delete from retired_employees;
     ```
 - Collections multiple rows.
-    - Nested tables: key value pairs (starts from 1 and goes one to one). Unbounded.
-    - VArray: bounded (exact number of rows).
+    - **VArray:** bounded (exact number of rows).
         - Index starts from 1.
         - 1 dimmension array.
         - Null by default.
@@ -911,6 +910,191 @@ END;
         - count(): amount of elements in the varray.
         - exists(): if index exists returns true.
         - We cannot create and initialize at the same time.
-        
-    - Associated arrays (any number for keys, even strings).
+        - You can create a type in a database (when you create it in the declare section it dies after the anonymous block finishes). Its call *schema level type* (create or replace type).
+        ```SQL
+        ---------------A simple working example
+        Declare
+        type e_list is varray(5) of varchar2(50);
+        employees e_list;
+        begin
+        employees := e_list('Alex','Bruce','John','Bob','Richard');
+        for i in 1..5 loop
+            dbms_output.put_line(employees(i));
+        end loop;
+        end;
+        ---------------limit exceeding error example
+        declare
+        type e_list is varray(4) of varchar2(50);
+        employees e_list;
+        begin
+        employees := e_list('Alex','Bruce','John','Bob','Richard');
+        for i in 1..5 loop
+            dbms_output.put_line(employees(i));
+        end loop;
+        end;
+        ---------------Subscript beyond cound error example
+        declare
+        type e_list is varray(5) of varchar2(50);
+        employees e_list;
+        begin
+        employees := e_list('Alex','Bruce','John','Bob');
+        for i in 1..5 loop
+            dbms_output.put_line(employees(i));
+        end loop;
+        end;
+        ---------------A working count() example
+        declare
+        type e_list is varray(5) of varchar2(50);
+        employees e_list;
+        begin
+        employees := e_list('Alex','Bruce','John','Bob');
+        for i in 1..employees.count() loop
+            dbms_output.put_line(employees(i));
+        end loop;
+        end;
+        ---------------A working first() last() functions example
+        declare
+        type e_list is varray(5) of varchar2(50);
+        employees e_list;
+        begin
+        employees := e_list('Alex','Bruce','John','Bob');
+        for i in employees.first()..employees.last() loop
+            dbms_output.put_line(employees(i));
+        end loop;
+        end;
+        --------------- A working exists() function example
+        declare
+        type e_list is varray(5) of varchar2(50);
+        employees e_list;
+        begin
+        employees := e_list('Alex','Bruce','John','Bob');
+        for i in 1..5 loop
+            if employees.exists(i) then
+            dbms_output.put_line(employees(i));
+            end if;
+        end loop;
+        end;
+        ---------------A working limit() function example
+        declare
+        type e_list is varray(5) of varchar2(50);
+        employees e_list;
+        begin
+        employees := e_list('Alex','Bruce','John','Bob');
+            dbms_output.put_line(employees.limit());
+        end;
+        --------------- A create-declare at the same time error example
+        declare
+        type e_list is varray(5) of varchar2(50);
+        employees e_list('Alex','Bruce','John','Bob');
+        begin
+        -- employees := e_list('Alex','Bruce','John','Bob');
+        for i in 1..5 loop
+            if employees.exists(i) then
+            dbms_output.put_line(employees(i));
+            end if;
+        end loop;
+        end;
+        --------------- A post insert varray example
+        declare
+        type e_list is varray(15) of varchar2(50);
+        employees e_list := e_list();
+        idx number := 1;
+        begin
+        for i in 100..110 loop
+            employees.extend;
+            select first_name into employees(idx) from employees where employee_id = i;
+            idx := idx + 1;
+        end loop;
+        for x in 1..employees.count() loop
+            dbms_output.put_line(employees(x));
+        end loop;
+        end;
+        --------------- An example for the schema level varray types
+        create type e_list is varray(15) of varchar2(50);
+        /
+        create or replace type e_list as varray(20) of varchar2(100);
+        /
+        declare
+        employees e_list := e_list();
+        idx number := 1;
+        begin
+        for i in 100..110 loop
+            employees.extend;
+            select first_name into employees(idx) from employees where employee_id = i;
+            idx := idx + 1;
+        end loop;
+        for x in 1..employees.count() loop
+            dbms_output.put_line(employees(x));
+        end loop;
+        end;
+        /
+        DROP TYPE E_LIST;
+        ```
+    - **Nested tables:** key value pairs (starts from 1 and goes one to one). Unbounded.
+        - Keys can only be positive numbers.
+        - Can be schema level type as well.
+        - We can delete a value from the nested table.
+        - Are not stored consecutively in the db.
+        ```SQL
+        ---------------The simple usage of nested tables
+        declare
+        type e_list is table of varchar2(50);
+        emps e_list;
+        begin
+        emps := e_list('Alex','Bruce','John');
+        for i in 1..emps.count() loop
+            dbms_output.put_line(emps(i));
+        end loop;
+        end;
+        ---------------Adding a new value to a nested table after the initialization
+        declare
+        type e_list is table of varchar2(50);
+        emps e_list;
+        begin
+        emps := e_list('Alex','Bruce','John');
+        emps.extend;
+        emps(4) := 'Bob';
+        for i in 1..emps.count() loop
+            dbms_output.put_line(emps(i));
+        end loop;
+        end;
+        ---------------Adding values from the tabledeclare
+        type e_list is table of employees.first_name%type;
+        emps e_list := e_list();
+        idx pls_integer := 1;
+        begin
+        for x in 100 .. 110 loop
+            emps.extend;
+            select first_name into emps(idx) from employees where employee_id = x;
+            idx := idx + 1;
+        end loop;
+        for i in 1..emps.count() loop
+            dbms_output.put_line(emps(i));
+        end loop;
+        end;
+        ---------------delete example
+        declare
+        type e_list is table of employees.first_name%type;
+        emps e_list := e_list();
+        idx pls_integer := 1;
+        begin
+        for x in 100 .. 110 loop
+            emps.extend;
+            select first_name into emps(idx) from employees where employee_id = x;
+            idx := idx + 1;
+        end loop;
+        emps.delete(3);
+        for i in 1..emps.count() loop
+        if emps.exists(i) then 
+            dbms_output.put_line(emps(i));
+        end if;
+        end loop;
+        end;
+        ```
+    type type_name as table of value_data_type [NOT NULL]
+        - We can store nested tables in our db tables but not associative arrays.
+    - **Associative arrays:**(any number for keys, even strings).
+        - Key must be unique.
+        - Keys don't need to be sequential.
+        - 
     - In memory tables. 
