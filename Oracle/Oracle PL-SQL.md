@@ -1337,9 +1337,9 @@ END;
     p_num.extend;
     p_num(5) := t_phone_number('FAX','999.99.9999');
     UPDATE emps_with_phones2 set phone_number = p_num where employee_id = 10;
-end;
+    end;
     ```
-- Sql cursors:
+- **Sql cursors:**
 
     - Cursors are pointers to the data.
     - Implicit cursors (to handle the selects) and explicit cursors. 
@@ -1360,7 +1360,6 @@ end;
         close cursor_name;
     end; 
 
-    
 
     ```SQL
     declare
@@ -1428,4 +1427,356 @@ end;
         close c_emps;
     end;
     ```
-- 
+    - Looping with cursors:
+    ```SQL
+    declare
+    cursor c_emps is select * from employees where department_id = 30;
+    v_emps c_emps%rowtype;
+    begin
+    open c_emps;
+    loop
+        fetch c_emps into v_emps;
+        dbms_output.put_line(v_emps.employee_id|| ' ' ||v_emps.first_name|| ' ' ||v_emps.last_name);
+    end loop;
+    close c_emps;
+    end; 
+    ---------------%notfound example
+    declare
+    cursor c_emps is select * from employees where department_id = 30;
+    v_emps c_emps%rowtype;
+    begin
+    open c_emps;
+    loop
+        fetch c_emps into v_emps;
+        exit when c_emps%notfound;
+        dbms_output.put_line(v_emps.employee_id|| ' ' ||v_emps.first_name|| ' ' ||v_emps.last_name);
+    end loop;
+    close c_emps;
+    end;
+    ---------------while loop example
+    declare
+    cursor c_emps is select * from employees where department_id = 30;
+    v_emps c_emps%rowtype;
+    begin
+    open c_emps;
+    fetch c_emps into v_emps;
+    while c_emps%found loop
+        dbms_output.put_line(v_emps.employee_id|| ' ' ||v_emps.first_name|| ' ' ||v_emps.last_name);
+        fetch c_emps into v_emps;
+        --exit when c_emps%notfound;
+    end loop;
+    close c_emps;
+    end;
+    ---------------for loop with cursor example
+    declare
+    cursor c_emps is select * from employees where department_id = 30;
+    v_emps c_emps%rowtype;
+    begin
+    open c_emps;
+    for i in 1..6 loop
+        fetch c_emps into v_emps;
+        dbms_output.put_line(v_emps.employee_id|| ' ' ||v_emps.first_name|| ' ' ||v_emps.last_name);
+    end loop;
+    close c_emps;
+    end;
+    ----- ----------FOR..IN clause example
+    declare
+    cursor c_emps is select * from employees where department_id = 30;
+    begin
+    for i in c_emps loop
+        dbms_output.put_line(i.employee_id|| ' ' ||i.first_name|| ' ' ||i.last_name);
+    end loop;
+    end;
+    ---------------FOR..IN with select example
+    begin
+    for i in (select * from employees where department_id = 30) loop
+        dbms_output.put_line(i.employee_id|| ' ' ||i.first_name|| ' ' ||i.last_name);
+    end loop;
+    end;
+    ```
+    - **Cursors with parameters:**
+        declare 
+            cursor cursor_name (parameter_name datatype...,)
+            is select_statement
+        begin
+            open cursor_name(parameter_values);
+            fetch cursor_name into variables, records, etc;
+            close cursor_name;
+        end; 
+        - We don't specify the precision in the parameter's datatype.
+        - Bind parameters with :b_parameter_name.
+        ```SQL
+        declare
+        cursor c_emps (p_dept_id number) is select first_name,last_name,department_name 
+                            from employees join departments using (department_id)
+                            where department_id = p_dept_id;
+        v_emps c_emps%rowtype;
+        begin
+        open c_emps(20);
+        fetch c_emps into v_emps;
+            dbms_output.put_line('The employees in department of '|| v_emps.department_name|| ' are :');
+            close c_emps;
+        open c_emps(20);
+            loop
+            fetch c_emps into v_emps;
+            exit when c_emps%notfound;
+            dbms_output.put_line(v_emps.first_name|| ' ' ||v_emps.last_name);
+            end loop;
+        close c_emps;
+        end;
+        --------------- bind variables as parameters
+        declare
+        cursor c_emps (p_dept_id number) is select first_name,last_name,department_name 
+                            from employees join departments using (department_id)
+                            where department_id = p_dept_id;
+        v_emps c_emps%rowtype;
+        begin
+        open c_emps(:b_emp);
+        fetch c_emps into v_emps;
+            dbms_output.put_line('The employees in department of '|| v_emps.department_name|| ' are :');
+            close c_emps;
+        open c_emps(:b_emp);
+            loop
+            fetch c_emps into v_emps;
+            exit when c_emps%notfound;
+            dbms_output.put_line(v_emps.first_name|| ' ' ||v_emps.last_name);
+            end loop;
+        close c_emps;
+        end;
+        ---------------cursors with two different parameters
+        declare
+        cursor c_emps (p_dept_id number) is select first_name,last_name,department_name 
+                            from employees join departments using (department_id)
+                            where department_id = p_dept_id;
+        v_emps c_emps%rowtype;
+        begin
+        open c_emps(:b_dept_id);
+        fetch c_emps into v_emps;
+            dbms_output.put_line('The employees in department of '|| v_emps.department_name|| ' are :');
+            close c_emps;
+        open c_emps(:b_dept_id);
+            loop
+            fetch c_emps into v_emps;
+            exit when c_emps%notfound;
+            dbms_output.put_line(v_emps.first_name|| ' ' ||v_emps.last_name);
+            end loop;
+        close c_emps;
+        
+        open c_emps(:b_dept_id2);
+        fetch c_emps into v_emps;
+            dbms_output.put_line('The employees in department of '|| v_emps.department_name|| ' are :');
+            close c_emps;
+        open c_emps(:b_dept_id2);
+            loop
+            fetch c_emps into v_emps;
+            exit when c_emps%notfound;
+            dbms_output.put_line(v_emps.first_name|| ' ' ||v_emps.last_name);
+            end loop;
+        close c_emps;
+        end;
+        --------------- cursor with parameters - for in loops
+        declare
+        cursor c_emps (p_dept_id number) is select first_name,last_name,department_name 
+                            from employees join departments using (department_id)
+                            where department_id = p_dept_id;
+        v_emps c_emps%rowtype;
+        begin
+        open c_emps(:b_dept_id);
+        fetch c_emps into v_emps;
+            dbms_output.put_line('The employees in department of '|| v_emps.department_name|| ' are :');
+            close c_emps;
+        open c_emps(:b_dept_id);
+            loop
+            fetch c_emps into v_emps;
+            exit when c_emps%notfound;
+            dbms_output.put_line(v_emps.first_name|| ' ' ||v_emps.last_name);
+            end loop;
+        close c_emps;
+        
+        open c_emps(:b_dept_id2);
+        fetch c_emps into v_emps;
+            dbms_output.put_line('The employees in department of '|| v_emps.department_name|| ' are :');
+            close c_emps;
+            
+            for i in c_emps(:b_dept_id2) loop
+            dbms_output.put_line(i.first_name|| ' ' ||i.last_name);
+            end loop;
+        end;
+        ---------------cursors with multiple parameters
+        declare
+        cursor c_emps (p_dept_id number , p_job_id varchar2) is select first_name,last_name,job_id,department_name 
+                            from employees join departments using (department_id)
+                            where department_id = p_dept_id
+                            and job_id = p_job_id;
+        v_emps c_emps%rowtype;
+        begin
+            for i in c_emps(50,'ST_MAN') loop
+            dbms_output.put_line(i.first_name|| ' ' ||i.last_name|| ' - ' || i.job_id);
+            end loop;
+            dbms_output.put_line(' - ');
+            for i in c_emps(80,'SA_MAN') loop
+            dbms_output.put_line(i.first_name|| ' ' ||i.last_name|| ' - ' || i.job_id);
+            end loop;
+        end;
+        --------------- An error example of using parameter name with the column name
+        declare
+        cursor c_emps (p_dept_id number , job_id varchar2) is select first_name,last_name,job_id,department_name 
+                            from employees join departments using (department_id)
+                            where department_id = p_dept_id
+                            and job_id = job_id;
+        v_emps c_emps%rowtype;
+        begin
+            for i in c_emps(50,'ST_MAN') loop
+            dbms_output.put_line(i.first_name|| ' ' ||i.last_name|| ' - ' || i.job_id);
+            end loop;
+            dbms_output.put_line(' - ');
+            for i in c_emps(80,'SA_MAN') loop
+            dbms_output.put_line(i.first_name|| ' ' ||i.last_name|| ' - ' || i.job_id);
+            end loop;
+        end;
+        ```
+    - **PL SQL Cursor attributes:**
+        - %FOUND
+        - %NOTFOUND
+        - %ISOPEN
+        - %ROWCOUNT: returns the number of rows fetched (error if not open).
+        ```SQL
+        declare
+        cursor c_emps is select * from employees where department_id = 50;
+        v_emps c_emps%rowtype;
+        begin
+        if not c_emps%isopen then
+            open c_emps;
+            dbms_output.put_line('hello');
+        end if;
+        dbms_output.put_line(c_emps%rowcount);
+        fetch c_emps into v_emps;
+        dbms_output.put_line(c_emps%rowcount);
+        dbms_output.put_line(c_emps%rowcount);
+        fetch c_emps into v_emps;
+        dbms_output.put_line(c_emps%rowcount);
+        close c_emps;
+        
+        open c_emps;
+            loop
+            fetch c_emps into v_emps;
+            exit when c_emps%notfound or c_emps%rowcount>5;
+            dbms_output.put_line(c_emps%rowcount|| ' ' ||v_emps.first_name|| ' ' ||v_emps.last_name);
+            end loop;
+        close c_emps;
+        end;
+        ``` 
+    - **For update clause:**
+        - Locks the rows of the select and keep them locked until you close the cursor.
+        - nowait option will terminate the execution if there is a lock.
+        - Default option is wait (specify number of seconds to wait and then exit if rows are still locked).
+        - for update of to lock only the specified columns.
+
+        cursor cursor_name (parameter_name datatype, ...)
+            is select_statement
+            for update (of colums) [nowait | wait n]
+        
+        ```SQL
+        grant create session to my_user;
+        grant select any table to my_user;
+        grant update on hr.employees_copy to my_user;
+        grant update on hr.departments to my_user;
+        UPDATE EMPLOYEES_COPY SET PHONE_NUMBER = '1' WHERE EMPLOYEE_ID = 100;
+        declare
+        cursor c_emps is select employee_id,first_name,last_name,department_name
+            from employees_copy join departments using (department_id)
+            where employee_id in (100,101,102)
+            for update;
+        begin
+        /* for r_emps in c_emps loop
+            update employees_copy set phone_number = 3
+            where employee_id = r_emps.employee_id; 
+        end loop; */
+        open c_emps;
+        end;
+        --------------- example of wait with second
+        declare
+        cursor c_emps is select employee_id,first_name,last_name,department_name
+            from employees_copy join departments using (department_id)
+            where employee_id in (100,101,102)
+            for update of employees_copy.phone_number, 
+            departments.location_id wait 5;
+        begin
+        /* for r_emps in c_emps loop
+            update employees_copy set phone_number = 3
+            where employee_id = r_emps.employee_id; 
+        end loop; */
+        open c_emps;
+        end;
+        ---------------example of nowait
+        declare
+        cursor c_emps is select employee_id,first_name,last_name,department_name
+            from employees_copy join departments using (department_id)
+            where employee_id in (100,101,102)
+            for update of employees_copy.phone_number, 
+            departments.location_id nowait;
+        begin
+        /* for r_emps in c_emps loop
+            update employees_copy set phone_number = 3
+            where employee_id = r_emps.employee_id; 
+        end loop; */
+        open c_emps;
+        end;
+        ```
+    - **Where current of clause:**
+        - Used together with the for update clause.
+        - Faster than updating using the PK.
+            - First get the related rows from the index.
+            - Then gets the row id from the column.
+            - Then does the update.
+
+        where current of cursor_name.
+        - It uses the row id so it is fast.
+        - We cannot use it with joins, group functions, etc. (because it doesn't have a rowid in the result set).
+        ```SQL
+        declare
+        cursor c_emps is select * from employees 
+                    where department_id = 30 for update;
+        begin
+        for r_emps in c_emps loop
+            update employees set salary = salary + 60
+                where current of c_emps;
+        end loop;  
+        end;
+        ---------------Wrong example of using where current of clause
+        declare
+        cursor c_emps is select e.* from employees e, departments d
+                            where 
+                            e.department_id = d.department_id
+                            and e.department_id = 30 for update;
+        begin
+        for r_emps in c_emps loop
+            update employees set salary = salary + 60
+                where current of c_emps;
+        end loop;  
+        end;
+        ---------------An example of using rowid like where current of clause
+        declare
+        cursor c_emps is select e.rowid,e.salary from employees e, departments d
+                            where 
+                            e.department_id = d.department_id
+                            and e.department_id = 30 for update;
+        begin
+        for r_emps in c_emps loop
+            update employees set salary = salary + 60
+                where rowid = r_emps.rowid;
+        end loop;  
+        end;
+        ```
+    - **Ref cursors:**
+        - Pointers (in memory) to the actual cursors.
+        - We cannot assign null values.
+        - Use in table-views create codes.
+        - Store in collections.
+        - Compare.
+    - There are two types: restricted and unrestricted. 
+
+    type cursor_type_name is ref cursor [return type]
+    open cursor_variable_name for query;
+
+    - 
