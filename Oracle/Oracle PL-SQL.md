@@ -1959,3 +1959,114 @@ END;
         close rc_emps;
         end;
         ```
+- **Exceptions:**
+    - Runtime errors may damage your data.
+    - We can explicit raise an exception.
+    - We can handle exceptions in 3 ways: 
+        1. Trap (write a method to handle it).
+        2. Propagate (default option)
+        3. Trap and propagate. 
+    - 3 types of exceptions:
+        1. Predefined oracle server errors.
+        2. Nonpredefined oracle server errors.
+        3. User-defined errors.
+    - If we want to deal with the non predefined exceptions we need to declare them in the declaration section.
+    - sqlcode returns the code of the exception.
+    - sqlerrm returns the sql error message.
+    - Inner blocks can have their own exceptions.
+    ```SQL
+    ----------------- Handling the exception
+    declare
+    v_name varchar2(6);
+    begin
+    select first_name into v_name from employees where employee_id = 50;
+    dbms_output.put_line('Hello');
+    exception
+    when no_data_found then
+        dbms_output.put_line('There is no employee with the selected id');
+    end;
+    ----------------- Handling multiple exceptions
+    declare
+    v_name varchar2(6);
+    v_department_name varchar2(100);
+    begin
+    select first_name into v_name from employees where employee_id = 100;
+    select department_id into v_department_name from employees where first_name = v_name;
+    dbms_output.put_line('Hello '|| v_name || '. Your department id is : '|| v_department_name );
+    exception
+    when no_data_found then
+        dbms_output.put_line('There is no employee with the selected id');
+    when too_many_rows then
+        dbms_output.put_line('There are more than one employees with the name '|| v_name);
+        dbms_output.put_line('Try with a different employee');
+    end;
+    ----------------- when others then example
+    declare
+    v_name varchar2(6);
+    v_department_name varchar2(100);
+    begin
+    select first_name into v_name from employees where employee_id = 103;
+    select department_id into v_department_name from employees where first_name = v_name;
+    dbms_output.put_line('Hello '|| v_name || '. Your department id is : '|| v_department_name );
+    exception
+    when no_data_found then
+        dbms_output.put_line('There is no employee with the selected id');
+    when too_many_rows then
+        dbms_output.put_line('There are more than one employees with the name '|| v_name);
+        dbms_output.put_line('Try with a different employee');
+    when others then
+        dbms_output.put_line('An unexpected error happened. Connect with the programmer..');
+    end;
+    ----------------- sqlerrm & sqlcode example
+    declare
+    v_name varchar2(6);
+    v_department_name varchar2(100);
+    begin
+    select first_name into v_name from employees where employee_id = 103;
+    select department_id into v_department_name from employees where first_name = v_name;
+    dbms_output.put_line('Hello '|| v_name || '. Your department id is : '|| v_department_name );
+    exception
+    when no_data_found then
+        dbms_output.put_line('There is no employee with the selected id');
+    when too_many_rows then
+        dbms_output.put_line('There are more than one employees with the name '|| v_name);
+        dbms_output.put_line('Try with a different employee');
+    when others then
+        dbms_output.put_line('An unexpected error happened. Connect with the programmer..');
+        dbms_output.put_line(sqlcode || ' ---> '|| sqlerrm);
+    end;
+    ----------------- Inner block exception example
+    declare
+    v_name varchar2(6);
+    v_department_name varchar2(100);
+    begin
+    select first_name into v_name from employees where employee_id = 100;
+    begin
+        select department_id into v_department_name from employees where first_name = v_name;
+        exception
+        when too_many_rows then
+        v_department_name := 'Error in department_name';
+    end;
+    dbms_output.put_line('Hello '|| v_name || '. Your department id is : '|| v_department_name );
+    exception
+    when no_data_found then
+        dbms_output.put_line('There is no employee with the selected id');
+    when too_many_rows then
+        dbms_output.put_line('There are more than one employees with the name '|| v_name);
+        dbms_output.put_line('Try with a different employee');
+    when others then
+        dbms_output.put_line('An unexpected error happened. Connect with the programmer..');
+        dbms_output.put_line(sqlcode || ' ---> '|| sqlerrm);
+    end;
+    /
+    select * from employees where first_name = 'Steven';
+    ```
+    - Non predefined exceptions (unnamed exceptions).
+    - We cannot trap with the error codes.
+    - We declare exceptions with the eror codes.
+    
+    exception_name EXCEPTION;
+    PRAGMA EXCEPTION_INIT(exception_name, error_code)
+
+    - Pragma is a compiler directive, to provide an instruction to the compiler.
+    
