@@ -2069,4 +2069,111 @@ END;
     PRAGMA EXCEPTION_INIT(exception_name, error_code)
 
     - Pragma is a compiler directive, to provide an instruction to the compiler.
+    ```SQL
+    begin
+    UPDATE employees_copy set email = null where employee_id = 100;
+    end;
+    -----------------HANDLING a nonpredefined exception
+    declare
+    cannot_update_to_null exception;
+    pragma exception_init(cannot_update_to_null,-01407);
+    begin
+    UPDATE employees_copy set email = null where employee_id = 100;
+    exception
+    when cannot_update_to_null then
+        dbms_output.put_line('You cannot update with a null value!');
+    end;
+    ```
+    - In user-defined exception we dont use an Oracle error number because we don't have one.
+    - We can raise our exception before or after handling it.
+    ```SQL
+    ----------------- creating a user defined exception
+    declare
+    too_high_salary exception;
+    v_salary_check pls_integer;
+    begin
+    select salary into v_salary_check from employees where employee_id = 100;
+    if v_salary_check > 20000 then
+        raise too_high_salary;
+    end if;
+    --we do our business if the salary is under 2000
+    dbms_output.put_line('The salary is in an acceptable range');
+    exception
+    when too_high_salary then
+    dbms_output.put_line('This salary is too high. You need to decrease it.');
+    end;
+    ----------------- raising a predefined exception
+    declare
+    too_high_salary exception;
+    v_salary_check pls_integer;
+    begin
+    select salary into v_salary_check from employees where employee_id = 100;
+    if v_salary_check > 20000 then
+        raise invalid_number;
+    end if;
+    --we do our business if the salary is under 2000
+    dbms_output.put_line('The salary is in an acceptable range');
+    exception
+    when invalid_number then
+        dbms_output.put_line('This salary is too high. You need to decrease it.');
+    end;
+    ----------------- raising inside of the exception
+    declare
+    too_high_salary exception;
+    v_salary_check pls_integer;
+    begin
+    select salary into v_salary_check from employees where employee_id = 100;
+    if v_salary_check > 20000 then
+        raise invalid_number;
+    end if;
+    --we do our business if the salary is under 2000
+    dbms_output.put_line('The salary is in an acceptable range');
+    exception
+    when invalid_number then
+        dbms_output.put_line('This salary is too high. You need to decrease it.');
+    raise;
+    end;
+    ```
+    - Raise_application_error to raise applications out of the block.
+    - Raises the error to the caller (for business exceptions).
     
+    raise_application_error(error_number, error_message [, TRUE | FALSE])
+
+    - Third parameter is the error stack. If false all the other error messages are deleted.
+    - Will stop execution (need to be handled with WHEN OTHERS).
+    - Error between -20000 and 20999.
+    ```SQL
+    declare
+    too_high_salary exception;
+    v_salary_check pls_integer;
+    begin
+    select salary into v_salary_check from employees where employee_id = 100;
+    if v_salary_check > 20000 then
+        --raise too_high_salary;
+    raise_application_error(-20243,'The salary of the selected employee is too high!');
+    end if;
+    --we do our business if the salary is under 2000
+    dbms_output.put_line('The salary is in an acceptable range');
+    exception
+    when too_high_salary then
+    dbms_output.put_line('This salary is too high. You need to decrease it.');
+    end;
+    ----------------- raise inside of the exception section
+    declare
+    too_high_salary exception;
+    v_salary_check pls_integer;
+    begin
+    select salary into v_salary_check from employees where employee_id = 100;
+    if v_salary_check > 20000 then
+        raise too_high_salary;
+    end if;
+    --we do our business if the salary is under 2000
+    dbms_output.put_line('The salary is in an acceptable range');
+    exception
+    when too_high_salary then
+    dbms_output.put_line('This salary is too high. You need to decrease it.');
+    raise_application_error(-01403,'The salary of the selected employee is too high!',true);
+    end;
+    ```
+- **Functions and stored procedures:**
+    - 
