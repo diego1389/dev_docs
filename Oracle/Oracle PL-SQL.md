@@ -2243,4 +2243,5 @@ END;
         dbms_output.put_line('Procedure finished executing!');
     end
     ```
-    - For IN parameters you can write the IN keyword or leave it empty and it will be IN parameter by default.
+    - For In parameters you can write the IN keyword or leave it empty and it will be IN parameter by default.
+    - 
