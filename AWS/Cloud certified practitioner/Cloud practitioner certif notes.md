@@ -55,4 +55,44 @@
         - 216 points of presence in 84 cities across 42 countries.
         - Content is delivered to end users with lower latency.
     - Region table to check availability of the service in your region.
+        - Shared responsability model. Customer is responsable for the security in the cloud (configuration, etc). AWS is responsable for the security of the cloud.
     
+    - **IAM:** identity access management.
+        - It is a global service (doesn't need a region).
+        - Since it is a global service when we create users they are for all regions.
+        - Create users and assign them to group.
+        - Root account created by default. 
+        - One user represents one person in the organization.
+        - Groups can only contain users not other groups.
+        - Not all users have to belong to a group.
+        - A user can belong to multiple groups.
+        - User / groups can be assigned JSON documents called policies. These policies helps us to define permissions for our users.
+        - IAM -> Users -> Add user -> Add access to the AWS console -> And password -> Add user to a group -> Create group -> Attach policy to the group (admins) -> Create group. 
+        - -> Tags
+            - Tags are a way to mark the users and add them some attributes but they don't change how AWS works.
+        - -> Review and create user.
+        - You can download a csv with the user information. 
+        - The policy has an effect (Allow), an action (get*, list*) and a resource (*) to grant access to the users to different actions in certain resources.
+        - You can create your custom policy usinga visual editor or creation the JSON file.
+        - Password policy: 
+            - Minimum length.
+            - Require specific character types.
+            - Allow users to change their passwords.
+            - Require your users to change the password after some time.
+            - Prevent password re use.
+            - To change the policy: IAM -> Account settings -> Set password policy -> Change it and save changes.
+        - Multi factor authentication (MFA device).
+            - Virtual MFA device (google authenticaticator or Authy).
+            - Universal 2nd factor (U2F) Security Key (USB) (Yubikey).
+            - In the Dashboard of the the root user -> Security Alerts (Enable MFA) ->  Install of compatible application (Authy) -> Scan del QR code -> Write two consecutive 
+    - Three ways to access AWS:
+        1. AWS management console.
+        2. AWS Command Line Interface (CLI).
+            - Install AWS CLI on windows (download version 2 for windows).
+            - Open CMD and type aws --version 
+        3. AWS Software Developer Kit (SDK). For this you need to generate access keys through AWS Console.
+            -  Access Key ID : user name
+            - Secret Access Key : password
+            - To create an access key login with an account user (not root).
+                - IAM -> Users => Select user => Security Credentials Tab => Create Access Key 
+         
