@@ -2319,5 +2319,41 @@ END;
     
     EXECUTE PROCEDURE_NAME(parameter_name => value | expression)
 
-    - When it has both positional and named notations at the same time it is called mixed notation.
-    
+     - When it has both positional and named notations at the same time it is called mixed notation. But you cannot use positional notation AFTER named notation.
+    - You can use named notation for both in and out parameters.
+    ```SQL
+        ----------------- A standard procedure creation with a default value
+    create or replace PROCEDURE PRINT(TEXT IN VARCHAR2 := 'This is the print function!.') IS
+    BEGIN
+    DBMS_OUTPUT.PUT_LINE(TEXT);
+    END;
+    -----------------Executing a procedure without any parameter. It runs because it has a default value.
+    exec print();
+    -----------------Running a procedure with null value will not use the default value 
+    exec print(null);
+    -----------------Procedure creation of a default value usage
+    create or replace procedure add_job(job_id pls_integer, job_title varchar2, 
+                                        min_salary number default 1000, max_salary number default null) is
+    begin
+    insert into jobs values (job_id,job_title,min_salary,max_salary);
+    print('The job : '|| job_title || ' is inserted!..');
+    end;
+    -----------------A standard run of the procedure
+    exec ADD_JOB('IT_DIR','IT Director',5000,20000); 
+    -----------------Running a procedure with using the default values
+    exec ADD_JOB('IT_DIR2','IT Director',5000); 
+    -----------------Running a procedure with the named notation
+    exec ADD_JOB('IT_DIR5','IT Director',max_salary=>10000); 
+    -----------------Running a procedure with the named notation example 2
+    exec ADD_JOB(job_title=>'IT Director',job_id=>'IT_DIR7',max_salary=>10000 , min_salary=>500);
+    ``` 
+    - Functions must return some value.
+    - Functions can also get IN and OUT parameters.
+    - You cannot run functions standalone and can be used within a select statement.
+
+    CREATE [OR REPLACE] FUNCTION function_name [(parameter_name [IN | OUT | IN OUT] type DEFAULT value|expression [, ...])] RETURN return_data_type {IS | AS}
+
+    - We can return null value even if we have a return type.
+    - To use a function in SQL expression they must return a valid SQL Data type (not a record for example). Also cannot call a function that contains a DML Statement. 
+    - You need to have execute privilege to execute a function.
+    - 
