@@ -2356,4 +2356,57 @@ END;
     - We can return null value even if we have a return type.
     - To use a function in SQL expression they must return a valid SQL Data type (not a record for example). Also cannot call a function that contains a DML Statement. 
     - You need to have execute privilege to execute a function.
+    - If you click run in a function it display a pop-up window with an anonymous block to test your function.
+
+    - To drop a function:
+
+    DROP FUNCTION function_name;
+
+    ```SQL
+    CREATE OR REPLACE FUNCTION get_avg_sal (p_dept_id departments.department_id%type) RETURN number AS 
+    v_avg_sal number;
+    BEGIN
+    select avg(salary) into v_avg_sal from employees where department_id = p_dept_id;
+    RETURN v_avg_sal;
+    END get_avg_sal;
+    ----------------- using a function in begin-end block
+    declare
+    v_avg_salary number;
+    begin
+    v_avg_salary := get_avg_sal(50);
+    dbms_output.put_line(v_avg_salary);
+    end;
+    ----------------- using functions in a select clause
+    select employee_id,first_name,salary,department_id,get_avg_sal(department_id) avg_sal from employees;
+    ----------------- using functions in group by, order by, where clauses 
+    select get_avg_sal(department_id) from employees
+    where salary > get_avg_sal(department_id)
+    group by get_avg_sal(department_id) 
+    order by get_avg_sal(department_id);
+    ----------------- dropping a function
+    drop function get_avg_sal;
+    ```
+    - Local subprogram: we can create subprograms inside of an anonymous blocks or in another subprogram.
+    - Local functions or procedure have to be at THE END OF the Declaration section.
+    ```SQL
+        ----------------- creating and using subprograms in anonymous blocks - false usage
+    create table emps_high_paid as select * from employees where 1=2;
+    /
+    declare
+    procedure insert_high_paid_emp(emp_id employees.employee_id%type) is 
+        emp employees%rowtype;
+        begin
+        emp := get_emp(emp_id);
+        insert into emps_high_paid values emp;
+        end;
+    function get_emp(emp_num employees.employee_id%type) return employees%rowtype is
+        emp employees%rowtype;
+        begin
+        select * into emp from employees where employee_id = emp_num;
+        return emp;
+        end;
+    begin
+    ```
+    - You can overload local subprograms and package subprograms but not standalone subprograms.
+    - If parameters are in the same family or subtype it won't work.
     - 
