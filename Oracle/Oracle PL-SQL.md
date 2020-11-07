@@ -2409,4 +2409,132 @@ END;
     ```
     - You can overload local subprograms and package subprograms but not standalone subprograms.
     - If parameters are in the same family or subtype it won't work.
+    ```SQL
+    declare
+    procedure insert_high_paid_emp(p_emp employees%rowtype) is 
+        emp employees%rowtype;
+        e_id number;
+        function get_emp(emp_num employees.employee_id%type) return employees%rowtype is
+        begin
+            select * into emp from employees where employee_id = emp_num;
+            return emp;
+        end;
+        function get_emp(emp_email employees.email%type) return employees%rowtype is
+        begin
+            select * into emp from employees where email = emp_email;
+            return emp;
+        end;
+        begin
+        emp := get_emp(p_emp.employee_id);
+        insert into emps_high_paid values emp;
+        end;
+    begin
+    for r_emp in (select * from employees) loop
+        if r_emp.salary > 15000 then
+        insert_high_paid_emp(r_emp);
+        end if;
+    end loop;
+    end;
+    ----------------- overloading with multiple usages
+    declare
+    procedure insert_high_paid_emp(p_emp employees%rowtype) is 
+        emp employees%rowtype;
+        e_id number;
+        function get_emp(emp_num employees.employee_id%type) return employees%rowtype is
+        begin
+            select * into emp from employees where employee_id = emp_num;
+            return emp;
+        end;
+        function get_emp(emp_email employees.email%type) return employees%rowtype is
+        begin
+            select * into emp from employees where email = emp_email;
+            return emp;
+        end;
+        function get_emp(f_name varchar2, l_name varchar2) return employees%rowtype is
+        begin
+            select * into emp from employees where first_name = f_name and last_name = l_name;
+            return emp;
+        end;
+        begin
+        emp := get_emp(p_emp.employee_id);
+        insert into emps_high_paid values emp;
+        emp := get_emp(p_emp.email);
+        insert into emps_high_paid values emp;
+        emp := get_emp(p_emp.first_name,p_emp.last_name);
+        insert into emps_high_paid values emp;
+        end;
+    begin
+    for r_emp in (select * from employees) loop
+        if r_emp.salary > 15000 then
+        insert_high_paid_emp(r_emp);
+        end if;
+    end loop;
+    end;
+    ```
+    - You should handle the exception in the subprograms as well as in the main programs that call them.
+
+    ```SQL
+    ----------------- An unhandled exception in function
+    create or replace function get_emp(emp_num employees.employee_id%type) return employees%rowtype is
+    emp employees%rowtype;
+    begin
+    select * into emp from employees where employee_id = emp_num;
+    return emp;
+    end;
+    ----------------- calling that function in an anonymous block
+    declare
+    v_emp employees%rowtype;
+    begin
+    dbms_output.put_line('Fetching the employee data!..');
+    v_emp := get_emp(10);
+    dbms_output.put_line('Some information of the employee are : ');
+    dbms_output.put_line('The name of the employee is : '|| v_emp.first_name);
+    dbms_output.put_line('The email of the employee is : '|| v_emp.email);
+    dbms_output.put_line('The salary of the employee is : '|| v_emp.salary);
+    end;
+    ----------------- hanling the exception wihout the return clause - not working
+    create or replace function get_emp(emp_num employees.employee_id%type) return employees%rowtype is
+    emp employees%rowtype;
+    begin
+    select * into emp from employees where employee_id = emp_num;
+    return emp;
+    exception
+    when no_data_found then
+        dbms_output.put_line('There is no employee with the id' || emp_num);
+    end;
+    /*handling and raising the exception*/
+    
+    create or replace function get_emp(emp_num employees.employee_id%type) return employees%rowtype is
+    emp employees%rowtype;
+    begin
+    select * into emp from employees where employee_id = emp_num;
+    return emp;
+    exception
+    when no_data_found then
+        dbms_output.put_line('There is no employee with the id '|| emp_num);
+        raise no_data_found;
+    end;
+    ----------------- handling all possible exception cases
+    create or replace function get_emp(emp_num employees.employee_id%type) return employees%rowtype is
+    emp employees%rowtype;
+    begin
+    select * into emp from employees where employee_id = emp_num;
+    return emp;
+    exception
+    when no_data_found then
+        dbms_output.put_line('There is no employee with the id '|| emp_num);
+        raise no_data_found;
+    when others then
+        dbms_output.put_line('Something unexpected happened!.');
+    return null;
+    end;
+    ```
+    - You can filter in the functions right clicking and select Apply filter. You have to clear the filter after you use. It remains even if you close the sql developer.
+    - We can also search for procedures and other objects in the User_source, dba_source and all_source data dictionary views.
+        - They have name (procedure_name for example), type (procedure), line (line number) and text (line's content).
+    - If you drop the function or procedure you will also remove the privileges of that function. If you create or replace the function/procedure the privileges remain.
+- **Regular table functions:**
+    - Table functions can be queried as a regular table.
+    - They return a table of varrays or nested tables.
+    - Regular table function create the data table in memory and then returns the whole thing.
     - 
