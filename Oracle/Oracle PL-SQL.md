@@ -2537,4 +2537,10 @@ END;
     - Table functions can be queried as a regular table.
     - They return a table of varrays or nested tables.
     - Regular table function create the data table in memory and then returns the whole thing.
-    - 
+- **Pipelined functions:**
+    - They return each row as soon as it has it.
+    - You will not have memory problems.
+- If your collection returns a small amount of data use a regular, otherwise use pipelined.
+- In order to call them as a table you need to use the table operator (for older versions of oracle).
+- 
+- 
