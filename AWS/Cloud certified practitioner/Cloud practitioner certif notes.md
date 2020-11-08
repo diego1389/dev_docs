@@ -95,4 +95,45 @@
             - Secret Access Key : password
             - To create an access key login with an account user (not root).
                 - IAM -> Users => Select user => Security Credentials Tab => Create Access Key 
-         
+                - aws configure
+                    - Insert AWS Key Id.
+                    - Insert AWS Secret Access Key.
+                    - Default region name.
+                    - Default output format (Enter).
+                - aws iam list-users
+            - IAM roles for services
+                - Some AWS service will need to perform actions on your behalf (EC2 instance virtual server).
+                - To do so we will assign permissions to AWS services with IAM roles.
+                - EC2 instance roles.
+                - Lamda function roles.
+                - Roles for CloudFormation.
+                IAM -> Roles -> Create Role -> AWS service -> EC2 -> Next: permissions -> IAMReadOnlyAccess 
+                    -> Tags -> Review (name) => Create.
+        - IAM Security tools.
+            - **IAM Credentials Report:** (account-level), which is a report that lists all your account's users and the status of their various credentials.
+                IAM -> Credential report ->  Download.
+                - when the user created, password policies, access_key_1_active.
+            - **IAM Access Advisor:** (user-level), shows the service permissions granted to a user and when those where last accessed.
+                IAM -> Users -> Select a user -> Access advisor.
+                    - It shows which last services where used.
+        - IAM best practices:
+            - Don't use root account.
+            - One physical user = one aws user.
+            - Assign users to groups and assign permissions to grupos (manage permissions at group level not user level).
+            - Create a strong password policy.
+            - Use and enforce the user of MFA.
+            - Use Access Keys for programmatic access (CLI / SDK).
+            - Audit permissions of your account with the IAM credentials report.
+            - Never share IAM users and access keys.
+        - **Shared responsability model for IAM:**
+            - AWS is responsabie for:
+                - Infraestructure
+                - Configuration and vulnerability analysis.
+                - Compliance validation.
+            - You
+                - Users, groups, roles policies management and monitoring.
+                - Enable MFA on all accounts.
+                - Rotate all your keys often.
+                - Use IAM tools to apply appropiate permisssions.
+                - Analyze access patterns and review permissions.
+        
