@@ -2542,5 +2542,63 @@ END;
     - You will not have memory problems.
 - If your collection returns a small amount of data use a regular, otherwise use pipelined.
 - In order to call them as a table you need to use the table operator (for older versions of oracle).
-- 
-- 
+- When you apply order by clause to pipelined it is slow but still faster than regular table functions.
+    ```SQL
+    ----------------- Creating the type
+    CREATE TYPE t_day AS OBJECT (
+    v_date DATE,
+    v_day_number INT
+    );
+    ----------------- creating a nested table type
+    create type t_days_tab is table of t_day;
+    ----------------- creating a regular table function
+    create or replace function f_get_days(p_start_date date , p_day_number int) 
+                return t_days_tab is
+    v_days t_days_tab := t_days_tab();
+    begin
+    for i in 1 .. p_day_number loop
+    v_days.extend();
+    v_days(i).v_date := p_start_date + i;
+    v_days(i).v_day_number := to_number(to_char(v_days(i).v_date,'DDD'));
+    end loop;
+    return v_days;
+    end;
+    ----------------- querying from the regular table function
+    select * from table(f_get_days(sysdate,1000000));
+    ----------------- querying from the regular table function without the table operator
+    select * from f_get_days(sysdate,1000000);
+    ----------------- creating a pipelined table function
+    create or replace function f_get_days_piped (p_start_date date , p_day_number int) 
+                return t_days_tab PIPELINED is
+    begin
+    for i in 1 .. p_day_number loop
+    PIPE ROW (t_day(p_start_date + i,
+                    to_number(to_char(p_start_date + i,'DDD'))));
+    end loop;
+    RETURN;
+    end;
+    ----------------- querying from the pipelined table function
+    select * from f_get_days_piped(sysdate,1000000)
+    ```
+
+- **Packages:**
+    - They group subprograms, types, variables, etc in one container.
+    - PGA: Program Global Area. When you call a fuction or procedure it takes from the storage and moves it to the PGA (in the database memory).
+    - When a user calls a function or proceduce from a package, the whole package is loaded in the SGA, so it doesnt have to load it again when another user calls something from the same package.
+    - SGA: System global area (shared by all users in the dba).
+    - Memory only stores the information, it is executed by the processor.
+    - Variables exists only in the PGA, when a user calls a variable from a package it takes it from the SGA and moves it to the PGA.
+    - Modularity.
+    - Easy maintenance.
+    - Encapsulation and security: only the functions specified in the package specs are accesible (the ones specified in the body dont).
+    - Performance.
+    - Functionality (persistence of viable and cursors in packages).
+    - Overloading.
+    - The packages consists of two parts:
+        - Package specification (specs). F
+            - For globalization, declaration part.
+            - This objects are public.
+        - Package body. 
+            - Implementation of the functions declared in the specs.
+            - If a subprogram is not specified in the spec is not visible to the others (private).
+            - 
