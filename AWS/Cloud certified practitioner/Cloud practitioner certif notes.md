@@ -136,4 +136,41 @@
                 - Rotate all your keys often.
                 - Use IAM tools to apply appropiate permisssions.
                 - Analyze access patterns and review permissions.
-        
+        - You can create a budget in the billing section. 
+            Billing -> Create budget -> Cost budget -> Recurring -> 10 dollars monthly -> Configure threshold 
+    
+    - **EC2 Section:**
+        - Elastic Compute Cloud, infraestructure as a service.
+            - You can rent VM.
+            - You can store data on virtual drives (EBS).
+            - Distribute load accross machines (ELB).
+            - Scale services using auto scaling group (ASG).
+        -  Configuration options:
+            - OS (Windows and Linux).
+            - Compute power access (CPU).
+            - Random access memory.
+            - Storage space:
+                - Network attackes (EBS & EFS).
+                - Hardware (EC2 Instance Store).
+            - Network card.
+            - Firewall rules.
+            - Bootstrap script (configure at first launch).
+        - EC2 -> Instances -> Launch instance -> Choose amazon AMI (template) -> Choose an instance type based on your needs -> Configure instance details -> User data text (copy script to configure a web service) -> Add storage -> Add tags -> Configure security group (firewall) (Add rule -> http -> port:80 -> from 0.0.0.0/0 (everywhere)) -> Review and launch -> Create new key pair.
+        - Once finished launching it gives you a public ip address to watch the website.
+        - Once you stop your instance you don't have to pay for it.
+        - You can also terminate your instance.
+        - If you stop and start the instance you get a new public ip.
+        - Security groups:
+            - They only contain allow rules.
+            - Can reference by IP or by security group.
+            - Firewall
+            - Are going to regulate access to ports, authorized ip ranges, control the inbound network (from the other to the instance) and outbound network (from the instance to the other).
+            - SSH port 22.
+            - FTP port 21.
+            - SFTP port 22.
+            - HTTP port 80 (unsecured websites).
+            - HTTPS port 443 (secured websites).
+            - Remote Desktop Protocol port3389
+            - You can go to security groups and edit inbound and outbound rules.
+            You can reuse security groups in different instances.
+            -  
