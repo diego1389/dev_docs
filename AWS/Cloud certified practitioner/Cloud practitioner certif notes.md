@@ -89,7 +89,11 @@
         1. AWS management console.
         2. AWS Command Line Interface (CLI).
             - Install AWS CLI on windows (download version 2 for windows).
-            - Open CMD and type aws --version 
+            - Open CMD and type:
+            
+            ```batch
+            aws --version
+            ``` 
         3. AWS Software Developer Kit (SDK). For this you need to generate access keys through AWS Console.
             -  Access Key ID : user name
             - Secret Access Key : password
@@ -100,7 +104,9 @@
                     - Insert AWS Secret Access Key.
                     - Default region name.
                     - Default output format (Enter).
-                - aws iam list-users
+                    ```batch
+                    aws iam list-users
+                    ```
             - IAM roles for services
                 - Some AWS service will need to perform actions on your behalf (EC2 instance virtual server).
                 - To do so we will assign permissions to AWS services with IAM roles.
@@ -173,4 +179,16 @@
             - Remote Desktop Protocol port3389
             - You can go to security groups and edit inbound and outbound rules.
             You can reuse security groups in different instances.
-            -  
+    - Connect to our instance using **ssh**:
+    ```batch
+     ssh -i .\EC2Tutorial.pem ec2-user@18.223.114.120
+    ```
+    - Check that the security file has full access permissions for your user.
+    - **EC2 instance connect:** Instances -> Select instance -> Connect -> opens an ssh terminal in the browser (aws will automatically upload the key to the instance).
+    - This doesn't work if you block the ssh port.
+    - **Amazon instance roles:**
+        - Attach role to instance: Select the instance => Security => Modify IAM role => DemoRoleForEC2.
+        ```batch
+        aws iam list-users
+        ```
+        - 
