@@ -56,6 +56,8 @@
         - Content is delivered to end users with lower latency.
     - Region table to check availability of the service in your region.
         - Shared responsability model. Customer is responsable for the security in the cloud (configuration, etc). AWS is responsable for the security of the cloud.
+        - Customer is responsible for operating system updates and patches of the instances.
+
     
     - **IAM:** identity access management.
         - It is a global service (doesn't need a region).
@@ -191,4 +193,48 @@
         ```batch
         aws iam list-users
         ```
+    - **EC2 Instance Launch types**
+        - EC2 On demand:
+            - Billing per second after the first minute.
+            - Has the hightest cost but not upfront payment.
+            - No long-term commitment.
+        - EC2 Reserved instance (minimum of 1 year, 1 or three not between 1 and three).
+            - Up to 75 % discount compared to on-demand.
+            - Reserve a specific instance type.
+        - Convertible reserved (long workloads).
+            - Can change the EC2 instance type.
+            - Up to 54 % discount.
+        - Scheduled reserved instances.
+            - Specific time window (fraction of day).
+        - EC2 Spot instances
+            - Discount of 90 % compared to On-demand but you can lose them if your max price is less than the current spot price.
+            - Not for critical job.
+        - For workloads that are resilient to failure (batch jobs, image proccessing). 
+        - Dedicated hosts. 
+            - Physical server in a data center.
+            - Compliance requirementes and reduce costs by allowing you to user your existing server-bound software licenses. 
+            - Allocated for your account for a 3 year period reservation.
+            - More expensive. 
+            - Per host billing. 
+        - Dedicated instances (hardware dedicated to you).
+            - May share hardware with other instances in the same account.
+            - No control over instance placement.
+            - Per instance billing.
+    - EBS Volume (Elastic Block Store).
+        - Network drive that you can attach to your instances while they run.
+        - Persist data even after the instance termination.
+        - Can only be mounted to one instance at a time.
+        - Bound to a specific availability zone.
+        - Network USB stick.
+        - 30 GB of free EBS storage of type gp2 per month.
+        - It's not a physical drive.
+        - Can be detached from an EC2 instance and atached to another one quickly.
+        - It's locked to an Availability Zone (AZ).
+        - To move volume across you first need to snapshot it.
+        - Have a provisioned capacity in advance (size in GBs).
+        - You can increase capacity over time.
+        - Can have more than one EBS attached to the same instance.
+        - It is possible to create an EBS volume and leave them unatached.
+        - Instance details root device and block devices (EBS volumes).
+        - A volume is created when you create your EC2 instance.
         - 
