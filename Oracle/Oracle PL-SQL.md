@@ -2904,4 +2904,36 @@ END;
     ```
     - There are dictionary views to look for information about the packages: USER_SOURCE/ ALL_SOURCE / DBA_SOURCE / USER_OBJECTS / ALL_OBJECTS / DBA_OBJECTS.
     - You will get the same information, it depends of the priviliges.
+    
+- **Triggers:**
+    - PL/SQL code blocks executed before or after or instead of a specific event.
+    - Executed automatically by the database server.
+    - Are defined on tables, views, schemas, databases.
+    - When DML opperation occurs.
+    - When a DDL operation occurs.
+    - When some database operations occur (logon, startup, servererror).
+    - DML Triggers:
+        - Before
+        - After
+        - Instead of 
+    - Compound triggers.
+    - Non-DML triggers.
+    - **DML triggers:**
+        - Duplications, logging, security, etc.
+
+        ```SQL
+        CREATE [OR REPLACE] TRIGGER trigger_name
+        TIMING = BEFORE | AFTER | INSTEAD OF
+        EVENT = INSERT | UPDATE | DELETE | UPDATE OF column_list
+        ON object_name
+        [REFERENCING OLD AS old NEW AS new]
+        [FOR EACH ROW]
+        [WHEN (Condition)]
+        [DECLARE variables, types, etc]
+        BEGIN
+        trigger_body
+        [EXCEPTION]
+        END
+        ```
+    - You can use the call keyword to call a procedure instead of the begin end block (trigger body).
     - 
