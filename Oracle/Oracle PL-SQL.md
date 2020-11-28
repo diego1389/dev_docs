@@ -2936,4 +2936,24 @@ END;
         END
         ```
     - You can use the call keyword to call a procedure instead of the begin end block (trigger body).
+    - There can be multiple triggers with the same timing points on a table or view.
+    - Follows and preceds clauses to choose which trigger fires first.
+    ```SQL
+    ---------------------------------------------------------------------------------------------
+    ------------------------------SPECIFYING THE TIMING OF TRIGGERS------------------------------
+    ---------------------------------------------------------------------------------------------
+    ----------------- The create code of the first trigger
+    create or replace trigger first_trigger 
+    before insert or update on employees_copy 
+    begin
+    dbms_output.put_line('An insert or update occurred in employees_copy table!.');
+    end;
+    ----------------- sql commands to or not to run the trigger
+    update employees_copy set salary = salary + 100;
+    delete from employees_copy;
+    ```
+    - If you update or insert one or many rows the trigger will fire only once (statement level trigger).
+    - If we want it to run at row level trigger to fire for each row affected by the dml operation.
+    - If no row is affected the trigger will not be executed.
+    - To create a row level trigger we write a for each row clause.
     - 
