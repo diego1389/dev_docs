@@ -3069,6 +3069,75 @@ END;
     end if;
     end;
     ```
-    - before update of to fire a trigger for updates of specific columns.
+    - **update of** to fire a trigger for updates of specific columns.
     - You cannot use update of and update at the same time (update of will have no meaning).
-    - 
+    - If you use the When clause the trigger is fired but the body is not executed.
+    - If you need to use old and new in the when clause you don't use the colon sign.
+    - Limit the trigger executions to the minimum using only the dml operations needed and using update of clause to execute the trigger only for certain columns. Also use the when clause to increase performance by executing the trigger body only for certain conditions.
+    ```SQL
+    ---------------------------------------------------------------------------------------------
+    ----------------------------------USING WHEN CLAUSE ON TRIGGERS------------------------------
+    ---------------------------------------------------------------------------------------------
+    create or replace trigger prevent_high_salary
+    before insert or update of salary on employees_copy 
+    for each row
+    when (new.salary > 50000)
+    begin
+    raise_application_error(-20006,'A salary cannot be higher than 50000!.');
+    end;
+    ```
+    - **Instead of** triggers are used to apply some DML statements on un-updatable views.
+    - Simple views (a single base table) are updateable but complex (multiple tables) are not.
+    - Fired instead of a DML operation.
+    - Instead of triggers are used ONLY with the views, not tables.
+    ```SQL
+    ---------------------------------------------------------------------------------------------
+    -----------------------------------USING INSTEAD OF TRIGGERS---------------------------------
+    ---------------------------------------------------------------------------------------------
+    ----------------- creating a complex view -----------------
+    CREATE OR REPLACE VIEW VW_EMP_DETAILS AS
+    SELECT UPPER(DEPARTMENT_NAME) DNAME, MIN(SALARY) MIN_SAL, MAX(SALARY) MAX_SAL 
+        FROM EMPLOYEES_COPY JOIN DEPARTMENTS_COPY
+        USING (DEPARTMENT_ID)
+        GROUP BY DEPARTMENT_NAME;
+    ----------------- updating the complex view -----------------
+    UPDATE VW_EMP_DETAILS SET DNAME = 'EXEC DEPT' WHERE
+    UPPER(DNAME) = 'EXECUTIVE';
+    ----------------- Instead of trigger -----------------
+    CREATE OR REPLACE TRIGGER EMP_DETAILS_VW_DML
+    INSTEAD OF INSERT OR UPDATE OR DELETE ON VW_EMP_DETAILS
+    FOR EACH ROW
+    DECLARE
+        V_DEPT_ID PLS_INTEGER;
+    BEGIN
+    
+    IF INSERTING THEN
+        SELECT MAX(DEPARTMENT_ID) + 10 INTO V_DEPT_ID FROM DEPARTMENTS_COPY;
+        INSERT INTO DEPARTMENTS_COPY VALUES (V_DEPT_ID, :NEW.DNAME,NULL,NULL);
+    ELSIF DELETING THEN
+        DELETE FROM DEPARTMENTS_COPY WHERE UPPER(DEPARTMENT_NAME) = UPPER(:OLD.DNAME);
+    ELSIF UPDATING('DNAME') THEN
+        UPDATE DEPARTMENTS_COPY SET DEPARTMENT_NAME = :NEW.DNAME
+        WHERE UPPER(DEPARTMENT_NAME) = UPPER(:OLD.DNAME);
+    ELSE
+        RAISE_APPLICATION_ERROR(-20007,'You cannot update any data other than department name!.');
+    END IF;
+    END;
+    ```
+    - USER_TRIGGER data dictionary view to search for triggers information.
+    - ALTER TRIGGER command to enable or disable a trigger.
+    - You can create a disabled trigger for testing purposes because it won't prevent any DML operations on the table.
+    - When you write the disable command it dissapears after it is compiled (single use).
+    ```SQL
+    ---------------------------------------------------------------------------------------------
+    -----------------------------------CREATING DISABLED TRIGGERS--------------------------------
+    ---------------------------------------------------------------------------------------------  
+    create or replace trigger prevent_high_salary
+    before insert or update of salary on employees_copy 
+    for each row
+    disable
+    when (new.salary > 50000)
+    begin
+    raise_application_error(-20006,'A salary cannot be higher than 50000!.');
+    end;
+    ``` 
