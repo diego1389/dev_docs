@@ -2956,4 +2956,119 @@ END;
     - If we want it to run at row level trigger to fire for each row affected by the dml operation.
     - If no row is affected the trigger will not be executed.
     - To create a row level trigger we write a for each row clause.
+    ```SQL
+    ---------------------------------------------------------------------------------------------
+    -------------------------------STATEMENT & ROW LEVEL TRIGGERS--------------------------------
+    ---------------------------------------------------------------------------------------------
+    ----------------- before statement level trigger example
+    create or replace trigger before_statement_emp_cpy 
+    before insert or update on employees_copy 
+    begin
+    dbms_output.put_line('Before Statement Trigger is Fired!.');
+    end;
+    ----------------- after statement level trigger example
+    create or replace trigger after_statement_emp_cpy 
+    after insert or update on employees_copy 
+    begin
+    dbms_output.put_line('After Statement Trigger is Fired!.');
+    end;
+    ----------------- before row level trigger example
+    create or replace trigger before_row_emp_cpy 
+    before insert or update on employees_copy 
+    for each row
+    begin
+    dbms_output.put_line('Before Row Trigger is Fired!.');
+    end;
+    ----------------- after row level trigger example
+    create or replace trigger after_row_emp_cpy 
+    after insert or update on employees_copy 
+    for each row
+    begin
+    dbms_output.put_line('After Row Trigger is Fired!.');
+    end;
+    ----------------- sql queries used in this lecture
+    update employees_copy set salary = salary + 100 where employee_id = 100;
+    update employees_copy set salary = salary + 100 where employee_id = 99;
+    update employees_copy set salary = salary + 100
+    where department_id = 30;
+    ```
+    - New and old qualifiers are used in row level triggers.
+        - :old.column_name returns the old value of the column (before the update for example).
+        - :new.column_name returns the new value of the column (after the update).
+
+    |Data operations  | :Old | :New  | 
+    |:-:|-|-|
+    |Insert  | NULL | Inserted value |  
+    |Update  | Value before update | Value after update  |  
+    |Delete  | Value before delete | NULL |  
+
+    - Performance concerns with row level triggers. Use them carefully.
+    - Colon prefix before the new and old qualifiers are not used in the when condttions.
+    ```SQL
+    ---------------------------------------------------------------------------------------------
+    -------------------------------:NEW & :OLD QUALIFIERS IN TRIGGERS----------------------------
+    ---------------------------------------------------------------------------------------------
+    create or replace trigger before_row_emp_cpy 
+    before insert or update or delete on employees_copy 
+    referencing old as O new as N
+    for each row
+    begin
+    dbms_output.put_line('Before Row Trigger is Fired!.');
+    dbms_output.put_line('The Salary of Employee '||:o.employee_id
+        ||' -> Before:'|| :o.salary||' After:'||:n.salary);
+    ```
+    - Instead of creating a lot of triggers you can use the conditional predicate to distinguish the DML types (deleting, inserting and updating) in your single trigger.
+    - If updating ('column_name').
+    ```SQL
+    ---------------------------------------------------------------------------------------------
+    --------------------------------USING CONDITIONAL PREDICATES --------------------------------
+    ---------------------------------------------------------------------------------------------
+    create or replace trigger before_row_emp_cpy 
+    before insert or update or delete on employees_copy 
+    referencing old as O new as N
+    for each row
+    begin
+    dbms_output.put_line('Before Row Trigger is Fired!.');
+    dbms_output.put_line('The Salary of Employee '||:o.employee_id
+        ||' -> Before:'|| :o.salary||' After:'||:n.salary);
+    if inserting then
+        dbms_output.put_line('An INSERT occurred on employees_copy table');
+    elsif deleting then
+        dbms_output.put_line('A DELETE occurred on employees_copy table');
+    elsif updating ('salary') then
+        dbms_output.put_line('A DELETE occurred on the salary column');
+    elsif updating then
+        dbms_output.put_line('An UPDATE occurred on employees_copy table');
+    end if;
+    ```
+    - You can raise application error in the triggers (to provide invalide data entries).
+    ```SQL
+    ---------------------------------------------------------------------------------------------
+    ------------------------USING RAISE_APPLICATION_ERROR PROCEDURE WITH TRIGGERS----------------
+    ---------------------------------------------------------------------------------------------
+    create or replace trigger before_row_emp_cpy 
+    before insert or update or delete on employees_copy 
+    referencing old as O new as N
+    for each row
+    begin
+    dbms_output.put_line('Before Row Trigger is Fired!.');
+    dbms_output.put_line('The Salary of Employee '||:o.employee_id
+        ||' -> Before:'|| :o.salary||' After:'||:n.salary);
+    if inserting then
+        if :n.hire_date > sysdate then
+        raise_application_error(-20000,'You cannot enter a future hire..');
+        end if;
+    elsif deleting then
+        raise_application_error(-20001,'You cannot delete from the employees_copy table..');
+    elsif updating ('salary') then
+        if :n.salary > 50000 then
+        raise_application_error(-20002,'A salary cannot be higher than 50000..');
+        end if;
+    elsif updating then
+        dbms_output.put_line('An UPDATE occurred on employees_copy table');
+    end if;
+    end;
+    ```
+    - before update of to fire a trigger for updates of specific columns.
+    - You cannot use update of and update at the same time (update of will have no meaning).
     - 
