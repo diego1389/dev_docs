@@ -3141,3 +3141,89 @@ END;
     raise_application_error(-20006,'A salary cannot be higher than 50000!.');
     end;
     ``` 
+    - Use after insert trigger to get the primary key of the inserted row.
+    - If you rollback the DML operations all the triggers operations will also rollaback.
+    ```SQL
+    ---------------------------------------------------------------------------------------------
+    -----------------------------REAL-WORLD EXAMPLES ON DML TRIGGERS-----------------------------
+    ---------------------------------------------------------------------------------------------
+    create sequence seq_dep_cpy
+    start with 280
+    increment by 10;
+    ----------------- primary key example
+    create or replace trigger trg_before_insert_dept_cpy
+    before insert on departments_copy 
+    for each row
+    begin
+    --select seq_dep_cpy.nextval into :new.department_id from dual;
+    :new.department_id := seq_dep_cpy.nextval;
+    end;
+    ----------------- 
+    insert into departments_copy 
+            (department_name,manager_id,location_id)
+            values
+            ('Security',200,1700);
+    ----------------- 
+    desc departments_copy;
+    ----------------- creating the audit log table
+    create table log_departments_copy 
+        (log_user varchar2(30), log_date date,
+        department_id number(4), department_name varchar2(30),
+        manager_id number(6), location_id number(4));
+    ----------------- audit log trigger
+    create or replace trigger trg_department_copy_log
+    after insert or update or delete on departments_copy 
+    for each row
+    declare v_dml_type varchar2(10);
+    begin
+    if inserting then
+        v_dml_type := 'INSERT';
+    elsif updating then
+        v_dml_type := 'UPDATE';
+    elsif deleting then
+        v_dml_type := 'DELETE';
+    end if;
+    insert into log_departments_copy values
+        (user, sysdate, v_dml_type, 
+        :old.department_id, :new.department_id,
+        :old.department_name, :new.department_name, 
+        :old.manager_id, :new.manager_id,
+        :old.location_id, :new.location_id);
+    end;
+    ----------------- other sql codes used in this lecture
+    insert into departments_copy (department_name, manager_id,location_id)
+        values ('Cyber Security', 100, 1700);
+    
+    select * from LOG_DEPARTMENTS_COPY;
+    update departments_copy set manager_id = 200 where DEPARTMENT_NAME = 'Cyber Security';
+    delete from departments_copy where DEPARTMENT_NAME = 'Cyber Security';
+    ```
+- **Compound triggers:**
+    - A single trigger that allows us  to specify actions for each DML trigger types.
+    ```SQL
+    CREATE OR REPLACE TRIGGER schema.trigger
+    FROM dml_event_clause ON schema.table
+    COMPOUND TRIGGER
+    --INitialization area
+    BEFORE STATEMENT IS 
+    ---some logic here
+    END BEFORE STATEMENT;
+    AFTER STATEMENT IS
+    -- more logic here
+    END AFTER STATEMENT;
+    BEFORE EACH ROW IS
+    -- also logic here
+    END BEFORE EACH ROW;
+    AFTER EACH ROW IS
+    -- last logic here
+    END AFTER EACH ROW;
+    ```
+    - They are optional (you need to write at least one section).
+    - They are useful to share common data.
+    - Avoiding mutating table errors.
+    - It must be a compound trigger block.
+    - IT must be a DML trigger based on a table or a view.
+    - Cannot have an initialization block.
+    - It can have an exception section (one per section, not common exception section).
+    - Old and new cannot be used in the declaration or before or after statements.
+    - 
