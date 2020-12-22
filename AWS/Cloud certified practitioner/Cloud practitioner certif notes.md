@@ -220,7 +220,7 @@
             - May share hardware with other instances in the same account.
             - No control over instance placement.
             - Per instance billing.
-    - EBS Volume (Elastic Block Store).
+    - **EBS Volume (Elastic Block Store)**
         - Network drive that you can attach to your instances while they run.
         - Persist data even after the instance termination.
         - Can only be mounted to one instance at a time.
@@ -237,4 +237,36 @@
         - It is possible to create an EBS volume and leave them unatached.
         - Instance details root device and block devices (EBS volumes).
         - A volume is created when you create your EC2 instance.
+        - EC2 -> Elastic Block Store -> Volumes -> Create volume -> gp2 -> change size -> availability zone must be in the same zone as your instance -> create volume.
+        - Select the volume -> actions -> Attach volume -> select your instance. 
+        - To check it Go to instances -> select your instance -> Select the Storage tab.
+        - ESB volumes that do not have delete in termination set to true will persist even if you delete the instance.
+        - EBS snapshots: you can make snapshots of your volumes and copy them across AZ or regions.
+            - Select Volume -> Actions -> Create snapshot
+            - To verify the goto to EBS -> Snapshots (under volumes).
+            - The snapshot is available in your region, not to specific AZ (availability zone).
+            - You can create a volume from a snapshot
+                - Select snapshot -> Actions -> Create volume. You can configure it in a different availability zone.
+    - **AMI (Amazon Machine Image)**
+        - A customization of an EC2 instance.
+        - It can be built for an specific region.
+        - You can add your own software, configuration, operation system, monitoring, etc.
+        - You have to make it and mantain it yourself or launch (and buy) from AWS marketplace.
+        - AMI process:
+            - Start an EC2 instance and customize it.
+            - Stop the instance (for data integrity).
+            - Build an AMI.
+            - Launch instances from other AMIs.
+        - Right click in the instance you want -> Image and templates -> Create image -> Type name (it will create a snapshot of the root volume) -> Create
+        - Now in Launch instance it will appear under the MyAMIs tab.
+        - If you create a new instance for yoIr AMI you will have the web server configured without needing to paste the configuration script (but it will have the same private ip address)
+    - **EC2 instance store**
+        - If you need high performance hardware disk.
+        - Better IO performance.
+        - They loose their storage when they're stopped.
+        - Risk of data loss if hardware fails.
+    - **EFL Elastic File System**
+        - Can be mounted in hundreds of EC2 instances at a time.
+        - IT works with Linux EC2 instances in multi-AZ.
         - 
+        
