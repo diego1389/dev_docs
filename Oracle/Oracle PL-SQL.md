@@ -3384,4 +3384,19 @@ END;
     - Click in the big bug button.
     - You cannot roll back.
     - You cannot compile for debug a whole package. Just a procedure at a time.
+    - Add rollback when debugging.
+    - For triggers you can delete the delete, update or insert that you dont need.
+    ```SQL
+    GRANT DEBUG CONNECT SESSION TO hr;
+    GRANT DEBUG ANY PROCEDURE TO hr;
+    
+    BEGIN
+        dbms_network_acl_admin.append_host_ace
+            (host=>'127.0.0.1',
+                ace=> sys.xs$ace_type(privilege_list=>sys.xs$name_list('JDWP') ,
+                            principal_name=>'HR',
+                            principal_type=>sys.xs_acl.ptype_db) );
+    END;
+    ```
+    - For debugging anonymous block you need to set Step into option in start debugging.
     - 
