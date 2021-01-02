@@ -3399,4 +3399,58 @@ END;
     END;
     ```
     - For debugging anonymous block you need to set Step into option in start debugging.
-    - 
+
+- **Dynamic SQL:**
+    - Steps of Static SQL:
+        1. Parse (query oftimization) 
+        2. Bind 
+        3. Execute
+        4. Fetch (only for select statements).
+    - Written in advance
+    - Constructed as strings and executed dynamically at runtime.
+    - Types:
+        - Native dynamic SQL statements (preffered).
+            - EXECUTE IMMEDIATE COMMAND
+
+                EXECUTE IMMEDIATE Dynamic_SQL_string [[Bulk collect] INTO {variable [,variable]... | record}]
+                [USING [IN | OUT | IN OUT] bind_argument...];
+
+            - OPEN-FOR, FETCH AND CLOSE statements
+                OPEN cursor FOR Dynamic_SQL_string USING [bind_argument...];
+            - You should use a terminator if it is a PL/SQL block and without it if it is an SQL statement.
+            - Now you can do Open-for with EXECUTE IMMEDIATE (for multiple rows dynamic queries).
+        - DBMS_SQL package.
+    - Dynamic PL/SQL can access only global objects. L0cal variables are unreacheable.
+    - The errores raised within dynamic PL/SQL can be trapped and handled by the surrounding block.
+        ```SQL
+        BEGIN
+        EXECUTE IMMEDIATE 'GRANT SELECT ON EMPLOYEES TO SYS';
+        END; 
+        /
+        BEGIN
+            EXECUTE IMMEDIATE 'GRANT SELECT ON EMPLOYEES TO SYS;';
+        END;
+        /
+        CREATE OR REPLACE PROCEDURE prc_create_table_dynamic 
+            (p_table_name IN VARCHAR2, p_col_specs IN VARCHAR2) IS
+        BEGIN
+            EXECUTE IMMEDIATE 'CREATE TABLE '||p_table_name||' ('||p_col_specs||')';
+        END;
+        /
+        EXEC prc_create_table_dynamic('dynamic_temp_table', 'id NUMBER PRIMARY KEY, name VARCHAR2(100)');
+        /
+        SELECT * FROM dynamic_temp_table;
+        /
+        CREATE OR REPLACE PROCEDURE prc_generic (p_dynamic_sql IN VARCHAR2) IS
+        BEGIN
+            EXECUTE IMMEDIATE p_dynamic_sql;
+        END;
+        /
+        EXEC prc_generic('drop table dynamic_temp_table');
+        /
+        EXEC prc_generic('drop procedure PRC_CREATE_TABLE_DYNAMIC');
+        /
+        DROP PROCEDURE prc_generic;
+        ```
+        - Using bind variables (:a, :b) is better to avoid SQL injection and improves performance (instead of concatetanion).
+        - 
