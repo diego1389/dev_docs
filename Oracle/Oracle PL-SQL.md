@@ -3590,3 +3590,337 @@ END;
             DROP TABLE stock_clerks;
             DROP TABLE stock_managers;
             ```
+    - Bulk collect into clause with execute immediate to get multiple rows from a query in one step. 
+    - You can use also Bulk collect into to update multiple rows and get the returning clause.
+    - Using returning is not considered a bind variable so it doesnt need a Using clause.
+        ```SQL
+        DECLARE
+        TYPE t_name IS TABLE OF VARCHAR2(20);
+        names   t_name;
+        BEGIN
+            EXECUTE IMMEDIATE 'SELECT distinct first_name FROM employees'
+                BULK COLLECT INTO names;
+            FOR i IN 1..names.COUNT LOOP
+                dbms_output.put_line(names(i));
+            END LOOP;
+        END;
+        /
+        CREATE TABLE employees_copy AS SELECT * FROM employees; 
+        /
+        DECLARE
+        TYPE t_name IS TABLE OF VARCHAR2(20);
+        names   t_name;
+        BEGIN
+            EXECUTE IMMEDIATE 'UPDATE employees_copy SET salary = salary + 1000 WHERE department_id = 30 RETURNING first_name INTO :a'
+                RETURNING BULK COLLECT INTO names;
+            FOR i IN 1..names.COUNT LOOP
+                dbms_output.put_line(names(i));
+            END LOOP;
+        END;
+        /
+        DROP TABLE employees_copy;
+        ```
+    - To escape characters q'[].
+    - To use local variable you have to include them inside the dynamic string (it also can reach values outside of it, package variables f.e). You also can use a bind variable
+    - You should handle the errors outside the dynamic pl sql block.
+        ```SQL
+        BEGIN
+            FOR r_emp in (SELECT * FROM employees) LOOP
+                dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name);
+            END LOOP;
+        END;
+        /
+        DECLARE
+            v_dynamic_text varchar2(1000);
+        BEGIN
+            v_dynamic_text := q'[BEGIN
+            FOR r_emp in (SELECT * FROM employees) LOOP
+                dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name);
+            END LOOP;
+            END;]';
+            EXECUTE IMMEDIATE v_dynamic_text;
+        END;
+        /
+        DECLARE
+            v_dynamic_text VARCHAR2(1000);
+            v_department_id PLS_INTEGER := 30;
+        BEGIN
+            v_dynamic_text := q'[BEGIN
+            FOR r_emp in (SELECT * FROM employees WHERE department_id = v_department_id) LOOP
+                dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name);
+            END LOOP;
+            END;]';
+            EXECUTE IMMEDIATE v_dynamic_text;
+        END;
+        /
+        DECLARE
+            v_dynamic_text VARCHAR2(1000);
+            --v_department_id pls_integer := 30;
+        BEGIN
+            v_dynamic_text := q'[DECLARE
+            v_department_id pls_integer := 30;
+            BEGIN
+            FOR r_emp in (SELECT * FROM employees WHERE department_id = v_department_id) LOOP
+                dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name);
+            END LOOP;
+            END;]';
+            EXECUTE IMMEDIATE v_dynamic_text;
+        END;
+        /
+        CREATE OR REPLACE PACKAGE pkg_temp AS
+        v_department_id_pkg PLS_INTEGER := 50;
+        END;
+        /
+        DECLARE
+            v_dynamic_text VARCHAR2(1000);
+            --v_department_id pls_integer := 30;
+        BEGIN
+            v_dynamic_text := q'[BEGIN
+            FOR r_emp in (SELECT * FROM employees WHERE department_id = pkg_temp.v_department_id_pkg) LOOP
+                dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name);
+            END LOOP;
+            END;]';
+            EXECUTE IMMEDIATE v_dynamic_text;
+        END;
+        /
+        DECLARE
+            v_dynamic_text VARCHAR2(1000);
+            v_department_id PLS_INTEGER := 30;
+        BEGIN
+            v_dynamic_text := q'[BEGIN
+            FOR r_emp in (SELECT * FROM employees WHERE department_id = :1) LOOP
+                dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name);
+            END LOOP;
+            END;]';
+            EXECUTE IMMEDIATE v_dynamic_text USING v_department_id;
+        END;
+        /
+        DECLARE
+            v_dynamic_text VARCHAR2(1000);
+            v_department_id PLS_INTEGER := 30;
+            v_max_salary PLS_INTEGER := 0;
+        BEGIN
+            v_dynamic_text := q'[BEGIN
+            FOR r_emp in (SELECT * FROM employees WHERE department_id = :1) LOOP
+                dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name);
+                if r_emp.salary > :sal then
+                    :sal := r_emp.salary;
+                end if;
+            END LOOP;
+            END;]';
+            EXECUTE IMMEDIATE v_dynamic_text USING v_department_id, IN OUT v_max_salary;
+            dbms_output.put_line('The maximum salary of this department is : '||v_max_salary);
+        END;
+        /
+        DECLARE
+            v_dynamic_text VARCHAR2(1000);
+            v_department_id PLS_INTEGER := 30;
+            v_max_salary PLS_INTEGER := 0;
+        BEGIN
+            v_dynamic_text := q'[BEGIN
+            FOR r_emp in (SELECT * FROM employeese WHERE department_id = :1) LOOP
+                dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name);
+                if r_emp.salary > :sal then
+                    :sal := r_emp.salary;
+                end if;
+            END LOOP;
+            END;]';
+            EXECUTE IMMEDIATE v_dynamic_text USING v_department_id, IN OUT v_max_salary;
+            dbms_output.put_line('The maximum salary of this department is : '||v_max_salary);
+        EXCEPTION
+            WHEN OTHERS THEN
+            dbms_output.put_line('The error is : '||sqlerrm);
+        END;
+        /
+        DECLARE
+            v_dynamic_text VARCHAR2(1000);
+            v_department_id PLS_INTEGER := 30;
+            v_max_salary PLS_INTEGER := 0;
+        BEGIN
+            v_dynamic_text := q'[BEGIN
+            FOR r_emp in (SELECT * FROM employeese WHERE department_id = :1) LOOP
+                dbms_output.put_line(r_emp.first_name||' '||r_emp.last_name);
+                if r_emp.salary > :sal then
+                    :sal := r_emp.salary;
+                end if;
+            END LOOP;
+            EXCEPTION
+            WHEN OTHERS THEN
+            dbms_output.put_line('The error is : '||SQLERRM);
+            END;]';
+            EXECUTE IMMEDIATE v_dynamic_text USING v_department_id, IN OUT v_max_salary;
+            dbms_output.put_line('The maximum salary of this department is : '||v_max_salary);
+        END;
+        /
+        DROP PACKAGE pkg_temp;
+        ```
+    - Open for to retrieve multiple records (now you can also do this with execute immediate as seen in previous lessons).
+        ```SQL
+        DECLARE
+        TYPE emp_cur_type  IS REF CURSOR;
+        emp_cursor      emp_cur_type;
+        emp_record      employees%rowtype;
+        BEGIN
+        OPEN emp_cursor FOR 'SELECT * FROM employees WHERE job_id = ''IT_PROG''';
+            FETCH emp_cursor INTO emp_record;
+            dbms_output.put_line(emp_record.first_name||emp_record.last_name);
+        CLOSE emp_cursor;
+        END;
+        /
+        DECLARE
+        TYPE emp_cur_type  IS REF CURSOR;
+        emp_cursor      emp_cur_type;
+        emp_record      employees%rowtype;
+        BEGIN
+        OPEN emp_cursor FOR 'SELECT * FROM employees WHERE job_id = :job' USING 'IT_PROG';
+            FETCH emp_cursor INTO emp_record;
+            dbms_output.put_line(emp_record.first_name||emp_record.last_name);
+        CLOSE emp_cursor;
+        END;
+        /
+        DECLARE
+        TYPE emp_cur_type  IS REF CURSOR;
+        emp_cursor      emp_cur_type;
+        emp_record      employees%rowtype;
+        BEGIN
+        OPEN emp_cursor FOR 'SELECT * FROM employees WHERE job_id = :job' USING 'IT_PROG';
+        LOOP
+            FETCH emp_cursor INTO emp_record;
+            EXIT WHEN emp_cursor%notfound;
+            dbms_output.put_line(emp_record.first_name||emp_record.last_name);
+        END LOOP;
+        CLOSE emp_cursor;
+        END;
+        /
+        DECLARE
+        TYPE emp_cur_type  IS REF CURSOR;
+        emp_cursor      emp_cur_type;
+        emp_record      employees%rowtype;
+        v_table_name    VARCHAR(20);
+        BEGIN
+        v_table_name := 'employees';
+        OPEN emp_cursor FOR 'SELECT * FROM '||v_table_name||' WHERE job_id = :job' USING 'IT_PROG';
+        LOOP
+            FETCH emp_cursor INTO emp_record;
+            EXIT WHEN emp_cursor%notfound;
+            dbms_output.put_line(emp_record.first_name||emp_record.last_name);
+        END LOOP;
+        CLOSE emp_cursor;
+        END;
+        ```
+    - DBMS_SQL package for dynamic executions (always prefer dynamic sql and dynamic pl sql when possible).
+        -  Use it when the Dynamic SQL has an unknown number of bind variables or columns until runtime (The method 4).
+        - When executing the same SQL statement multiple times with different bind values (because it avoids parsing).
+            - Open cursor
+            - Parse(cursorId, sql statement, edition)
+            - Execute (cursor id)
+            - Fetch_rows (cursor id)
+            - Close cursor (cursor id)
+        ```SQL
+        CREATE TABLE employees_copy AS SELECT * FROM employees;
+        
+        /
+        set serveroutput on;
+        DECLARE
+            v_table_name VARCHAR2(20) := 'employees_copy';
+            v_cursor_id PLS_INTEGER;
+            v_affected_rows PLS_INTEGER;
+        BEGIN
+            v_cursor_id := dbms_sql.open_cursor;
+            dbms_sql.parse(v_cursor_id, 'update '||v_table_name||' set salary=salary+500',dbms_sql.NATIVE);
+            v_affected_rows := dbms_sql.EXECUTE(v_cursor_id);
+            dbms_output.put_line(v_affected_rows|| ' rows are updated by dbms_sql!');
+            dbms_sql.close_cursor(v_cursor_id);
+        END;  
+        
+        /
+        
+        select * from employees_copy;
+        
+        /
+        
+        DECLARE
+            v_table_name varchar2(20) := 'employees_copy';
+            v_cursor_id pls_integer;
+            v_affected_rows pls_integer;
+        BEGIN
+            v_cursor_id := DBMS_SQL.OPEN_CURSOR;
+            DBMS_SQL.PARSE(v_cursor_id, 'update '||v_table_name||' set salary=salary+500 WHERE job_id = :jid',DBMS_SQL.NATIVE);
+            DBMS_SQL.BIND_VARIABLE(v_cursor_id, ':jid','IT_PROG');
+            v_affected_rows := DBMS_SQL.EXECUTE(v_cursor_id);
+            dbms_output.put_line(v_affected_rows|| ' rows are updated by dbms_sql!');
+            DBMS_SQL.CLOSE_CURSOR(v_cursor_id);
+        END;
+        
+        /
+        
+        DECLARE
+            v_table_name varchar2(20) := 'employees_copy';
+            v_cursor_id pls_integer;
+            v_affected_rows pls_integer;
+        BEGIN
+            v_cursor_id := DBMS_SQL.OPEN_CURSOR;
+            DBMS_SQL.PARSE(v_cursor_id, 'update '||v_table_name||' set salary=salary+:inc WHERE job_id = :jid',DBMS_SQL.NATIVE);
+            DBMS_SQL.BIND_VARIABLE(v_cursor_id, ':jid','IT_PROG');
+            DBMS_SQL.BIND_VARIABLE(v_cursor_id, ':inc','5');
+            v_affected_rows := DBMS_SQL.EXECUTE(v_cursor_id);
+            dbms_output.put_line(v_affected_rows|| ' rows are updated by dbms_sql!');
+            DBMS_SQL.CLOSE_CURSOR(v_cursor_id);
+        END;  
+        
+        /
+        
+        SELECT * FROM user_tab_columns;
+        EXEC prc_method4_example('employees');
+        EXEC prc_method4_example('departments');
+        EXEC prc_method4_example('countries');
+        EXEC prc_method4_example('locations');
+        /
+        
+        create or replace PROCEDURE prc_method4_example (p_table_name IN VARCHAR2) IS
+            TYPE t_columns IS TABLE OF user_tab_columns%rowtype INDEX BY PLS_INTEGER;
+            v_columns               t_columns;
+            v_columns_with_commas   VARCHAR2(32767);
+            v_number_value          NUMBER;
+            v_string_value          VARCHAR2(32767);
+            v_date_value            DATE;
+            v_output_string         VARCHAR2(32767);
+            cur_dynamic             INTEGER;
+        BEGIN
+            SELECT * BULK COLLECT INTO v_columns FROM user_tab_columns WHERE table_name = upper(p_table_name);
+            v_columns_with_commas:=v_columns(1).column_name;
+            FOR i IN 2..v_columns.COUNT LOOP
+                v_columns_with_commas:=v_columns_with_commas||','||v_columns(i).column_name;
+            END LOOP;
+            cur_dynamic := dbms_sql.open_cursor;
+            dbms_sql.parse(cur_dynamic,'SELECT '||v_columns_with_commas||' FROM '||p_table_name,dbms_sql.NATIVE);
+            FOR idx IN 1..v_columns.COUNT LOOP
+                IF v_columns(idx).data_type = 'NUMBER' THEN
+                    dbms_sql.define_column(cur_dynamic,idx,1);
+                ELSIF v_columns(idx).data_type IN ('VARCHAR2','VARCHAR','CHAR') THEN
+                    dbms_sql.define_column(cur_dynamic,idx,'dummy text',v_columns(idx).char_length);
+                ELSIF v_columns(idx).data_type = 'DATE' THEN
+                    dbms_sql.define_column(cur_dynamic,idx,sysdate);
+                END IF;
+                v_output_string:=v_output_string||'  '||rpad(v_columns(idx).column_name,20);
+            END LOOP;
+            dbms_output.put_line(v_output_string);
+            v_number_value:=dbms_sql.execute(cur_dynamic);
+            WHILE dbms_sql.fetch_rows(cur_dynamic) > 0 LOOP
+                v_output_string:=NULL;
+                FOR t IN 1..v_columns.COUNT LOOP
+                    IF v_columns(T).data_type = 'NUMBER' THEN
+                        dbms_sql.column_value(cur_dynamic,t,v_number_value);
+                        v_output_string := v_output_string||'  '||rpad(nvl(to_char(v_number_value),' '),20);
+                    ELSIF v_columns(T).data_type IN ('VARCHAR2','VARCHAR','CHAR') THEN
+                        dbms_sql.column_value(cur_dynamic,t,v_string_value);
+                        v_output_string := v_output_string||'  '||rpad(nvl(to_char(v_string_value),' '),20);
+                    ELSIF v_columns(T).data_type = 'DATE' THEN
+                        dbms_sql.column_value(cur_dynamic,t,v_date_value);
+                        v_output_string := v_output_string||'  '||rpad(nvl(to_char(v_date_value),' '),20);
+                    END IF;
+                END LOOP;
+                dbms_output.put_line(v_output_string);
+            END LOOP;
+        END;
+        ```
