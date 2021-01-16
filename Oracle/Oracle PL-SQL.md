@@ -3992,4 +3992,7 @@ END;
         ```
     - The UTL_FILE package reads and writes to any operating system files that are accesible to the database server.
     - It provides file access to both server and client sides.
-    - 
+    - Use directory aliases created for specif paths (directories).
+    - FOPEN fu nction to open files.
+    - It actually writes in the file when you close or flush.
+    
