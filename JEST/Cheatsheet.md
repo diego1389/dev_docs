@@ -145,4 +145,78 @@
         * Appropiately named npm mocks are loaded automatically.
         * Mocks must reside in a __mocks__ folder next to mocked module.
         * NPM modules and local modules can both be mocked.
-        * 
+        * The mock is automatically substituted in for any tests!
+        * Create the __mocks__ directory in the same level of the node_modules.
+        * If a file in your __mocks__ folder that is directly adjacent to the npm modules has the exact same name as an npm module, it will be loades instead of the whole module when you require it in your tests. 
+        ```js
+        //fetch-question-saga.js
+        import { takeEvery, put } from 'redux-saga/effects'
+        import fetch from 'isomorphic-fetch';
+
+        export default function * () {
+            /**
+            * Every time REQUEST_FETCH_QUESTION, fork a handleFetchQuestion process for it
+            */
+            yield takeEvery(`REQUEST_FETCH_QUESTION`,handleFetchQuestion);
+        }
+
+        /**
+        * Fetch question details from the local proxy API
+        */
+        export function * handleFetchQuestion ({question_id}) {
+            const raw = yield fetch(`/api/questions/${question_id}`);
+            const json = yield raw.json();
+            const question = json.items[0];
+            /**
+            * Notify application that question has been fetched
+            */
+            yield put({type:`FETCHED_QUESTION`,question});
+        }
+
+        //isomorphic-fetch.js (mock)
+        let __value = 42;
+        const isomorphicFetch = jest.fn(()=> __value); //creates a spy function that returns __value
+        isomorphicFetch.__setValue = v=> __value = v; //equals to a method that changes this value property thats here on the global scope of this module
+        export default isomorphicFetch;
+
+        //fetch-question-saga.spec.js
+        import {handleFetchQuestion} from './fetch-question-saga';
+        import fetch from 'isomorphic-fetch'
+
+        describe("Fetch questions saga", ()=>{
+
+            beforeAll(()=> {
+                fetch.__setValue([{question_id : 42}]);
+            })
+
+            it("should fetch the questions", async ()=> {
+                const gen = handleFetchQuestion({question_id : 42});
+                const  {value} = await gen.next();
+
+                expect(value).toEqual([{question_id : 42}]);
+                expect(fetch).toHaveBeenCalledWith('/api/questions/42');
+            })
+        });
+
+        ```
+        * A snapshot is a JSON file with a record of a component's output.
+        * Commited along with other modules and tests to the application repo.
+        * The first time it just creates the snapshot, the second one it compares it with previous snapshots.
+        ```js
+        import React from 'react';
+        import TagsList from './TagsList';
+        import renderer from 'react-test-renderer';
+
+        describe("Teh tags list", () => {
+            it("renders as expected", () => {
+                const tree = renderer
+                    .create(<TagsList tags={['css', 'html', 'go']}/>)
+                    .toJSON();
+
+                console.log(tree);
+                expect(tree).toMatchSnapshot();
+            })
+        });
+        ```
+        * To update the snapshot with --update flag (after checking is not a regression of course).
+            jest TagsList -u

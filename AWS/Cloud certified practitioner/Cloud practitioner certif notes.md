@@ -109,6 +109,7 @@
                     ```batch
                     aws iam list-users
                     ```
+            - AWS cloud shell (a terminal in the cloud inside AWS portal). 
             - IAM roles for services
                 - Some AWS service will need to perform actions on your behalf (EC2 instance virtual server).
                 - To do so we will assign permissions to AWS services with IAM roles.
@@ -158,7 +159,7 @@
             - Compute power access (CPU).
             - Random access memory.
             - Storage space:
-                - Network attackes (EBS & EFS).
+                - Network attached (EBS & EFS).
                 - Hardware (EC2 Instance Store).
             - Network card.
             - Firewall rules.
