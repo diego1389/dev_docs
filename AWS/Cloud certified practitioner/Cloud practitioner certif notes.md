@@ -167,25 +167,50 @@
         - EC2 -> Instances -> Launch instance -> Choose amazon AMI (template) -> Choose an instance type based on your needs -> Configure instance details -> User data text (copy script to configure a web service) -> Add storage -> Add tags -> Configure security group (firewall) (Add rule -> http -> port:80 -> from 0.0.0.0/0 (everywhere)) -> Review and launch -> Create new key pair.
         - Once finished launching it gives you a public ip address to watch the website.
         - Once you stop your instance you don't have to pay for it.
-        - You can also terminate your instance.
+        - You can also terminate your instance (delete it).
         - If you stop and start the instance you get a new public ip.
+        - Instance types: https://aws.amazon.com/ec2/instance-types
+            - m5.2large:
+                - m: instance class
+                - 5: generation (AWS improves them over time).
+                - 2xlarge: size within the instance class.
+            - Different types:
+             1. **General purpose:** 
+                - Balance between compute, memory and networking.
+             2. **Compute optimized:** 
+                - High performance processors. (C name)
+                - For batch processing workloads, media transcoding, machine learning, gaming servers, etc.
+             3. **Memory optimized:**
+                - R name
+                - Fast performance for workloads that process large data sets in memory.
+                -   Floating point number calculations, data pattern matching, graphic processing.
+             4. **Storage optimized:**
+                - Name i, h, d.
+                - Online transaction processing.
+                - Relational and NoSQL.
+                - Data warehousing applications.
+                - Distributed file systems.
+
         - Security groups:
+            - They control how traffic is allowd into or out of the EC2 instances.
             - They only contain allow rules.
             - Can reference by IP or by security group.
-            - Firewall
-            - Are going to regulate access to ports, authorized ip ranges, control the inbound network (from the other to the instance) and outbound network (from the instance to the other).
-            - SSH port 22.
-            - FTP port 21.
-            - SFTP port 22.
-            - HTTP port 80 (unsecured websites).
-            - HTTPS port 443 (secured websites).
-            - Remote Desktop Protocol port3389
+            - They act as a firewall on EC2 instances.
+            - Are going to regulate access to ports, authorized ip ranges, control the inbound network (from the other to the instance) and outbound network (from the instance to the other):
+                - SSH port 22. (Log into a Linux instance)
+                - FTP port 21. (upload files into a file share)
+                - SFTP port 22. (upload files using SSH)
+                - HTTP port 80 (access unsecured websites). 
+                - HTTPS port 443 (access secured websites).
+                - RDP port 3389 (Remote Desktop Protocol, log into a Windows instance).
             - You can go to security groups and edit inbound and outbound rules.
-            You can reuse security groups in different instances.
+            - You can reuse security groups in multiple instances.
+            - Anywhere IP v4: 0.0.0.0/0. Anywhere IP v6: ::/0.
     - Connect to our instance using **ssh**:
     ```batch
      ssh -i .\EC2Tutorial.pem ec2-user@18.223.114.120
     ```
+    - For windows versions < 10 you need to use Putty instead of SSH.
     - Check that the security file has full access permissions for your user.
     - **EC2 instance connect:** Instances -> Select instance -> Connect -> opens an ssh terminal in the browser (aws will automatically upload the key to the instance).
     - This doesn't work if you block the ssh port.
