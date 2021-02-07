@@ -207,14 +207,20 @@
             - You can reuse security groups in multiple instances.
             - Anywhere IP v4: 0.0.0.0/0. Anywhere IP v6: ::/0.
     - Connect to our instance using **ssh**:
+    - Use the Public IP to connect using SSH.
+    - Use the key file (EC2Tutorial.pem) to get into the machine.
+    - chmod 0400 for the key file (only read permissions). 
+    - To access the EC2 instance via CLI:
     ```batch
      ssh -i .\EC2Tutorial.pem ec2-user@18.223.114.120
     ```
     - For windows versions < 10 you need to use Putty instead of SSH.
-    - Check that the security file has full access permissions for your user.
+    - The user is always ec2-user.
+    - For windows the file must have full access and only your user should have access to it (disable inheritance).
     - **EC2 instance connect:** Instances -> Select instance -> Connect -> opens an ssh terminal in the browser (aws will automatically upload the key to the instance).
     - This doesn't work if you block the ssh port.
     - **Amazon instance roles:**
+        - Don't use your AWS credentials on the instance to execute AWS commands, instead use instance roles.
         - Attach role to instance: Select the instance => Security => Modify IAM role => DemoRoleForEC2.
         ```batch
         aws iam list-users
