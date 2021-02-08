@@ -230,25 +230,30 @@
             - Billing per second after the first minute.
             - Has the hightest cost but not upfront payment.
             - No long-term commitment.
+            - For short term and un-interrupted workloads.
         - EC2 Reserved instance (minimum of 1 year, 1 or three not between 1 and three).
             - Up to 75 % discount compared to on-demand.
             - Reserve a specific instance type.
+            - Purchasing options: All upfront (discount), partial upfront, no upfront. 
+            - Steady-stage usage applications (databases).
         - Convertible reserved (long workloads).
             - Can change the EC2 instance type.
-            - Up to 54 % discount.
+            - Up to 54 % discount (a bit less than reserved instance).
         - Scheduled reserved instances.
             - Specific time window (fraction of day).
+            - Still need 1 or 3 years conmitment.
         - EC2 Spot instances
             - Discount of 90 % compared to On-demand but you can lose them if your max price is less than the current spot price.
             - Not for critical job.
-        - For workloads that are resilient to failure (batch jobs, image proccessing). 
+            - For workloads that are resilient to failure (batch jobs, image proccessing). 
         - Dedicated hosts. 
-            - Physical server in a data center.
-            - Compliance requirementes and reduce costs by allowing you to user your existing server-bound software licenses. 
+            - Physical server in a data center fully dedicated to you.
+            - **Compliance requirements** and reduce costs by allowing you to use your **existing server-bound software licenses**. 
             - Allocated for your account for a 3 year period reservation.
+            - Software that has complicated licensing model.
             - More expensive. 
             - Per host billing. 
-        - Dedicated instances (hardware dedicated to you).
+        - Dedicated instances (hardware dedicated to you, you don't get access to the hardware).
             - May share hardware with other instances in the same account.
             - No control over instance placement.
             - Per instance billing.
@@ -269,11 +274,11 @@
         - It is possible to create an EBS volume and leave them unatached.
         - Instance details root device and block devices (EBS volumes).
         - A volume is created when you create your EC2 instance.
-        - EC2 -> Elastic Block Store -> Volumes -> Create volume -> gp2 -> change size -> availability zone must be in the same zone as your instance -> create volume.
+        - EC2 -> Elastic Block Store -> Volumes -> Create volume -> gp2 (General purpose)-> change size -> availability zone must be in the same zone as your instance -> create volume.
         - Select the volume -> actions -> Attach volume -> select your instance. 
         - To check it Go to instances -> select your instance -> Select the Storage tab.
         - ESB volumes that do not have delete in termination set to true will persist even if you delete the instance.
-        - EBS snapshots: you can make snapshots of your volumes and copy them across AZ or regions.
+        - **EBS snapshots:** you can make snapshots of your volumes (backup) and copy them across AZ or regions.
             - Select Volume -> Actions -> Create snapshot
             - To verify the goto to EBS -> Snapshots (under volumes).
             - The snapshot is available in your region, not to specific AZ (availability zone).
@@ -290,8 +295,18 @@
             - Build an AMI.
             - Launch instances from other AMIs.
         - Right click in the instance you want -> Image and templates -> Create image -> Type name (it will create a snapshot of the root volume) -> Create
-        - Now in Launch instance it will appear under the MyAMIs tab.
-        - If you create a new instance for yoIr AMI you will have the web server configured without needing to paste the configuration script (but it will have the same private ip address)
+        - Now in Launch instance it will appear under the MyAMIs tab (when you are creating the instance).
+        - If you create a new instance for your AMI you will have the web server configured without needing to paste the configuration script (but it will have the same private ip address).
+        - **EC2 image builder:** automate the creation, mantain, validate and test EC2 AMI. It is a regional service.
+            -  Can be run scheduled.
+            - Go to EC2 image builder -> create image pipeline -> Name it -> build schedule -> Create a new recipe -> Output type: AMI -> Name the recipe and add version (1.0.0 f.e) -> Select image name Amazon Linux 2 x86 -> Add components (Coreto 11 for java and aws cli v2) -> Create new infrastructure -> Create new role* -> IAM Role: EC2InstanceProfileForImageBuilder -> Instance type: t2.micro -> Next -> Create distribution settings -> Create pipeline.
+            
+            - \*Create new role -> EC2 -> Permissions (EC2InstanceProfileForImageBuilder, EC2InstanceProfileForImageBuilderECRContainerBuilds and AmazonSSMManagedInstanceCore) -> Review -> role name: EC2InstanceProfileForImageBuilder
+            
+            - Go to pipeline (to the demo we just created) -> Action : run pipeline -> Check in output image (in pending for now) and click in the version hyperlink -> It changes state to testing.
+            - In instances (EC2 service) we have a new Build instance for MyDemoRecipe created by EC2 image builder. It terminates it after a while.
+            - After everything finishes it add a new AMI that you can use to create a new instance with its configuration.
+            - Launch a new instance using the new AMI, connect using EC2 Connect (Connect -> EC2 instance connect) and check java --version and aws --version.
     - **EC2 instance store**
         - If you need high performance hardware disk.
         - Better IO performance.
@@ -300,5 +315,5 @@
     - **EFL Elastic File System**
         - Can be mounted in hundreds of EC2 instances at a time.
         - IT works with Linux EC2 instances in multi-AZ.
-        - 
+
         
