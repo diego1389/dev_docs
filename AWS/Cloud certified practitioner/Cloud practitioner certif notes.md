@@ -307,13 +307,49 @@
             - In instances (EC2 service) we have a new Build instance for MyDemoRecipe created by EC2 image builder. It terminates it after a while.
             - After everything finishes it add a new AMI that you can use to create a new instance with its configuration.
             - Launch a new instance using the new AMI, connect using EC2 Connect (Connect -> EC2 instance connect) and check java --version and aws --version.
-    - **EC2 instance store**
-        - If you need high performance hardware disk.
+    - **Local EC2 instance store**
+        - If you need high performance hardware disk use EC2 instance store.
         - Better IO performance.
         - They loose their storage when they're stopped.
         - Risk of data loss if hardware fails.
-    - **EFL Elastic File System**
-        - Can be mounted in hundreds of EC2 instances at a time.
+        - Good for buffer / cache / scratch data or temporary data.
+    - **EFS Elastic File System**
+        - Managed NFS (network file system) that can be mounted in hundreds of EC2 instances at a time.
         - IT works with Linux EC2 instances in multi-AZ.
+        - HIghly available, scalable, expensive, pay per use, no capacity planning.
+        - EBS can be attached to only one instance at a time (to move it we need a snapshot, a copy).
+        - EFS is shared accross multiple instances in multiple Availability Zones.
+    - **Shared responsability for EC2 storage:**
+        - AWS: infrastructure, replication for data for EBS volumes and EFS drives, replacing faulty hardware and employees cannot access data.
+        - Client: backups, snapshot procedures, setting up encryption, responsability of any data on the drives, understanding the risk of using EC2 instance store.
+## Elastic load balancing and auto scaling groups: 
 
-        
+- Scalability means that an application / systema can handle greater loads by adapting.
+- **Vertical scalability:** 
+     - Increasing the size of the instance. Change from t2.micro to t2.large. 
+     - Common for non distributed systems (such a database).
+- **Horizontal scalability (elasticity):** 
+    - Increasing the number of instances.
+    - Implies distributed systems. 
+    - Common for web applications.
+    - Auto scaling group.
+    - Load balancer
+- **High availability:**
+    - At least 2 availability zones. 
+    - Auto Scaling Group multi AZ.
+    - Load balancer multi AZ.
+ - **Scalability:** ability to accomodate a larger load by making the hardware stronger (scale up) or by adding nodes (scale out).
+ - **Elasticity:** there will be some "auto-scaling" so that the system can scale based on the load. This is "cloud-friendly": pay-per-use, match demand, optimize costs.
+ - **Agility:** new IT resources are only a click away. 
+- **Load balancer**
+    - Servers that forward internet traffic to multiple servers (EC2 instances) downstream.
+    - Spread load accross multiple instances.
+    - Expose a single point of access (DNS) to your application.
+    - Seamlessly handle failures of downstream instances.
+    - Do regular health checks to your instances.
+    - Provide SSL termination (HTTPS) for your websites.
+    - High availability across multiple AZ.
+    - Amn ELB (elastic load balancer) is a managed load balancer.
+        - AWS guarantees that it will be working.
+        - AWS provides only a few configuration knobs. 
+        - 
