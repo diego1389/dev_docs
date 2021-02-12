@@ -358,4 +358,12 @@
 			1. **Application load balancer (layer 7):** HTTP and HTTPS.
 			2. **Network load balancer (Layer 4):** ultra high performance, allows for TCP. 
 		    3. **Classic load balancer (Layer 4 and 7)**
-	- Create new instance -> 
+    - **Hands-on load balancer:**
+	    1. Create two new EC2 instances:
+            - **First instance details:** Subnet: us-east-2a -> copy the initialization script on user data -> Next add storage (leave it as is) -> Add tag (Name : First server) -> Security group launch wizard 3 (SSH all and TCP all ipv4 and v6) -> Review and Launch.
+            - **Second instance details:** Subnet: us-east-2b -> copy the initialization script on user data -> Next add storage (leave it as is) -> Add tag (Name : Second server) -> Security group launch wizard 3 (SSH all and TCP all ipv4 and v6) -> Review and Launch.
+        2. Go to Load balancing -> Load balancers -> Create load balancer -> Create application load balancer -> Add name -> internet facing -> ipv4 -> protocol http -> AZ: mark a, b and c -> Create a new security group (80 all) -> 
+        3. Configure routing: 
+            - Create target group: Add name -> target type: instance -> http port 80 -> Add the two instances from step one to registered targes list -> Create
+        4. Wait a few minutes until the load balancer is ready (active) -> copy the DNS name (Ip address) and paste in a browser -> Refresh the browser and check how it balances the traffic between the two instances. 
+        5. Stop one of the instances. Since it moves to an unhealthy stata in the registered targets it will forward the traffic only to the remaining healthy instance. 
