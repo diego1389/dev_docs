@@ -352,4 +352,10 @@
     - Amn ELB (elastic load balancer) is a managed load balancer.
         - AWS guarantees that it will be working.
         - AWS provides only a few configuration knobs. 
-        - 
+        - Provide SSL termination (HTTPS).
+		- Highly available across AZ.
+		- 3 kinds of load balancers:
+			1. **Application load balancer (layer 7):** HTTP and HTTPS.
+			2. **Network load balancer (Layer 4):** ultra high performance, allows for TCP. 
+		    3. **Classic load balancer (Layer 4 and 7)**
+	- Create new instance -> 
