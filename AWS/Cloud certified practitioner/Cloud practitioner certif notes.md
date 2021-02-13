@@ -374,11 +374,69 @@
         - Costs savings.
     - **Auto scaling group hands-on:**
         *  Go to auto scaling group -> Create Amazon auto scaling group -> \* Create a template -> Select the created template -> Next, subnets: select all the AZ -> Next -> Attach existing load balancer -> Select target group -> ELB healthcheck (if it detects my instance is unhealthy it will be replaced) -> \**Configure size -> Desired: 2, Minimum: 1, Max: 4 -> None -> next, next Create auto scaling group. -> Check the instance management tab and you can see the instances that were created automatically -> YOU can also check it on the Targets groups, the instances tab and the load balancer.
-        - Terminate one instance and check in the activite tab on Auto scaling group that it adds a new instance because the desired capacity is two.
-        - 
+        - Terminate one instance and check in the activite tab on Auto scaling group that it adds a new instance because the desired capacity is two. 
         
         \* Create a launch template -> Name it -> AMI (Amazon Linux 2) -> t2.micro -> Choose key pair -> VPC -> Security group launch-wizard-1 -> Scroll down to the details and add the user data script -> Create launch template.
 
         \** If you want to do it automatically add a target tracking policy -> Select a metric (CPU) -> etc
         * We just created a template for instances creation to use it in our autoscaling group.
-        * 
+        
+## S3:
+
+- Infinitely scaling storage.
+- Many websites use Amazon S3 as a backbone.
+- Backup and storage.
+- Disaster recovery.
+- Archive data.
+- Hybrid cloud storage.
+- Media hosting.
+- Data lakes and big data analytics.
+- Static website.
+- **Buckets (directories):**
+    - Buckets most have a globally unique name (across all regions all accounts).
+    - Buckets are defined at the region level.
+    - S3 looks like a global service but buckets are created in a region.
+    - Naming convention:
+        - No uppercase
+        - No underscore
+        - Not IP, etc
+    - **Objects (files):**
+        - Objects have a key.
+        - The key is the full path to the object:
+            - s3://my-bucket/my_file.txt
+            - s3://my-bucket/my_folder/another_folder/my_file.txt
+            - The key is composed of a prefix (directories) + object name (file name).
+            - There is no concept of directories within buckets.
+            - Object values are the content of the body.
+            - Max size is 5TB (5000 GB).
+                - If using more you must use "multi-part upload".
+            - Metadata (key / value pairs).
+            - Tags
+            - Version iD.
+    - **Hands-on S3:**
+        - S3 -> Buckets -> Create bucket -> Bucket name (unique) -> select region -> Create bucket.
+        - Upload -> Add files -> Select file -> Upload. Now the object appears in the bucket.
+        - Go to the file object review -> Object actions -> Open (presigned url with my AWS credentials).
+        - Click on object url (access denied because its not public)
+        - Create a folder inside the bucket (images).
+        - Delete folder (deletes objects inside it). 
+      - **S3 security:**
+        - **User based:** IAM policies: which API calls should be allowed for a specific user from IAM console.
+            - Allow IAM user to access our buckets
+        - **Resource based:** S3 Bucket policy, a rule attached directly into your buckets.
+            - Allows public access.
+        - **Object Access Control List (ACL)**
+        - **Bucket Access Control List (ACL)**
+        - Encryption.
+        - You can create an EC2 Instance role to grant access to the S3 objects (IAM permissions) and then attach that role to the instance. (There is no IAM user for an EC2 instance, bad!).
+        - Cross account access (other AWS account) -> Create a bucket policy.
+        - S3 bucket policies:
+            - JSON based policies.
+                - Actions: set of ASPI to allow or deny (fe: s3.GetObject)
+                - Effect: Allow, Deny
+                - Principal: The account or user to apply the policy to.
+            - Use the S3 bucket policy to grant public access to the bucket.
+            - Force objects to be encrypted at upload.
+            - Grant access to another account.
+            - Disable bucket settings for block public access (to prevent data leaks).
+            
