@@ -367,3 +367,18 @@
             - Create target group: Add name -> target type: instance -> http port 80 -> Add the two instances from step one to registered targes list -> Create
         4. Wait a few minutes until the load balancer is ready (active) -> copy the DNS name (Ip address) and paste in a browser -> Refresh the browser and check how it balances the traffic between the two instances. 
         5. Stop one of the instances. Since it moves to an unhealthy stata in the registered targets it will forward the traffic only to the remaining healthy instance. 
+    - **Autoscaling group:**
+        - Scale out to match an increase load or scale in to decrease instances.
+        - Automatically register new instances to a load balancer.
+        - Replace unhealthy instances.
+        - Costs savings.
+    - **Auto scaling group hands-on:**
+        *  Go to auto scaling group -> Create Amazon auto scaling group -> \* Create a template -> Select the created template -> Next, subnets: select all the AZ -> Next -> Attach existing load balancer -> Select target group -> ELB healthcheck (if it detects my instance is unhealthy it will be replaced) -> \**Configure size -> Desired: 2, Minimum: 1, Max: 4 -> None -> next, next Create auto scaling group. -> Check the instance management tab and you can see the instances that were created automatically -> YOU can also check it on the Targets groups, the instances tab and the load balancer.
+        - Terminate one instance and check in the activite tab on Auto scaling group that it adds a new instance because the desired capacity is two.
+        - 
+        
+        \* Create a launch template -> Name it -> AMI (Amazon Linux 2) -> t2.micro -> Choose key pair -> VPC -> Security group launch-wizard-1 -> Scroll down to the details and add the user data script -> Create launch template.
+
+        \** If you want to do it automatically add a target tracking policy -> Select a metric (CPU) -> etc
+        * We just created a template for instances creation to use it in our autoscaling group.
+        * 
