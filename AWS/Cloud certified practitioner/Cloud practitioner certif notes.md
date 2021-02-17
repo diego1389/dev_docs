@@ -439,4 +439,20 @@
             - Force objects to be encrypted at upload.
             - Grant access to another account.
             - Disable bucket settings for block public access (to prevent data leaks).
-            
+        - **Hands on security:**
+            - Go to the **Bucket** permissions -> Block public access Edit -> Edit -> Uncheck everything and save -> write confirm -> Edic bucket policy -> Generate policy\* and paste it under Policy -> Save changes.
+
+            \*Edit bucket policy -> Policy generator -> S3 Bucket policy -> Allow -> Principal: * -> Action: Get object -> Amazon resource name: arn:aws:s3:::diego-ccp-demo-2021/* -> Add statement -> Generate policy -> copy the JSON -> Paste it under Policy (Edit bucket policy).
+    - **Websites:**
+        - Host static websites under awz.
+        - <bucket_name>.s3-website.<AWS-region>.amazonaws.com
+        - **Website hands-on**:
+            - Upload beach.jpg and index.html on the public bucket. -> Bucket properties -> Static website hosting -> Edit -> Host static document -> Index document (index.html) -> Save -> Now under static website hosting there is a bucket website endopoint.
+        - **S3 Versioning overview:**
+            - You can version your files in Amazon S3.
+            - It is enabled at bucket level.
+            - It protects against unintended deletes (ability to restore a version).
+            - Any file that is not versioned prior to enabling versioning will have version null. 
+        - **Hands-on:**
+            - Go to bucket -> Bucket versioning -> Enable -> Save
+            - Edit the index.html file -> Upload it again -> Go to the file versions tab. 
