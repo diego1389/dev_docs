@@ -456,3 +456,35 @@
         - **Hands-on:**
             - Go to bucket -> Bucket versioning -> Enable -> Save
             - Edit the index.html file -> Upload it again -> Go to the file versions tab. 
+            - TO check the versions under the Buckets -> objects list check the List versions option. Then you can delete the version using its id.
+            - When you delete an object that doesnt have version it (but we need to activate versioning first) adds a delete marker. If you check the List versions you can restore it. If you delete the delete market it restores the object. 
+      - **S3 Access Logging:**
+        - For audit purpose.
+        - Any reqeust made to S3 will be logged into another S3 bucket.
+            - **Hands-on:**
+                - Create new bucket (for the logs of the other bucket).
+                - On the other bucket go to properties -> Server access logging -> Edit -> Enable -> enable -> target bucket/logs -> save
+                - After a couple of hours you will get the logs into the logging bucket.
+    - **S3 Replication:**
+        - Replicate content from one bucket into another.
+        - Must enable versioning in source and destination
+        - Cross Region Replication (CRR).
+        - Same Region Replication (SRR).
+        - Buckets can be in different accounts.
+            
+            - **Hands-on:**
+
+            - Create new bucket -> select different region -> enable versioning.
+            - Go to main bucket -> Management -> Replication rules -> Create replication rule -> Destination -> add bucket name -> Choose IAM role -> Create new role -> Save
+            - Objects added before replication are not replicated. 
+
+    - **S3 Storage classes:**
+        -  Standar-Infrequent Access (IA)
+        - Standard-Infrequent Access
+        - One zone-infreqent Access
+        - Intelligent Tiering
+        - Glacier
+        - Glacier deep archive
+        - Reduced Redundancy Sotrage (deprecated)
+
+        - Durability: how often you will use a file
