@@ -479,12 +479,59 @@
             - Objects added before replication are not replicated. 
 
     - **S3 Storage classes:**
+        - General class (99.99% availability).
+            - Frequently accessed data.
+            - Low latency.
+            - Sustain 2 concurrent facility failure
         -  Standar-Infrequent Access (IA)
+            - Rapid access.
+            - 99.9% availability.
+            - Lower cost compared to standard.
+            - As data store for distaster recovery, backups.
         - Standard-Infrequent Access
-        - One zone-infreqent Access
+        - One zone-infrequent Access:
+            - Single AZ.
+            - 99.%
+            - Lower cost comparted to S3-IA
         - Intelligent Tiering
+            - 99.9% availability.
+            - Cost-optimized by automatically moving objects between two access tiers based on changing patters:
+                - Frequent access
+                - Infrequent access.
         - Glacier
         - Glacier deep archive
+            - Low cost object storage
+            - Data is retained for longet term(years)
+            - ASmazon Glacier (cheap):
+                - Expedited (1 to 3 minutes retrieval)
+                - Standard (3 to 5 hours)
+                - BUlk (many files 5 to 12 hours)
         - Reduced Redundancy Sotrage (deprecated)
+        - Moving between storage classes.
+        - Moving objects can be automated using lifecycle configuration.
+        - **Hands-on:**
+            - Upload files -> Storage class -> Standard IA -> Edit it a move it to Glacier (Select the file and scroll down to storage class).
+            - When you edit the storage class it creates a new version of the object.
+            - Go to bucket -> Management -> Create Lifecycle rules -> Name it -> Apply to all objects in the bucket -> transition current versions of objects between storage classes -> 
 
-        - Durability: how often you will use a file
+        - Durability: how often you will use a file (99.9999999%)
+        - Availability: measures how readily available a service is (99.99%, 53 minutes a year will not be available). Varies depending of the storage class. Transition to Standard-IA after 35 days -> To glacier after 180 days -> Expire current versions of objects (check) -> Expire current versions of objects after (n) days.
+      - **S3 Object Lock & Glacier vault lock:**
+        - Object Lock (WORM write once read many).
+            - BLock an object version deletion for a specified amount of time.
+        - Glacier Vault Lock
+            - Lock the policy for future  edits (cannot longer be changed).
+            - Compliance and data retention.
+     - **Shared responsability:**
+        - AWS: responsible for infraestruction, durability availability, sustain concurrent loss of dataa, configuration and vulnerability analysys.
+        - User: versioning, bucket policies, replication setup, logging and monitoring, storage classes, data encryption.
+       - **Snow Family Overview**
+        - Highly secure portable devices to collect and process data at the edge and migrate data into and out of AWS.
+        - Data migration:
+            - Snowcone
+            - Snowball edge
+            - Snowmobile
+        - Edge computing
+            - Snowcone
+            - Snowball eedge
+        
