@@ -526,12 +526,78 @@
         - AWS: responsible for infraestruction, durability availability, sustain concurrent loss of dataa, configuration and vulnerability analysys.
         - User: versioning, bucket policies, replication setup, logging and monitoring, storage classes, data encryption.
        - **Snow Family Overview**
-        - Highly secure portable devices to collect and process data at the edge and migrate data into and out of AWS.
+        - Highly secure portable (offline) devices to collect and process data at the edge and migrate data into and out of AWS.
         - Data migration:
             - Snowcone
+                - Smaller.
+                - 8 TB
             - Snowball edge
+                - Pay per data transfer job.
+                - Block storage and Amazon S3 compatible object storage.
+                - Storage optimized or compute optimized.
+                - 80 TB
             - Snowmobile
+                - It is a truck.
+                - 100 > PB
         - Edge computing
             - Snowcone
             - Snowball eedge
-        
+        - It is a physical device that AWS will send to you to upload a lot of information to AWS.
+        - It process data that is being created on an edge location. A truck on the road, a ship on the sea, a mine.
+        - OpsHub
+            - Normally the snow family uses a CLI but OpsHub is a software that you use in your computer to manage the snow family.
+            - A graphical interface.
+        - **Hands-on snow family:**
+            - Services -> AWS Snow family -> Order one -> Import into Amazon S3
+        - **Hybrid Cloud for storage:**
+            -  AWS storage gateway: expose the S3 data on-premise.
+            - Differnet types:
+                - File gateway.
+                - Volume gateway.
+                - Tape gateway.
+
+## Database intro:
+- No SQL databases allow horizontal scaling (scale out). Relational databases allow only vertical scaling (more resources).
+- AWS db:
+    - Quick provisioning.
+    - High availability/
+    - Vertical and horizontal scaling.
+    - Automated backup & restore operations.
+    - OS patching (AWS responsability).
+- **Relational database:**
+    - Managed database service for DB use
+        - Postgres
+        - MySQL
+        - MariaDB
+        - Oracle
+        - Microsoft SQL Server
+        - Aurora (AWS propietary)
+    - RDS instead of installing our own database on an EC2 instance:
+        - Automated provisioning, OS patching.
+        - COntinous backups and restore to a specific timestamp
+        - Monitoring dashboards.
+        - Read replicas for improved read performance.
+        - Multi AZ.
+        - We cannot SSH to our DB instance.
+    - It uses an Elastic Load Balancer
+    - **RDS deployments:**
+        - Read replicas (up to 15).
+            - Data is only written through the main DB.
+        -Multi AZ: high availability.
+            - Read and write through the same DB.
+            - Failover DB.
+        - Multi-region
+            - Read replicas on multiple regions.
+            - Write happens only in the main db (in one region).
+    - **Amazon ElastiCache:
+        - To get managed Redis or Memcached.
+        - In memory databases with high performance and low latency.
+        - Reduce load off databases for read intensive workloads.
+        -  
+    - **Amazon Aurora:**
+        - Amazon propietary.
+        - Supports Postgres SQL and MySQL.
+        - It is cloud optimized (5x performance improvement over MySQL running on RDS and 3x Postgres).
+        - It grows automatically in increments of 10 GB.
+        - 20 % more expensive.
+- 
