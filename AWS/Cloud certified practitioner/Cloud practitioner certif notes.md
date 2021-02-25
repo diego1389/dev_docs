@@ -600,4 +600,62 @@
         - It is cloud optimized (5x performance improvement over MySQL running on RDS and 3x Postgres).
         - It grows automatically in increments of 10 GB.
         - 20 % more expensive.
-- 
+    - **Dynamo DB:**
+        - Fully managed highly available with replication in 3 AZ.
+        - NoSQL database.
+        - Distributed serverless database.
+        - Fast and consistent performance.
+        - Low latency.
+        - Dynamic Database Acelator (DAX).
+            - In memory cache for Dynamo DB.
+    - **Redshift:**
+        - It's based on PostgreSQL for Online Analytical Processing (OLAP).
+        - Warehousing.
+        - Load data every hour (not every second).
+        - Columnar storage of data (instead of rows).
+        - Pay as you go.
+        - BI tools as AWS Quicksight or Tableau.
+    - **EMR:**
+        - Elastic map reduce.
+        - Hadoop clusters (big data) to analyze vast amounts of data.
+        - Cluster of hundreds of EC2 instances.
+        - Machine learning, web indexing.
+    - **Athena:**
+        - Serverless database.
+        - Used to query data on S3.
+        - Pay per query.
+        - Output results back to S3.
+    - **Amazon Quecksight:**    
+        - Serverless machine learning-powered business intelligence service to create interactive dashboards.
+        - Business analytics.
+        - Building visualizations.
+        - Perform ad hoc analysis.
+    - **DocumentDB:**
+        - The same as MongoDB.
+        - Query and index json data.
+        - 3 availabilty zones.
+        - Millions of requests per sercond.
+    - **Amazon Neptune:**
+        - Graph database.
+        - Graph dataset (social network).
+        - 3 AZ. HIghly connected datasets.
+        - Billions of relations.
+        - Great knowledge graphs (wikipedia, social networks).
+    - **Amazon QLDB:**
+        - Quantum ledger db: 
+        - A record of financial transactions.
+        - To review history of all the changes made to your application data over time.
+        - Innmutable system. Crypthographical verifiable.
+        - The difference between QLDB and blockchain is that there is no descentrailization concept.
+    - **Managed blockchain:**
+        - Descentralization concept.
+        - Join public blockchain networks.
+        - Create your own scalable private network.
+    - **DMS:**
+        - Database migration service. Move data from one db to another.
+        - Source database remain available.
+    - **Glue:**
+        - ETL service (Extract, transform load).
+        - Fully serverless service.
+        - 
+    
