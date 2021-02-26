@@ -657,5 +657,34 @@
     - **Glue:**
         - ETL service (Extract, transform load).
         - Fully serverless service.
+- **ECS:**
+    - Docker: softwere development platform to deploy apps.
+        -  Apps are packed in containers (regardless of OS)
+        - Any time, no compatibility issues, easier to mantain and deploy.
+        - Docker repositories.
+        - Docker is a sort of virtualization technology. Resources are shared with the host, many containers on one server.
+    - ECS: Elastic container service. 
+        - Launch the docker containers on AWS.
+        - You must provision and mantain the infraestructure.
+        - AWS takes care of starting of stopping the containers.
+        - Has integration with an application load balancer.
+    - Fargate:
+        - We dont need to provision any infraestructure (dont need an EC2 instance, serverless).
         - 
-    
+    - Elastic container registry (ECR):
+        - Private docker registry on AWS so they can be run on Fargate or ECS.
+- **Serverless:**
+    - The developers don't manage the servers anymore.
+    - Function as a service.
+    - **Lambda:**
+        - Virtual functions:
+            - Limited by time.
+            - Run on demand.
+            - Scaling is automated.
+            - Pay per request.
+            - Event-driven
+            - Integrated with many programming languages.
+            - Lambda container image: it must implement the Lambda Runtime API.
+            - For example when you upload an image on AWS S3 it will trigger a lambda function that will create thumbnail on S3 or write metadata on DynamoDB.
+            - You pay per calles (first one million requests are free).
+            - Pay for the duration (in increments of 100 ms)
