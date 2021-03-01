@@ -688,3 +688,48 @@
             - For example when you upload an image on AWS S3 it will trigger a lambda function that will create thumbnail on S3 or write metadata on DynamoDB.
             - You pay per calles (first one million requests are free).
             - Pay for the duration (in increments of 100 ms)
+    - **Lambda hands-on:**
+        - Lambda explanation: https://us-east-2.console.aws.amazon.com/lambda/home?region=us-east-2#/begin
+        - Create function -> Use blueprint -> hello-world-python -> name -> Create function -> Test -> Create demo test -> name -> Test.
+        - To run functions without provisioning servers.
+        - You can edit settings and set the memory limit for your function, also time-out, 
+- **API Gateway:**
+    - Fully managed service for developers to easily create, publish, mantain, monitor and secure API.
+    - Serverless and scalable.
+- **AWS Batch:**
+    - Allows batch processing, hundreds of thousands of computing batch jobs on AWS.
+    - A job that has a start and an end.
+    - Will dynamically launch EC2 instances or spot instances..
+    - Are defined as a docker image.
+    - **Lambda:**
+        - Time limit.
+        - Limited runtimes.
+        - Limited temporary disk space.
+    - **Batch:**
+        - No time limit.
+        - Any runtime as long as it's packed as a Docker image.
+        - Rely on EBS and EC2 (not serverless).
+- **Lightsail:**
+    - Virtual servers, storage, databases and networking.
+    - Low and predictable pricing.
+    - Simpler than EC2, RD2, ELB, EBS, Route S3.
+    - Deploy simple websites (LAMP, MEAN, Joomla, etc).
+- **Lightsail hands-on:**
+    - Select a blueprint (Wordpress website, etc), region, OS.
+    - Quickly up and running.
+## Deploy and manage infraestructure 
+- **Cloudformation:**
+    - Declarative way of outlining your AWS infraestructure for any resource.
+    - Cloudformation template (EC2, security group, storage, etc).
+    - Infraestructure as code.
+    - No resource manually created.
+    - You can estimate the costs using the template.
+    - Declarative programming.
+    - Ability to create and destroy infraestructure on the fly.
+    - Useful when you need to repeat an architecture on different environments.
+    - **Hands-on:**
+        - Cloudformation -> Create stack -> Template is ready -> us-east-1 -> Upload -> 0-just-ec2.yaml -> view in designer -> Next -> Name it -> Create.
+        - You can check the events that are happening.
+        - You can check the instance on EC2 instances.
+        - Go to CloudFormation -> Update -> Change the script to 1-ec2...
+        -> Now we have a changes set -> Update stack -> 
