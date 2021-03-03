@@ -732,4 +732,51 @@
         - You can check the events that are happening.
         - You can check the instance on EC2 instances.
         - Go to CloudFormation -> Update -> Change the script to 1-ec2...
-        -> Now we have a changes set -> Update stack -> 
+        -> Now we have a changes set -> Update stack.
+- **Elastic Beanstalk:**
+    - A developer centric view of deploying an application on AWS.
+    - We still have full control over the configuration.
+    - BeanstalkÑ Platform as a Service (PaaS).
+    - Managed service.
+        - Deployment strategy is configurable but performed by Elastic Beanstalk.
+        - Load balancing and auto-scaling.
+    - Just the application code is the responsability of the developer. 
+    - **3 architecture models:**
+        - Single instance deployement (for devs).
+        - LB (load balancer) + AGS (auto-scaling group) great for prod and pre prod web applications.
+        - AGS only: for non-web apps in production (workers).
+    - Support a lot of platforms.
+    - Health monitoring.
+    - **Beanstalk hands-on:**
+        - Elastic Beanstalk -> Create application -> Name it -> Select platform (node.js) -> Sample application -> Create application.
+        - It uses Cludformation behing the scenes.
+        - Copy and paste the link of the application once it finishes.
+        - We can create multiple environmnent within our application.
+    - **CodeDeploy:**
+        - More permisive. Independent from cloud formation.
+        - Deploy application automatically.
+        - Works with on-premises servers.
+        - Hybrid service
+    - **CodeCommit:**
+        - AWS version of GitHub.
+        - Version control repository.
+        - Private, secured and integrated with AWS.
+    - **CodeBuild:**
+        - Compiles source code, run tests and produces packages that are ready to be deployed.
+        - Code building service in the cloud.
+        - Pay-as-you-go.
+    - **CodePipeline:**
+        - Orchestrate the different steps to have the code automatically pushed to production.
+        - Basis for CI/CD.
+        - Fully managed and compatible with a lot of services.
+    - **AWS CodeArtifact:**
+        - Storing and retrieving dependencies (software packages).
+        - WOrks with commong dependency management tools (npm, yarn, etc).
+        - Developers and CodeBuild can retrieve dependencies from CodeArtifact.
+    - **AWS CodeStar:**
+        - Unified UI to easily manage software development activities in one place.
+    -  **AWS Code9:**
+        - A Cloud IDE.
+        - Used within a webbrowser.
+        - Code collaboration in real-time (pair programming).
+    - 
