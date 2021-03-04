@@ -775,8 +775,25 @@
         - Developers and CodeBuild can retrieve dependencies from CodeArtifact.
     - **AWS CodeStar:**
         - Unified UI to easily manage software development activities in one place.
+        -**Hands-on:**
+            - CodeStar -> Create prooject -> Python (on Elastic Beanstalk) -> Repo Code commit -> t2.micro -> Select key pair -> Create Project.
+            - Pipeline
+            - Go to IDE -> AWS cloud 9 -> t2.micro -> shutdown after 30 minutes -> Create environmnent -> Go to IDE -> Open IDE -> You can change the code on the cloud and commit to the repo and it will trigger the pipeline -> View application.
+            - Delete IDE env and the project (in overview).
     -  **AWS Code9:**
         - A Cloud IDE.
         - Used within a webbrowser.
         - Code collaboration in real-time (pair programming).
-    - 
+    - **AWS Systems Manager(SSM):**
+        - Helps you manage your EC2 and On-Premises systemas at scale.
+        - Operational insights about the state of your infraestructure.
+        - Patching automation.
+        - Run commands accros your entire fleet of serveers.
+        - Parameter store configuration.
+        - Works for windows and linux OS.
+        - Install SSM agent on the systems.
+    - **AWS OpsWorks:**
+        - Chef & Puppet help you perform server configuration automatically.
+        - They work great with EC2 and On-Premises VM.
+        - An alternative to AWS SSM.
+        - Only provision standard AAWS resources.
