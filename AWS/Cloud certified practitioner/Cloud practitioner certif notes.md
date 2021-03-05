@@ -797,3 +797,49 @@
         - They work great with EC2 and On-Premises VM.
         - An alternative to AWS SSM.
         - Only provision standard AAWS resources.
+
+## Leveragint the AWS Global Infraestructure
+
+- Application deployed in multiple geographies.
+- Crecreased latency.
+- Deploy your applications closer to your users.
+- Disaster Recovery (DR).  
+- Attack protection.
+- **Route 53>**
+    - Great to route users to the closes deployement with least latency.
+    - Managed DNS.
+     - Routing policies:
+        - Simple RP:
+            - No health checks.
+        - Weighted routng policy:
+            - Distribute the traffic accross multiple EC2 instancs.
+            - Health ckecks.
+        - Latency routing policy:
+            - Minimize the latency.
+            - Connect to the closes instance.
+        - Failover routing policy:
+            - Disaster recovery.
+    - Instances -> Create instance -> 
+     You need to create a domain and add different instances in different regions and AZ and add it to the Route 53 and it will redirect to what's closest to you.
+- **GLobal Content Delivery Network:**
+    - **Cloudfront:**
+    - Edge locations.
+    - Cache common requests.
+    - Improves the read performances, content is cached at the edge.
+    - Improves users experience.
+    - 216 Point of presence globally.
+    - For distributing files (S3 and caching them at the edge).
+    - CloudFront can be used as an ingress (to upload fiels to S3).
+    - Custom Origin (HTTP) Application load balance, Ec2 instance, S3 website.
+    - If it doesn;t have it on the cage it goes to the origin.
+    - CloudFront vs S3 Cross region replication:
+        - CloudFront: 
+            - Global edge network.
+            - Files are cached for a TTL.
+            - Great for static content that must be available everywhere.
+        - S3 Cross region replication:
+            - Must be setup for each region you want replication to happen.
+            - Files are updated in near real-time.
+            - Read only.
+            Great for dynamic content that needs to be available at low-latency in few regions.
+        
