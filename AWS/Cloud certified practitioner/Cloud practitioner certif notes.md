@@ -837,9 +837,50 @@
             - Global edge network.
             - Files are cached for a TTL.
             - Great for static content that must be available everywhere.
+            - **Hands-on:**
+                - Go to S3 and create a bucket -> Name it -> Upload the website files (code/s3/files).
+                - Go to cloudfront -> Create distribution -> origin domain name (s3) -> Restrict bucket access yes -> Grant Read Permissions on Bucket : Yes -> Create distribution -> Distributions -> Copy the origin domain and paste in a browser it will give you an access denied error  -> go to distribution, click on your distribution and go to origins and origin group -> edit -> copy the s3 bucket region and paste it on origin domain name (f.e: demo-diego-ccp-cloudfront.s3-us-east-2.amazonaws.com) -> Restrict bucket access -> use identity -> yes update bucket policy -> go to dvr0nrd0sc384.cloudfront.net/index.html.
+
         - S3 Cross region replication:
             - Must be setup for each region you want replication to happen.
             - Files are updated in near real-time.
             - Read only.
             Great for dynamic content that needs to be available at low-latency in few regions.
-        
+- **S3 Transfer Acceleration:**
+    - Increase transfer speed by transferring file to an AWS edge location which will forward the data to the S3 bucket in the target region.
+    - Amazon S3 transfer acceleartion speed comparison toolk.
+    - Upload and downloads of data into S3.
+- **AWS Global accelerator:**
+    - Improve global application (availability and performance) using AWS global network.
+    - Anycast IP.
+    - Not CDN (cached served at the edge).
+    - No caching. Improves performance for a wide range of applications over TCP or UDP (not only static websites).
+- **AWS Outposts:**
+    - Hybrid cloud.
+    - Offer the same AWS infrastructure on-premises just as in the cloud.
+    - AWS will setup and manage "Outposts racks" within your on-premises infrastructure and you can start leveragin AWS services on-premises.
+    - You are responsible for the physical security.
+
+
+## Cloud integration
+- Multiple applications will inevitably need to communicate with one another.
+- Patterns of application communication:
+    - Synchronous communications.
+    - Asynchronous / event based.
+- Asynchronous to decouple your applications:
+    - SQS queue model.
+        - Fully managed service (serverless). Used to decouple applications.
+        - 4 days, maximum 14 days of messages retention.
+        - Messages are deleted after they-re read by consumers.
+        - **Hands-on:**
+            - Go to SQS -> Create queue -> Standard -> Create -> Send and receive messages -> Send message -> Poll messages -> Remove messages from the queue.
+    - SNS pub/sub model.
+        - SNS topic send notification tto email notification, fraud service, shipping service and SQL queue.
+        - Simple Notification Service.
+        - Event publishers and subscribers.
+        - **Hands-on:**
+            - Amazon SNS -> add topic name -> Next -> Create topic -> Create subscription -> Email -> diego-ccp-demo@mailinator.com -> Go to mailinator and add the email -> Confirm the subscription -> Now the subscription will change from pending confirmation to confirmed.
+            - Topics -> demo-sns -> Publish message -> Add subject and message and send-> check mailinator inbox.
+  
+    - Kinesis (real-time data streaming model).
+    
