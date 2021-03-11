@@ -958,4 +958,56 @@
 - **Personal health dashboard:**
     - Alerts and remediation guidance when AWS is experienciing events that may impact you.
     - Relevant and timely information to help you manage events.
-    - 
+## VPC and networking:
+- Virtual Private Cloud: private network to deploy your resources (regional resource).
+- Subnets: allow you to partition  your network inside your VPC.
+- Public subnet accesible from the internet.
+- Route tables. EC2 instances are created on a public subnet.
+- Databases on the private subnet.
+- Internet gateways helps our VPC instances connect with the internet.
+- NAT gateways allow your instances in your private subnets to access the internet while remaining private.
+- EC2 instances created on our default VPC go in the range of VPC -> IPv4 CIDR.
+- Subnets partition of our VPC.
+- Internet gateway attach to VPC (route table).
+- NAT gateway associated to a subnet to access internet.
+- **Network ACL and security groups:**
+    - NACL:
+        - Operates at subnet level.
+        - Firewall which controls traffic from a to subnet.
+        - Attached at a subnet level.
+        - Rules only include IP addresses (ALLOW or DENY).
+        - Stateless.
+    - Security groups:
+        - Stateful.
+        - Operates at instance level.
+        - Firewall that controls traffic to and from an EC2 instance.
+        - Can have only ALLOW rules.
+        - Rules include IP addresses and other security groups.
+- **VPC flow logs:**
+    - Capture information about IP traffic going into your interfaces (VPC, subnet, elastic network interface).
+- **VPC peering:**
+    - COnnect two VPC, privately using AWS network.
+    - Make them behave as if the were in the same network.
+    - Connection is not transitive (must be established for each VPC that need to commnicate with one another).
+- **VPC Endpoints - Interface & Gateway (S3 and DynamoDB)**
+    - Allows to connect to AWS services using a private network instead of the public www network.
+    - Enhanced security and lower latency.
+    - VPC Endpoint gateway.
+    - Amazon S3 Dynamo DB (gateway). For the rest of services is interface.
+- **Direct connect and site-to-site VPN:**
+    - Direct connect:
+        - Physical connection between on-premises and AWS.
+        - COnnection is private, secure and fast.
+        - At least one month to establish.
+        - More expensive.
+    - Site-to-site VPN:
+        -  On-premises VPN to AWS.
+        - Connection is automatically encrypted.
+        - Goes over the public internet.
+        - Limited bandwidth.
+        - Customer Gateway (CGW).
+        - Must use a Virtual Private Gateway (VGW).
+- **Transit gateway overview:**
+    - Peering connection between thousands of VPC and on-premises.
+    - One single gateway.
+    
