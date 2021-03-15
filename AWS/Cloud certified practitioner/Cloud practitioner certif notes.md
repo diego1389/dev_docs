@@ -1010,4 +1010,107 @@
 - **Transit gateway overview:**
     - Peering connection between thousands of VPC and on-premises.
     - One single gateway.
+
+## AWS shared responsbility model:
+- **AWS responsability:**
+    - Protecting infraestructure.
+    - Managed service like S3, DynamoDB, RDS, etc.
+    - Customer responsability:
+        - Security in the cloud.
+        - Encrypting application data.
+    - Shared:
+        - Patch managgement, configuration management, awareness and training.
+- **RDS:**
+    - AWS:
+        - Manage the EC2 instance, disable SSH access.
+        - Automated DB patching.
+        - Automated OS patching.
+    - Customer:
+        - Check the ports /IP/ security groups in DB SG.
+        - In-database user creation.
+        - Creating a database with or withoud internet access.
+- **S3:**
+    - AWS:
+        - Guarantee unlimited storage.
+        - Guarantee you get encryption.
+        - Ensure preparation of the data between customers.
+        - Ensure AWS employees cannot access your data.
+    - Customer:
+        - Bucket configuration.
+        - Bucket policy / public settings.
+        - IAM users and rules.
+        - Enabling encryption.
+- **DDos protection:**
+    - Distributed denial of service attack.
+    - Use AWS shield standard.
+        - Free service activated for every AWS customer.
+        - Layer 3 4 attacks.
+    - Use AWS shield advanced (premium).
+        - $ 3000 protects against more sophisticated attacks.
+        - 24/7 access to AWS DDoS response attack team.
+    - AWS WAF to filter specific requests based on rules.
+        - Layer 7 (common web exploits).
+        -  Deploy on AApplication load balancer, API gateways, CloudFront.
+        - Define Web ACL. Rules can include IP addresses, HTTP headers, HTTP body or URI strings.
+        - Size constraints, geo-match.
+        - Rate-based rules (to count occurences of events).
+    - CloudFront and Route 53:
+        - Availability protection using global edge network.
+        - Combined with AWS shield provides attack mitigation at the edge.
+    - Penetration testing on AWS cloud:
+        - Penetration testing without prior approval for 8 services (EC2, RDS, NAT gateways, Cloudfront, AUrora, API gateways, AWS lambda, etc).
+        - Contact aws-security-simulated-event@amazon.com
+- **Encryption with KMS and cloudHSM:**
+    - Data at rest:
+        - data stored or archived on a device.
+    - Data in transit:
+        - data being moved from one location to another (to AWS, EC2 to DynamoDB, etc).
+    - Encrypt data in both sites to protected. Leverage encryption keys.
+    - **Key management services:** AWS manages the encryption keys for us.
+        - Encryption opt-in (EBS volumes, S3 buckets, Redshift, rds db).
+        - **Hands-on:**
+            - To verify the keys go to Key Management Service (KMS) -> managed keys.
+            - EC2 -> volumes -> create volume (1 GB) -> Encryption -> aws/ebs (or your own key, costs money) -> Create volume.
+            - Cloudtrail is encryption enabled by default.
+            - Custome managed keys (costs 1 dollar). It has key rotation.
+    - **CloudHSM:**
+        - AWS provisions encryption hardware.    
+        - Hardware security module.
+        - You manage your own encryption keys entirely (not AWS).
+        - Types of customer master keys (CMK):
+            - Customer managed CMK:
+                - Create, manage and ussed by the customer, can enable or disable.
+                - Rotation policy.
+            - AWS managed CMK:
+                - Created, managed and used on the customer's behalf by AWS.
+                - Used by AWS services (aws/s3, aws ebs, aws redshift).
+            - AWS owned CMK:
+                - Collection of CMKs that an AWS service owns and manages to use in multiple accounts.
+            - CloudHSM keys:
+                - Keys generated from your own CloudHSM.
     
+- **AWS secrets manager:**
+    - Meant for storing secrets.
+    - Force rotation of secrets every X days.
+    - Integration with Amazon RDS (relational dbs).
+    - Secrets are encrypted with KMS.
+- **AWS artifact:**
+    - Portal that provides customers with on-demand access to AWS compliance documentation and AWS agreements.
+    - Artifact reports.
+- **GuardDuty:**
+    - Intelligent threat discovery to protect aws account.
+    - Uses machine learning algorithms, anomaly detection, 3rd party data.
+    - Read data from various sources.
+    - You can setup cloudwatch event to be notified in case of findings.
+    - It can trigger a lambda function or send SNS notification.
+- **Amazon inspector:**
+    - Automated security assessments for EC2 instances.
+    - Analyze the running OS against known vulnerabilities, against unintended network accessibility.
+    - Must be installed on OS in EC2 instances.
+    - You get a report at the end.
+- **AWS config:** 
+    - Helps auditing and recording compliance of your AWS resources.
+    - Possibility of storing the configuration data into S3.
+    - Record configurations and changes over time.
+- **Macle:**
+    - 
