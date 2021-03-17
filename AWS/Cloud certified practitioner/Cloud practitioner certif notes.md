@@ -1112,5 +1112,59 @@
     - Helps auditing and recording compliance of your AWS resources.
     - Possibility of storing the configuration data into S3.
     - Record configurations and changes over time.
-- **Macle:**
-    - 
+- **Macie:**
+    - Managed data security and data privacy service that uses machine learning and pattern matching to discover and protect your sensitive data.
+    - It helps to identify and alert you to sensitive data (on the S3 buckets).
+- **Security Hub Overview:**
+    - Central security tool to manage security across several AWS accounts and automate security checks.
+    - Integrated dashboards showing current security and compliance status to take actions.
+    - Aggregates alerts from varios AWS services (guardduty, macie, inspector, etc).
+- **Amazon Detective:**
+    - Analize, investigates and quickly identifies the root cause of the security issues (using ML).
+- **AWS abuse:**
+    - Report suspected AWS resources used for abusive or illegal purposes.
+    - Spam, port scanning, Dos or DDoS attacks.
+    - Hosting copyrighted content.
+- **Root user privileges:**
+    - Account owner.
+    - Has complete access.
+    - Do not use it even for administrative tasks.
+    - The only one that can change account setting (name email, address, user password, root  user access keys). 
+    - View certain tax invoices.
+    - Close the account.
+    - Restore IAM user permissions.
+    - Change or cancel your AWS support plan.
+    - REgister as a seller in the reserved instance marketplace.
+    - Sign up for GovCloud.
+    - Configure Amazon S3 bucket to enable MFA.
+    - Edit or delete an Amazon S3 bucket policy that include an invalid VPC ID or VPC endpoint ID.
+- **Machine learning:**
+    - **Amazon rekognition:**
+        - Recognize objects, text, scenes.
+        - Facial analysis and facial search to do user verification.
+        - Create a database of familiar faces.
+    - **Transcribe:**
+        - Convert speech to text.
+        - ASR deep learning process.
+        - Generate closed captioning or subtitles.
+    - **Polly:**
+        - Turns text into speech.
+    - **Translate:**
+        - Natural and accurate language translation.
+        - Large volumes of text.
+    - **Lex+Connect:**
+        - It powers alexa devices.
+        - Automatic speech recognition.
+        - Natural language, understand to recognize the intent of text, callers.
+        - **Connect:** Receive calls, create contact flows, cloud-based virtual contact center.
+            - Can integrate with other CRM systems or AWS.
+        - **Comprenhend:**
+            - Natural Language Processing.
+            - Fully managed and serverless.
+            - Find insights and relationships in text (language, extracts key phrases, places, people, positive, organizes a collection of text files by topics).
+            - Analyzes emails.
+    - **Sagemaker:**
+        - Fully managed for developers / data scientists to build ML models.
+        - High level machine learning service.
+        - Predictions from historical model.
+        - Train and tune.
