@@ -1011,7 +1011,7 @@
     - Peering connection between thousands of VPC and on-premises.
     - One single gateway.
 
-## AWS shared responsbility model:
+## Security and compliance:
 - **AWS responsability:**
     - Protecting infraestructure.
     - Managed service like S3, DynamoDB, RDS, etc.
@@ -1088,7 +1088,7 @@
                 - Collection of CMKs that an AWS service owns and manages to use in multiple accounts.
             - CloudHSM keys:
                 - Keys generated from your own CloudHSM.
-    
+
 - **AWS secrets manager:**
     - Meant for storing secrets.
     - Force rotation of secrets every X days.
@@ -1138,33 +1138,66 @@
     - Sign up for GovCloud.
     - Configure Amazon S3 bucket to enable MFA.
     - Edit or delete an Amazon S3 bucket policy that include an invalid VPC ID or VPC endpoint ID.
-- **Machine learning:**
-    - **Amazon rekognition:**
-        - Recognize objects, text, scenes.
-        - Facial analysis and facial search to do user verification.
-        - Create a database of familiar faces.
-    - **Transcribe:**
-        - Convert speech to text.
-        - ASR deep learning process.
-        - Generate closed captioning or subtitles.
-    - **Polly:**
-        - Turns text into speech.
-    - **Translate:**
-        - Natural and accurate language translation.
-        - Large volumes of text.
-    - **Lex+Connect:**
-        - It powers alexa devices.
-        - Automatic speech recognition.
-        - Natural language, understand to recognize the intent of text, callers.
-        - **Connect:** Receive calls, create contact flows, cloud-based virtual contact center.
-            - Can integrate with other CRM systems or AWS.
-        - **Comprenhend:**
-            - Natural Language Processing.
-            - Fully managed and serverless.
-            - Find insights and relationships in text (language, extracts key phrases, places, people, positive, organizes a collection of text files by topics).
-            - Analyzes emails.
-    - **Sagemaker:**
-        - Fully managed for developers / data scientists to build ML models.
-        - High level machine learning service.
-        - Predictions from historical model.
-        - Train and tune.
+## Machine learning:
+- **Amazon rekognition:**
+    - Recognize objects, text, scenes.
+    - Facial analysis and facial search to do user verification.
+    - Create a database of familiar faces.
+- **Transcribe:**
+    - Convert speech to text.
+    - ASR deep learning process.
+    - Generate closed captioning or subtitles.
+- **Polly:**
+    - Turns text into speech.
+- **Translate:**
+    - Natural and accurate language translation.
+    - Large volumes of text.
+- **Lex+Connect:**
+    - It powers alexa devices.
+    - Automatic speech recognition.
+    - Natural language, understand to recognize the intent of text, callers.
+    - **Connect:** Receive calls, create contact flows, cloud-based virtual contact center.
+        - Can integrate with other CRM systems or AWS.
+- **Comprenhend:**
+    - Natural Language Processing.
+    - Fully managed and serverless.
+    - Find insights and relationships in text (language, extracts key phrases, places, people, positive, organizes a collection of text files by topics).
+    - Analyzes emails.
+- **Sagemaker:**
+    - Fully managed for developers / data scientists to build ML models.
+    - High level machine learning service.
+    - Predictions from historical model.
+    - Train and tune.
+## Account management, billing and support:
+- **AWS Organizations:**
+    - Manage multiple AWS accounts.
+    - Master account.
+    - Cost benefits, single payment method.
+    - Pooling of reserved EC2 instances.
+    - API is available to automate AWS account creation.
+    - Restrict account privileges using Service Control Policies (SCP).
+    - Multi account strategies:
+        - Create accounts per department, per cost center, per dev / test/ prod, based on regulatory restrictions, for better resource isolation, per account service limits, isolated account for logging.
+        - Tagging standars for billing purposes (for all accounts).
+        - Enable Cloudtrail on all accounts, sends logs to central S3 account.
+        - Send cloudwatch logs to central logging account.
+    - Organizational Units (OU):
+        - Environment, production, etc.
+        - Project-based.
+        - The OU can have multiple accounts.
+        - Better leave the master account on the Root OU.
+    - Service Control Policies:
+        - Whitelist or blacklist IAM actions.
+        - Applied at the OU or Account level.
+        - Does not apply to master account (different from root).
+        - Restrict access to certain services.
+        - Enforce PCI compliance.
+        - SCP cascade effect. Denies for accounts and OU below.
+        
+- **AWS control tower:**
+    - Set up and govern a secure and compliant multi-account AWS environment.
+    - Automate the set up of the environment in a few clicks.
+    - Automate ongoing policy management using guardrails.
+    - Detect policy violations.
+    - Monitor compliance through an interactive dashboard.
+    - It runs on top of AWS Organizations.
