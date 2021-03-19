@@ -1193,7 +1193,6 @@
         - Restrict access to certain services.
         - Enforce PCI compliance.
         - SCP cascade effect. Denies for accounts and OU below.
-        
 - **AWS control tower:**
     - Set up and govern a secure and compliant multi-account AWS environment.
     - Automate the set up of the environment in a few clicks.
@@ -1201,3 +1200,74 @@
     - Detect policy violations.
     - Monitor compliance through an interactive dashboard.
     - It runs on top of AWS Organizations.
+- **Pricing models of the cloud:**
+    - **Pay as you go:**
+        - Responsive, meet scale demands.
+    - **Save when you reserve:**
+         - Minimize risks, predictably manage budgets. Long-term requirements.
+         - EC2, Reserved instances, DynamoDB, ElastiCache, RDS, redshift.
+    - **Pay less by using more:**
+        - Volume-based discounts (S3).
+    - **Pay less as AWS grows:**
+        - Monthly or yearly.
+    - **Compute pricing - EC2:**
+        - Number of instances, instance configuration (physical capacity, region, OS and software, instance type and size).
+        - ELB running time and amount of data processed.
+        - **On-demand isntances** (pay per second Linux or per hour Windows).
+        - **Reserved instances** 75 % discound compared to On-demand.
+            - 1 or 3 years commitmen.
+            - All upfront, partial upfront, no upfront.
+        - **Spot instances:**
+            - 90 % discount compared to On-demand.
+        - **Dedicated host:**
+            - On-demand, reservation for 1 year or 3 years.
+        - **Saving plans**
+            - Commit a certain $ amount per hour for 1 or 3 years.
+            - Easiest way to setup long-ter commitments on AWS.
+            - EC2 instance savings plan:
+                -Commit to usage of individual instance family, regardless of size.
+            - COmpute savings plan:
+                - 66 % discount. Regardless of family, region, size, OS, tenancy, compute options.
+                - Compute options: EC2, fargate, lambda.
+    - **Compute pricing for lambda and ECS:**
+        - Lambda:
+            - Pay per call.
+            - Pay per duration.
+        - ECS:
+            - EC2 launch type model: no adiotional fees, you pay for the AWS resources stored and created in your application.
+        - Fargate:
+            - Fargate launch type model: pay for vCPU and memory resources allocated to your applicatons in your containers.
+    - **Storage pricing - S3:**
+        - Storage class (Standard, infrequent access, one-zone, glacier, etc).
+        - Number and size of objects.
+        - Number and type of requests.
+        - Data transfer out of the s3 region.
+        - S3 transfer acceleration.
+        - Lifecycle transitions.
+    - **EBS** 
+        - Volume type (based on performance).
+        - Storage volume in GB per month provissioned.
+        - IOPS:
+            - General purpose SSD.
+        - Snapshots.
+        - Data transfer.
+     - **Database RDS:**         
+        - Per hour billing.
+        - Database characteristics (engine, size, memory class).
+        - Purchase type:
+            - On-demand.
+            - Reserved instances (1 or 3 years).
+        - Backup storage.
+        - Additional storage (per GB per month).
+        - Number of IO operations.
+        - Deployment type (single AZ or multiple).
+        - Data transfer.
+    - **Cloudfront:**
+        - Different accross different geographic regions.
+        - Agreggated for each edge location.
+        - Data transfer out.
+        - Number of requests.
+    - **Networking costs:**
+        - Use private IP insterad of public.
+        - Use same AZX for maximum savings.
+
