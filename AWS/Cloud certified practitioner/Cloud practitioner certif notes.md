@@ -1270,4 +1270,51 @@
     - **Networking costs:**
         - Use private IP insterad of public.
         - Use same AZX for maximum savings.
-
+    - **Billing and costing tools:**
+        - **Estimating costs in the cloud:**
+            - TCO (total cost of ownership) calculator.
+                - Allows you to estimate the cost savings when using AWS and provide a detailed set of reports that can be used in executive presentations.
+                - Compare the cost of your applications in an on-premises or traditional hosting environment.
+                - Compares the server costs, storage costs, network costs and IT labor costs.
+            - Simple monthly calculator / AWS Pricing calculator.
+                - Estimate the cost for your architecture solution.
+        - **Tracking costs in the cloud:**
+            - Billing dashboard.
+                - High level view.
+                - AWS free tier dashboard.
+            - Cost allocation tags.
+                - Tags to track your AWS costs on a detailed level.
+                - AWS generated tags automatically applied to the resource you create.
+                - Free naming.
+                - Tags can be used to create Resource Groups.
+            - Cost and usage reports.
+                - Dive deeper into your cost and usage.
+                - Most comprenhensive set of AWS cost and usage data available.
+                - Can be integrated with Athena, Redshift or Quicksight.
+            - Cost explorer.
+                - Visualize, understand and manage our AWS costs and usage over time.
+                - Create custom reports.
+                - Forecast usage up to 12 months based on previous usage.
+                - Up to 12 months ahead of time.
+                - Recommendations to save costs.
+        - **Monitoring against costs plans:**
+            - Billing alarms.
+                - Billing data metric is stored in CloudWatch us-east-1.
+                - Actual costs.
+                - Simple alarm.
+            - Budgets.
+                - Send alarms when costs exceeds the budget.
+                - Usage,  cost and reservation.
+                - For reserved instances.
+                - First two budgets are free.
+    - **AWS trusted advisor:**
+        - High level account asssessment.
+        - Analyze your AWS accounts and provides recommendations: cost optimization, performance, security, fault tolerance and service limits.
+        - Core checks and recommendations for all customers.
+        - Can enable weekly email notification from the console.
+        - Full trusted advisor (business and enterprise supoort plans).
+        - Cost optimization: Low utilization EC2 instances, idle load balancers, under-utilized volums.
+        - Performance: high utilization EC2 instances, cloudfront CDN optimizations.
+        - Security: MFA eneabled on Root account, iam key rotation, exposed access keys. S3 bucket permissions for public access, security groups and unrestricted ports.
+        - Fault tolerance: EBS snapshots age, AZ balance, ASG multi-az, reds multi-az, ELB configuration.
+        - Service limits.
