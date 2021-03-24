@@ -1318,3 +1318,56 @@
         - Security: MFA eneabled on Root account, iam key rotation, exposed access keys. S3 bucket permissions for public access, security groups and unrestricted ports.
         - Fault tolerance: EBS snapshots age, AZ balance, ASG multi-az, reds multi-az, ELB configuration.
         - Service limits.
+    - **Support plans for AWS:**
+        - Basic support: free.
+            - Customer service and communities: 24x7 access to customer service, documentation, whitepapers and support forums.
+            - AWS trusted advisor: Access to the 7 core trusted advisor checks and guidance to provision your resources following best practices to increase performance and improve security.
+            - AWS personal health dashboard: personalized view of health of AWS services and alerts when your resources are impacted.
+        - AWS developer support plan:
+            - Business hours email access to cloud support associates.
+            - Unmilited cases / 1 primary contact.
+            - Case severity : general guidance < 24 business.
+        - AWS business support plan:
+            - If you have production workloads.
+            - Trusted advisor (full set of checks and API access).
+            - 24x7 phone, email and chat access to Cloud Support Engineers.
+            - Production system impaired < 4 hours.
+            - Production system down < 1 hour.
+        - AWS enterprise support plan:
+            - Dedicated technical account manager.
+            - Mission critical workloads.
+            - Concierge support team.
+            - Business-critical system down < 15 minutes.
+    - **Advanced identity:**
+        - Cognito:
+            - Provide identity for your web and mobile applications users.
+            - Instead of creatin them an IAM user you create a user in Cognito.
+            - Integrated login.
+        - Directory services:
+            - AWS managed microsoft AD.
+            - AD connector.
+                - Proxy.
+            - Simple AD.
+                - Cnnot be joined with the on-premise AD.
+        - Single sign-on (SSO):
+            - Centrally manage Single sign-on to access muliple accounts and 3rd paty business applications.
+            - Integrated with AWS organizations.
+    - **Other services:**
+        - Workspaces:
+            - Managed desktop as a service to easily provision Windows or linux desktops.
+            - Great to eliminate management of on-premise VDI.
+            - Fast and quickly scalable.
+            - Pay as you go.
+        - Appstream:
+            - Desktop application streaming services.
+            - Deliver to any computer without acquiring or provisioning infraestructure.
+            - Delivered from within a web browser.
+            - Works with any device.
+        - Amazon Sumerian:
+            - Virtual reality, augmented reality and 3d applications.
+            - Ready to use templates and assets.
+        - IOT core overview:
+            - Internet of thigs, easily connect devices to AWS cloud.
+            - Serverless, secure and scalable to billions of devices.
+        - Elastic transcoder overview:
+            - To convert media files stored in S3 into media files in the formats required by consumer playback devices.
