@@ -3,7 +3,7 @@
 - Routers know where to send your packages on the internet.
 - Switch takes a package and send it to the correct server / client on your network.
 - Scaling is limited in traditional architectures.
-- Clound computing is the on demand delivery of compute power, database storage, applications and other IT resources.
+- Cloud computing is the on demand delivery of compute power, database storage, applications and other IT resources.
 - Pay as you go pricing.
 - You can access as many resources as you need, almost instantly.
     - **Private cloud:** cloud services used by a single organization, not exposed to the public.
@@ -55,7 +55,7 @@
         - 216 points of presence in 84 cities across 42 countries.
         - Content is delivered to end users with lower latency.
     - Region table to check availability of the service in your region.
-        - Shared responsability model. Customer is responsable for the security in the cloud (configuration, etc). AWS is responsable for the security of the cloud.
+        - Shared responsability model. Customer is responsible for the security in the cloud (configuration, etc). AWS is responsible for the security of the cloud.
         - Customer is responsible for operating system updates and patches of the instances.
 
     
@@ -73,9 +73,9 @@
         - -> Tags
             - Tags are a way to mark the users and add them some attributes but they don't change how AWS works.
         - -> Review and create user.
-        - You can download a csv with the user information. 
+        - You can download a csv with the user's information. 
         - The policy has an effect (Allow), an action (get*, list*) and a resource (*) to grant access to the users to different actions in certain resources.
-        - You can create your custom policy usinga visual editor or creation the JSON file.
+        - You can create your custom policy using visual editor or creating the JSON file.
         - Password policy: 
             - Minimum length.
             - Require specific character types.
@@ -135,7 +135,8 @@
             - Audit permissions of your account with the IAM credentials report.
             - Never share IAM users and access keys.
         - **Shared responsability model for IAM:**
-            - AWS is responsabie for:
+            - AWS is responsibl
+            e for:
                 - Infraestructure
                 - Configuration and vulnerability analysis.
                 - Compliance validation.
@@ -271,7 +272,7 @@
         - Have a provisioned capacity in advance (size in GBs).
         - You can increase capacity over time.
         - Can have more than one EBS attached to the same instance.
-        - It is possible to create an EBS volume and leave them unatached.
+        - It is possible to create an EBS volume and leave them unattached.
         - Instance details root device and block devices (EBS volumes).
         - A volume is created when you create your EC2 instance.
         - EC2 -> Elastic Block Store -> Volumes -> Create volume -> gp2 (General purpose)-> change size -> availability zone must be in the same zone as your instance -> create volume.
@@ -324,7 +325,7 @@
         - Client: backups, snapshot procedures, setting up encryption, responsability of any data on the drives, understanding the risk of using EC2 instance store.
 ## Elastic load balancing and auto scaling groups: 
 
-- Scalability means that an application / systema can handle greater loads by adapting.
+- Scalability means that an application / system can handle greater loads by adapting.
 - **Vertical scalability:** 
      - Increasing the size of the instance. Change from t2.micro to t2.large. 
      - Common for non distributed systems (such a database).
@@ -366,7 +367,7 @@
         3. Configure routing: 
             - Create target group: Add name -> target type: instance -> http port 80 -> Add the two instances from step one to registered targes list -> Create
         4. Wait a few minutes until the load balancer is ready (active) -> copy the DNS name (Ip address) and paste in a browser -> Refresh the browser and check how it balances the traffic between the two instances. 
-        5. Stop one of the instances. Since it moves to an unhealthy stata in the registered targets it will forward the traffic only to the remaining healthy instance. 
+        5. Stop one of the instances. Since it moves to an unhealthy state in the registered targets it will forward the traffic only to the remaining healthy instance. 
     - **Autoscaling group:**
         - Scale out to match an increase load or scale in to decrease instances.
         - Automatically register new instances to a load balancer.
@@ -393,7 +394,7 @@
 - Data lakes and big data analytics.
 - Static website.
 - **Buckets (directories):**
-    - Buckets most have a globally unique name (across all regions all accounts).
+    - Buckets must have a globally unique name (across all regions all accounts).
     - Buckets are defined at the region level.
     - S3 looks like a global service but buckets are created in a region.
     - Naming convention:
@@ -440,11 +441,11 @@
             - Grant access to another account.
             - Disable bucket settings for block public access (to prevent data leaks).
         - **Hands on security:**
-            - Go to the **Bucket** permissions -> Block public access Edit -> Edit -> Uncheck everything and save -> write confirm -> Edic bucket policy -> Generate policy\* and paste it under Policy -> Save changes.
+            - Go to the **Bucket** permissions -> Block public access Edit -> Edit -> Uncheck everything and save -> write confirm -> Edit bucket policy -> Generate policy\* and paste it under Policy -> Save changes.
 
             \*Edit bucket policy -> Policy generator -> S3 Bucket policy -> Allow -> Principal: * -> Action: Get object -> Amazon resource name: arn:aws:s3:::diego-ccp-demo-2021/* -> Add statement -> Generate policy -> copy the JSON -> Paste it under Policy (Edit bucket policy).
     - **Websites:**
-        - Host static websites under awz.
+        - Host static websites under aws.
         - <bucket_name>.s3-website.<AWS-region>.amazonaws.com
         - **Website hands-on**:
             - Upload beach.jpg and index.html on the public bucket. -> Bucket properties -> Static website hosting -> Edit -> Host static document -> Index document (index.html) -> Save -> Now under static website hosting there is a bucket website endopoint.
@@ -483,11 +484,11 @@
             - Frequently accessed data.
             - Low latency.
             - Sustain 2 concurrent facility failure
-        -  Standar-Infrequent Access (IA)
+        -  Standard-Infrequent Access (IA)
             - Rapid access.
             - 99.9% availability.
             - Lower cost compared to standard.
-            - As data store for distaster recovery, backups.
+            - As data store for disaster recovery, backups.
         - Standard-Infrequent Access
         - One zone-infrequent Access:
             - Single AZ.
@@ -502,11 +503,11 @@
         - Glacier deep archive
             - Low cost object storage
             - Data is retained for longet term(years)
-            - ASmazon Glacier (cheap):
+            - Amazon Glacier (cheap):
                 - Expedited (1 to 3 minutes retrieval)
                 - Standard (3 to 5 hours)
-                - BUlk (many files 5 to 12 hours)
-        - Reduced Redundancy Sotrage (deprecated)
+                - Bulk (many files 5 to 12 hours)
+        - Reduced Redundancy Storage (deprecated)
         - Moving between storage classes.
         - Moving objects can be automated using lifecycle configuration.
         - **Hands-on:**
@@ -523,7 +524,7 @@
             - Lock the policy for future  edits (cannot longer be changed).
             - Compliance and data retention.
      - **Shared responsability:**
-        - AWS: responsible for infraestruction, durability availability, sustain concurrent loss of dataa, configuration and vulnerability analysys.
+        - AWS: responsible for infraestructure, durability availability, sustain concurrent loss of data, configuration and vulnerability analysys.
         - User: versioning, bucket policies, replication setup, logging and monitoring, storage classes, data encryption.
        - **Snow Family Overview**
         - Highly secure portable (offline) devices to collect and process data at the edge and migrate data into and out of AWS.
@@ -572,9 +573,9 @@
         - Oracle
         - Microsoft SQL Server
         - Aurora (AWS propietary)
-    - RDS instead of installing our own database on an EC2 instance:
+    - RDS instead of installing your own database on an EC2 instance:
         - Automated provisioning, OS patching.
-        - COntinous backups and restore to a specific timestamp
+        - Continous backups and restore to a specific timestamp
         - Monitoring dashboards.
         - Read replicas for improved read performance.
         - Multi AZ.
@@ -589,7 +590,7 @@
         - Multi-region
             - Read replicas on multiple regions.
             - Write happens only in the main db (in one region).
-    - **Amazon ElastiCache:
+    - **Amazon ElastiCache:**
         - To get managed Redis or Memcached.
         - In memory databases with high performance and low latency.
         - Reduce load off databases for read intensive workloads.
@@ -625,7 +626,7 @@
         - Used to query data on S3.
         - Pay per query.
         - Output results back to S3.
-    - **Amazon Quecksight:**    
+    - **Amazon Quicksight:**    
         - Serverless machine learning-powered business intelligence service to create interactive dashboards.
         - Business analytics.
         - Building visualizations.
@@ -634,7 +635,7 @@
         - The same as MongoDB.
         - Query and index json data.
         - 3 availabilty zones.
-        - Millions of requests per sercond.
+        - Millions of requests per second.
     - **Amazon Neptune:**
         - Graph database.
         - Graph dataset (social network).
@@ -686,7 +687,7 @@
             - Integrated with many programming languages.
             - Lambda container image: it must implement the Lambda Runtime API.
             - For example when you upload an image on AWS S3 it will trigger a lambda function that will create thumbnail on S3 or write metadata on DynamoDB.
-            - You pay per calles (first one million requests are free).
+            - You pay per calls (first one million requests are free).
             - Pay for the duration (in increments of 100 ms)
     - **Lambda hands-on:**
         - Lambda explanation: https://us-east-2.console.aws.amazon.com/lambda/home?region=us-east-2#/begin
@@ -749,9 +750,9 @@
     - Health monitoring.
     - **Beanstalk hands-on:**
         - Elastic Beanstalk -> Create application -> Name it -> Select platform (node.js) -> Sample application -> Create application.
-        - It uses Cludformation behing the scenes.
+        - It uses Cludformation behind the scenes.
         - Copy and paste the link of the application once it finishes.
-        - We can create multiple environmnent within our application.
+        - We can create multiple environmnents within our application.
     - **CodeDeploy:**
         - More permisive. Independent from cloud formation.
         - Deploy application automatically.
@@ -771,7 +772,7 @@
         - Fully managed and compatible with a lot of services.
     - **AWS CodeArtifact:**
         - Storing and retrieving dependencies (software packages).
-        - WOrks with commong dependency management tools (npm, yarn, etc).
+        - WOrks with common dependency management tools (npm, yarn, etc).
         - Developers and CodeBuild can retrieve dependencies from CodeArtifact.
     - **AWS CodeStar:**
         - Unified UI to easily manage software development activities in one place.
@@ -785,7 +786,7 @@
         - Used within a webbrowser.
         - Code collaboration in real-time (pair programming).
     - **AWS Systems Manager(SSM):**
-        - Helps you manage your EC2 and On-Premises systemas at scale.
+        - Helps you manage your EC2 and On-Premises systems at scale.
         - Operational insights about the state of your infraestructure.
         - Patching automation.
         - Run commands accros your entire fleet of serveers.
@@ -801,12 +802,12 @@
 ## Leveragint the AWS Global Infraestructure
 
 - Application deployed in multiple geographies.
-- Crecreased latency.
+- Decreased latency.
 - Deploy your applications closer to your users.
 - Disaster Recovery (DR).  
 - Attack protection.
 - **Route 53>**
-    - Great to route users to the closes deployement with least latency.
+    - Great to route users to the closest deployement with least latency.
     - Managed DNS.
      - Routing policies:
         - Simple RP:
@@ -831,7 +832,7 @@
     - For distributing files (S3 and caching them at the edge).
     - CloudFront can be used as an ingress (to upload fiels to S3).
     - Custom Origin (HTTP) Application load balance, Ec2 instance, S3 website.
-    - If it doesn;t have it on the cage it goes to the origin.
+    - If it doesn;t have it on the cache it goes to the origin.
     - CloudFront vs S3 Cross region replication:
         - CloudFront: 
             - Global edge network.
@@ -895,6 +896,7 @@
     
 ## Cloud monitoring:
 - **CloudWatch metrics:**
+    - Devops.
     - Billong metric (per region).
     - CPU utilization, status echecks, network (not RAM).
     - Every 5 minutes.
@@ -1308,6 +1310,7 @@
                 - For reserved instances.
                 - First two budgets are free.
     - **AWS trusted advisor:**
+        - Infraestructure.
         - High level account asssessment.
         - Analyze your AWS accounts and provides recommendations: cost optimization, performance, security, fault tolerance and service limits.
         - Core checks and recommendations for all customers.
