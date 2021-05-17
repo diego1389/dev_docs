@@ -5,31 +5,31 @@
 * Unit test: a single function or service (Mocha / Jest).
     - You can write them before the actual code (TDD).
     
-* Component test: a single component (functionality, Jest / Enzyme).
+* **Component test:** a single component (functionality, Jest / Enzyme).
  * Great defense against regression.
  * Does not verify interactions between two components.
-* Snapshot test: a single component (regression), Jest. It protects a component from regression.
+* **Snapshot test:** a single component (regression), Jest. It protects a component from regression.
  * A subtype of a component test.
  * Generated automatically.
  * Verifies output matches a past record.
-* End-to-End Test: interaction between multiple components (Cypress).
- * Measures the functionaloty of the whole applications.
- * virtual or headless browser.
-* Peformance tests (not JEST). 
+* **End-to-End Test:** interaction between multiple components (Cypress).
+ * Measures the functionalty of the whole applications.
+ * Virtual or headless browser.
+* **Peformance tests (not JEST):** 
  * Idenfity bottlenecks.
-* Coverage Tests
+* **Coverage Tests:**
  * Tests for your tests.
- * Measures application code whi9ch is visited but not verified during tests. 
+ * Measures application code which is visited but not verified during tests. 
 
 ## Jest
  * Javascript library.
- * Test runners but with handy extra features (Jasmine is also of test runner).
+ * Test runners but with handy extra features (Jasmine is also a test runner).
  * Enzyme works with Jest.
  * Jasmine / Mocha (Jest is built on top of). Organize tests into groups "describe" and "it" blocks. It checks all the assertions inside tests are verified whenever the test-runner is invoked.
- *  Jests adds snapshot testing, mocking and other feature sto mocha/jasmine.
+ *  Jests adds snapshot testing, mocking and other features to mocha/jasmine.
  * Includes superiors assertion library and CLI.
  * Works with or without React. 
- * Jest has spies (mock functions) and snapshot testings and moduce mocking that Jest has but Mocha doesnt. 
+ * Jest has spies (mock functions) and snapshot testings and module mocking that Jest has but Mocha hasn't. 
  * Jest version has to match Jest CLI version. 
  * To get the latest version:
     npm install -g jest-cli
@@ -173,10 +173,10 @@
             yield put({type:`FETCHED_QUESTION`,question});
         }
 
-        //isomorphic-fetch.js (mock)
+        /*isomorphic-fetch.js (mock) create it on __mocks__ folder with the same name as the npm function now it should use the mock when calling it on the test*/
         let __value = 42;
-        const isomorphicFetch = jest.fn(()=> __value); //creates a spy function that returns __value
-        isomorphicFetch.__setValue = v=> __value = v; //equals to a method that changes this value property thats here on the global scope of this module
+        const isomorphicFetch = jest.fn(()=> __value); /*creates a spy function that returns __value, the spy function stores information regarding the times the method was called and so on*/
+        isomorphicFetch.__setValue = v=> __value = v; /*equals to a method that changes this value property thats here on the global scope of this module*/
         export default isomorphicFetch;
 
         //fetch-question-saga.spec.js
@@ -220,3 +220,90 @@
         ```
         * To update the snapshot with --update flag (after checking is not a regression of course).
             jest TagsList -u
+    - **React components testing:**
+        *  Testable components:
+            - No internal state.
+            - No side effects (ajax calls). Any ajax calls, ui changes are handled by sagas, thunks but not by components. 
+            - No lifecycle hooks. Fetching data is handling at the application level not at component level.
+        - React redux:
+            - Test container and display element separately. 
+            - Use unit tests to verify methods and properties passed by containers are accurate.
+            - Use snapshot tests to verify the output of the display component, passing props in directly.
+        - To test a component export the component itself and the inner functions.
+        - Example:
+        Original component: 
+        ```js
+        import React from 'react';
+        import Markdown from 'react-markdown';
+        import TagsList from './TagsList'
+        import { connect } from 'react-redux';
+
+        /**
+        * Question Detail Display outputs a view containing question information when passed a question
+        * as its prop
+        * If no question is found, that means the saga that is loading it has not completed, and display an interim message
+        */
+        export const QuestionDetailDisplay = ({title,body,answer_count,tags})=>(
+            <div>
+                <h3 className="mb-2">
+                    {title}
+                </h3>
+                {body ?
+                    <div>
+                        <div className="mb-3">
+                            <TagsList tags={tags}/>
+                        </div>
+                        <Markdown source={body}/>
+                        <div>
+                            {answer_count} Answers
+                        </div>
+                    </div> :
+                    <div>
+                        {/* If saga has not yet gotten question details, display loading message instead. */}
+                        <h4>
+                            Loading Question...
+                        </h4>
+                    </div>
+                }
+            </div>
+        );
+
+        export const mapStateToProps = (state,ownProps)=>({
+            /**
+            * Find the question in the state that matches the ID provided and pass it to the display component
+            */
+            ...state.questions.find(({question_id})=>question_id == ownProps.question_id)
+        });
+
+        /**
+        * Create and export a connected component
+        */
+        export default connect(mapStateToProps)(QuestionDetailDisplay);
+        ```
+        - Component test;
+        - Create QuestionDetail.js file under __tests__
+        ```js
+        import {mapStateToProps} from '../QuestionDetail';
+
+        describe('The Question Detail Component', ()=>{
+            describe('The Container element', () => {
+                describe('mapStateToProps', () =>{
+                    it('should map the state to props correct', () => {
+                        const sampleQuestion = {
+                            question_id : 42,
+                            body : "Some question"
+                        }
+                        const appsState = {questions : [sampleQuestion]};
+                        const ownProps = {question_id : 42};
+
+                        const componentState = mapStateToProps(appsState, ownProps);
+                        console.log(componentState);
+                        expect(componentState).toEqual(sampleQuestion);
+                    });
+                })
+            });
+            it('Should not regress', () => {
+
+            });
+        });
+        ```
