@@ -307,3 +307,147 @@
             });
         });
         ```
+        - Test display with snapshot test:
+        ```js
+        import {mapStateToProps, QuestionDetailDisplay} from '../QuestionDetail';
+        import renderer from 'react-test-renderer';
+        import React from 'react';
+
+        describe('The Question Detail Component', ()=>{
+            describe('The Container element', () => {
+                describe('mapStateToProps', () =>{
+                    it('should map the state to props correct', () => {
+                        const sampleQuestion = {
+                            question_id : 42,
+                            body : "Some question"
+                        }
+                        const appsState = {questions : [sampleQuestion]};
+                        const ownProps = {question_id : 42};
+
+                        const componentState = mapStateToProps(appsState, ownProps);
+                        console.log(componentState);
+                        expect(componentState).toEqual(sampleQuestion);
+                    });
+                })
+            });
+            describe('The display element', () => {
+                it('Should not regress', () => {
+                    const tree = renderer.create(
+                        <QuestionDetailDisplay
+                            title = "THANKS!"
+                            body = "43"
+                            answer_count = {0}
+                            tags = {['hitchhiking']}
+                        />
+                    );
+                    expect(tree.toJSON()).toMatchSnapshot();
+                });
+            });
+        });
+        ```
+    - React test renderer vs Enzyme:
+        - Test renderer:
+                - Doesnt need a DOM.
+                - From react team.
+        - Enzyme:
+            - Outputs result as html without DOM as well.
+            - Useful for variaty of interactions (clicking, keyboard input and more).
+    - Test stateful React components:
+        - Mock dependencies then test them
+        - Use spies to verify side effects.
+        - Move logic from lifecycles to services.
+        - Prevent regressions with snapshots, 
+        - Inject values by writing mocks for services.
+        - Make stateless components where possible.
+    - Create a stateful component:
+    ```js
+    import React from 'react';
+    import NotificationsService from '../services/NotificationsService';
+
+    export default class NotificationsViewer extends React.Component {
+    constructor(...args) {
+        super(...args);
+
+        this.state = {
+        count: -1
+        }
+    }
+
+    async componentDidMount () {
+        let { count } = await NotificationsService.GetNotifications();
+        console.log('componentDidMount count:', count);
+
+        this.setState({
+        count
+        });
+    }
+
+    componentDidUpdate() {
+        console.log('componentDidUpdate count:', this.state.count);
+    }
+
+    render() {
+        return (
+        <div className="mt-3 mb-2">
+            <div className="notifications">
+            {this.state.count != -1 ? `${this.state.count} Notifications Awaiting` : `Loading...`}
+            </div>
+        </div>
+        )
+    }
+    }
+    ```
+    - Create a NotificationsView.js under a __tests__ folder.
+    - You have to mock the NotificationsServices (create a NotificationsService.js under a __mocks__ folder).
+    - You have to explicitly say it to use the mock:
+        ```js
+        jest.mock('../../services/NotificationsService');
+        ``` 
+    - __tests__/NotificationsViewer.js
+        ```js
+        import { delay } from 'redux-saga';
+        import NotificationsViewer from '../NotificationsViewer';
+        import renderer from  'react-test-renderer';
+        import React from 'react';
+
+        jest.mock('../../services/NotificationsService');
+        const notificationsService = require('../../services/NotificationsService').default;
+
+        describe("The notification viewer", () => {
+            beforeAll(()=> {
+                notificationsService.__setCount(5);
+            });
+            it("should display the correct number of notifications", async()=> {
+                const tree = renderer.create(
+                    <NotificationsViewer/>
+                );
+
+                await delay();
+                const instance = tree.root;
+                const component = instance.findByProps({className : 'notifications'}); /*To get the div where the text is displayed */
+                const text = component.children[0]; //gets the actual text
+                expect(text).toEqual("5 Notifications Awaiting");
+            });
+        });
+        ```
+    - services/__mocks__/NotificationsService.js
+        ```js
+        let count = 0;
+        export default {
+            __setCount(_count){
+                count = _count;
+            },
+        async GetNotifications() {
+            console.warn("GOOD JOB CALLING THE MOCK SERVICE!");
+            return { count };
+        }
+        }
+        ```
+    - **Jest matcher:**
+        - Represents a claim that a value will be equal (or not) to something.
+        - https://jestjs.io/docs/expect
+        - Not: reverses an assertion.
+        - To be and to equal verify tat two values are equal. Two arrays with matching elements are equal but not identical. To equal will be true but to be will be different because they're different arrays.
+        - To be close to (for decimals).
+        - To Contain and To Have lenght.
+        
