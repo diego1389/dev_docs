@@ -1,9 +1,10 @@
-﻿<Properties>
-  <MonoDevelop.Ide.ItemProperties.GameEngine.Tests FirstBuild="True" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="GameEngine.Tests/UnitTest1.cs">
+﻿<Properties StartupConfiguration="{2969B458-B814-44B9-8390-5289C214AC4E}|Default">
+  <MonoDevelop.Ide.ItemProperties.GameEngine.Tests PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="GameEngine.Tests/BossEnemyShould.cs">
     <Files>
       <File FileName="GameEngine/PlayerCharacter.cs" Line="1" Column="1" />
-      <File FileName="GameEngine.Tests/UnitTest1.cs" Line="1" Column="1" />
+      <File FileName="GameEngine.Tests/UnitTest1.cs" Line="71" Column="8" />
+      <File FileName="GameEngine.Tests/BossEnemyShould.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,7 +12,23 @@
           <Node name="Game" expanded="True">
             <Node name="GameEngine" expanded="True" />
             <Node name="GameEngine.Tests" expanded="True">
-              <Node name="UnitTest1.cs" selected="True" />
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="BossEnemyShould.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="Game" expanded="True">
+            <Node name="GameEngine.Tests" expanded="True">
+              <Node name="GameEngine.Tests" expanded="True">
+                <Node name="PlayerCharacterShould" expanded="True">
+                  <Node name="IncreaseHealthAfterSpeeling" selected="True" />
+                </Node>
+              </Node>
             </Node>
           </Node>
         </State>
