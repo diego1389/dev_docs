@@ -182,3 +182,94 @@ public class PlayerCharacterShould{
             Assert.All(sut.Weapons, weapon => Assert.False(string.IsNullOrEmpty(weapon)));
         }
         ```
+    * Makings asserts againts object types:
+        * IsType validation is strict, meaning it will fail if you ask if BossEnemy is type enemy, even if it inherits from it. For a non-strict validation use IsAssignableFrom.
+        ```cs
+        [Fact]
+        public void CreateNormalEnemy()
+        {
+            EnemyFactory sut = new EnemyFactory();
+            Enemy enemy = sut.Create("Zombie");
+            Assert.IsType<NormalEnemy>(enemy);
+        }
+
+        [Fact]
+        public void CreateNormalEnemy_NotTypeExample()
+        {
+            EnemyFactory sut = new EnemyFactory();
+            Enemy enemy = sut.Create("Zombie");
+            Assert.IsNotType<DateTime>(enemy);
+        }
+
+        [Fact]
+        public void CreateBossEnemy()
+        {
+            EnemyFactory sut = new EnemyFactory();
+            Enemy enemy = sut.Create("Zombie King", true);
+            Assert.IsType<BossEnemy>(enemy);
+        }
+
+        [Fact]
+        public void CreateBossEnemy_NonStrict()
+        {
+            EnemyFactory sut = new EnemyFactory();
+            Enemy enemy = sut.Create("Zombie King", true);
+            Assert.IsAssignableFrom<Enemy>(enemy);
+        }
+        ```
+    * Asserting object instances
+        ```cs
+        [Fact]
+        public void CreateSeparateInstances()
+        {
+            EnemyFactory sut = new EnemyFactory();
+            Enemy enemy1 = sut.Create("Zombie");
+            Enemy enemy2 = sut.Create("Zombie");
+
+            Assert.NotSame(enemy1, enemy2);
+        }
+        ```
+    * Asserting that code throws exceptions
+        ```cs
+        [Fact]
+        public void NotAllowNullName()
+        {
+            EnemyFactory sut = new EnemyFactory();
+
+            //Assert.Throws<ArgumentNullException>(() => sut.Create(null));
+
+            //You can also pass the argument that raises the exception
+            Assert.Throws<ArgumentNullException>("name", () => sut.Create(null));
+        }
+
+        [Fact]
+        public void OnlyAllowKingOrQueenBosses()
+        {
+            EnemyFactory sut = new EnemyFactory();
+
+            EnemyCreationException ex = Assert.Throws<EnemyCreationException>(() => sut.Create("Zombie", true));
+
+            Assert.Equal("Zombie", ex.RequestedEnemyName);
+        }
+        ```
+    * Asserting that events are raised
+        ```cs
+        [Fact]
+        public void RaiseSleptEvent()
+        {
+            PlayerCharacter sut = new PlayerCharacter();
+            Assert.Raises<EventArgs>(
+                handler => sut.PlayerSlept += handler, //attach to the event
+                handler => sut.PlayerSlept -= handler,  //detach from the event
+                () => sut.Sleep()
+                );
+        }
+
+        [Fact]
+        public void RaisePropertyChangedEvent()
+        {
+            PlayerCharacter sut = new PlayerCharacter();
+
+            Assert.PropertyChanged(sut, "Health", () => sut.TakeDamage(10));/*PlayerCharacter has to implementINofityPropertyChanged interface and call OnPropertyChanged() on the properties set*/
+        }
+        ```
