@@ -5,6 +5,7 @@ namespace GameEngine.Tests
     public class BossEnemyShould
     {
         [Fact]
+        [Trait("Category", "Enemy")]
         public void HaveCorrectPower()
         {
             BossEnemy sut = new BossEnemy();

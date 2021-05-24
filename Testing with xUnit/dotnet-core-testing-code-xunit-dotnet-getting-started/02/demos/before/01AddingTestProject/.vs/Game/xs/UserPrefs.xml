@@ -2,40 +2,35 @@
   <MonoDevelop.Ide.ItemProperties.GameEngine.Tests PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="GameEngine.Tests/EnemyFactoryShould.cs">
     <Files>
-      <File FileName="GameEngine/PlayerCharacter.cs" Line="85" Column="13" />
-      <File FileName="GameEngine.Tests/UnitTest1.cs" Line="133" Column="10" />
-      <File FileName="GameEngine.Tests/BossEnemyShould.cs" Line="14" Column="6" />
-      <File FileName="GameEngine.Tests/EnemyFactoryShould.cs" Line="70" Column="10" />
+      <File FileName="GameEngine/PlayerCharacter.cs" Line="61" Column="21" />
+      <File FileName="GameEngine.Tests/BossEnemyShould.cs" Line="17" Column="1" />
+      <File FileName="GameEngine.Tests/EnemyFactoryShould.cs" Line="3" Column="1" />
       <File FileName="GameEngine/EnemyFactory.cs" Line="15" Column="14" />
-      <File FileName="GameEngine/EnemyCreationException.cs" Line="5" Column="18" />
+      <File FileName="GameEngine/EnemyCreationException.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Game" expanded="True">
-            <Node name="GameEngine" expanded="True" />
+            <Node name="GameEngine" expanded="True">
+              <Node name="PlayerCharacter.cs" selected="True" />
+            </Node>
             <Node name="GameEngine.Tests" expanded="True">
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
-              <Node name="EnemyFactoryShould.cs" selected="True" />
             </Node>
           </Node>
         </State>
-      </Pad>
-      <Pad Id="MonoDevelop.Debugger.WatchPad">
-        <State />
       </Pad>
       <Pad Id="MonoDevelop.UnitTesting.TestPad">
         <State name="__root__">
           <Node name="Game" expanded="True">
             <Node name="GameEngine.Tests" expanded="True">
               <Node name="GameEngine.Tests" expanded="True">
-                <Node name="BossEnemyShould" expanded="True" />
                 <Node name="EnemyFactoryShould" expanded="True">
-                  <Node name="CreateBossEnemy" selected="True" />
+                  <Node name="CreateNormalEnemy" selected="True" />
                 </Node>
-                <Node name="PlayerCharacterShould" expanded="True" />
               </Node>
             </Node>
           </Node>

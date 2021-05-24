@@ -1,0 +1,31 @@
+﻿<Properties StartupConfiguration="{6C54BF77-DA2D-4560-97A9-E3A7D189DC56}|Default">
+  <MonoDevelop.Ide.ItemProperties.GameEngine.Tests PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="GameEngine.Tests/GameStateShould.cs">
+    <Files>
+      <File FileName="GameEngine.Tests/GameStateShould.cs" Line="55" Column="1" />
+      <File FileName="GameEngine.Tests/GameStateFixture.cs" Line="21" Column="2" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Game" expanded="True">
+            <Node name="GameEngine.Tests" expanded="True">
+              <Node name="GameStateShould.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="MonoDevelop.UnitTesting.TestPad">
+        <State name="__root__">
+          <Node name="Game" expanded="True" selected="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

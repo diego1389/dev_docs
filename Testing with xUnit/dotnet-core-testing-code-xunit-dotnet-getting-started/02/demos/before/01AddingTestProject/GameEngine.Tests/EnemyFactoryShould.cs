@@ -1,15 +1,24 @@
 ﻿using System;
 using Xunit;
+using Xunit.Abstractions;
 
 
 namespace GameEngine.Tests
 {
     public class EnemyFactoryShould
     {
+        private readonly ITestOutputHelper _output;
+
+        public EnemyFactoryShould(ITestOutputHelper output)
+        {
+            this._output = output;
+        }
+
         [Fact]
         public void CreateNormalEnemy()
         {
             EnemyFactory sut = new EnemyFactory();
+            _output.WriteLine("Creating an enemy and validating type");
             Enemy enemy = sut.Create("Zombie");
             Assert.IsType<NormalEnemy>(enemy);
         }
@@ -59,7 +68,7 @@ namespace GameEngine.Tests
             Assert.Throws<ArgumentNullException>("name", () => sut.Create(null));
         }
 
-        [Fact]
+        [Fact(Skip = "Don't need to run this")]
         public void OnlyAllowKingOrQueenBosses()
         {
             EnemyFactory sut = new EnemyFactory();

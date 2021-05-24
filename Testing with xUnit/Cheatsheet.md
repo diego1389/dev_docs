@@ -273,3 +273,189 @@ public class PlayerCharacterShould{
             Assert.PropertyChanged(sut, "Health", () => sut.TakeDamage(10));/*PlayerCharacter has to implementINofityPropertyChanged interface and call OnPropertyChanged() on the properties set*/
         }
         ```
+    * Categorize tests through Trait attribute.
+        ```cs
+        [Fact]
+        [Trait("Category", "Enemy")]
+        public void HaveCorrectPower()
+        {
+            BossEnemy sut = new BossEnemy();
+
+            Assert.Equal(166.667, sut.TotalSpecialAttackPower, 3);
+        }
+        ```
+    * Trait attribute can also be at class level.
+    * On the command line under the tests folder:
+        ```bash
+        dotnet tests --filter Category=Enemy
+        dotnet tests --filter "Category=Enemy|Category=Boss"
+        ```
+    * To skip a test: 
+        ```cs
+        [Fact(Skip = "Don't need to run this")]
+        public void OnlyAllowKingOrQueenBosses()
+        {
+            EnemyFactory sut = new EnemyFactory();
+
+            EnemyCreationException ex = Assert.Throws<EnemyCreationException>(() => sut.Create("Zombie", true));
+
+            Assert.Equal("Zombie", ex.RequestedEnemyName);
+        }
+        ```
+    * Write additional info to the output console:
+        ```cs
+        using Xunit.Abstractions;
+
+        namespace GameEngine.Tests
+        {
+            public class EnemyFactoryShould
+            {
+                private readonly ITestOutputHelper _output;
+
+                public EnemyFactoryShould(ITestOutputHelper output)
+                {
+                    this._output = output;
+                }
+
+                [Fact]
+                public void CreateNormalEnemy()
+                {
+                    EnemyFactory sut = new EnemyFactory();
+                    _output.WriteLine("Creating an enemy and validating type");
+                    Enemy enemy = sut.Create("Zombie");
+                    Assert.IsType<NormalEnemy>(enemy);
+                }
+            }
+        }
+        ```
+    *  Get additional info from tests in the command line (this creates an xml file on the folder called TestResults):
+        ```bash
+         dotnet tests --filter Category=Enemy --logger:trx
+        ```
+    * REduce code duplication (a global instances instead of one per method).
+    * To share context between test methods because isntance creation is expensive.
+    * Create new class GameStateFixture:
+        ```cs
+        public class GameStateFixture : IDisposable
+        {
+            public GameState State { get; private set; }
+
+            public GameStateFixture()
+            {
+                State = new GameState();
+            }
+
+            public void Dispose()
+            {
+                // Cleanup
+            }
+        }
+        ```
+    * Implement IClassFixture interface, implementing it we tell xUnit we want to supply an instance of the GameStateFixture before the first test executes and then dispose after all tests are executed.
+    * We get the same instance injected for every method.
+    * Be aware the actions performed under the shared instance don't have side effects.
+        ```cs
+        using Xunit;
+        using Xunit.Abstractions;
+
+        namespace GameEngine.Tests
+        {
+            public class GameStateShould : IClassFixture<GameStateFixture>
+            {
+                private readonly GameStateFixture _gameStateFixture;
+                private readonly ITestOutputHelper _output;
+
+                public GameStateShould(GameStateFixture gameStateFixture,
+                                    ITestOutputHelper output)
+                {
+                    _gameStateFixture = gameStateFixture;
+
+                    _output = output;
+                }
+
+                [Fact]
+                public void DamageAllPlayersWhenEarthquake()
+                {
+                    _output.WriteLine($"GameState ID={_gameStateFixture.State.Id}");
+
+                    var player1 = new PlayerCharacter();
+                    var player2 = new PlayerCharacter();
+
+                    _gameStateFixture.State.Players.Add(player1);
+                    _gameStateFixture.State.Players.Add(player2);
+
+                    var expectedHealthAfterEarthquake = player1.Health - GameState.EarthquakeDamage;
+
+                    _gameStateFixture.State.Earthquake();
+
+                    Assert.Equal(expectedHealthAfterEarthquake, player1.Health);
+                    Assert.Equal(expectedHealthAfterEarthquake, player2.Health);
+                }
+
+                [Fact]
+                public void Reset()
+                {
+                    _output.WriteLine($"GameState ID={_gameStateFixture.State.Id}");
+
+                    var player1 = new PlayerCharacter();
+                    var player2 = new PlayerCharacter();
+
+                    _gameStateFixture.State.Players.Add(player1);
+                    _gameStateFixture.State.Players.Add(player2);
+
+                    _gameStateFixture.State.Reset();
+
+                    Assert.Empty(_gameStateFixture.State.Players);            
+                }
+            }
+        }
+        ```
+    * To share the same instance across multiple classes:
+        * Create a new class and implement ICollectionFixture<GameStateFixture>.
+        ```cs
+        using Xunit;
+
+        namespace GameEngine.Tests
+        {   
+        [CollectionDefinition("GameState collection")] //collection name
+        public class GameStateCollection : ICollectionFixture<GameStateFixture> {}
+        }
+
+        ```
+    * Add collection attribute at class level of the tests classes (we dont need to implement any interface in the classes).
+    ```cs
+    using Xunit;
+    using Xunit.Abstractions;
+
+    namespace GameEngine.Tests
+    {
+        [Collection("GameState collection")]
+        public class TestClass1
+        {
+            private readonly GameStateFixture _gameStateFixture;
+            private readonly ITestOutputHelper _output;
+
+            public TestClass1(GameStateFixture gameStateFixture, ITestOutputHelper output)
+            {
+                _gameStateFixture = gameStateFixture;
+
+                _output = output;
+            }
+
+            [Fact]
+            public void Test1()
+            {
+                _output.WriteLine($"GameState ID={_gameStateFixture.State.Id}");
+            }
+
+            [Fact]
+            public void Test2()
+            {
+                _output.WriteLine($"GameState ID={_gameStateFixture.State.Id}");
+            }
+        }
+    }
+    ```
+
+
+    
