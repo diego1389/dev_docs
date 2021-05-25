@@ -41,7 +41,7 @@ namespace GameEngine.Tests
             sut.FirstName = "Erwin";
             sut.LastName = "Smith";
 
-            Assert.Equal("erwin smith", sut.FullName, ignoreCase : true);
+            Assert.Equal("erwin smith", sut.FullName, ignoreCase: true);
         }
 
         [Fact]
@@ -151,6 +151,24 @@ namespace GameEngine.Tests
             Assert.PropertyChanged(sut, "Health", () => sut.TakeDamage(10));/*PlayerCharacter has to implementINofityPropertyChanged interface and call OnPropertyChanged() on the properties set*/
         }
 
-    }
+        [Fact]
+        public void TakeZeroDamage()
+        {
+            PlayerCharacter sut = new PlayerCharacter();
+            sut.TakeDamage(0);
+            Assert.Equal(100, sut.Health);
+        }
 
+        [Theory]
+        [InlineData(0,100)]
+        [InlineData(1, 99)]
+        [InlineData(50, 50)]
+        [InlineData(101, 1)]
+        public void TakeDamage(int damage, int expectedHealth)
+        {
+            PlayerCharacter sut = new PlayerCharacter();
+            sut.TakeDamage(damage);
+            Assert.Equal(expectedHealth, sut.Health);
+        }
+    }
 }

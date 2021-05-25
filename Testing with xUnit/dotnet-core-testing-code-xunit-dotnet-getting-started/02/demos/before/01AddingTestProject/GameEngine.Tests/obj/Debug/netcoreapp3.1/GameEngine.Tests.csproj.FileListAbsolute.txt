@@ -95,3 +95,4 @@
 /Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/dotnet-core-testing-code-xunit-dotnet-getting-started/02/demos/before/01AddingTestProject/GameEngine.Tests/obj/Debug/netcoreapp3.1/GameEngine.Tests.dll
 /Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/dotnet-core-testing-code-xunit-dotnet-getting-started/02/demos/before/01AddingTestProject/GameEngine.Tests/obj/Debug/netcoreapp3.1/GameEngine.Tests.pdb
 /Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/dotnet-core-testing-code-xunit-dotnet-getting-started/02/demos/before/01AddingTestProject/GameEngine.Tests/obj/Debug/netcoreapp3.1/GameEngine.Tests.genruntimeconfig.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/dotnet-core-testing-code-xunit-dotnet-getting-started/02/demos/before/01AddingTestProject/GameEngine.Tests/obj/Debug/netcoreapp3.1/GameEngine.Tests.csprojAssemblyReference.cache

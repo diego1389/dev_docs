@@ -456,6 +456,20 @@ public class PlayerCharacterShould{
         }
     }
     ```
-
-
+    * Data-driven tests: when you have to execute the same test method but with different data. Test case n.
+    * Test data sources: inline attribute, property, field attribute, external data.
+    *  [Theory] attribute means the test should be execute it multiple times. The test has to be provide it with some test data (that we pass as parameters).
+        ```cs
+        [Theory]
+        [InlineData(0,100)]
+        [InlineData(1, 99)]
+        [InlineData(50, 50)]
+        [InlineData(101, 1)]
+        public void TakeDamage(int damage, int expectedHealth)
+        {
+            PlayerCharacter sut = new PlayerCharacter();
+            sut.TakeDamage(damage);
+            Assert.Equal(expectedHealth, sut.Health);
+        }
+        ```
     
