@@ -1,3 +1,5 @@
+## Getting started with xUnit
+
 * Test code sits with production code.
 * Categories:
     1. Unit test (more depth and less breadth).
@@ -545,3 +547,23 @@ public class PlayerCharacterShould{
             }
         }
         ```
+## Mocking with Moq and xUnit
+* Replacing the actual dependency that would be used at production time, with a test-time only version to enable easier isolation of the code we want to test.
+* Improve test execution speed.
+* Improve test reliability.
+* Support parallel development stream:
+    - Real object not yet developed.
+* Reduce development/testing costs.
+* Unit tests: 
+    * Low level testing.
+    * Specific part of the system.
+    * Quick to execute.
+    * Test all the logical paths.
+    * A unit doesnt need to test an individual class, it is a situational thing.
+    * Units of behaviour over units of implementation.
+    * Test double: generic term for replacing a production object for testing purposes.
+        * Fake: working implementation of the dependency. EF COre in memory provider f.e.
+        * Dummies: passed around never used / accessed. Satisfy parameters.
+        * Stubs: provide answers to calls. Property gets. Method return values.
+        * Mocks: expect / verify calls, properties, methods.
+    * 
