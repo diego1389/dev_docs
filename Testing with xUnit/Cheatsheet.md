@@ -458,7 +458,7 @@ public class PlayerCharacterShould{
     ```
     * Data-driven tests: when you have to execute the same test method but with different data. Test case n.
     * Test data sources: inline attribute, property, field attribute, external data.
-    *  [Theory] attribute means the test should be execute it multiple times. The test has to be provide it with some test data (that we pass as parameters).
+    *  [Theory] attribute means the test should be execute it multiple times. The test has to be provide it with some test data (that we pass as parameters). With inline we cannot share data across multiple test classes or tests.
         ```cs
         [Theory]
         [InlineData(0,100)]
@@ -472,4 +472,76 @@ public class PlayerCharacterShould{
             Assert.Equal(expectedHealth, sut.Health);
         }
         ```
-    
+    * To share test data create a new class.
+        ```cs
+             public class InternalHealthDamageTestData
+        {
+            /*private static readonly List<object[]> Data = new List<object[]>()
+            {
+                new object[]{0, 100},
+                new object[]{1, 99},
+                new object[]{50,50},
+                new object[]{101, 1}
+            };
+
+            public static IEnumerable<object[]> TestData => Data;*/
+
+            public static IEnumerable<object[]> TestData
+            {
+                get
+                {
+                    yield return new object[] { 0, 100 };
+                    yield return new object[] { 1, 99 };
+                    yield return new object[] { 50, 50 };
+                    yield return new object[] { 101, 1 };
+                }   
+            }
+        }
+        ```
+    * Now use it in the tests:
+        ```cs
+        [Theory]
+        [MemberData(nameof(InternalHealthDamageTestData.TestData), MemberType = typeof(InternalHealthDamageTestData))]
+        public void TakeDamage(int damage, int expectedHealth)
+        {
+            PlayerCharacter sut = new PlayerCharacter();
+            sut.TakeDamage(damage);
+            Assert.Equal(expectedHealth, sut.Health);
+        }
+        ```
+    * We can use custom attributes to share test data accross tests.
+    * Add new class:
+        ```cs
+        using System;
+        using System.Collections.Generic;
+        using System.Reflection;
+        using Xunit.Sdk;
+
+        namespace GameEngine.Tests
+        {
+            public class HealthDamageDataAttribute : DataAttribute
+            {
+                public override IEnumerable<object[]> GetData(MethodInfo testMethod)
+                {
+                    yield return new object[] { 0, 100 };
+                    yield return new object[] { 1, 99 };
+                    yield return new object[] { 50, 50 };
+                    yield return new object[] { 101, 1 };
+                }
+            }
+        }
+        ```
+    * Use the new custom attribute:
+        ```cs
+        public class NonPlayerCharacterShould
+        {
+        [Theory]
+        [HealthDamageData]
+            public void TakeDamage(int damage, int expectedHealth)
+            {
+                PlayerCharacter sut = new PlayerCharacter();
+                sut.TakeDamage(damage);
+                Assert.Equal(expectedHealth, sut.Health);
+            }
+        }
+        ```

@@ -1,13 +1,16 @@
 ﻿<Properties StartupConfiguration="{2969B458-B814-44B9-8390-5289C214AC4E}|Default">
   <MonoDevelop.Ide.ItemProperties.GameEngine.Tests PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="GameEngine.Tests/PlayerCharacterShould.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="GameEngine.Tests/HealthDamageDataAttribute.cs">
     <Files>
       <File FileName="GameEngine/PlayerCharacter.cs" Line="61" Column="21" />
       <File FileName="GameEngine.Tests/BossEnemyShould.cs" />
       <File FileName="GameEngine.Tests/EnemyFactoryShould.cs" Line="3" Column="1" />
       <File FileName="GameEngine/EnemyFactory.cs" />
       <File FileName="GameEngine/EnemyCreationException.cs" />
-      <File FileName="GameEngine.Tests/PlayerCharacterShould.cs" Line="1" Column="1" />
+      <File FileName="GameEngine.Tests/PlayerCharacterShould.cs" Line="162" Column="8" />
+      <File FileName="GameEngine.Tests/NonPlayerCharacterShould.cs" Line="17" Column="10" />
+      <File FileName="GameEngine.Tests/InternalHealthDamageTestData.cs" Line="6" Column="1" />
+      <File FileName="GameEngine.Tests/HealthDamageDataAttribute.cs" Line="6" Column="8" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,7 +21,7 @@
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
-              <Node name="PlayerCharacterShould.cs" selected="True" />
+              <Node name="HealthDamageDataAttribute.cs" selected="True" />
             </Node>
           </Node>
         </State>
@@ -26,7 +29,12 @@
       <Pad Id="MonoDevelop.UnitTesting.TestPad">
         <State name="__root__">
           <Node name="Game" expanded="True">
-            <Node name="GameEngine.Tests" selected="True" />
+            <Node name="GameEngine.Tests" expanded="True" selected="True">
+              <Node name="GameEngine.Tests" expanded="True">
+                <Node name="NonPlayerCharacterShould" expanded="True" />
+                <Node name="PlayerCharacterShould" expanded="True" />
+              </Node>
+            </Node>
           </Node>
         </State>
       </Pad>
