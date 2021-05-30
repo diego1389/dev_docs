@@ -1,0 +1,142 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications.Tests/CreditCardApplications.Tests.csproj": {}
+  },
+  "projects": {
+    "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications.Tests/CreditCardApplications.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications.Tests/CreditCardApplications.Tests.csproj",
+        "projectName": "CreditCardApplications.Tests",
+        "projectPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications.Tests/CreditCardApplications.Tests.csproj",
+        "packagesPath": "/Users/diego.guillen/.nuget/packages/",
+        "outputPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications.Tests/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/diego.guillen/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {
+              "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications/CreditCardApplications.csproj": {
+                "projectPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications/CreditCardApplications.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[16.5.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.13.1, )"
+            },
+            "coverlet.collector": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.2.1, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.4.1, )"
+            },
+            "xunit.runner.visualstudio": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.4.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.203/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications/CreditCardApplications.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications/CreditCardApplications.csproj",
+        "projectName": "CreditCardApplications",
+        "projectPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications/CreditCardApplications.csproj",
+        "packagesPath": "/Users/diego.guillen/.nuget/packages/",
+        "outputPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/before/07out/CreditCardApplications/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/diego.guillen/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.203/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

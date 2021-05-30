@@ -566,4 +566,177 @@ public class PlayerCharacterShould{
         * Dummies: passed around never used / accessed. Satisfy parameters.
         * Stubs: provide answers to calls. Property gets. Method return values.
         * Mocks: expect / verify calls, properties, methods.
-    * 
+    * Add a new dependency to CreditCardApplicationEvaluator:
+        ```cs
+        public class CreditCardApplicationEvaluator
+        {
+            private readonly IFrequentFlyerNumberValidator _validator;
+            private const int AutoReferralMaxAge = 20;
+            private const int HighIncomeThreshold = 100_000;
+            private const int LowIncomeThreshold = 20_000;
+
+
+            public CreditCardApplicationEvaluator(IFrequentFlyerNumberValidator validator)
+            {
+                _validator = validator;
+            }
+
+            public CreditCardApplicationDecision Evaluate(CreditCardApplication application)
+            {
+                if (application.GrossAnnualIncome >= HighIncomeThreshold)
+                {
+                    return CreditCardApplicationDecision.AutoAccepted;
+                }
+
+                var isValidFrequentFlyerNumber = _validator.IsValid(application.FrequentFlyerNumber);
+
+                if (application.Age <= AutoReferralMaxAge)
+                {
+                    return CreditCardApplicationDecision.ReferredToHuman;
+                }
+
+                if (application.GrossAnnualIncome < LowIncomeThreshold)
+                {
+                    return CreditCardApplicationDecision.AutoDeclined;
+                }
+
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }       
+        }
+        ```
+    * Modify the tests to pass a mocked implementation:
+        ```cs
+        [Fact]
+        public void ReferYoungApplications()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() { Age = 19 };
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
+        }
+        ```
+    * Configure mocks to return specific values (setup method):
+        ```cs
+        [Fact]
+        public void DeclineLowIncomeApplications()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            mockValidator.Setup(x => x.IsValid("x")).Returns(true);
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() { GrossAnnualIncome = 19_999, Age = 42, FrequentFlyerNumber= "x" };
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, decision);
+        }
+        ```
+    * YOu can use argument matching methods to not specify the parameters directly. 
+        ```cs
+        [Fact]
+        public void DeclineLowIncomeApplications()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            //mockValidator.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            //mockValidator.Setup(x => x.IsValid(It.Is<string>(number => number.StartsWith("y")))).Returns(true);
+            //mockValidator.Setup(x => x.IsValid(It.IsInRange<string>("a", "z", Moq.Range.Inclusive))).Returns(true);
+            //mockValidator.Setup(x => x.IsValid(It.IsIn<string>("abx", "clin", "yay"))).Returns(true);
+            mockValidator.Setup(x => x.IsValid(It.IsRegex("[a-z]"))).Returns(true);
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() { GrossAnnualIncome = 19_999, Age = 42, FrequentFlyerNumber= "yay" };
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, decision);
+        }
+        ```
+    * By default mocking is loose. Strict mocking throws an exception if a mocked method is called but has not been setup. Loose mocks use default values.
+        ```cs
+        [Fact]
+        public void ReferInvalidFrequentFlyerApplications()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockValidator = new Mock<IFrequentFlyerNumberValidator>(MockBehavior.Strict);
+            mockValidator.Setup(x => x.IsValid(It.IsAny<string>())).Returns(false);
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication();
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
+        }
+        ```
+    * Mocking methods with out parameters.
+    * Modify the credit card evaluator and add a new method, it uses the overloaded IsValid that uses an out paraemeter:
+        ```cs
+        public CreditCardApplicationDecision EvaluateUsingOut(CreditCardApplication application)
+        {
+            if (application.GrossAnnualIncome >= HighIncomeThreshold)
+            {
+                return CreditCardApplicationDecision.AutoAccepted;
+            }
+
+            _validator.IsValid(application.FrequentFlyerNumber,
+                               out var isValidFrequentFlyerNumber);
+
+            if (!isValidFrequentFlyerNumber)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            if (application.Age <= AutoReferralMaxAge)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            if (application.GrossAnnualIncome < LowIncomeThreshold)
+            {
+                return CreditCardApplicationDecision.AutoDeclined;
+            }
+
+            return CreditCardApplicationDecision.ReferredToHuman;
+        }
+        ```
+    * Setup a mock method that has an out parameter:
+        ```cs
+        [Fact]
+        public void DeclineLowIncomeApplicationsOutDemo()
+        {
+            Mock<IFrequentFlyerNumberValidator> mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            bool isValid = true;
+            mockValidator.Setup(x => x.IsValid(It.IsAny<string>(), out isValid));
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication()
+            {
+                GrossAnnualIncome = 19_000,
+                Age = 42
+            };
+
+            CreditCardApplicationDecision decision = sut.EvaluateUsingOut(application);
+
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, decision);
+
+        }
+        ```
+    * Matching attribute for reference types:
+        ```cs
+        var person1 = new Person();
+        var person2 = new Person();
+        var mockGateway = new Mock<IGateway>();
+        mockGateway.Setup(x => x.Execute(ref It.Ref<Person>.IsAny)).Returns(-1);
+
+        var sut = new Processor(mockGateway.Object);
+        sut.Process(person1); //IGateway.Execute() returns -1
+        sut.Process(person2); //IGateway.Execute() returns -1
+        ```
+    
