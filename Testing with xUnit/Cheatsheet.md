@@ -739,4 +739,148 @@ public class PlayerCharacterShould{
         sut.Process(person1); //IGateway.Execute() returns -1
         sut.Process(person2); //IGateway.Execute() returns -1
         ```
-    
+    * Setup mock properties to return a specific value.
+        ```cs
+        [Fact]
+        public void ReferWhenLicenseKeyExpired()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            mockValidator.Setup(x => x.LicenseKey).Returns("EXPIRED"); /*You can pass a method to the Returns(). F.e GetLicenseExpiryString*/
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+            var application = new CreditCardApplication { Age = 42 };
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision); 
+        }
+        ```
+    * Working with hierarchies:
+        ```cs
+        namespace CreditCardApplications
+        {
+            public interface ILicenseData
+            {
+                string LicenseKey { get; }
+            }
+
+            public interface IServiceInformation
+            {
+                ILicenseData License { get; }
+            }
+
+            public interface IFrequentFlyerNumberValidator
+            {
+                bool IsValid(string frequentFlyerNumber);
+                void IsValid(string frequentFlyerNumber, out bool isValid);
+                //string LicenseKey { get; }
+                IServiceInformation ServiceInformation { get; }
+
+            }
+        }
+        ```
+    * Modify the tests to work with hierarchy:
+        ```cs
+        [Fact]
+        public void ReferWhenLicenseKeyExpired()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            var mockLicenseData = new Mock<ILicenseData>();
+
+            mockLicenseData.Setup(x => x.LicenseKey).Returns("EXPIRED");
+
+            var mockServiceInfo = new Mock<IServiceInformation>();
+
+            mockServiceInfo.Setup(x => x.License).Returns(mockLicenseData.Object);
+
+            mockValidator.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+            mockValidator.Setup(x => x.ServiceInformation).Returns(mockServiceInfo.Object);
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+            var application = new CreditCardApplication { Age = 42 };
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision); 
+        }
+        ```
+    * Moq has a more succint way to do this:
+        ```cs       
+        [Fact]
+        public void ReferWhenLicenseKeyExpired()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            /*var mockLicenseData = new Mock<ILicenseData>();
+
+            mockLicenseData.Setup(x => x.LicenseKey).Returns("EXPIRED");
+
+            var mockServiceInfo = new Mock<IServiceInformation>();
+
+            mockServiceInfo.Setup(x => x.License).Returns(mockLicenseData.Object);
+
+
+            mockValidator.Setup(x => x.ServiceInformation).Returns(mockServiceInfo.Object);*/
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("EXPIRED");
+            mockValidator.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+            var application = new CreditCardApplication { Age = 42 };
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision); 
+        }
+        ```
+    * Specify default value behaviour to avoid breaking the other tests. DefaultValue defines a mocked object instead of null as default.
+        ```cs
+        [Fact]
+        public void ReferYoungApplications()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            mockValidator.DefaultValue = DefaultValue.Mock;
+
+            mockValidator.Setup(x => x.IsValid(It.IsAny<string>())).Returns(true);
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication { Age = 19 };
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
+        }
+        ```
+    * Track changes made to the mock objects (when method changes a value dynamically). 
+    * Add new property to the interface (an enum):
+        ```cs
+        public interface IFrequentFlyerNumberValidator
+        {
+            bool IsValid(string frequentFlyerNumber);
+            void IsValid(string frequentFlyerNumber, out bool isValid);
+            //string LicenseKey { get; }
+            IServiceInformation ServiceInformation { get; }
+            ValidationMode ValidationMode { get; set; }
+
+        }
+        //change in the evaluate method:
+         _validator.ValidationMode = application.Age >= 30 ? ValidationMode.Detailed : ValidationMode.Quick;
+        ```
+    * Modify the tests to remember its changes:
+        ```cs
+        [Fact]
+        public void UseDetailedLookupForOlderApplications()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            //mockValidator.Setup(x => x.ValidationMode);
+            mockValidator.SetupAllProperties(); /*Before any specific setup otherwise it will override it*/
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication { Age = 35 };
+
+            sut.Evaluate(application);
+
+            Assert.Equal(ValidationMode.Detailed, mockValidator.Object.ValidationMode);
+        }
+        ```

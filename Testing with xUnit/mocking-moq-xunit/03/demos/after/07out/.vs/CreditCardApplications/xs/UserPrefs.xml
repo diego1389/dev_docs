@@ -1,31 +1,45 @@
-﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs">
+﻿<Properties StartupConfiguration="{9BDB08DA-C4AD-4C64-91DA-000980BF6D14}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CreditCardApplications/ValidationMode.cs">
     <Files>
-      <File FileName="CreditCardApplications/CreditCardApplicationEvaluator.cs" Line="44" Column="4" />
-      <File FileName="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" Line="70" Column="71" />
+      <File FileName="CreditCardApplications/CreditCardApplicationEvaluator.cs" Line="23" Column="1" />
+      <File FileName="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" Line="24" Column="5" />
+      <File FileName="CreditCardApplications/IFrequentFlyerNumberValidator.cs" Line="23" Column="2" />
+      <File FileName="CreditCardApplications/FrequentFlyerNumberValidator.cs" Line="32" Column="1" />
+      <File FileName="CreditCardApplications/ValidationMode.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="CreditCardApplications" expanded="True">
-            <Node name="CreditCardApplications" expanded="True" />
-            <Node name="CreditCardApplications.Tests" expanded="True">
-              <Node name="CreditCardApplicationEvaluatorShould.cs" selected="True" />
+            <Node name="CreditCardApplications" expanded="True">
+              <Node name="ValidationMode.cs" selected="True" />
             </Node>
+            <Node name="CreditCardApplications.Tests" expanded="True" />
           </Node>
         </State>
       </Pad>
       <Pad Id="MonoDevelop.UnitTesting.TestPad">
         <State name="__root__">
-          <Node name="CreditCardApplications" expanded="True" selected="True" />
+          <Node name="CreditCardApplications" expanded="True">
+            <Node name="CreditCardApplications.Tests" expanded="True">
+              <Node name="CreditCardApplications.Tests" expanded="True">
+                <Node name="CreditCardApplicationEvaluatorShould" expanded="True">
+                  <Node name="ReferYoungApplications" selected="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.CreditCardApplications.Tests PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" relfile="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" line="95" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>
