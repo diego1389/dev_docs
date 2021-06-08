@@ -884,3 +884,186 @@ public class PlayerCharacterShould{
             Assert.Equal(ValidationMode.Detailed, mockValidator.Object.ValidationMode);
         }
         ```
+    * State based testing: Test passes mock to the constructor, SUT calls the Mock and returns a state/result to the test for it to assert it. 
+    * In behaviour verification tests we create a mock and SUT interacts with the mock object but the test check the mock object (methods called or properties accessed).
+        ```cs
+        [Fact]
+        public void ValidateFrequentFlyerNumberForLowIncomeApplications()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication();
+
+            sut.Evaluate(application);
+
+            mockValidator.Verify(x => x.IsValid(null));
+
+        }
+        ```
+    * If we comment the IsValid method on Evaluate method it will fail.
+        ```cs
+        [Fact]
+        public void ValidateFrequentFlyerNumberForLowIncomeApplications()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication(){ FrequentFlyerNumber = "q"};
+
+            sut.Evaluate(application);
+
+            mockValidator.Verify(x => x.IsValid(It.IsAny<string>()), Times.Exactly(1));
+
+        }
+        ```
+    * You can use an overload of the Verify method to specify a custom message when test fails:
+        ```cs
+        mockValidator.Verify(x => x.IsValid(It.IsAny<string>()), "IsValid method not called");
+        ```          
+    * Verify if a method is not called:
+        ```cs
+        [Fact]
+        public void ValidateFrequentFlyerNumberForHighIncomeApplications()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() {GrossAnnualIncome = 100_000 };
+
+            sut.Evaluate(application);
+
+            mockValidator.Verify(x => x.IsValid(It.IsAny<string>()), Times.Never);
+        }
+        ```
+    * Verify if a property's get method is called:
+        ```cs
+        [Fact]
+        public void CheckLicenseKeyForLowIncomeApp()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() { GrossAnnualIncome = 90_000 };
+
+            sut.Evaluate(application);
+
+            mockValidator.VerifyGet(x => x.ServiceInformation.License.LicenseKey);
+        }
+        ```
+    * Verify that a property was set:
+        ```cs
+        [Fact]
+        public void SetDetailedLookupForOlderApplications()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() { Age = 30 };
+
+            sut.Evaluate(application);
+
+            mockValidator.VerifySet(x => x.ValidationMode = ValidationMode.Detailed);
+        }
+        ```
+    * VerifyNoOtherCalls() we are telling moq than other than any verifications we already made there should be no other calls.
+    * Modify the evaluate method:
+        ```cs
+         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)
+        {
+            if (application.GrossAnnualIncome >= HighIncomeThreshold)
+            {
+                return CreditCardApplicationDecision.AutoAccepted;
+            }
+
+            if(_validator.ServiceInformation.License.LicenseKey == "EXPIRED")
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            _validator.ValidationMode = application.Age >= 30 ? ValidationMode.Detailed : ValidationMode.Quick;
+            bool isValidFrequentFlyerNumber = false;
+            try
+            {
+                isValidFrequentFlyerNumber =
+                _validator.IsValid(application.FrequentFlyerNumber);
+            }
+            catch (System.Exception ex)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            if (!isValidFrequentFlyerNumber)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            if (application.Age <= AutoReferralMaxAge)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            if (application.GrossAnnualIncome < LowIncomeThreshold)
+            {
+                return CreditCardApplicationDecision.AutoDeclined;
+            }
+
+            return CreditCardApplicationDecision.ReferredToHuman;
+        }
+        ```
+    * Create a test method that simulates an exception when calling the IsValid method:
+        ```cs
+        [Fact]
+        public void ReferWhenFrequentFlyerValidationError()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+            mockValidator.Setup(x => x.IsValid(It.IsAny<string>())).Throws<Exception>();
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() { Age = 42 };
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, decision);
+        }
+        ```
+    * Automatic and manual ways to raise an event using Moq:
+        ```cs
+        [Fact]
+        public void IncrementLookupCount()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+            mockValidator.Setup(x => x.IsValid(It.IsAny<string>()))
+                .Returns(true)
+                .Raises(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() { FrequentFlyerNumber = "x", Age = 25 };
+
+            sut.Evaluate(application);
+
+            //mockValidator.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+
+
+            Assert.Equal(1, sut.ValidatorLookupCount);
+        }
+        ```
