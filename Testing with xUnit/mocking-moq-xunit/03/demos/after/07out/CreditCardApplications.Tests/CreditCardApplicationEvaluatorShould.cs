@@ -1,6 +1,8 @@
 using System;
 using Xunit;
 using Moq;
+using System.Collections.Generic;
+using Moq.Protected;
 
 namespace CreditCardApplications.Tests
 {
@@ -260,5 +262,89 @@ namespace CreditCardApplications.Tests
             Assert.Equal(1, sut.ValidatorLookupCount);
         }
 
+        [Fact]
+        public void ReferWhenFrequentFlyer_ReturnValuesSequence()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+            mockValidator.SetupSequence(x => x.IsValid(It.IsAny<string>()))
+                .Returns(false)
+                .Returns(true);
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() { Age = 42 };
+
+            CreditCardApplicationDecision firstDecision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.ReferredToHuman, firstDecision);
+
+            CreditCardApplicationDecision secondDecision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, secondDecision);
+        }
+
+        [Fact]
+        public void ReferWhenFrequentFlyer_MultipleCallsSequence()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+
+            var frequenFlyerNumbersPassed = new List<string>();
+            mockValidator.Setup(x => x.IsValid(Capture.In(frequenFlyerNumbersPassed)));
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application1 = new CreditCardApplication { Age = 25, FrequentFlyerNumber = "aa"};
+            var application2 = new CreditCardApplication { Age = 25, FrequentFlyerNumber = "bb" };
+            var application3 = new CreditCardApplication { Age = 25, FrequentFlyerNumber = "cc" };
+
+            sut.Evaluate(application1);
+            sut.Evaluate(application2);
+            sut.Evaluate(application3);
+
+            Assert.Equal(new List<string> { "aa", "bb", "cc" }, frequenFlyerNumbersPassed);
+        }
+
+
+        [Fact]
+        public void ReferFraudRisk()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            Mock<FraudLookup> mockFraudLookup = new Mock<FraudLookup>();
+
+            mockFraudLookup.Protected()
+                .Setup<bool>("CheckApplication", ItExpr.IsAny<CreditCardApplication>()).Returns(true);
+
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object, mockFraudLookup.Object);
+
+            var application = new CreditCardApplication();
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+
+            Assert.Equal(CreditCardApplicationDecision.ReferToHumanFraudRisk, decision);
+        }
+
+        [Fact]
+        public void LinqToMoqs()
+        {
+            IFrequentFlyerNumberValidator mockValidator = Mock.Of<IFrequentFlyerNumberValidator>(
+                validator =>
+                validator.ServiceInformation.License.LicenseKey == "OK" &&
+                validator.IsValid(It.IsAny<string>()) == true
+            );
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator);
+
+            var application = new CreditCardApplication() {Age = 25};
+
+            var decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, decision);
+        }
     }
 }

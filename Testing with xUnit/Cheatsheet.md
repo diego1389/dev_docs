@@ -1067,3 +1067,162 @@ public class PlayerCharacterShould{
             Assert.Equal(1, sut.ValidatorLookupCount);
         }
         ```
+    - We can setup a method to return different results when it's called multiple times using SetupSequence and chain multiple return methods.
+        ```cs
+        [Fact]
+        public void IncrementLookupCount()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+            mockValidator.Setup(x => x.IsValid(It.IsAny<string>()))
+                .Returns(true)
+                .Raises(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application = new CreditCardApplication() { FrequentFlyerNumber = "x", Age = 25 };
+
+            sut.Evaluate(application);
+
+            //mockValidator.Raise(x => x.ValidatorLookupPerformed += null, EventArgs.Empty);
+
+
+            Assert.Equal(1, sut.ValidatorLookupCount);
+        }
+        ```
+    - Check a method was called multiple times:
+        ```cs
+        [Fact]
+        public void ReferWhenFrequentFlyer_MultipleCallsSequence()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+
+            mockValidator.Setup(x => x.ServiceInformation.License.LicenseKey).Returns("OK");
+
+            var frequenFlyerNumbersPassed = new List<string>();
+            mockValidator.Setup(x => x.IsValid(Capture.In(frequenFlyerNumbersPassed)));
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object);
+
+            var application1 = new CreditCardApplication { Age = 25, FrequentFlyerNumber = "aa"};
+            var application2 = new CreditCardApplication { Age = 25, FrequentFlyerNumber = "bb" };
+            var application3 = new CreditCardApplication { Age = 25, FrequentFlyerNumber = "cc" };
+
+            sut.Evaluate(application1);
+            sut.Evaluate(application2);
+            sut.Evaluate(application3);
+
+            Assert.Equal(new List<string> { "aa", "bb", "cc" }, frequenFlyerNumbersPassed);
+        }
+        ```
+    - In order to mock members of concrete classes the methods should be virtual.
+        ```cs
+        public class FraudLookup
+        {
+            public virtual bool IsFraudRisk(CreditCardApplication application)
+            {
+                if(application.LastName == "Smith")
+                {
+                    return true;
+                }
+                return false;
+            }
+            
+        }
+        /************************TEST**************************/
+        [Fact]
+        public void ReferFraudRisk()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            Mock<FraudLookup> mockFraudLookup = new Mock<FraudLookup>();
+
+            mockFraudLookup.Setup(x => x.IsFraudRisk(It.IsAny<CreditCardApplication>())).Returns(true);
+
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object, mockFraudLookup.Object);
+
+            var application = new CreditCardApplication();
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+
+            Assert.Equal(CreditCardApplicationDecision.ReferToHumanFraudRisk, decision);
+        }
+        ```
+    - MOcking virtual protected methods
+        ```cs
+        public bool IsFraudRisk(CreditCardApplication application)
+        {
+            return CheckApplication(application);
+        }
+
+        protected virtual bool CheckApplication(CreditCardApplication application)
+        {
+            if (application.LastName == "Smith")
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /**************************TEST**********************/
+        [Fact]
+        public void ReferFraudRisk()
+        {
+            var mockValidator = new Mock<IFrequentFlyerNumberValidator>();
+            Mock<FraudLookup> mockFraudLookup = new Mock<FraudLookup>();
+
+            mockFraudLookup.Protected()
+                .Setup<bool>("CheckApplication", ItExpr.IsAny<CreditCardApplication>()).Returns(true);
+
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator.Object, mockFraudLookup.Object);
+
+            var application = new CreditCardApplication();
+
+            CreditCardApplicationDecision decision = sut.Evaluate(application);
+
+
+            Assert.Equal(CreditCardApplicationDecision.ReferToHumanFraudRisk, decision);
+        }
+        ```
+    * Using Linq to Mocks
+        ```cs
+        [Fact]
+        public void LinqToMoqs()
+        {
+            IFrequentFlyerNumberValidator mockValidator = Mock.Of<IFrequentFlyerNumberValidator>(
+                validator =>
+                validator.ServiceInformation.License.LicenseKey == "OK" &&
+                validator.IsValid(It.IsAny<string>()) == true
+            );
+
+            var sut = new CreditCardApplicationEvaluator(mockValidator);
+
+            var application = new CreditCardApplication() {Age = 25};
+
+            var decision = sut.Evaluate(application);
+
+            Assert.Equal(CreditCardApplicationDecision.AutoDeclined, decision);
+        }
+        ```
+    - Mocking for generic type:
+        ```cs
+        mock.Setup(x=> x.IsOdd(It.IsAny<It.IsAnyType>())).Returns(true);
+        //also
+        mock.Setup(x=> x.IsOdd(It.IsAny<It.IsSubtype<ApplicationException>>())).Returns(true);
+
+        ```
+    - Mocking async methods:
+        ```cs
+        public interface IDemoInterfaceAsync{
+            Task StartAsync();
+            Task<int> StopAsync();
+        }
+
+        var mock = new Mock<IDemoInterfaceAsync>();
+        mock.Setup(x => x.StartAsync()).Returns(Task.CompletedTask);
+        mock.Setup(x => x.StopAsync()).Returns(Task.FromResult(42));
+        //or
+        mock.Setup(x=> x.StopAsync()).ReturnsAsync(42);
+        ```
