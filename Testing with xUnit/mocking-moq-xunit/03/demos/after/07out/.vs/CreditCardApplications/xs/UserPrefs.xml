@@ -7,7 +7,7 @@
       <File FileName="CreditCardApplications/ValidationMode.cs" Line="1" Column="1" />
       <File FileName="CreditCardApplications/FraudLookup.cs" Line="6" Column="15" />
       <File FileName="CreditCardApplications/CreditCardApplicationDecision.cs" Line="9" Column="30" />
-      <File FileName="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" Line="317" Column="59" />
+      <File FileName="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" Line="332" Column="6" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -40,8 +40,8 @@
   <MonoDevelop.Ide.ItemProperties.CreditCardApplications.Tests PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" relfile="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" line="96" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" relfile="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" line="143" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" relfile="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" line="97" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" relfile="CreditCardApplications.Tests/CreditCardApplicationEvaluatorShould.cs" line="144" column="1" />
       <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/CreditCardApplicationEvaluator.cs" relfile="CreditCardApplications/CreditCardApplicationEvaluator.cs" line="28" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
