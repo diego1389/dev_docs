@@ -1,6 +1,18 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
+const InputElement = () => {
+    const [isLoading, setIsLoading] = useState(true);
 
+    useEffect(()=> {
+        setTimeout(()=>{
+            setIsLoading(false)
+        }, 2000);
+    })
+    return isLoading ? <div>Loading...</div> : <input placeholder="Enter Some Text"/>;
+};
+
+export default InputElement;
+/*
 const InputElement = () => {
     const [inputText, setInputText] = useState("");
     const [historyList, setHistoryList] = useState([]);
@@ -20,4 +32,4 @@ const InputElement = () => {
     </div>
 };
 
-export default InputElement;
+export default InputElement;*/

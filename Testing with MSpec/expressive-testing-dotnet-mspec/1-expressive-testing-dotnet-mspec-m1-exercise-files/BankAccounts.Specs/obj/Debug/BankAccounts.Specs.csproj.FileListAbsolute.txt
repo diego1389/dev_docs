@@ -1,0 +1,24 @@
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/BankAccounts.Specs.dll
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/BankAccounts.Specs.pdb
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/BDD Bank Accounts.dll
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/Machine.Specifications.dll
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/Machine.Specifications.Should.dll
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/Moq.dll
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/BDD Bank Accounts.pdb
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.csproj.AssemblyReference.cache
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.csproj.CopyComplete
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.dll
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/BankAccounts.Specs.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/BankAccounts.Specs.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/BDD Bank Accounts.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/Machine.Specifications.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/Machine.Specifications.Should.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/Moq.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/bin/Debug/BDD Bank Accounts.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.csproj.CopyComplete
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BankAccounts.Specs/obj/Debug/BankAccounts.Specs.pdb

@@ -131,6 +131,7 @@ useState:
             export default ImageToggleOnScroll;
             ```
         - ImageChangeOnScroll.js
+
             ```js
             import React from 'react';
             import ImageToggleOnScroll from '../src/ImageToggleOnScroll';
@@ -153,6 +154,7 @@ useState:
             export default ImageChangeOnScroll;
             ```
         - ImageChangeOnScroll.js
+        
             ```js
             import React, {useState, useEffect} from 'react';
             import ImageToggleOnScroll from '../src/ImageToggleOnScroll';
@@ -162,9 +164,8 @@ useState:
                 const [currentSpeakerId, setCurrentSpeakerId] = useState(0);
                 const [mouseEventCount, setMouseEventCount] = useState(0);
                 useEffect(()=>{
-                    window.document.title = `Speaker id: ${currentSpeakerId}`;
-                });
-
+                    window.document.title = `Speaker id: ${currentSpeakerId}`;        console.log(`useEffect: setting title to ${currentSpeakerId}`);
+                }, [currentSpeakerId]);
                 return (
                     <div>
                         <span>mouseEventCount : {mouseEventCount}</span>
@@ -186,3 +187,5 @@ useState:
 
             export default ImageChangeOnScroll;
             ```
+    * Hooks can only be used in functional React components and they must be called just at the top level. No nesting no calling them inside other functions. 
+    * Eslint plugin to identify react hooks that don't meet the basic rules.

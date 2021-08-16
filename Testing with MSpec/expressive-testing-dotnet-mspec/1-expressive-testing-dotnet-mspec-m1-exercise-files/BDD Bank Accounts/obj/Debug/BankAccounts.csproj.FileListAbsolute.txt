@@ -1,0 +1,12 @@
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/bin/Debug/BDD Bank Accounts.dll
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/bin/Debug/BDD Bank Accounts.pdb
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/obj/Debug/BankAccounts.csproj.AssemblyReference.cache
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/obj/Debug/BankAccounts.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/obj/Debug/BDD Bank Accounts.dll
+/Users/diego.guillen/Downloads/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/obj/Debug/BDD Bank Accounts.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/bin/Debug/BDD Bank Accounts.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/bin/Debug/BDD Bank Accounts.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/obj/Debug/BankAccounts.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/obj/Debug/BankAccounts.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/obj/Debug/BDD Bank Accounts.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with MSpec/expressive-testing-dotnet-mspec/1-expressive-testing-dotnet-mspec-m1-exercise-files/BDD Bank Accounts/obj/Debug/BDD Bank Accounts.pdb
