@@ -616,3 +616,131 @@ useState:
             </div>)
         }
         ```
+    - For managing unrelated pieces of state you can use multiple state values. For related pieces of state you can use multiple state values. 
+    - useEffect to call an external API and display:
+        ```js
+        import React, {useState, useEffect} from 'react';
+        import axios from 'axios';
+
+        export default function App(){
+
+        const [results, setResults] = useState([]);
+        useEffect(()=>{
+            axios.get('https://hn.algolia.com/api/v1/search?query=reacthooks')
+                .then(response =>{
+                setResults(response.data.hits);
+                })
+        }, [])
+        return(
+            <>
+            <ul>
+            {results.map(result =>(
+            <li key={result.objectID}>
+                <a href={result.url}>{result.title}</a>
+            </li>
+            ))}
+            </ul>
+            </>
+        )
+        }
+        ```
+    - Retrieve the data using async / await
+        ```js
+        import React, {useState, useEffect} from 'react';
+        import axios from 'axios';
+
+        export default function App(){
+
+        const [results, setResults] = useState([]);
+        useEffect( ()=>{
+            getResults()
+        }, []);
+
+        const getResults = async () => {
+            const response = await axios.get('https://hn.algolia.com/api/v1/search?query=reacthooks')
+            setResults(response.data.hits);
+        }
+        
+        return(
+            <>
+            <ul>
+            {results.map(result =>(
+            <li key={result.objectID}>
+                <a href={result.url}>{result.title}</a>
+            </li>
+            ))}
+            </ul>
+            </>
+        )
+        }
+        ```
+    - Search different queries:
+        ```js
+        import React, {useState, useEffect} from 'react';
+        import axios from 'axios';
+
+        export default function App(){
+        const [query, setQuery] = useState("reacthooks")
+        const [results, setResults] = useState([]);
+        useEffect( ()=>{
+            getResults()
+        }, [query]);
+
+        const getResults = async () => {
+            const response = await axios.get(`https://hn.algolia.com/api/v1/search?query=${query}`)
+            setResults(response.data.hits);
+        }
+
+        return(
+            <>
+            <ul>
+            <input type="text" onChange={event => setQuery(event.target.value)}/>
+            {results.map(result =>(
+            <li key={result.objectID}>
+                <a href={result.url}>{result.title}</a>
+            </li>
+            ))}
+            </ul>
+            </>
+        )
+        }
+        ```
+    - Add a button to search (you can search with Enter enclosing the input and the button tags within form tags and changing the button type to submit).
+        ```js
+        import React, {useState, useEffect} from 'react';
+        import axios from 'axios';
+
+        export default function App(){
+        const [query, setQuery] = useState("reacthooks")
+        const [results, setResults] = useState([]);
+        useEffect( ()=>{
+            getResults()
+        }, []);
+
+        const getResults = async () => {
+            const response = await axios.get(`https://hn.algolia.com/api/v1/search?query=${query}`)
+            setResults(response.data.hits);
+        }
+
+        const handleSearch = event => {
+            event.preventDefault();
+            getResults();
+        }
+
+        return(
+            <>
+            <form onSubmit={handleSearch}>
+            <input type="text" onChange={event => setQuery(event.target.value)} value={query}/>
+        <button type="submit">Search</button>
+            </form> 
+            <ul>
+            {results.map(result =>(
+            <li key={result.objectID}>
+                <a href={result.url}>{result.title}</a>
+            </li>
+            ))}
+            </ul>
+            </>
+        )
+        }
+        ```
