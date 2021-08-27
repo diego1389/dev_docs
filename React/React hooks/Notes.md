@@ -846,4 +846,94 @@ useState:
         )
         }
         ```
-- 
+- Props drilling: passing props through components, possibly unrelated components (sometimes the component doesnt use just needs to pass it to a inferior level). You can fix this with render props pattern.
+
+    -  Configure the provider:
+    ```js
+    import React from 'react';
+    import ReactDOM from 'react-dom';
+    import App from './App';
+    import reportWebVitals from './reportWebVitals';
+
+    export const UserContext = React.createContext();
+    const username = "Dave";
+
+    ReactDOM.render(
+    <UserContext.Provider value={username}>
+        <App/>
+    </UserContext.Provider>
+    ,document.getElementById('root')
+    );
+
+    // If you want to start measuring performance in your app, pass a function
+    // to log results (for example: reportWebVitals(console.log))
+    // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+    reportWebVitals();
+    ```
+    - Configure the consumer:
+
+    ```js
+    import React from 'react';
+    import { UserContext } from './index';
+
+    export default function App(){
+    return(<div><UserContext.Consumer>
+        {value => <div>Hello, {value}</div>}
+        </UserContext.Consumer>
+        </div>);
+    }
+    ```
+    - Configure the consumer with useContext hook:
+    ```js
+    import React, {useContext} from 'react';
+    import { UserContext } from './index';
+
+    export default function App(){
+    const value = useContext(UserContext);
+
+    return(<div>
+        Hello, {value}
+        </div>);
+    }
+    ```
+    - Replacing redux with the useReducer hook. State management is handled through useReducer hook.
+        ```js
+        import React, {useContext, useReducer} from 'react';
+        import { UserContext } from './index';
+
+        const initialState = {
+        count : 0
+        };
+
+        function reducer(state, action){
+        switch(action.type){
+            case "increment":
+            return {
+                count : state.count + 1 
+            }
+            case "decrement":
+                return {
+                count : state.count - 1 
+                }
+            case "reset":
+                return initialState;
+            default:
+            return initialState;
+        }
+        }
+
+        export default function App(){
+        const [state, dispatch] = useReducer(reducer, initialState);
+        const value = useContext(UserContext);
+
+        return(<div>
+            Count: {state.count}
+            <button className="border m-1 p-1" 
+            onClick={() => dispatch({type : "increment"})}>Increment</button>
+            <button className="border m-1 p-1" 
+            onClick={() => dispatch({type : "decrement"})}>Decrement</button>
+            <button className="border m-1 p-1" 
+            onClick={() => dispatch({type : "reset"})}>Reset</button>
+            </div>);
+        }
+        ```

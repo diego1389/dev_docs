@@ -29,14 +29,17 @@ const searchInputRef = useRef();
   }
 
   return(
-    <>
+    <div className="container max-w-md mx-auto p-4 m-2 bg-purple-lightest
+    shadow-lg rounded">
+      <h1 className="text-grey-darkest font-thin">Hooks news</h1>
     <form onSubmit={handleSearch}>
     <input type="text" 
     onChange={event => setQuery(event.target.value)} 
     value={query}
-    ref={searchInputRef}/>
-   <button type="submit">Search</button>
-   <button type="button" onClick={handleClearSearch}>Clear</button>
+    ref={searchInputRef}
+    className="border p-1 rounded"/>
+   <button type="submit" className="bg-orange rounded m-1 p-1">Search</button>
+   <button type="button" onClick={handleClearSearch} className="bg-teal rounded">Clear</button>
     </form> 
     {isLoading ? (<div>Loading results</div>) : (<ul>
     {results.map(result =>(
@@ -45,6 +48,6 @@ const searchInputRef = useRef();
       </li>
     ))}
     </ul>)}
-    </>
+    </div>
   )
 }
