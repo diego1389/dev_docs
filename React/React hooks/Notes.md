@@ -937,3 +937,421 @@ useState:
             </div>);
         }
         ```
+- Manipulate state with useContext and useReducer
+    - Create context.js
+    ```js
+    import React from 'react';
+
+    const TodosContext = React.createContext({
+        todos: [
+            {id: 1, text: "Eat breakfast", complete: false},
+            {id: 2, text: "Do laundry", complete: false},
+            {id: 3, text: "Finish project", complete: true}
+        ]
+    })
+
+    export default TodosContext;
+    ```
+    - Create reducer.js
+    ```js
+    export default function reducer(state, action){
+    switch(action.type){
+        default: 
+        return state;
+    }
+    }
+    ```
+    - Create TodoList.js component
+    ```js
+    import React, {useContext} from 'react';
+    import TodosContext from '../context';
+
+    export default function TodoList(){
+        const{state, dispatch} = useContext(TodosContext);
+
+        return(
+            <div>
+                <ul>
+                    {state.todos.map(todo=>(
+                        <li key={todo.id}>
+                            <span>{todo.text}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )
+
+    }
+    ``` 
+    - Modify index.js
+    ```js
+    import React, {useContext, useReducer} from 'react';
+    import ReactDOM from 'react-dom';
+    import reportWebVitals from './reportWebVitals';
+    import TodosContext from './context';
+    import reducer from './reducer'; 
+    import TodoList from './components/TodoList';
+
+    const App = ()=> {
+    const initialState = useContext(TodosContext);
+    const [state, dispatch] = useReducer(reducer, initialState);
+
+    return(
+        <TodosContext.Provider value={{state, dispatch}}>
+        <TodoList/>
+        </TodosContext.Provider>
+    );
+    }
+
+    ReactDOM.render(
+        <App/>
+    ,document.getElementById('root')
+    );
+
+    // If you want to start measuring performance in your app, pass a function
+    // to log results (for example: reportWebVitals(console.log))
+    // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+    reportWebVitals();
+    ```
+- Change complete property from todo list:
+    - TodoList.js
+    ```js
+    import React, {useContext} from 'react';
+    import TodosContext from '../context';
+    import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+    export default function TodoList(){
+        const{state, dispatch} = useContext(TodosContext);
+        const title = state.todos.length > 0 
+        ? `${state.todos.length} Todos`
+        : "Nothing To Do!"
+        return(
+            <div className="container mx-auto max-w-md text-center font-mono">
+                <h1 className="bold">
+                    {title}
+                </h1>
+                <ul className="list-reset text-white p-0">
+                    {state.todos.map(todo=>(
+                        <li className="bg-yellow-600 border-black border-dashed border-2
+                        my-2 py-4 flex items-centered" key={todo.id}>
+                            <span 
+                            className={`flex-1 m1-12 cursor-pointer ${todo.complete &&  "line-through text-gray-500"}`}
+                            onDoubleClick={() => dispatch({type : "TOGGLE_TODO", payload: todo})}>{todo.text}</span>
+                            <button>
+                            <img src="https://img.icons8.com/material-outlined/24/000000/edit--v4.png" 
+                            alt="Edit"
+                            className="h-6"/>
+                            </button>
+                            <button>
+                            <img src="https://img.icons8.com/material-outlined/24/000000/delete--v4.png" 
+                            alt="Delete"
+                            className="h-6"/>
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )
+    }
+    ```
+    - reducer.js
+    ```js
+    export default function reducer(state, action){
+        switch(action.type){
+            case "TOGGLE_TODO":
+                const toggledTodos = state.todos.map(t=> t.id === action.payload.id ? 
+                    {...action.payload, complete : !action.payload.complete}
+                    : t
+                )
+            return{
+                ...state,
+                todos: toggledTodos
+            }
+            default: 
+            return state;
+        }
+    }
+    ```
+- Remove todos:
+    - TodoList.js
+    ```js
+    import React, {useContext} from 'react';
+    import TodosContext from '../context';
+    import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+    export default function TodoList(){
+        const{state, dispatch} = useContext(TodosContext);
+        const title = state.todos.length > 0 
+        ? `${state.todos.length} Todos`
+        : "Nothing To Do!"
+        return(
+            <div className="container mx-auto max-w-md text-center font-mono">
+                <h1 className="bold">
+                    {title}
+                </h1>
+                <ul className="list-reset text-white p-0">
+                    {state.todos.map(todo=>(
+                        <li className="bg-yellow-600 border-black border-dashed border-2
+                        my-2 py-4 flex items-centered" key={todo.id}>
+                            <span 
+                            className={`flex-1 m1-12 cursor-pointer ${todo.complete &&  "line-through text-gray-500"}`}
+                            onDoubleClick={() => dispatch({type : "TOGGLE_TODO", payload: todo})}>{todo.text}</span>
+                            <button>
+                            <img src="https://img.icons8.com/material-outlined/24/000000/edit--v4.png" 
+                            alt="Edit"
+                            className="h-6"/>
+                            </button>
+                            <button onClick={() => dispatch({type: "REMOVE_TODO", payload : todo})}>
+                            <img src="https://img.icons8.com/material-outlined/24/000000/delete--v4.png" 
+                            alt="Delete"
+                            className="h-6"/>
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )
+
+    }
+    ```
+    - reducer.js
+    ```js
+    export default function reducer(state, action){
+        switch(action.type){
+            case "TOGGLE_TODO":
+                const toggledTodos = state.todos.map(t=> t.id === action.payload.id ? 
+                    {...action.payload, complete : !action.payload.complete}
+                    : t
+                )
+            return{
+                ...state,
+                todos: toggledTodos
+            }
+            case "REMOVE_TODO":
+                const filteredTodos = state.todos.filter(t => t.id !== action.payload.id);
+                return {
+                    ...state,
+                    todos: filteredTodos
+                }
+            default: 
+            return state;
+        }
+    }
+    ```
+- Add todos and todoform component:
+    - Create new form component TodoForm.js
+    ```js
+    import React, {useState, useContext} from 'react';
+    import TodosContext from '../context';
+
+    export default function TodoForm(){
+        const [todo, setTodo] = useState("");
+        const {dispatch} = useContext(TodosContext);
+
+        const handleSubmit = event => {
+            event.preventDefault();
+            dispatch({type: "ADD_TODO", payload: todo})
+            setTodo("");
+        }
+
+        return(
+            <form className="flex justify-center p-5" onSubmit={handleSubmit}>
+                <input type="text"
+                className="border-black border-solid border-2"
+                onChange={event => setTodo(event.target.value)}
+                value ={todo}/>
+
+            </form>
+        )
+    }
+    ```
+    - Modify the reducer add a new todo:
+    ```js
+    import { v1 as uuidv1 } from 'uuid';
+
+    export default function reducer(state, action){
+        switch(action.type){
+            case "ADD_TODO":
+                const newTodo = {
+                    id : uuidv1(),
+                    text : action.payload,
+                    complete : false
+                }
+
+                const addedTodos = [...state.todos, newTodo];
+
+                return{
+                    ...state,
+                    todos: addedTodos
+                }
+            case "TOGGLE_TODO":
+                const toggledTodos = state.todos.map(t=> t.id === action.payload.id ? 
+                    {...action.payload, complete : !action.payload.complete}
+                    : t
+                )
+            return{
+                ...state,
+                todos: toggledTodos
+            }
+            case "REMOVE_TODO":
+                const filteredTodos = state.todos.filter(t => t.id !== action.payload.id);
+                return {
+                    ...state,
+                    todos: filteredTodos
+                }
+            default: 
+            return state;
+        }
+    }
+    ```
+- Edit existing todo:
+    -Context.js
+    ```js
+    import React from 'react';
+
+    const TodosContext = React.createContext({
+        todos: [
+            {id: 1, text: "Eat breakfast", complete: false},
+            {id: 2, text: "Do laundry", complete: false},
+            {id: 3, text: "Finish project", complete: false}
+        ],
+        currentTodo: {}
+    })
+
+    export default TodosContext;
+    ```
+    - TodoForm.js
+    ```js
+    import React, {useState, useContext, useEffect} from 'react';
+    import TodosContext from '../context';
+
+    export default function TodoForm(){
+        const [todo, setTodo] = useState("");
+        const {state : {currentTodo = {}}, dispatch} = useContext(TodosContext);
+
+        useEffect(()=> {
+            if(currentTodo.text){
+                setTodo(currentTodo.text);
+            }
+        }, [currentTodo.id])
+
+        const handleSubmit = event => {
+            event.preventDefault();
+            if(currentTodo.text){
+                dispatch({type : "UPDATE_TODO", payload: todo});
+            }else{
+                dispatch({type: "ADD_TODO", payload: todo});
+            }
+
+            setTodo("");
+        }
+
+        return(
+            <form className="flex justify-center p-5" onSubmit={handleSubmit}>
+                <input type="text"
+                className="border-black border-solid border-2"
+                onChange={event => setTodo(event.target.value)}
+                value ={todo}/>
+
+            </form>
+        )
+    }
+    ```
+    - TodoList.js
+    ```js
+    import React, {useContext} from 'react';
+    import TodosContext from '../context';
+
+    export default function TodoList(){
+        const{state, dispatch} = useContext(TodosContext);
+        const title = state.todos.length > 0 
+        ? `${state.todos.length} Todos`
+        : "Nothing To Do!"
+        return(
+            <div className="container mx-auto max-w-md text-center font-mono">
+                <h1 className="bold">
+                    {title}
+                </h1>
+                <ul className="list-reset text-white p-0">
+                    {state.todos.map(todo=>(
+                        <li className="bg-yellow-600 border-black border-dashed border-2
+                        my-2 py-4 flex items-centered" key={todo.id}>
+                            <span 
+                            className={`flex-1 m1-12 cursor-pointer ${todo.complete &&  "line-through text-gray-500"}`}
+                            onDoubleClick={() => dispatch({type : "TOGGLE_TODO", payload: todo})}>{todo.text}</span>
+                            <button onClick={()=> dispatch({type : "SET_CURRENT_TODO", payload:todo})}>
+                            <img src="https://img.icons8.com/material-outlined/24/000000/edit--v4.png" 
+                            alt="Edit"
+                            className="h-6"/>
+                            </button>
+                            <button onClick={() => dispatch({type: "REMOVE_TODO", payload : todo})}>
+                            <img src="https://img.icons8.com/material-outlined/24/000000/delete--v4.png" 
+                            alt="Delete"
+                            className="h-6"/>
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )
+
+    }
+    ```
+    - reducer.js
+    ```js
+    import { v1 as uuidv1 } from 'uuid';
+
+    export default function reducer(state, action){
+        switch(action.type){
+            case "ADD_TODO":
+                const newTodo = {
+                    id : uuidv1(),
+                    text : action.payload,
+                    complete : false
+                }
+
+                const addedTodos = [...state.todos, newTodo];
+
+                return{
+                    ...state,
+                    todos: addedTodos
+                }
+            case "UPDATE_TODO":
+                const updatedTodo = {...state.currentTodo, text: action.payload};
+                const updatedTodoIndex = state.todos.findIndex(
+                    t => t.id === state.currentTodo.id
+                )
+                const updatedTodos = [
+                    ...state.todos.slice(0, updatedTodoIndex),
+                    updatedTodo,
+                    ...state.todos.slice(updatedTodoIndex + 1)
+                ]
+
+                return{
+                    ...state,
+                    currentTodo : {},
+                    todos: updatedTodos
+                }
+            case "SET_CURRENT_TODO":
+                return{
+                    ...state,
+                    currentTodo : action.payload
+                }
+            case "TOGGLE_TODO":
+                const toggledTodos = state.todos.map(t=> t.id === action.payload.id ? 
+                    {...action.payload, complete : !action.payload.complete}
+                    : t
+                )
+            return{
+                ...state,
+                todos: toggledTodos
+            }
+            case "REMOVE_TODO":
+                const filteredTodos = state.todos.filter(t => t.id !== action.payload.id);
+                return {
+                    ...state,
+                    todos: filteredTodos
+                }
+            default: 
+            return state;
+        }
+    }
+    ```
