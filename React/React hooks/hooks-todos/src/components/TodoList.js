@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, {useContext} from 'react';
 import TodosContext from '../context';
 
@@ -17,13 +18,26 @@ export default function TodoList(){
                     my-2 py-4 flex items-centered" key={todo.id}>
                         <span 
                         className={`flex-1 m1-12 cursor-pointer ${todo.complete &&  "line-through text-gray-500"}`}
-                        onDoubleClick={() => dispatch({type : "TOGGLE_TODO", payload: todo})}>{todo.text}</span>
+                        onDoubleClick={async () => 
+                            {
+                                const response = await axios.patch(`https://hooks-api-dtcefwvsg-diego1389.vercel.app/todos/${todo.id}`,
+                                {
+                                    complete : !todo.complete
+                                })
+                                dispatch({type : "TOGGLE_TODO", payload: response.data});
+                            }
+                            }>{todo.text}</span>
                         <button onClick={()=> dispatch({type : "SET_CURRENT_TODO", payload:todo})}>
                         <img src="https://img.icons8.com/material-outlined/24/000000/edit--v4.png" 
                         alt="Edit"
                         className="h-6"/>
                         </button>
-                        <button onClick={() => dispatch({type: "REMOVE_TODO", payload : todo})}>
+                        <button 
+                        onClick={async () => {
+                            axios.delete(`https://hooks-api-dtcefwvsg-diego1389.vercel.app/todos/${todo.id}`)
+                            dispatch({type: "REMOVE_TODO", payload : todo})}
+                        }
+                        >
                         <img src="https://img.icons8.com/material-outlined/24/000000/delete--v4.png" 
                         alt="Delete"
                         className="h-6"/>

@@ -1,6 +1,7 @@
 import React, {useState, useContext, useEffect} from 'react';
 import TodosContext from '../context';
-
+import axios from 'axios';
+import { v1 as uuidv1 } from 'uuid';
 
 export default function TodoForm(){
     const [todo, setTodo] = useState("");
@@ -9,15 +10,27 @@ export default function TodoForm(){
     useEffect(()=> {
         if(currentTodo.text){
             setTodo(currentTodo.text);
+        }else{
+            setTodo("");
         }
     }, [currentTodo.id])
 
-    const handleSubmit = event => {
+    const handleSubmit = async event => {
         event.preventDefault();
         if(currentTodo.text){
-            dispatch({type : "UPDATE_TODO", payload: todo});
+            const response = await axios.patch(`https://hooks-api-dtcefwvsg-diego1389.vercel.app/todos/${currentTodo.id}`,
+                {
+                    text : todo
+                }
+            )
+            dispatch({type : "UPDATE_TODO", payload: response.data});
         }else{
-            dispatch({type: "ADD_TODO", payload: todo});
+            const response = await axios.post("https://hooks-api-dtcefwvsg-diego1389.vercel.app/todos", {
+                id : uuidv1(),
+                text: todo, 
+                complete : false
+            })
+            dispatch({type: "ADD_TODO", payload: response.data});
         }
 
         setTodo("");
