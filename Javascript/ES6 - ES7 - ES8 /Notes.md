@@ -21,3 +21,24 @@
 
     console.log("value after loop "+ i); //Error, i is not defined
     ```
+- **const** when something should change.
+    ```js
+    const i = 2;
+    console.log(i);
+    i = 3;//throws an error
+    ```
+- To compile code in different languages: https://replit.com/languages.
+- Const means it doesn't bind the variable to other object (but you can change it without an equal sign). You can change what's inside just don't change what the variable is assigned to.
+    ```js
+    const myArray = [1, 2, 3, 4];
+    console.log(myArray);
+    //myArray = [1,2,3,4,5];//throws an error
+    myArray.push(5);//this works
+    ```
+- Interpolation: you're trying to take something and insert it into something that's different.
+    ```js
+    const name = 'Diego';
+    const selectQuery = 'SELECT * from users where name = "' + name + '"';
+    console.log(selectQuery);
+    ```
+- Template literals: 
