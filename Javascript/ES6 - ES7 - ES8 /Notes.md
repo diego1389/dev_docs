@@ -41,4 +41,100 @@
     const selectQuery = 'SELECT * from users where name = "' + name + '"';
     console.log(selectQuery);
     ```
-- Template literals: 
+- Template literals:    
+    ```js
+    const name = 'Diego';
+    const selectQuery =`SELECT * from users where name = "${name}"`;
+    console.log(selectQuery);
+    ```
+- Multiline:
+    ```js
+    const text = `It's a rainy day
+    a very rainy day`;
+
+    console.log(text);
+    ```
+- Expressions (you can use regular javascript code inside template literals):
+    ```js
+    const anExpression = `10 * 3 = ${10*3}`;
+    console.log(anExpression);
+    const isMember = false;
+    const anotherExpression = `Your price is ${isMember ? 10 : 12}`;
+    console.log(anotherExpression);
+    ```
+- Tagged templates give us the ability to package up html and pre process it. You pass the 
+    ```js
+    let expression1 = "First expression";
+    let expression2 = "Second expression";
+    let expression3 = "Third expression";
+
+    let lines = [expression1, expression2, expression3];
+
+    //function buildHtml(strings, expression1, expression2)
+    function buildHtml(strings, expressions){
+        console.log(expressions); //array with expression1, expression2 and expression3
+    }
+
+    //const result = buildHtml`<li>${lines[0]}${lines[1]}</li>`;
+    const result = buildHtml`<li>${lines}</li>`;
+    ```
+- Build and pre process html with tagged templates:
+    ```js
+    let expression1 = "First expression";
+    let expression2 = "Second expression";
+    let expression3 = "Third expression";
+
+    let lines = [expression1, expression2, expression3];
+
+    function buildHtml(strings, expressions){
+        const newHtml = expressions.map((expression)=>{
+            return `${strings[0]}${expression}${strings[1]}`;
+        });
+        return newHtml;
+    }
+
+    const result = buildHtml`<li>${lines}</li>`;
+    console.log(result);
+    /*
+    [
+    '<li>First expression</li>',
+    '<li>Second expression</li>',
+    '<li>Third expression</li>'
+    ]
+    */
+    ```
+- You cannot get functions result using just template literals:
+    ```js
+    function testFunction(){
+        return "some other demo text";
+    }
+
+    const result = `Some text and ${() =>testFunction()}`; 
+    console.log(result); //Some text and () =>testFunction()
+    ```
+- But with tagged literals you can:
+    ```js
+    function testFunction(){
+        return "some other demo text";
+    }
+
+    const result = `Some text and ${() =>testFunction()}`; 
+    console.log(result); //Some text and () =>testFunction()
+
+    function taggedCallback(strings, func){
+        return strings[0]+func();
+    }
+
+    const taggedLiteralCallback = taggedCallback`Some text and ${() =>testFunction()}`;
+    console.log(taggedLiteralCallback);//Some text and some other demo text
+    ```
+- Optional parameters:
+    ```js
+    function getArea(x,y,s='r'){
+        if(s === 'r'){
+            return x*y;
+        }
+    }
+
+    console.log(getArea(2,5));
+    ```
