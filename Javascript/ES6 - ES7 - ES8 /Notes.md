@@ -27,7 +27,7 @@
     console.log(i);
     i = 3;//throws an error
     ```
-- To compile code in different languages: https://replit.com/languages.
+- To compile code in different languages: https://replit.com/languages
 - Const means it doesn't bind the variable to other object (but you can change it without an equal sign). You can change what's inside just don't change what the variable is assigned to.
     ```js
     const myArray = [1, 2, 3, 4];
@@ -137,4 +137,154 @@
     }
 
     console.log(getArea(2,5));
+    ```
+- rest operator. ... operator, it has to come last.
+    ```js
+    function findHighest(upperLimit, ...restValues){
+        console.log("arguments: ");
+        console.log(arguments);
+        console.log("rest of values (excluding the first upper limit): ");
+        console.log(restValues);
+    }
+
+    findHighest(80, 15, 80, 70, 55, 40, 30);
+    /*
+    arguments: 
+    [Arguments] {
+    '0': 80,
+    '1': 15,
+    '2': 80,ß
+    '3': 70,
+    '4': 55,
+    '5': 40,
+    '6': 30
+    }
+    rest of values (excluding the first upper limit): 
+    [ 15, 80, 70, 55, 40, 30 ]
+    */
+    ```
+- Spread syntax:
+- Reduce function to return a single thing.
+    ```js
+    /*rest way*/
+    function sum(...numberList){
+        return numberList.reduce(
+            function(total, num){
+                return total+num
+            }
+        )
+    }
+
+    const total = sum(10,5,3);
+    console.log(total);//18
+    //------------------------------------
+    function sum(a, b, c, d, e){
+	return a + b + c + d + e;
+    }
+
+    const numbersArray = [2, 3, 1, 4, 0];
+    const total = sum(...numbersArray);
+    console.log(total); //10
+    ```
+- Another spread operator example:
+    ```js
+    function aReducer(state, action){
+        switch(action.type){
+            case 'ADD':
+                //let newState = Object.assign({}, state); //makes a copy of state
+                let newState = {...state}; //makes a copy of state
+                newState.c = action.payload;
+                return newState;
+            default:
+                return state;
+        }
+    }
+
+    const currState = {
+        a: 1,
+        b: 2
+    };
+
+    const action = {
+        type : 'ADD',
+        payload : 3
+    }
+
+    console.log(aReducer(currState, action)); //{ a: 1, b: 2, c: 3 }
+    ```
+- Yet another example:
+    - With spread operator you can make copies of objects and arrays.
+    ```js
+    const numberSet = [5, 2, 1, 4, 3];
+    console.log(Math.min(...numberSet));
+    /*Math.min definition: Math.min(value0, value1, ... , valueN)*/
+
+    //You can merge arrays with spread operator
+    const letters = ['a', 'b', 'c'];
+    const numbersAndLetters = [1, 2, 3, ...letters, 4];
+
+    console.log(numbersAndLetters);
+    /*
+    [
+    1,   2,   3, 'a',
+    'b', 'c', 4
+    ]
+    */
+    const myArray1 = [1, 2, 3];
+    const myArray2 = myArray1;
+    myArray1.push(4);
+    console.log(myArray2); //[ 1, 2, 3, 4 ] (it mutated the array!)
+
+
+    const myArray1 = [1, 2, 3];
+    const myArray2 = [...myArray1];
+    myArray1.push(4);
+    console.log(myArray2); //[ 1, 2, 3 ]
+    ```
+- Anonymous functions: In computer programming, an anonymous function is a function definition that is not bound to an identifier. Anonymous functions are often arguments being passed to higher-order functions.
+    ```js
+    const myArray1 = [2, 4, 6];
+
+    myArray1.map((n, i)=>{
+        console.log(i); //0 1 2
+    });
+    ```
+- The regular function creates a new this, the arrow function doesn't.
+- If you use an arrow function inside a regular function it takes the this (the context) of the regular function. If that's not the desired behaviour use a regular function inside as well. For example: 
+    ```js
+    function Timer(){
+        setInterval(()=> {
+            console.log(this); //The this is the Timer constructor (function)
+        }, 250)
+    }
+
+    const timer = new Timer();
+    /*
+    Timer {}
+    Timer {}
+    Timer {}
+    Timer {}
+    */
+    /*-------------------------*/
+        function Timer(){
+        setInterval(function(){
+            console.log(this); //the this is the setInterval function
+        }, 500)
+    }
+
+    const timer = new Timer();
+    /*Timeout {
+    _idleTimeout: 500,
+    _idlePrev: null,
+    _idleNext: null,
+    _idleStart: 89,
+    _onTimeout: [Function],
+    _timerArgs: undefined,
+    _repeat: 500,
+    _destroyed: false,
+    [Symbol(refed)]: true,
+    [Symbol(kHasPrimitive)]: false,
+    [Symbol(asyncId)]: 2,
+    [Symbol(triggerId)]: 1
+    }*/
     ```
