@@ -266,7 +266,7 @@
     Timer {}
     */
     /*-------------------------*/
-        function Timer(){
+    function Timer(){
         setInterval(function(){
             console.log(this); //the this is the setInterval function
         }, 500)
@@ -287,4 +287,232 @@
     [Symbol(asyncId)]: 2,
     [Symbol(triggerId)]: 1
     }*/
+    ```
+
+- Object literal. Three primary ways to create an object.
+    - let x = new Object();
+    - let x = Object.create();
+    - And object literal: let x = {};
+    ```js
+    const stuff = {
+        name : "Diego",
+        lastName : "Guillen",
+        job: function(){
+            console.log("Developer");
+        }
+    };
+    stuf.name;
+    stuff.job();//Developer
+    ```
+- Example without destructuring:
+    ```js
+    const someJSON = {
+        "userId": 1,
+        "id": 1,
+        "title": "delectus aut autem",
+        "completed": false
+    };
+
+    const userId = someJSON.userId;
+    const id = someJSON.id;
+    const title = someJSON.title;
+
+    const newThing = {
+        userId,
+        id,
+        title
+    };
+
+    function processSomeData(data){
+        console.log(data);
+    };
+
+    processSomeData(newThing);//{ userId: 1, id: 1, title: 'delectus aut autem' }
+    ```
+- Example with destructuring
+    ```js
+   const someJSON = {
+        "userId": 1,
+        "id": 1,
+        "title": "delectus aut autem",
+        "completed": false
+    };
+
+        //you can change variable name title for newTitle like this:
+    const {userId, id,  title : newTitle } = someJSON;
+
+    const newThing = {
+        userId,
+        id,
+        newTitle
+    };
+
+    function processSomeData({userId, id, newTitle}){
+        console.log(`UserId: ${userId}, id: ${id} and title: ${newTitle}`);
+    };
+
+    processSomeData(newThing);//UserId: 1, id: 1 and title: delectus aut autem
+    ```
+- We can destructure nested objects (and arrays) as well with "inner destructuring":
+    ```js
+    const someJSON = {
+        "userId": 1,
+        "id": 1,
+        "title": "delectus aut autem",
+        "completed": false,
+        "numbers" : [
+            3,
+            6,
+            9
+        ],
+        "pets" : {
+            "dogName" : "Xabi"
+        }
+    };
+
+    const {numbers : {[0] : firstNumber, [2] : thirdNumber}} = someJSON;
+    console.log(firstNumber, thirdNumber); //3 9
+    const {pets : {dogName}} = someJSON;
+    console.log(dogName); //Xabi
+    ```
+- We can use destructuring as a workaround for named parameters:
+    ```js
+    getArea({height : 30, width : 50});
+    function getArea({width, height}){
+        console.log(width); //50
+    }
+    ```
+- We can destructure arrays:
+    ```js
+    const someJSON = {
+        "userId": 1,
+        "id": 1,
+        "title": "delectus aut autem",
+        "completed": false,
+        "numbers" : [
+            3,
+            6,
+            9,
+            12,
+            15
+        ],
+        "pets" : {
+            "dogName" : "Xabi"
+        }
+    };
+
+    const [first, second, third] = someJSON.numbers;
+
+    console.log(`${first+second+third} `); //18
+    ```
+- And also you can skip values and use the rest operator:
+    ```js
+    const someJSON = {
+        "numbers" : [
+            3,
+            6,
+            9,
+            12,
+            15
+        ]
+    };
+
+    const [, second,, ...others] = someJSON.numbers; //skip first and third values
+    console.log(second);//6
+    console.log(others);//[12, 15]
+    ```
+- Regular javscript "constructure". This instance variable (cannot use destructuring here).
+    - Every time you create a new hero it will create a new copy of the "static" goodHero property and the powerUp function. 
+    ```js
+    function Hero(name, weapon, strength){
+        this.name = name;
+        this.weapon = weapon;
+        this.strength = strength;
+
+        this.goodHero = true;
+        this.powerUp = function(){
+            this.strength += 5;
+        }
+    }
+
+    const hero1 = new Hero("Lu Bu", "Spear", 80);
+    hero1.powerUp();
+    console.log(hero1);
+    /*
+    Hero {
+    name: 'Lu Bu',
+    weapon: 'Spear',
+    strength: 85,
+    powerUp: [Function]
+    }
+    */
+    ```
+- To create a shared variable (a static variable you use the prototype keyword):
+    ```js
+    function Hero(name, weapon, strength){
+        this.name = name;
+        this.weapon = weapon;
+        this.strength = strength;
+    }
+
+    Hero.prototype.powerUp =  function(){
+            this.strength += 5;
+        }
+
+    const hero1 = new Hero("Lu Bu", "Spear", 80);
+    hero1.powerUp();
+    console.log(hero1);//Hero { name: 'Lu Bu', weapon: 'Spear', strength: 85 }
+    ```
+- Now JS has classes (syntactic sugar). 
+    ```js
+    class Hero{
+        constructor(name, weapon, strength){
+            this.name = name;
+            this.weapon = weapon;
+            this.strength = strength;
+        }
+
+        powerUp(){
+            this.strength += 5;
+        }
+        
+    }
+
+    const hero1 = new Hero("Lu Bu", "Spear", 80);
+    hero1.powerUp();
+    console.log(hero1);//Hero { name: 'Lu Bu', weapon: 'Spear', strength: 85 }
+    ```
+- Setters and getters. 
+    - Private variables in js start with underscore, otherwise they create an infinite loop in the setter (you set the name and calls the set and so on).
+    ```js
+    class Hero{
+        constructor(name, weapon, strength){
+            this._name = name;
+            this._weapon = weapon;
+            this._strength = strength;
+        }
+
+        powerUp(){
+            this._strength += 5;
+        }
+        
+        get name(){
+            console.log("Getting name...");
+        }
+
+        set name(newName){
+            console.log("Setting name...");
+            this._name = newName;
+        }
+    }
+
+    const LuBuDetails = ["Lu Bu", "Spear", 80];
+    const hero1 = new Hero(...LuBuDetails);
+    hero1.name = "Adan";
+    hero1.powerUp();
+    console.log(hero1);
+    /*
+    Setting name...
+    Hero { _name: 'Adan', _weapon: 'Spear', _strength: 85 }
+    */
     ```
