@@ -516,3 +516,55 @@
     Hero { _name: 'Adan', _weapon: 'Spear', _strength: 85 }
     */
     ```
+- Now we can create static methods:
+    ```js
+    class Hero{
+        constructor(name, weapon, strength){
+            this._name = name;
+            this._weapon = weapon;
+            this._strength = strength;
+        }
+
+        static getHero(){
+            return true;
+        }
+    }
+
+    const LuBuDetails = ["Lu Bu", "Spear", 80];
+    const hero1 = new Hero(...LuBuDetails);
+
+    console.log(Hero.getHero());//true
+    ```
+- Subclasses and prototypal inheritance:
+    - super() is going to run the parent's constructor.
+    - in case of having variables or methods with the same name it goes child first.
+    ```js
+    class Hero{
+        constructor(name, weapon, strength){
+            this._name = name;
+            this._weapon = weapon;
+            this._strength = strength;
+        }
+
+        static getHero(){
+            return true;
+        }
+    }
+
+    class Human extends Hero{
+        constructor(health, ...heroDetails){
+            super(...heroDetails);
+            this._health = health;
+        }
+    }
+
+
+    const LuBuDetails = [60, "Lu Bu", "Spear", 80];
+    const AdanDetails = ["Adan", "Brass Knuckles", 90];
+    const hero1 = new Human(...LuBuDetails);
+    const hero2 = new Hero(...AdanDetails);
+    console.log(hero1);
+    /*Human { _name: 'Lu Bu', _weapon: 'Spear', _strength: 80, _health: 60 }*/
+    console.log(hero2);
+    /*Hero { _name: 'Adan', _weapon: 'Brass Knuckles', _strength: 90 }*/
+    ```
