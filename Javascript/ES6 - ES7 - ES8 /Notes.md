@@ -568,3 +568,113 @@
     console.log(hero2);
     /*Hero { _name: 'Adan', _weapon: 'Brass Knuckles', _strength: 90 }*/
     ```
+- **Arrays:**
+    - Different ways to iterate them (the first one doesnt iterate):
+        ```js
+        const array = [1, 3, 5, 7, 9];
+
+        for(let i = 0; i < array.length; i++){
+            console.log(array[i]);
+        }
+        //iterates over the keys
+        for(let key in array){
+            console.log(array[key]);
+        }
+        //iterates over the values
+        for(let value of array){
+            console.log(value);
+        }
+
+        array.forEach(value =>{
+            console.log(value);
+        })
+        ```
+    - Map will push and return an array.
+    - Array.from = creates an array from an array-like or iterable object.
+        - You can also passs a map function to call on every element of the array
+
+        ```js
+        const array = Array.from(`Diego`);
+        console.log(array);//[ 'D', 'i', 'e', 'g', 'o' ]
+
+        console.log(Array.from([1, 2, 3], x => x + x));//[ 2, 4, 6 ]
+        ```
+    - .of() //create a new array with a variable number of arguments:
+        ```js
+        const array = Array.of(7,6);
+        console.log(array);//[ 7, 6 ]
+
+        ```
+    - fill(): it mutates the array. Arguments:
+        - 1. Value you want to fill
+        - 2. starting index
+        - 3. stopping index
+        - If you pass a negative value it starts counting from the end.
+        ```js
+        const array = [1, "a", 3, 4, "b", "c"];
+        const array2 = [...array];
+        array.fill("d", 2);
+
+        console.log(array); //[ 1, 'a', 'd', 'd', 'd', 'd' ]
+
+        array2.fill("d", 2, 3);
+        console.log(array2);//[ 1, 'a', 'd', 4, 'b', 'c' ]
+        ```
+    - slice doesnt mutate the array
+
+        ```js
+        const array = [1, "a", 3, 4, "b", "c"];
+        const array2 = array.slice(1,2);
+        console.log(array2);//[ 'a' ]
+        console.log(array);//[ 1, 'a', 3, 4, 'b', 'c' ]
+        ```
+    - splice does mutate the array. Arguments:
+        - 1. Where to start
+        - 2. How many to
+        - 3. What to insert
+        ```js
+        const monthsDiscount = ["Jan", "Mar", "Jul", "Nov"];
+        monthsDiscount.splice(2, 0, "Jun");//[ 'Jan', 'Mar', 'Jun', 'Jul', 'Nov' ]
+        monthsDiscount.splice(2, 1, "Jun");//[ 'Jan', 'Mar', 'Jun', 'Nov' ]
+        ```
+    - find(): we provide a callback, if it returns true returns the (first) element that was on when the callback returned true.
+        ```js
+        const donut = {
+            "id": "0001",
+            "type": "donut",
+            "name": "Cake",
+            "ppu": 0.55,
+            "batters":
+                {
+                    "batter":
+                        [
+                            { "id": "1001", "type": "Regular" },
+                            { "id": "1002", "type": "Chocolate" },
+                            { "id": "1003", "type": "Blueberry" },
+                            { "id": "1004", "type": "Devil's Food" }
+                        ]
+                },
+            "topping":
+                [
+                    { "id": "5001", "type": "None" },
+                    { "id": "5002", "type": "Glazed" },
+                    { "id": "5005", "type": "Sugar" },
+                    { "id": "5007", "type": "Powdered Sugar" },
+                    { "id": "5006", "type": "Chocolate with Sprinkles" },
+                    { "id": "5003", "type": "Chocolate" },
+                    { "id": "5004", "type": "Maple" }
+                ]
+        };
+
+        const glazedTopping = donut.topping.find((t)=> {
+            return t.id === "5002";
+        });
+
+        const glazedToppingIndex = donut.topping.findIndex((t)=> {
+            return t.id === "5002";
+        });
+
+
+        console.log(glazedTopping); //{ id: '5002', type: 'Glazed' }
+        console.log(glazedToppingIndex); //1
+        ```
