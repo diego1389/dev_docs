@@ -678,3 +678,64 @@
         console.log(glazedTopping); //{ id: '5002', type: 'Glazed' }
         console.log(glazedToppingIndex); //1
         ```
+- All datatypes are primitives and objects. 
+    - Primitives: string, number, bool, null, undefined and Symbol.
+    ```js
+    let str = "Popeye";
+    let name = str; //we copied the value (because they are primitives)
+    str = "Olive Oil";
+    console.log(name);//Popeye
+
+    /*Objects are stored by ref*/
+    let cartoon = obj;
+    console.log(obj);//{ name: 'Popeye' }
+    console.log(cartoon);//{ name: 'Popeye' }
+    obj.girlfriend = "Olive Oil";
+    console.log(obj);//{ name: 'Popeye', girlfriend: 'Olive Oil' }
+    console.log(cartoon);//{ name: 'Popeye', girlfriend: 'Olive Oil' }
+    /*To make an actual copy and not copy the reference: */
+    let cartoon = {...obj};
+    ```
+- The value of the variable primitive is inmutable.
+- Map is a key-value pair. Its more protected than a regular object and comes with specific methods. It is also iterable:
+    ```js
+    let myContacts = new Map();
+    myContacts.set("Diego", "83122155");
+    const rob = myContacts.get("Diego");
+    console.log(rob);//83122155
+    ```
+- You can use a function as a key (just for Map not for regular objects):
+    ```js
+    keyFunction = () =>{
+        console.log("Hello from key. function");
+    }
+
+    let myContacts = new Map();
+    myContacts.set("Diego", "83122155");
+    myContacts.set(keyFunction, "Some value");
+    const someValue = myContacts.get(keyFunction);
+    console.log(someValue);//Some value
+
+    //to get the size of the Map
+    console.log(myContacts.size);
+    // we can iterate:
+    for(value of myContacts){
+        console.log(value);
+    }
+    //clear method
+    myContacts.clear();
+    console.log(myContacts);//Map {}
+    //get all the entries:
+    console.log(myContacts.entries()); /*[Map Entries] {
+    [ 'Diego', '83122155' ],
+    [ [Function: keyFunction], 'Some value' ]
+    }*/
+
+    //get keys:
+    console.log(myContacts.keys());/*[Map Iterator] { 'Diego', [Function: keyFunction] }*/
+
+    //get values
+
+    console.log(myContacts.values()); //[Map Iterator] { '83122155', 'Some value' }
+    ```
+- 
