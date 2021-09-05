@@ -738,4 +738,47 @@
 
     console.log(myContacts.values()); //[Map Iterator] { '83122155', 'Some value' }
     ```
-- 
+- weakMap will allow garbage collection, if the key has no reference.
+    - it's not iterable and only has get, set, has delete.
+- Set object lets you store unique values of anytype (primitive or object).
+    - sets are iterable.
+    ```js
+  let employeesIds = new Set([`a1`, `b2`, `c3`, `b2`]);
+    console.log(employeesIds);//Set { 'a1', 'b2', 'c3' }
+
+    let employeeSet = new Set();
+    let employee1 = {
+        name: `Employee name`,
+        job: `Cashier`
+    };
+    let employee2 = employee1;
+
+    employeeSet.add(employee1);
+    employeeSet.add(employee2);
+
+    console.log(employeeSet);//Set { { name: 'Employee name', job: 'Cashier' } }
+    ```
+    - WeakSet can only hold objects. Garbage collection.
+        - It's not iterable, is no get method, size is always 0.
+- **Symbol:**
+    - A primitive, an identifier. Symbols are often used to add unique property keys to an object that won’t collide with keys any other code might add to the object, and which are hidden from any mechanisms other code will typically use to access the object. That enables a form of weak encapsulation, or a weak form of information hiding.
+    ```js
+    const CARCOLOR = Symbol();
+    const CARMAKE = Symbol();
+    const CARMODEL = Symbol();
+
+    class Car{
+        constructor(color, make, model){
+            this[CARCOLOR] = color;
+            this[CARMAKE]= make;
+            this[CARMODEL] = model;
+        }
+
+        get color(){
+            return this[CARCOLOR];
+        }
+    }
+
+    let myCar = new Car("red", "Suzuki","Vitara");
+    console.log(myCar.color);
+    ```
