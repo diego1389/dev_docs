@@ -231,7 +231,7 @@ public class PlayerCharacterShould{
             Assert.NotSame(enemy1, enemy2);
         }
         ```
-    * Asserting that code throws exceptions
+    * Asserting that code throws exceptions. There is also a ThrowsAsync version for asynchoronous methods.
         ```cs
         [Fact]
         public void NotAllowNullName()

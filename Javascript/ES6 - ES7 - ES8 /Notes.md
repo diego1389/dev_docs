@@ -782,3 +782,157 @@
     let myCar = new Car("red", "Suzuki","Vitara");
     console.log(myCar.color);
     ```
+- Javascript works with an event queue separate from the main thread. The events queue can check for things to execute.
+- Functions are first class objects:
+    - You can pass them around
+    - Store them in a variable, etc.
+    ```js
+    printUpper = function(text){
+        console.log(text.toUpperCase());
+    }
+
+    function run(callback, input){
+        callback(input);
+    }
+
+    run(printUpper, `Diego`);//DIEGO
+    ```
+- Callback its a function that will be call later on, it will be called back.
+    ```js
+    function a(x){
+        console.log(x);
+        return function(y){
+            console.log(x+y);
+        }
+    }
+    a(2)(3);//2
+    //5
+
+    function b(num){
+        const objectToReturn = {
+            run : `RUN!`
+        }
+        return objectToReturn;
+    }
+    //RUN!
+    ```
+- Javascript is a single threaded language, but it is non-blocking, IO / event driven.
+- Callback hell: a callback inside a callback inside a callback (inside the then for example).
+- Use promises to avoid callback hell.
+- Promises improve readability.
+- A promise is a js constructor. The Promise object represents the eventual completion (or failure) of an asynchronous operation and its resulting value. It gives you a few methods:
+    - then
+    - catch
+    - all
+    - race
+    - resolve, reject.
+- A promise constructor expects one parameter: a callback function.
+    ```js
+    let myPromise = new Promise((resolve, reject)=> {
+        console.log("Inside the promise");
+        resolve()
+    })
+
+
+
+    myPromise.then(()=> {
+        console.log("Promised finished");
+    })
+
+    console.log("Final line");
+    /*Inside the promise
+    Final line
+    Promised finished*/
+    ```
+- The .then() method takes up to two arguments; the first argument is a callback function for the resolved case of the promise, and the second argument is a callback function for the rejected case. Each .then() returns a newly generated promise object. 
+- Whatever argument you send to the resolve callback (it can be any datatype). When you make a call to an api the data is send to the then() through the resolve().
+- Whatever argument you send in the reject you get in the catch.
+    ```js
+    const myPromise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve('foo');
+    }, 300);
+    });
+
+    const handleResolvedA = (value)=>{
+        console.log(`handled resolved A value: ${value}`);
+    }
+
+    const handleRejectedA = () => {
+        console.log("handled resolved B");
+    }
+
+    myPromise
+    .then(handleResolvedA, handleRejectedA);
+    //handled resolved A value: foo
+    ```
+- Promise.all takes an array of promises as an argument. It's an iterable of promises. The then of the all will wait until all the promises finish.
+- Promise.race takes one parameter as well (an array of promises) and finishes as soon as the first promise finishes.
+    ```js
+    const myPromiseA = new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve('foo');
+    }, 2000);
+    });
+
+    const myPromiseB = new Promise((resolve) =>{
+        setTimeout(() => {
+        resolve('bar');
+    }, 1000);
+    })
+
+    const handleResolvedA = (value)=>{
+        console.log(`handled resolved A value: ${value}`);
+    }
+
+    const handleResolvedB = (value)=>{
+        console.log(`handled resolved B value: ${value}`);
+    }
+
+    const handleRejectedA = () => {
+        console.log("handled resolved B");
+    }
+
+    myPromiseA
+    .then(handleResolvedA, handleRejectedA);
+
+    myPromiseB
+    .then(handleResolvedB);
+
+    const promiseArray = [myPromiseA, myPromiseB];
+
+    Promise.all(promiseArray).then((data) => {
+        console.log("All promises finished", data);
+    });
+
+    Promise.race(promiseArray).then((data) => {
+        console.log("Race finished", data);
+    });
+    /*handled resolved B value: bar
+    Race finished bar
+    handled resolved A value: foo
+    All promises finished [ 'foo', 'bar' ]*/
+    ```
+- Array.from() to create a shallow-copied Array instance from an array-like or iterable object.
+- Chaining promises: To avoid callback hell when you need the result from one promise to use it in another promise. 
+    ```js
+    //...
+    function getCast(movie){
+        return new Promise((resolve, reject)=>{
+            $.ajax({
+                url: `${castUrl}/${movie.id}/credits?api_key=${apiKey}`,
+                method : `get`,
+                success :(castData)=>{
+                    resolve(castData.cast[0]);
+                }
+            })
+        })
+    }
+    const moviePromise = getMovieData(movieElem[0].value); //gets a promise
+    moviePromise.then((movieData)=>{
+        return getCast(movieData);//gets another promise
+    }).then((personInfo)=>{
+
+    })
+
+    ```
