@@ -934,5 +934,72 @@
     }).then((personInfo)=>{
 
     })
+    ```
+- Before async await:
+    ```js
+    function one(){
+        return new Promise((resolve, reject)=>{
+            setTimeout(()=>{
+                resolve("2 seconds have passed");
+            }, 2000)
+        })
+    }
 
+    console.log("Call one: ");
+    one().then((data)=>{
+        console.log(data);
+    });
+    console.log("last line of the code")
+    /*Call one: 
+    last line of the code
+    Hint: hit control+c anytime to enter REPL.
+    2 seconds have passed*/
+
+    //----------------
+    function one(){
+        return new Promise((resolve, reject)=>{
+            setTimeout(()=>{
+                resolve("2 seconds have passed");
+            }, 2000)
+        })
+    }
+
+    function two(){
+        const oneResponse = one();
+        console.log("Inside two: ");
+        console.log(oneResponse);
+    }
+    two();
+    console.log("last line of the code")
+    /*
+    Inside two: 
+    Promise { <pending> }
+    last line of the code
+    */
+    ```
+- After async and await:
+    ```js
+    function one(){
+        return new Promise((resolve, reject)=>{
+            setTimeout(()=>{
+                resolve("2 seconds have passed");
+            }, 2000)
+        })
+    }
+
+    async function two(){
+        const oneResponse = await one();
+        console.log("Inside two: ");
+        console.log(oneResponse);
+    }
+    /*console.log("Call one: ");
+    one().then((data)=>{
+        console.log(data);
+    });*/
+    two();
+    console.log("last line of the code")
+    /*last line of the code
+    Hint: hit control+c anytime to enter REPL.
+    Inside two: 
+    2 seconds have passed*/
     ```
