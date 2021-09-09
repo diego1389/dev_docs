@@ -1003,3 +1003,167 @@
     Inside two: 
     2 seconds have passed*/
     ```
+- Change chaining promises to async/await:
+    ```js
+    const apiKey = `e9ddb24aed6d48c4342303aba5269e28`;
+    const apiUrl = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=`;
+    const imgUrl = `http://image.tmdb.org/t/p/w300/`;
+    const peopleUrl = `https://api.themoviedb.org/3/person`;
+    const castUrl = `https://api.themoviedb.org/3/movie`;
+
+    // The Promise Way
+    function getMovieData(movieTitle){
+        return new Promise((resolve, reject)=>{
+            $.ajax({
+                url: apiUrl+movieTitle,
+                method: 'get',
+                success: (movieData)=>{
+                    // console.log(movieData)
+                    resolve(movieData.results);
+                },
+                error: (errorMsg)=>{
+                    reject(errorMsg)
+                }
+            })
+        })
+    }
+
+    function getCast(movie){
+        // console.log(movie)
+        return new Promise((resolve, reject)=>{
+            $.ajax({
+                url: `${castUrl}/${movie.id}/credits?api_key=${apiKey}`,
+                method: 'get',
+                success: (castData)=>{
+                    resolve(castData.cast[0])
+                }
+            })
+        })
+    }
+
+    function getPerson(person){
+        return new Promise((resolve, reject)=>{
+            $.ajax({
+                url: `${peopleUrl}/${person.id}?api_key=${apiKey}`,
+                success: (personData)=>{
+                    resolve(personData)
+                }
+            })
+        })
+    }
+
+    async function getInfo(movieTitle){
+        const movieData = await getMovieData(movieTitle);
+        console.log("---------Movie----------")
+        console.log(movieData[0]);
+        const castInfo = await getCast(movieData[0]);
+        console.log("---------Cast info----------")
+        console.log(castInfo);
+        const personInfo = await getPerson(castInfo);
+        console.log("---------Person info----------")
+        console.log(personInfo);
+    }
+
+    document.getElementById('movie-form').addEventListener('submit',(event)=>{
+        event.preventDefault();
+        const movieElems = Array.from(document.getElementsByClassName('movie-title'))
+        movieElems.forEach(movieField =>{
+           getInfo(movieField.value)
+        })
+        /*const moviePromise = getMovieData(movieElem[0].value)
+        moviePromise.then((movieData)=>{
+            // console.log(movieData);
+            return getCast(movieData[0]);
+        }).then((castInfo)=>{
+            // console.log(personInfo)
+            return getPerson(castInfo)
+        }).then((personInfo)=>{
+            console.log(personInfo)
+        })*/
+        //getInfo(movieElem);        
+    });
+    ```
+    - Object.values (get object values in an array)
+        ```js
+        const footballer = {
+            name : "Wayne Rooney",
+            position: "Forward",
+            club: "ManU",
+            scoringAverage: 0.45
+        }; 
+
+        /*Old way*/
+        const footballerVals = [];
+        for(prop in footballer){
+            footballerVals.push(footballer[prop]);
+        }
+
+        console.log(footballerVals);//[ 'Wayne Rooney', 'Forward', 'ManU', 0.45 ]
+
+        /*New way*/
+        const footballerVals2 = Object.values(footballer);
+        console.log(footballerVals2);//[ 'Wayne Rooney', 'Forward', 'ManU', 0.45 ]
+        ```
+- Object entries: gets an array of arrays with key value pairs:
+    ```js
+    const footballer = {
+        name : "Wayne Rooney",
+        position: "Forward",
+        club: "ManU",
+        scoringAverage: 0.45
+    }; 
+
+    const footballerEntries = Object.entries(footballer);
+    console.log(footballerEntries);/*
+    [
+        [ 'name', 'Wayne Rooney' ],
+        [ 'position', 'Forward' ],
+        [ 'club', 'ManU' ],
+        [ 'scoringAverage', 0.45 ]
+    ]*/
+    console.log(footballerEntries[0][1]);//Wayne Rooney
+    ```
+- padEnd: the method pads the current string with a given string (repeated, if needed) so that the resulting string reaches a given length. The padding is applied from the end of the current string. It DOES NOT MUTATE THE STRING.
+    ```js
+    const name = "Wayne";
+    console.log(name.padEnd(15, "*"));//Wayne**********
+    ```
+- padStarts: does the same thing but at the beginning.
+    ```js
+    const name = "Wayne";
+    console.log(name.padStart(15, "*"));//**********Wayne
+    ```
+- Object getOwnPropertyDescriptors. Search for the descriptors of each object property.
+    ```js
+    const footballer = {
+        name : "Wayne Rooney",
+        position: "Forward",
+        club: "ManU",
+        scoringAverage: 0.45
+    }; 
+
+    const descriptors = Object.getOwnPropertyDescriptors(footballer);
+    console.log(descriptors);
+    /*{
+    name: {
+        value: 'Wayne Rooney',
+        writable: true,
+        enumerable: true,
+        configurable: true
+    },
+    position: {
+        value: 'Forward',
+        writable: true,
+        enumerable: true,
+        configurable: true
+    },
+    club: {
+        value: 'ManU',
+        writable: true,
+        enumerable: true,
+        configurable: true
+    },
+    scoringAverage: { value: 0.45, writable: true, enumerable: true, configurable: true }
+    }*/
+    ```
+- Trailing commas in functions.
