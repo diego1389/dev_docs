@@ -20,11 +20,11 @@
         null;
     END;
     ```
-    - In the declaration section you declare all the variables to be used during your block.
-    - All lines have to end with a ; except for code blocks and other elements.
-    - **:=** assignment operator vs **=** which is a compare operator. 
-    - When others is a catch all exception block. 
-    - The declaration and exception sections are optional.
+- In the declaration section you declare all the variables to be used during your block.
+- All lines have to end with a ; except for code blocks and other elements.
+- **:=** assignment operator vs **=** which is a compare operator. 
+- When others is a catch all exception block. 
+- The declaration and exception sections are optional.
 - **--** for single line comments, /* */ for multi-line comments.
 - PL/SQL is not case sensitive. 
 - **||** Concatenation symbol.
