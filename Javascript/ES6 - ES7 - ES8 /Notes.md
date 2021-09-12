@@ -1167,3 +1167,123 @@
     }*/
     ```
 - Trailing commas in functions.
+
+- Proxy: a middleman (acting in between two other parties).
+    - The Proxy object enables you to create a proxy for another object, which can intercept and redefine fundamental operations for that object.
+    - Allows you to cut off almost any part of the process of object change. 
+    - Create middleware.
+    - Exclusive control over accessive and setting objects.
+    - Takes to args: object to proxy and object serving as the handler:
+        ```js
+        let handler = {
+            get : (target, propName)=> {
+                console.log("target: ", target);
+                console.log("propName: ", propName);
+            } 
+        };
+
+        let newObj = new Proxy({}, handler);
+        newObj.name = "Diego";
+        newObj.job = "Dev";
+        console.log(newObj.name);
+        /*target:  { name: 'Diego', job: 'Dev' }
+        propName:  name
+        undefined*/
+        ```
+        - get has to return the value:
+        ```js
+        let handler = {
+            get : (target, propName)=> {
+                console.log("target: ", target);
+                console.log("propName: ", propName);
+                return target[propName];
+            } 
+        };
+
+        let newObj = new Proxy({}, handler);
+        newObj.name = "Diego";
+        newObj.job = "Dev";
+        console.log(newObj.name);
+        /*target:  { name: 'Diego', job: 'Dev' }
+        propName:  name
+        Diego*/
+        ```
+    - set:
+    ```js
+    let handler = {
+        get : (target, propName)=> {
+            return target[propName];
+        }, 
+        set : (target, propName, newValue) =>{
+            target[propName] = newValue;
+        }
+    };
+
+    let newObj = new Proxy({}, handler);
+    newObj.job = "Dev";
+    ```
+    - Use set for validations:
+    ```js
+    let handler = {
+        get : (target, propName)=> {
+            return target[propName];
+        }, 
+        set : (target, propName, newValue) =>{
+            if(propName === 'age' && typeof(newValue) !== 'number'){
+                throw new TypeError('Age must be a valid number');
+            }
+            target[propName] = newValue;
+        }
+    };
+
+    let newObj = new Proxy({}, handler);
+    newObj.job = "Dev";
+    newObj.age = "Test";/*TypeError: Age must be a valid number
+    at Object.set (/home/runner/xf5ofb0j9xe/index.js:7:10)*/
+    ```
+- We can make a proxy out of a constructor / class.
+    ```js
+    class Car{
+        constructor(make, model){
+            this.make = make;
+            this.model = model;
+        }
+        printInfo(){
+            console.log(`${this.make} - ${this.model}`);
+        }
+    }
+    handler = {
+        get : (target, propName)=>{
+            console.log(`Someone is trying to get ${propName} propery`)
+            
+        }
+    }
+    let myCar = new Car("Volvo", "XC40");
+    let carProxy = new Proxy(myCar, handler);
+    console.log("Car's make: ", carProxy.make);/*Someone is trying to get make propery
+    Car's make:  undefined*/
+    ```
+- Apply trap (use a proxy with a function). Apply takes three arguments:
+    1. target.
+    2. the this.
+    3. Arguments list for the this.
+    ```js
+    function Sum(x, y){
+        return x + y;
+    }
+
+    handler = {
+        apply : (target, thisArg, argsList) =>{
+            console.log("Someone called a function");
+            return target(argsList[0], argsList[1]);
+        }
+    };
+
+    const sumProxy = new Proxy(Sum, handler);
+    console.log(Sum(5,2)); 
+    console.log(sumProxy(5,2));
+    /*7
+    Someone called a function
+    7*/
+    ```
+
