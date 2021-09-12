@@ -1286,4 +1286,115 @@
     Someone called a function
     7*/
     ```
+- Reflection to examine, instrospect or modify your program at run time (typeof f.e).
+- Reflect is not instantiated or invoked. 
+- Reflect is a stand alone global object (Math f.e) that has methods that goes 1:1 with the proxy handlers. 
+- Reflect is a built-in object that provides methods for interceptable JavaScript operations. The methods are the same as those of proxy handlers. Reflect is not a function object, so it's not constructible.
+- Reflect.get takes two args:
+    1. target.
+    2. property.
+    ```js
+    const x = {
+        a : 1,
+        b : 2
+    }
+    console.log(Reflect.get(x, 'a'));//1
 
+    const arr = ["a", "b", "c"];
+    console.log(Reflect.get(arr, 1));//b
+    ```
+- ...arguments is available inside of anyfunction as a keyword.
+    ```js
+    const monster1 = {
+    secret: 'easily scared',
+    eyeCount: 4
+    };
+
+    const handler1 = {
+    get: function(target, prop, receiver) {
+        //target: { secret: 'easily scared', eyeCount: 4 }
+		//prop: propName (eyeCount, secret).	
+        if (prop === 'secret') {
+        return `${target.secret.substr(0, 4)} ... shhhh!`;
+        }
+        return Reflect.get(...arguments);//Same as: return Reflect.get(target, prop, receiver);
+    }
+    };
+
+    const proxy1 = new Proxy(monster1, handler1);
+
+    console.log(proxy1.eyeCount);
+    // expected output: 4
+
+    console.log(proxy1.secret);
+    // expected output: "easi ... shhhh!"
+    ```
+- Reflect.has
+    ```js
+    const x = {
+        a : 1,
+        b : 2
+    }
+	console.log(Reflect.has(x, 'a'));//true
+	/*Also you can use:*/
+    console.log(x.hasOwnProperty('a'));//true
+	console.log('a' in x);//true
+    ```
+- Object.defineProperty:
+    ```js
+    let bandit = {}
+
+    const diffLevel = 2;
+
+    if(diffLevel <= 2){
+        Object.defineProperty(bandit, 'attack', {
+            value : 15,
+            writable: false
+        });
+    };
+
+    console.log(bandit.attack);//15
+    ```
+- Reflect.defineProperty replaces Object.defineProperty:
+    ```js
+    let bandit = {}
+    const diffLevel = 2;
+
+    if(diffLevel <= 2){
+        Reflect.defineProperty(bandit, 'attack', {
+            value : 15,
+            writable: false
+        });
+        Reflect.defineProperty(bandit, 'run', {
+            value : ()=> {
+                console.log("Bandit started to run");
+            },
+            writable: false
+        });
+    };
+
+    console.log(bandit.attack); //15
+    bandit.run(); //Bandit started to run
+    ```
+- Reflect.getOwnPropertyDescriptor:
+    ```js
+    let bandit = {}
+    const diffLevel = 2;
+
+    if(diffLevel <= 2){
+        Reflect.defineProperty(bandit, 'attack', {
+            value : 15,
+            writable: false
+        });
+        Reflect.defineProperty(bandit, 'run', {
+            value : ()=> {
+                console.log("Bandit started to run");
+            },
+            writable: false
+        });
+    };
+
+    console.log(Reflect.getOwnPropertyDescriptor(bandit, 'attack'));
+    /*{ value: 15, writable: false, enumerable: false, configurable: false }*/
+    ```
+- 
