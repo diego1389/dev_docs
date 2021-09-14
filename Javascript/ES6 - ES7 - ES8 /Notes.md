@@ -1635,3 +1635,23 @@
         console.log(lines);
     }
     ```
+- ES7:
+    - Exponentiation (works with decimals and negatives): 
+    ```js
+    const x2 = 2**3;
+    console.log(x2);//8
+    ```
+    - includes:
+        ```js
+        const x2 = [2,3,5, NaN];
+        console.log(x2.includes(5));//true
+        console.log(x2.indexOf(NaN));//-1
+        console.log(x2.includes(NaN));//true
+        ```
+    - Desturcturing rest parameters:
+        ```js
+        function sum(...[a,b]){
+            return a+b;
+        }
+        console.log(sum(2,3));//5
+        ```
