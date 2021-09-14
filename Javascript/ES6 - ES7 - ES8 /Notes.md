@@ -1397,4 +1397,241 @@
     console.log(Reflect.getOwnPropertyDescriptor(bandit, 'attack'));
     /*{ value: 15, writable: false, enumerable: false, configurable: false }*/
     ```
-- 
+- Generator functions provide a powerful alternative: they allow you to define an iterative algorithm by writing a single function whose execution is not continuous. Generator functions are written using the function* syntax. When called, generator functions do not initially execute their code. Instead, they return a special type of iterator, called a Generator. When a value is consumed by calling the generator's next method, the Generator function executes until it encounters the yield keyword. The function can be called as many times as desired, and returns a new Generator each time. Each Generator may only be iterated once.
+    ```js
+    function* aGenerator(){
+        console.log("I ran!");
+        yield 1;
+        console.log("I ran too");
+    }
+
+    const gen = aGenerator();
+
+    gen.next()//I ran!
+    gen.next();//I ran too
+    ```
+- Another example:
+    ```js
+    function* aGenerator(){
+        let i = 0;
+        while(true){
+            console.log("I ran!");
+            yield i++;
+            console.log("I ran too");
+        }
+    }
+
+    const gen = aGenerator();
+
+    gen.next();/*I ran!
+    { value: 0, done: false }*/
+    gen.next();
+    /*I ran!
+    I ran too
+    I ran!
+    { value: 1, done: false }*/
+    gen.next();
+    /*
+    I ran!
+    I ran too
+    I ran!
+    I ran too
+    I ran!
+    { value: 2, done: false }
+    */
+    ```
+- yield i++// first yields and then increments the variable. ++i first increments and then yields the value.
+- You can pass information in the next() method (as a return value of calling yield) and use it inside the generator:
+    ```js
+    function* aGenerator(){
+        let i = 0;
+        while(true){
+            console.log("I ran!");
+            const dataFromYield = yield i++;
+            console.log(dataFromYield);
+        }
+    }
+
+    const gen = aGenerator();
+
+    gen.next("first")
+    gen.next("second");
+    gen.next("third");
+    /*
+    I ran!
+    second
+    I ran!
+    third
+    I ran!
+    { value: 2, done: false }
+    */
+    ```
+- Iterables:
+    - An object is iterable if it defines its iteration behavior, such as what values are looped over in a for...of construct. Some built-in types, such as Array or Map, have a default iteration behavior, while other types (such as Object) do not.
+    - Iterables have an iterator defined for them.
+    - Default: Array, Map, WeakMap, String, TypedArray, Set and WeakSet.
+    - Iterables have a [Symbol.iterator] property.
+    - In order to be iterable, an object must implement the @@iterator method. This means that the object (or one of the objects up its prototype chain) must have a property with a Symbol.iterator key.
+        ```js
+        const aString = "Hello!";
+        console.log(aString[Symbol.iterator]);//[Function: [Symbol.iterator]]
+        const anObj = {name: "Diego"};
+        console.log(anObj[Symbol.iterator]);//undefined
+        ```
+    - We can make an object literable as long as we define the property Symbol.iterator.
+        ```js
+        ```
+    - We can customize our iterator (if we dont need to do that just use the default iterator forEach, regular for, etc).
+        ```js
+        const iterable1 = new Object();
+        iterable1[Symbol.iterator] = function* (){
+            yield 1;
+            yield 2;
+            yield 3;
+        }
+
+        for(let value of iterable1){
+            console.log(value);
+        }/*1
+        2
+        3*/
+        ```
+- In JavaScript an iterator is an object which defines a sequence and potentially a return value upon its termination. Specifically, an iterator is any object which implements the Iterator protocol by having a next() method that returns an object with two properties:
+    1. value: the next value in the iteration sequence. Can be omitted when done is true.
+    2. done: this is true if the last value in the sequence has already been consumed. If value is present alongside done, it is the iterator's return value.
+- An object is an iterator when it implements a next() method
+- Strings are iterables not iterators (iterables have an iterator):
+    ```js
+    const aString = "Hello";
+    //console.log(aString.next());//Error
+    console.log(aString[Symbol.iterator]().next()); //{ value: 'H', done: false }
+    ```
+- Example:
+    ```js
+    const aString = "ABC";
+    const iterator1 = aString[Symbol.iterator]();
+    console.log(iterator1.next());//{ value: 'A', done: false }
+    console.log(iterator1.next());//{ value: 'B', done: false }
+    console.log(iterator1.next());//{ value: 'C', done: false }
+    console.log(iterator1.next());//{ value: undefined, done: true }
+    ```
+- Crate a new iterator:
+    ```js
+    function makeRangeIterator(start = 0, end = Infinity, step = 1) {
+        let nextIndex = start;
+        let iterationCount = 0;
+
+        const rangeIterator = {
+        next: function() {
+            let result;
+            if (nextIndex < end) {
+                result = { value: nextIndex, done: false }
+                nextIndex += step;
+                iterationCount++;
+                return result;
+            }
+            return { value: iterationCount, done: true }
+        }
+        };
+        return rangeIterator;
+    }
+
+    const it = makeRangeIterator(1, 10, 2);
+
+    let result = it.next();
+    while (!result.done) {
+        console.log(result.value); // 1 3 5 7 9
+        result = it.next();
+    }
+
+    console.log("Iterated over sequence of size: ", result.value); // [5 numbers returned, that took interval in between: 0 to 10]
+    ```
+- An iterator attached to an iterable:
+    ```js
+    const aString = new String("hi");
+
+    aString[Symbol.iterator] = function(){
+        let counter = 0;
+        return{
+            next: function(){
+                if(counter === 5){
+                    return{
+                        done: true
+                    }
+                }
+                ++counter;
+                return{
+                    value: "Something unexpected",
+                    done: false
+                }
+            }
+        }
+    }
+
+    for(letter of aString){
+        console.log(letter);
+    }
+    /*Something unexpected
+    Something unexpected
+    Something unexpected
+    Something unexpected
+    Something unexpected*/
+    ```
+- Generators are iterators. Their purpose is to make it easy to write iterators. It returns done: true automatically as soon as it finishes, or you can specify done true manually:
+    ```js
+    function* counter(){
+        let i = 0;
+        while(true){
+            if(i === 5){
+                return {
+                    done : true
+                }
+            }
+            const dataFromNext = yield i++;
+            if(dataFromNext){
+                i = 0;
+            }
+        }
+    }
+
+    const myGenerator = counter();
+    for(v of myGenerator){
+        console.log(v);
+    }
+    ```
+- Another example: 
+    ```js
+    function* myIterator(myArray){
+        for(i = 0; i < myArray.length; i++){
+            yield myArray[i];
+        }
+    }
+
+    const myArray = [2,3,8,15];
+    const it = myIterator(myArray);
+    for(v of it){
+        console.log(v);// 2 3 8 15
+    }
+    ```
+- Generators can be called inside other generators. 
+    ```js
+    function* inigo(){
+        yield `Hello, my name is Inigo Montoya.`;
+        yield `You killed my father. Prepare to die.`;
+    }
+
+    function* countR(){
+        yield `Good heavens, are you still trying to win?`;
+        yield `You’ve got an overdeveloped sense of vengeance, that’s going to get you in trouble someday.`;
+        yield* inigo();
+        yield* inigo();
+        yield* inigo();
+        yield `Stop saying that!`
+        yield* inigo();
+    }
+
+    const princessBride = countR();
+    for(lines of princessBride){
+        console.log(lines);
+    }
+    ```
