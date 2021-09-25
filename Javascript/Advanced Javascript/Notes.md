@@ -449,3 +449,294 @@
     3. Was the function called via containing/owning object (context)? USe that object. 
     4. Default: global object (except strict mode).
     ***The new keyword is able to override hard binding. 
+
+# Closure: 
+
+-  When a function remembers its lexical scope even when the function is executed outside that lexical scope. It is created when an inner function is transported outside of the outer function.  
+- Example:
+    - It is able to access the bar value even if the baz() function is executed outside its lexical scope (foo). It is passed as a parameter to bam).
+    - It's not just a copy of the lexical scope is a reference to the existing lexical scope. It's kept alive. 
+    ```js
+    function foo(){
+        var bar = "bar";
+        function baz(){
+            console.log(bar);
+        }
+        bam(baz);
+    }
+
+    function bam(baz){
+        baz();//bar (has access to bar even though is outside of its lexical scope - foo function)
+    }
+
+    foo();
+    ```
+- Another way is with a function that returns a function and still has access to its lexical scope:
+    ```js
+    function foo(){
+        var bar = "bar";
+        return function baz(){
+            console.log(bar);
+        }
+    }
+
+    function bam(){
+        foo()();//bar
+    }
+
+    bam();
+    ```
+- No matter how many functions have a clousure over the scope the all have a closure over the same scope:
+    ```js
+    function foo(){
+        var bar = 0;
+        setTimeout(function(){
+            console.log(bar++); //++ at the end first prints, then updates
+        }, 100);
+        setTimeout(function(){
+            console.log(bar++);
+        }, 200);
+    }
+
+    foo(); //0  1 
+
+    //------------------------------
+    function foo(){
+        var bar = 0;
+        setTimeout(function(){
+            var baz = 1;
+            console.log(bar++);
+            setTimeout(function(){
+                console.log(bar+baz);
+            }, 200);
+            
+        }, 100);
+    }
+
+    foo();//0 2
+    ```
+- Other example:
+    - They share the same lexical scope (the same i value).
+    ```js
+    /*This is why it gets 6 in the for: */
+    for(var i = 1; i <= 5; i++){
+        //console.log(i);
+    }
+
+    console.log(i);//i
+    /*Here starts the actual example: */
+    for(var i = 1; i <= 5; i++){
+        setTimeout(function(){
+            console.log("i"+i);
+        }, i*1000);
+    }
+    /*
+    i6
+    i6
+    i6
+    i6
+    i6
+    i6
+    */
+    ```
+    - You can use IIFE to create a new lexical scope (a different copy of i every time): 
+    ```js
+    for(var i = 1; i <= 5; i++){
+        (function(i){
+            setTimeout(function(){
+                console.log("i"+i);
+            }, i*1000);
+        })(i)
+    }
+    /*
+    i1
+    i2
+    i3
+    i4
+    i5 
+    */
+    ```
+    - The other solution is create the loop with the let keyword (creates a new lexical scope (works as an IIFE).
+- Module patterns:
+    -  Closure: clasic module pattern:
+        1. There must be an outer wrapping function that gets executed.
+        2. There must be one or more function that get returned from that function call. So one or more inner functions that have a closure over the inner private scope. 
+        ```js
+        var foo = (function(){
+            var o = {bar : "bar"};
+
+            return {
+                bar : function(){
+                    console.log(o.bar)
+                }
+            }
+        })();
+
+        foo.bar(); //bar
+        ```
+    - Moified module pattern (add a reference to modify, update properties and values).
+        ```js
+        var foo = (function(){
+            var publicApi = {
+                bar : function(){
+                    publicApi.baz();
+                },
+                baz : function(){
+                    console.log("baz");
+                }
+            }
+            return publicApi;
+        })();
+
+        foo.bar(); //baz
+        ```
+        - foo and publicApi are references to the same object. 
+    - Modern module pattern:
+        ```js
+        define("foo", function(){
+            var o = {bar : "bar"};
+
+            return {
+                bar : function(){
+                    console.log(o.bar)
+                }
+            }
+        });
+        ```
+    - ES6 module pattern (foo.js):
+        - It is syntactic sugar it asumes the whole file is a module.
+        ```js
+        var o = {bar: "bar"};
+        export function bar(){
+            return o.bar;
+        }
+        ```
+        - There is two ways to import them from the module:
+        ```js
+        import bar from "foo"; //imports only the bar from foo
+        bar(); //bar
+
+        module foo from "foo"; //imports the whole module (rejected)
+        foo.bar();//bar 
+        ```
+    - Benefits of the module pattern: encapsulation (rule of least exposure).
+    - Tradeoff: difficult to test inner functions. 
+- How to take a big spaguetti class and wrap it in a module (create an IIFE) and expose an API with just an init method and a method to load the data. Also keep the data private.
+    ```js
+    var NotesManager = (function(){
+        function addNote(note) {
+            $("#notes").prepend(
+                $("<a href='#'></a>")
+                .addClass("note")
+                .text(note)
+            );
+        }
+
+        function addCurrentNote() {
+            var current_note = $("#note").val();
+
+            if (current_note) {
+                notes.push(current_note);
+                addNote(current_note);
+                $("#note").val("");
+            }
+        }
+
+        function showHelp() {
+            $("#help").show();
+
+            document.addEventListener("click",function __handler__(evt){
+                evt.preventDefault();
+                evt.stopPropagation();
+                evt.stopImmediatePropagation();
+
+                document.removeEventListener("click",__handler__,true);
+                hideHelp();
+            },true);
+        }
+
+        function hideHelp() {
+            $("#help").hide();
+        }
+
+        function handleOpenHelp(evt) {
+            if (!$("#help").is(":visible")) {
+                evt.preventDefault();
+                evt.stopPropagation();
+
+                showHelp();
+            }
+        }
+
+        function handleAddNote(evt) {
+            addCurrentNote();
+        }
+
+        function handleEnter(evt) {
+            if (evt.which == 13) {
+                addCurrentNote();
+            }
+        }
+
+        function handleDocumentClick(evt) {
+            $("#notes").removeClass("active");
+            $("#notes").children(".note").removeClass("highlighted");
+        }
+
+        function handleNoteClick(evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+
+            $("#notes").addClass("active");
+            $("#notes").children(".note").removeClass("highlighted");
+            $(evt.target).addClass("highlighted");
+        }
+
+        function init() {
+            // build the initial list from the existing `notes` data
+            var html = "";
+            for (i=0; i<notes.length; i++) {
+                html += "<a href='#' class='note'>" + notes[i] + "</a>";
+            }
+            $("#notes").html(html);
+
+            // listen to "help" button
+            $("#open_help").bind("click",handleOpenHelp);
+
+            // listen to "add" button
+            $("#add_note").bind("click",handleAddNote);
+
+            // listen for <enter> in text box
+            $("#new_note").bind("keypress",handleEnter);
+
+            // listen for clicks outside the notes box
+            $(document).bind("click",handleDocumentClick);
+
+            // listen for clicks on note elements
+            $("#notes").on("click",".note",handleNoteClick);
+        }
+
+        function loadData(data){
+            notes = notes.concat(data)
+        } 
+
+        var notes = []
+
+        var publicAPI = {
+            init : init,
+            loadData : loadData
+        }
+
+        return publicAPI;
+    })();
+    // assume this data came from the database
+    NotesManager.loadData(
+        [
+            "This is the first note I've taken!",
+            "Now is the time for all good men to come to the aid of their country.",
+            "The quick brown fox jumped over the moon."
+        ]
+    );
+
+    $(document).ready(NotesManager.init);
+    ```
