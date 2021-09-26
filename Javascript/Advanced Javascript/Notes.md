@@ -740,3 +740,7 @@
 
     $(document).ready(NotesManager.init);
     ```
+# Object orienting
+
+--- Complete object orienting...
+

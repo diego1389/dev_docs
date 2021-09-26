@@ -1,0 +1,12 @@
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/bin/Debug/netcoreapp3.1/DesignPatterns.deps.json
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/bin/Debug/netcoreapp3.1/DesignPatterns.runtimeconfig.json
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/bin/Debug/netcoreapp3.1/DesignPatterns.runtimeconfig.dev.json
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/bin/Debug/netcoreapp3.1/DesignPatterns.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/bin/Debug/netcoreapp3.1/DesignPatterns.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/obj/Debug/netcoreapp3.1/DesignPatterns.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/obj/Debug/netcoreapp3.1/DesignPatterns.AssemblyInfoInputs.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/obj/Debug/netcoreapp3.1/DesignPatterns.AssemblyInfo.cs
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/obj/Debug/netcoreapp3.1/DesignPatterns.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/obj/Debug/netcoreapp3.1/DesignPatterns.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/obj/Debug/netcoreapp3.1/DesignPatterns.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns/DesignPatterns/obj/Debug/netcoreapp3.1/DesignPatterns.genruntimeconfig.cache
