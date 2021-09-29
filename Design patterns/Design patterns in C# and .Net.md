@@ -532,3 +532,106 @@
         }
     }
     ```
+## Builder
+
+- Gamma categorization:
+    1. Creational patterns: deal with the creation (construction) of objects.
+        - Explicit (constructor) vs implicit (DI, reflection, etc).
+        - Wholesale (single statement) vs piecewise (step-by-step).
+    2. Structural patterns: structure of the classes (class members).
+        - Many patterns are wrappers that mimic the underlying class interface.
+        - Good API design.
+    3. Behavioral patterns:
+        - They are all different (no central theme).
+        - They solve a particular problem in a particular way.
+- Builder: some objects are simple and can be created in a single constructor call, 
+    - Other objects require a lot of ceremony to create.
+    - Having an object with 10 constructor arguments is not productive.
+    - Instead, opt for piecewise constructor.
+    - When a piecewise object construction is complicated provide an API for doing it succintly.
+    ```c#
+    public class HtmlElement
+    {
+        public string Name, Text;
+        public List<HtmlElement> Elements = new List<HtmlElement>();
+        private const int indentSize = 2;
+
+        public HtmlElement()
+        {
+
+        }
+
+        public HtmlElement(string name, string text)
+        {
+            this.Name = name;
+            this.Text = text;
+        }
+
+        private string ToStringImpl(int indent)
+        {
+            var sb = new StringBuilder();
+            var i = new string(' ', indentSize * indent);
+            sb.AppendLine($"{i}<{Name}>");
+
+            if (!string.IsNullOrWhiteSpace(Text))
+            {
+                sb.Append(new string(' ', indentSize * (indent + 1)));
+                sb.AppendLine(Text);
+            }
+
+            foreach (var htmlElement in Elements)
+            {
+                sb.Append(htmlElement.ToStringImpl(indent + 1));
+            }
+            sb.AppendLine($"{i}</{Name}>");
+            return sb.ToString();
+        }
+
+        public override string ToString()
+        {
+            return ToStringImpl(0);
+        }
+    }
+
+    public class HtmlBuilder
+    {
+        HtmlElement root = new HtmlElement();
+        private readonly string rootName;
+
+        public HtmlBuilder(string rootName)
+        {
+            root.Name = rootName;
+            this.rootName = rootName;
+        }
+
+        public HtmlBuilder AddChild(string childName, string childText)
+        {
+            var e = new HtmlElement(childName, childText);
+            root.Elements.Add(e);
+            return this;
+        }
+
+        public override string ToString()
+        {
+            return root.ToString();
+        }
+
+        public void Clear()
+        {
+            root = new HtmlElement()
+            {
+                Name = rootName
+            };
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var builder = new HtmlBuilder("ul");
+            builder.AddChild("li", "hello").AddChild("li", "world");
+            Console.WriteLine(builder.ToString());
+        }
+    }
+    ```

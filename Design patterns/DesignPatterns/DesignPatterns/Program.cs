@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace DesignPatterns
 {
@@ -338,7 +339,7 @@ namespace DesignPatterns
     }*/
     #endregion
     #region Dependency inversion principle
-    public enum Relationship
+    /*public enum Relationship
     {
         Parent,
         Child,
@@ -380,18 +381,19 @@ namespace DesignPatterns
     //high level
     public class Research 
     {
-        /*public Research(Relationships relationships)
-        {
-            var relations = relationships.Relations;
+        //public Research(Relationships relationships)
+        //{
+          //  var relations = relationships.Relations;
 
-            foreach (var r in relations.Where(
-                x => x.Item1.Name == "John"
-                && x.Item2 == Relationship.Parent
-            ))
-            {
-                Console.WriteLine($"John has a child called: {r.Item3.Name}");
-            }
-        }*/
+            //foreach (var r in relations.Where(
+              //  x => x.Item1.Name == "John"
+                //&& x.Item2 == Relationship.Parent
+           // ))
+            //{
+              //  Console.WriteLine($"John has a child called: {r.Item3.Name}");
+           // }
+        //}
+
         public Research(IRelationshipBrowser browser)
         {
             foreach (var p in browser.FindAllChildrenOf("John"))
@@ -412,8 +414,95 @@ namespace DesignPatterns
 
             new Research(relationships);
         }
-    }
+    }*/
 
     #endregion
+    #endregion
+    #region Builder
+
+    public class HtmlElement
+    {
+        public string Name, Text;
+        public List<HtmlElement> Elements = new List<HtmlElement>();
+        private const int indentSize = 2;
+
+        public HtmlElement()
+        {
+
+        }
+
+        public HtmlElement(string name, string text)
+        {
+            this.Name = name;
+            this.Text = text;
+        }
+
+        private string ToStringImpl(int indent)
+        {
+            var sb = new StringBuilder();
+            var i = new string(' ', indentSize * indent);
+            sb.AppendLine($"{i}<{Name}>");
+
+            if (!string.IsNullOrWhiteSpace(Text))
+            {
+                sb.Append(new string(' ', indentSize * (indent + 1)));
+                sb.AppendLine(Text);
+            }
+
+            foreach (var htmlElement in Elements)
+            {
+                sb.Append(htmlElement.ToStringImpl(indent + 1));
+            }
+            sb.AppendLine($"{i}</{Name}>");
+            return sb.ToString();
+        }
+
+        public override string ToString()
+        {
+            return ToStringImpl(0);
+        }
+    }
+
+    public class HtmlBuilder
+    {
+        HtmlElement root = new HtmlElement();
+        private readonly string rootName;
+
+        public HtmlBuilder(string rootName)
+        {
+            root.Name = rootName;
+            this.rootName = rootName;
+        }
+
+        public HtmlBuilder AddChild(string childName, string childText)
+        {
+            var e = new HtmlElement(childName, childText);
+            root.Elements.Add(e);
+            return this;
+        }
+
+        public override string ToString()
+        {
+            return root.ToString();
+        }
+
+        public void Clear()
+        {
+            root = new HtmlElement()
+            {
+                Name = rootName
+            };
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var builder = new HtmlBuilder("ul");
+            builder.AddChild("li", "hello").AddChild("li", "world");
+            Console.WriteLine(builder.ToString());
+        }
+    }
     #endregion
 }

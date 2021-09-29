@@ -2,15 +2,13 @@
   <MonoDevelop.Ide.ItemProperties.DesignPatterns PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns/Program.cs">
     <Files>
-      <File FileName="DesignPatterns/Program.cs" Line="219" Column="6" />
+      <File FileName="DesignPatterns/Program.cs" Line="349" Column="6" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
-          <Node name="DesignPatterns" expanded="True">
-            <Node name="DesignPatterns" expanded="True">
-              <Node name="Program.cs" selected="True" />
-            </Node>
+          <Node name="DesignPatterns" expanded="True" selected="True">
+            <Node name="DesignPatterns" expanded="True" />
           </Node>
         </State>
       </Pad>
