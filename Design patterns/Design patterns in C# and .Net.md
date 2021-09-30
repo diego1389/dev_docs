@@ -635,3 +635,178 @@
         }
     }
     ```
+- The problem: when you call the "Called" method it returns a PersonInfoBuilder and it doesn't have a definition for WorksAsA.
+    ```c#
+    public class Person
+    {
+        public string Name;
+        public string Position;
+    }
+
+    public class PersonInfoBuilder
+    {
+        protected Person person = new Person();
+        public PersonInfoBuilder Called(string name)
+        {
+            person.Name = name;
+            return this;
+        }
+    }
+
+    public class PersonJobBuilder : PersonInfoBuilder
+    {
+        public PersonJobBuilder WorksAAsA(string position)
+        {
+            person.Position = position;
+            return this;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var builder = new PersonJobBuilder();
+            builder.Called("diego").WorksAsA("dev"); /*Error PersonInfoBuilder does not contain a definition for WorkAsA*/
+        }
+    }
+    ```
+- The solution: fluent builder with recursive generics:
+    - You need a return type to refer not to the current object but the kind of this that you get throught inheritance.
+    ```c#
+        public class Person
+    {
+        public string Name;
+        public string Position;
+
+        public class Builder : PersonJobBuilder<Builder>
+        {
+
+        }
+
+        public static Builder New => new Builder();
+
+        public override string ToString()
+        {
+            return $"{nameof(Name)} : {Name}, {nameof(Position)}: {Position}";
+        }
+    }
+
+    public abstract class PersonBuilder
+    {
+        protected Person person = new Person();
+
+        public Person Build() { return person; }
+    }
+
+    /* we're only allowing the situation where T actually refers to the object inheriting form this object: Foo : Bar<Foo>*/
+    public class PersonInfoBuilder<T> : PersonBuilder
+        where T : PersonInfoBuilder<T>
+    {
+        public T Called(string name)
+        {
+            person.Name = name;
+            return (T)this;
+        }
+    }
+
+    public class PersonJobBuilder<T> : PersonInfoBuilder<PersonJobBuilder<T>>
+        where T : PersonJobBuilder<T>
+    {
+        public T WorksAAsA(string position)
+        {
+            person.Position = position;
+            return (T)this;
+        }
+    }
+
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            /*var builder = new PersonJobBuilder();
+            builder.Called("diego").WorksAs("dev");*/
+            var person = Person.New.Called("diego").WorksAAsA("dev").Build();
+            Console.WriteLine(person.ToString());
+        }
+    }
+    ```
+- Stepwise builder:
+    - A chain that is enforce through various interfaces. 
+    - When you need the creation to be in certain order.
+    ```c#
+    public enum CarType
+    {
+        Sedan,
+        Crossover
+    }
+
+    public class Car
+    {
+        public CarType Type;
+        public int WheelSize;
+    }
+
+    public interface ISpecifyCarType
+    {
+        ISpecifyWheelSize OfType(CarType type);
+    }
+
+    public interface ISpecifyWheelSize
+    {
+        IBuildCar WithWheels(int wheelSize);
+    }
+
+    public interface IBuildCar
+    {
+        public Car Build();
+    }
+
+    public class CarBuilder
+    {
+        private class Impl : ISpecifyCarType, ISpecifyWheelSize, IBuildCar
+        {
+            private Car car = new Car();
+
+            public Car Build()
+            {
+                return car;
+            }
+
+            public ISpecifyWheelSize OfType(CarType type)
+            {
+                car.Type = type;
+                return this;
+            }
+
+            public IBuildCar WithWheels(int wheelSize)
+            {
+                switch (car.Type)
+                {
+                    case CarType.Crossover when wheelSize < 10 || wheelSize > 20:
+                    case CarType.Sedan when wheelSize < 15 || wheelSize > 17:
+                        throw new ArgumentNullException($"Wrong size of wheel for {car.Type}");
+                }
+                car.WheelSize = wheelSize;
+                return this;
+            }
+        }
+
+        public static ISpecifyCarType Create()
+        {
+            return new Impl();
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args) { 
+            var car = CarBuilder.Create()// ISpecifyCarType
+                .OfType(CarType.Crossover)//ISpecifyWheelSize
+                .WithWheels(18) //IBuildCar
+                .Build();
+            Console.WriteLine($"{nameof(car.Type)} : {car.Type} {nameof(car.WheelSize)} : {car.WheelSize}");
+        }
+    }
+    ```
