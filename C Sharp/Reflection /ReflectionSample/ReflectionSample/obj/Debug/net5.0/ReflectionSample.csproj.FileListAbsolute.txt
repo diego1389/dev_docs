@@ -1,0 +1,15 @@
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/bin/Debug/net5.0/ReflectionSample.deps.json
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/bin/Debug/net5.0/ReflectionSample.runtimeconfig.json
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/bin/Debug/net5.0/ReflectionSample.runtimeconfig.dev.json
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/bin/Debug/net5.0/ReflectionSample.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/bin/Debug/net5.0/ref/ReflectionSample.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/bin/Debug/net5.0/ReflectionSample.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/obj/Debug/net5.0/ReflectionSample.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/obj/Debug/net5.0/ReflectionSample.GeneratedMSBuildEditorConfig.editorconfig
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/obj/Debug/net5.0/ReflectionSample.AssemblyInfoInputs.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/obj/Debug/net5.0/ReflectionSample.AssemblyInfo.cs
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/obj/Debug/net5.0/ReflectionSample.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/obj/Debug/net5.0/ReflectionSample.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/obj/Debug/net5.0/ref/ReflectionSample.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/obj/Debug/net5.0/ReflectionSample.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/Reflection /ReflectionSample/ReflectionSample/obj/Debug/net5.0/ReflectionSample.genruntimeconfig.cache

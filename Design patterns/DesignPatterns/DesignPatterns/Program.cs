@@ -564,7 +564,7 @@ namespace DesignPatterns
     }*/
     #endregion
     #region Stepwise Builder
-    public enum CarType
+    /*public enum CarType
     {
         Sedan,
         Crossover
@@ -635,6 +635,40 @@ namespace DesignPatterns
                 .WithWheels(18) //IBuildCar
                 .Build();
             Console.WriteLine($"{nameof(car.Type)} : {car.Type} {nameof(car.WheelSize)} : {car.WheelSize}");
+
+            var create = CarBuilder.Create();
+        }
+    }*/
+    #endregion
+    #region Functional builder
+    public class Person
+    {
+        public string Name, Position;
+    }
+
+    public sealed class PersonBuilder
+    {
+        private readonly List<Func<Person, Person>> actions = new List<Func<Person, Person>>();
+
+        public PersonBuilder Called(string name) => Do(p => p.Name = name);
+        public PersonBuilder Do(Action<Person> action) => AddAction(action);
+
+        private PersonBuilder AddAction(Action<Person> action)
+        {
+            actions.Add(p =>
+            {
+                action(p);
+                return p;
+            });
+            return this;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello!");
         }
     }
     #endregion
