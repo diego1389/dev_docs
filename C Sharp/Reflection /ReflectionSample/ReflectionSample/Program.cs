@@ -15,6 +15,7 @@ namespace ReflectionSample
 
             var currentAssembly = Assembly.GetExecutingAssembly();
             var typesFromCurrentAssembly = currentAssembly.GetTypes();
+            var oneTypeFromCurrentAssembly = currentAssembly.GetType("ReflectionSample.Person");
             foreach (var type in typesFromCurrentAssembly)
             {
                 Console.WriteLine(type.Name);
@@ -32,13 +33,36 @@ namespace ReflectionSample
             var oneTypeFromExternalAssembly = externalAssembly.GetType("System.Text.Json.JsonProperty");
             Console.WriteLine(oneTypeFromExternalAssembly);//System.Text.Json.JsonProperty
 
-                        var modulesFromExternalAssembly = externalAssembly.GetModules();
+            var modulesFromExternalAssembly = externalAssembly.GetModules();
 
             foreach (var module in modulesFromExternalAssembly)
             {
                 Console.WriteLine(module.Name);//System.Text.Json.dll
             }
 
+            var oneModuleFromExternalAssembly = externalAssembly.GetModule("System.Text.Json.dll");
+            var oneTypeFromModuleFromExternalAssembly = oneModuleFromExternalAssembly.GetType("System.Text.Json.JsonProperty");
+
+            foreach (var constructor in oneTypeFromCurrentAssembly.GetConstructors())
+            {
+                Console.WriteLine(constructor);/*
+                Void .ctor()                               
+                Void .ctor(System.String)*/
+            }
+
+            foreach (var method in oneTypeFromCurrentAssembly.GetMethods(BindingFlags.Instance| BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                Console.WriteLine(method);/*              
+                Void Finalize()
+                Boolean Equals(System.Object)
+                Int32 GetHashCode()              
+                Void set_Name(System.String)
+                Void Talk(System.String)
+                Void Yell(System.String)
+                System.String ToString()
+                System.Type GetType()
+                System.Object MemberwiseClone()               */
+            }
             Console.ReadLine();
         }
     }
