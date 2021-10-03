@@ -1,9 +1,10 @@
 ﻿<Properties StartupConfiguration="{5A001CCC-5E3D-4C83-B720-2DAF9B6847FE}|Default">
   <MonoDevelop.Ide.ItemProperties.ReflectionSample PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ReflectionSample/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="ReflectionSample/ResultOfT.cs">
     <Files>
-      <File FileName="ReflectionSample/Program.cs" Line="1" Column="1" />
-      <File FileName="ReflectionSample/DemoClasses.cs" />
+      <File FileName="ReflectionSample/Program.cs" Line="29" Column="60" />
+      <File FileName="ReflectionSample/DemoClasses.cs" Line="37" Column="38" />
+      <File FileName="ReflectionSample/ResultOfT.cs" Line="6" Column="22" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -11,7 +12,7 @@
           <Node name="ReflectionSample" expanded="True">
             <Node name="ReflectionSample" expanded="True">
               <Node name="Dependencies" expanded="True" />
-              <Node name="Program.cs" selected="True" />
+              <Node name="ResultOfT.cs" selected="True" />
             </Node>
           </Node>
         </State>

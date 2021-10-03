@@ -1,11 +1,112 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace ReflectionSample
 {
     class Program
     {
+        private static string _typeFromConfiguration = "ReflectionSample.Alien";
+
         static void Main(string[] args)
+        {
+            //InspectingMetadata();
+            //ManipulateObjectsWithReflection();
+            var myList = new List<Person>();
+            Console.WriteLine(myList.GetType().Name); //List`1 (only one generic type parameter (CLS comply))
+            var myDictionary = new Dictionary<string, int>();//System.Collections.Generic.Dictionary`2[System.String, System.Int32]
+            Console.WriteLine(myDictionary.GetType());
+
+            var dictionaryType = myDictionary.GetType();
+            foreach (var genericTypeArgument in dictionaryType.GenericTypeArguments) //or call method GetGenericArguments()
+            {
+                Console.WriteLine(genericTypeArgument);/*
+                System.String
+                System.Int32*/
+            }
+
+            var createdInstance = Activator.CreateInstance(typeof(List<Person>));
+            Console.WriteLine(createdInstance.GetType());//System.Collections.Generic.List`1[ReflectionSample.Person]
+
+            //var createdResult = Activator.CreateInstance(typeof(Result<>)); //this fails
+            var openResultType = typeof(Result<>);
+            var closedResultType = openResultType.MakeGenericType(typeof(Person));
+            var createdResult = Activator.CreateInstance(closedResultType);
+
+            Console.WriteLine(createdResult.GetType());//ReflectionSample.Result`1[ReflectionSample.Person]
+
+        }
+
+        public static void ManipulateObjectsWithReflection()
+        {
+            var personType = typeof(Person);
+            var personConstructors = personType.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            foreach (var constructor in personConstructors)
+            {
+                Console.WriteLine(constructor);
+            }
+
+            var privatePersonConstructor = personType.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic,
+                null,
+                new Type[] { typeof(string), typeof(int) },
+                null);
+
+            var person1 = personConstructors[0].Invoke(null);
+            var person2 = personConstructors[1].Invoke(new object[] { "Diego" });
+            privatePersonConstructor.Invoke(new object[] { "Diego", 32 });
+
+            var person4 = Activator.CreateInstance("ReflectionSample", "ReflectionSample.Person").Unwrap();
+
+            var actualTypeFromConfiguration = Type.GetType(_typeFromConfiguration);
+            //var iTalkInstance = Activator.CreateInstance(actualTypeFromConfiguration) as ITalk;
+            //iTalkInstance.Talk("Hello world"); //Alien talking... Hello world
+            dynamic dynamicITalkInstance = Activator.CreateInstance(actualTypeFromConfiguration);
+            dynamicITalkInstance.Talk("Hello world"); //Alien talking... Hello world
+
+            var personForManipulation = Activator.CreateInstance("ReflectionSample",
+                "ReflectionSample.Person",
+                true,
+                BindingFlags.Instance | BindingFlags.NonPublic,
+                null,
+                new object[] { "Diego", 32 },
+                null,
+                null).Unwrap();
+
+            var nameProperty = personForManipulation.GetType().GetProperty("Name");
+            nameProperty.SetValue(personForManipulation, "DiegoTest");
+            Console.WriteLine(personForManipulation); //DiegoTest 32 initial private field value
+            var ageField = personForManipulation.GetType().GetField("age");
+            ageField.SetValue(personForManipulation, 45);
+            var privateField = personForManipulation.GetType().GetField("_aPrivateField", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            privateField.SetValue(personForManipulation, "updated Private Field Value"); //DiegoTest 45 updated Private Field Value
+
+            personForManipulation.GetType().InvokeMember(
+                "Name", BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty,
+                null,
+                personForManipulation,
+                new[] { "Emma" }
+            );
+
+
+            personForManipulation.GetType().InvokeMember(
+                "_aPrivateField", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.SetField,
+                null,
+                personForManipulation,
+                new[] { "second updated Private Field Value" }
+            );
+
+            Console.WriteLine(personForManipulation);
+
+            var talkMethod = personForManipulation.GetType().GetMethod("Talk");
+            talkMethod.Invoke(personForManipulation, new[] { "Hola" });
+
+            personForManipulation.GetType().InvokeMember("Yell", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.InvokeMethod,
+                null, personForManipulation, new[] { "Something to yell" });
+        }
+
+        public static void InspectingMetadata()
         {
             string name = "Diego";
             var stringType = name.GetType();
@@ -50,7 +151,7 @@ namespace ReflectionSample
                 Void .ctor(System.String)*/
             }
 
-            foreach (var method in oneTypeFromCurrentAssembly.GetMethods(BindingFlags.Instance| BindingFlags.Public | BindingFlags.NonPublic))
+            foreach (var method in oneTypeFromCurrentAssembly.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 Console.WriteLine(method);/*              
                 Void Finalize()
@@ -63,6 +164,8 @@ namespace ReflectionSample
                 System.Type GetType()
                 System.Object MemberwiseClone()               */
             }
+
+
             Console.ReadLine();
         }
     }

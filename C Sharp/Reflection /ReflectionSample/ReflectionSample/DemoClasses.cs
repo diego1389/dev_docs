@@ -61,6 +61,11 @@ namespace ReflectionSample
             Console.WriteLine($"Talking...: {sentence}");
         }
 
+        public static void StaticTest()
+        {
+
+        }
+
         protected void Yell(string sentence)
         {
             // yell...
