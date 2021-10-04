@@ -35,6 +35,12 @@ namespace ReflectionSample
 
             Console.WriteLine(createdResult.GetType());//ReflectionSample.Result`1[ReflectionSample.Person]
 
+            var methodInfo = closedResultType.GetMethod("AlterAndReturnValue");
+            Console.WriteLine(methodInfo);
+
+            var genericMethodInfo = methodInfo.MakeGenericMethod(typeof(Employee));
+            genericMethodInfo.Invoke(createdResult, new object[] { new Employee() });
+
         }
 
         public static void ManipulateObjectsWithReflection()

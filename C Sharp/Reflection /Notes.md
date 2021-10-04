@@ -319,3 +319,22 @@
 
         Console.WriteLine(createdResult.GetType());//ReflectionSample.Result`1[ReflectionSample.Person]
         ```
+    - Invoking generic methods:
+        ```c#
+        var methodInfo = closedResultType.GetMethod("AlterAndReturnValue");
+        Console.WriteLine(methodInfo);
+
+        var genericMethodInfo = methodInfo.MakeGenericMethod(typeof(Employee));
+        genericMethodInfo.Invoke(createdResult, new object[] { new Employee() });
+        /*
+        A person is being created.
+        Altering value using ReflectionSample.Employee*/
+        ```
+    - Check IoC example.
+
+## Advanced topics
+- Reflection magic library makes it easier to work with reflection.
+```c#
+var person = new Person("Diego");
+person.AsDynamic()._aPrivateField = "Private field";
+```
