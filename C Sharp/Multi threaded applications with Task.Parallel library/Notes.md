@@ -1,0 +1,4 @@
+- Break down a larga problem and compute each piece independently. 
+- Two options: thread class and Task Parallel Library.
+- PLINQ.
+- Parallel will ensure that work is distributed efficiently on the system that runs the application. 
