@@ -126,5 +126,195 @@ lst.RemoveAll(x => someExpression(x));
         AllData.AllCountriesByKey.TryGetValue(new CountryCode(code), out Country result);
         return result;
     }
+    ```
+- Override Equality for keys
+    - Override also the == operator toe create a more predictable behaviour (not needed for dictionary equality)
+    - C# requires that if you override the Equals operator you should override the NotEquals operator.
+    ```c#
+       public class CountryCode{
+        public string Value{get;}
+        public CountryCode(string value){
+            Value = value;
+        }
+
+        public override string ToString()=> Value;
+        
+        public override bool Equals(object obj){
+            if(obj is CountryCode other)
+                return StringComparer.OrdinalIgnoreCase.Equals(this.Value, other.Value);
+            return false;
+        }
+
+        public static bool operator ==(CountryCode lhs, CountryCode rhs){
+            if(lhs != null)
+                return lhs.Equals(rhs);
+            else
+                return rhs == null;
+        }
+
+        public static bool !=(CountryCode lhs, CountryCode rhs){
+            return !(lhs == rhs);
+        }
+    }
+    ```
+- Overriding Equals is not enough. You also have to override object.GetHashCode(). This method is around every single object and is virtual. The hash code is an integer representation that represents a compressed version of the value of the object. 
+- Dictionaries rely on GetHashCode() extensively. Lookup will fail if key doesn't implement GetHashCode((). Easiest way is to use existing MS implementations. Also is easier to use standard MS types as keys. 
+    ```c#
+    public class CountryCode{
+        public string Value{get;}
+        public CountryCode(string value){
+            Value = value;
+        }
+
+        public override string ToString()=> Value;
+        
+        public override bool Equals(object obj){
+            if(obj is CountryCode other)
+                return StringComparer.OrdinalIgnoreCase.Equals(this.Value, other.Value);
+            return false;
+        }
+
+        public static bool operator ==(CountryCode lhs, CountryCode rhs){
+            if(lhs != null)
+                return lhs.Equals(rhs);
+            else
+                return rhs == null;
+        }
+
+        public static bool !=(CountryCode lhs, CountryCode rhs){
+            return !(lhs == rhs);
+        }
+
+        public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(this.Value);
+    }
+    ```
+
+## Linked lists
+
+- Efficient for adding and removing elements.
+- Complex.
+- No direct element lookup.
+- List<T> performs badly for modifications. 
+- Each node contains a Next() reference to the next element of the list. 
+- With LinkedLists the items can be anywhere in memory (no sequential order). 
+
+|  LinkedList<T> |List<T>   |
+|---|---|
+| Definite order  | Definite order |
+| Optimized for fast changes  | Optimized for fast lookup |
+
+- The reason it is optimized for fast changes its that you need to move elements, just change the next() and previous() references of the elements to remove an element from the LinkedList. The unlinked element then gets GarbageCollected. 
+- Same thing for adding an item. Just change the next and previous references and thats it, it is going to be fast no matter of the size of the linked list.
+- However you lost the ability to lookup items quickly. This will scale O(n). 
+- LinkedListNode<T> is a Wrapper to let you put stuff in linked lists. 
+- Must use LinkedListNode<T> as an intermediary. 
+    ```c#
+    public class AppData{
+        
+        public List<Country> AllCountries {get; private set;}
+        public Dictionary<CountryCode, Country> AllCountriesByKey{get; private set;}
+        public LinkedList<Country> ItineraryBuilder {get; } = new LinkedList<Country>();
+
+        public void Initialize(string csvFilePath){
+            CsvReader reader = new CsvReader(csvFilePath);
+            this.AllCountries = reader.ReadAllCountries().OrderBy(x => x.Name).ToList();
+            this.AllCountriesByKey = AllCountries.ToDictionary(x=> x.Code); 
+        }
+    }
+
+    /*Add country*/
+    private void btnAddToItinerary_Click(object sender, RoutedEventArgs e){
+        int selectedIndex = this.lbxAllCountries.SelectedIndex;
+        if(selectedIndex == -1)
+            return;
+        Country selectedCountry = AllData.AllCountries[selectedIndex];
+        AllData.ItineraryBuilder.AddLast(selectedCountry);
+        this.UpdateAllLists(); //WPF method
+    }
+    ```
+- AddLast() is an O(1) operation. 
+- Removing from a linked list
+    ```c#
+    private void btnRemoveFromItinerary_Click(object sender, RoutedEventArgs e){
+        int selectedItinIndex = this.lbxItinerary.SelectedIndex;
+        if(selectedItinIndex < 0)
+            return;
+        var nodeToRemove = AllData.ItineraryBuilder.GetNthNode(selectedItinIndex);
+        AllData.ItineraryBuilder.Remove(nodeToRemove);
+
+        this.UpdateAllLists();
+    }
+
+    public static class LinkedListExtension{
+        public static LinkedListNode<T> GetNthNode<T>(this LinkedList<T> lst, int n){
+            LinkedList<T> currentNode = lst.First;
+            for(int i = 0; i<n; i++)
+                currentNode = current.Next;
+            return currentNode; 
+        }
+    }
+    ```
+- Insert before method:
+    ```c#
+    private void btnInserInItinerary_Click(object sender, RoutedEventArgs e){
+        int selectedIndex = this.lbxAllCountries.SelectedIndex;
+        int selectedItinIndex = this.lbxItinerary.SelectedIndex;
+
+        Country selectedCountry = AllData.AllCountries[selectedIndex];
+        var insertBeforeNode = AllData.ItineraryBuilder.GetNthNode(selectedItinIndex);
+        AllData.ItineraryBuilder.AddBefore(insertBeforeNode, selectedCountry);
+        this.UpdateAllLists();
+    }
+    ```
+|  Pros |Cons  |
+|---|---|
+| Very scalable insertions and deletions | Need to wrap elements in LinkedListNode<T> |
+|  | No direct indexed element access |
+
+- Adding elements in the middle nullify the performance gains because you have to search through all the elements. 
+
+    ```c#
+    public string Name{get;}
+    public Country[] Itinerary{get;}
+
+    public override string ToString() => $"{Name} ({Itinerary.Length} countries)}"
+
+    public Tour(string name, Country[] itinerary){
+        if(string.IsNullOrWhiteSpace(name))
+            throw new ArgumentException("Tour must have a non-whitespace name", nameof(name))
+        //other validations
+        this.Name = name;
+        this.Itinerary = itinerary;
+    }
+    ```
+- Taking advantage of dictionary
+- Converting the LinkedList into an Array because the data to persist is not gonna change (no need to operate in it because it is for saving). 
+    ```c#
+     public class AppData{
+        
+        public List<Country> AllCountries {get; private set;}
+        public Dictionary<CountryCode, Country> AllCountriesByKey{get; private set;}
+        public LinkedList<Country> ItineraryBuilder {get; } = new LinkedList<Country>();
+        public SortedDictionary<string, Tour> AllTours {get; private set;} = new SortedDictionary<string, Tour>();
+
+        public void Initialize(string csvFilePath){
+            CsvReader reader = new CsvReader(csvFilePath);
+            this.AllCountries = reader.ReadAllCountries().OrderBy(x => x.Name).ToList();
+            this.AllCountriesByKey = AllCountries.ToDictionary(x=> x.Code); 
+        }
+    }
+
+    /*Save tour*/
+    private void btnSaveTour_Click(object sender, RoutedEventAArgs e){
+        string name = this.tbxTourName.Text.Trim();
+        Country[] itinerary = AllData.ItineraryBuilder.ToArray();
+
+        try{
+            Tour newTour = new Tour(name, itinerary);
+            AllData.AllTours.Add(newTour.Name, newTour);
+        }catch(Exception e){
+            //handle exception
+        }
+    }
 
     ```
