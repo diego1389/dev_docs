@@ -256,7 +256,7 @@ lst.RemoveAll(x => someExpression(x));
     ```
 - Insert before method:
     ```c#
-    private void btnInserInItinerary_Click(object sender, RoutedEventArgs e){
+    private void btnInsertInItinerary_Click(object sender, RoutedEventArgs e){
         int selectedIndex = this.lbxAllCountries.SelectedIndex;
         int selectedItinIndex = this.lbxItinerary.SelectedIndex;
 
@@ -316,5 +316,110 @@ lst.RemoveAll(x => someExpression(x));
             //handle exception
         }
     }
-
     ```
+## Stacks
+
+- Items remved as they are processed. 
+- You only retrieve the latest change.
+- You push and pop items from a stack. 
+
+    ```c#
+    public enum ChangeType {Append, Insert, Remove}
+
+    public class ItineraryChange{
+        public ChangeType ChangeType{get;}
+        public Country Value {get;}
+        public int Index {get;}
+
+        public ItineraryChange(ChangeType changeType, int index, Country countryRemoved){
+            this.ChangeType = changeType;
+            this.Index = index;
+            this.Value = countryRemovedl
+        }
+    }
+
+    public class AppData{
+        
+        public List<Country> AllCountries {get; private set;}
+        public Dictionary<CountryCode, Country> AllCountriesByKey{get; private set;}
+        public LinkedList<Country> ItineraryBuilder {get; } = new LinkedList<Country>();
+        public SortedDictionary<string, Tour> AllTours {get; private set;} = new SortedDictionary<string, Tour>();
+        public Stack<ItineraryChange> ChangeLog {get;} = new Stack<ItineraryChange>();
+
+        public void Initialize(string csvFilePath){
+            CsvReader reader = new CsvReader(csvFilePath);
+            this.AllCountries = reader.ReadAllCountries().OrderBy(x => x.Name).ToList();
+            this.AllCountriesByKey = AllCountries.ToDictionary(x=> x.Code); 
+        }
+    }
+
+    /*Add country*/
+    private void btnAddToItinerary_Click(object sender, RoutedEventArgs e){
+        int selectedIndex = this.lbxAllCountries.SelectedIndex;
+        if(selectedIndex == -1)
+            return;
+        Country selectedCountry = AllData.AllCountries[selectedIndex];
+        AllData.ItineraryBuilder.AddLast(selectedCountry);
+
+        var change = new ItineraryChange(ChangeType.Append, AllData.ItineraryBuilder.Count, selectedCountry); /*For appending at the end of the linked list the position = the number of items*/
+        AllData.ChangeLog.Push(change); 
+
+        this.UpdateAllLists(); //WPF method
+    }
+
+    /*Remove from itinerary*/
+    private void btnRemoveFromItinerary_Click(object sender, RoutedEventArgs e){
+        int selectedItinIndex = this.lbxItinerary.SelectedIndex;
+        if(selectedItinIndex < 0)
+            return;
+        var nodeToRemove = AllData.ItineraryBuilder.GetNthNode(selectedItinIndex);
+        AllData.ItineraryBuilder.Remove(nodeToRemove);
+
+        var change = new ItineraryChange(ChangeType.Remove, selectedIndex, noteToRemove.Value);
+        AllData.ChangeLog.Push(change);
+        this.UpdateAllLists();
+    }
+
+      private void btnInsertInItinerary_Click(object sender, RoutedEventArgs e){
+        int selectedIndex = this.lbxAllCountries.SelectedIndex;
+        int selectedItinIndex = this.lbxItinerary.SelectedIndex;
+
+        Country selectedCountry = AllData.AllCountries[selectedIndex];
+        var insertBeforeNode = AllData.ItineraryBuilder.GetNthNode(selectedItinIndex);
+        AllData.ItineraryBuilder.AddBefore(insertBeforeNode, selectedCountry);
+
+        var change = new ItineraryChange(ChangeType.Insert, selectedItindex, selectedCountry);
+        AllData.ChangeLog.Push(change);
+        this.UpdateAllLists();
+    }
+    ```
+- Undo button
+    ```c#
+    private void btnUndo_Click(object sender, RoutedEventArgs e){
+        if(AllData.ChangeLog.Count === 0){
+            return
+        }
+
+        ItineraryChange lastChange = AllData.ChangeLog.Pop();
+        ChangeUndoer.Undo(AllData.ItineraryBuilder, lastChange);
+        this.UpdateAllLists();
+    }
+
+    public static void Undo(LinkedList<Country> itinerary, ItineraryChange changeToUndo){
+        switch(changeToUndo.ChangeType){
+            case ChangeType.Append:
+                //change was to append final country so we need to remove it
+                itinerary.RemoveLast();
+                break;
+            case ChangeType.Insert:
+                LinkListNode<Country> insertion = itinerary.GetNthNode(changeToUndo.Index);
+                itinerary.Remove(insertion);
+                break;
+            case ChangeType.Remove:
+                itinerary.AddLast(cangeToUndo.Value);
+                break;
+        }
+    }
+    ```
+- There is no look-up.
+- The stack decides which item you get next (the most recently added). 
