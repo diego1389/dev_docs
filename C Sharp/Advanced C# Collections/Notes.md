@@ -423,3 +423,115 @@ lst.RemoveAll(x => someExpression(x));
     ```
 - There is no look-up.
 - The stack decides which item you get next (the most recently added). 
+
+## Queues
+
+- Always supplies the item that has been waiting in the collection the longest. 
+    ```c#
+    public class Customer{
+        public string Name {get;}
+        public List<Tour> BookedTours{get;} = new List<Tour>();
+        public Customer(string name){
+            this.Name = name;
+        }
+        public override string ToString()=> Name;
+
+    }
+
+    public class AppData{
+        
+        public List<Country> AllCountries {get; private set;}
+        public Dictionary<CountryCode, Country> AllCountriesByKey{get; private set;}
+        public List<Customer> Customers{get; private set;} = new List<Customer>(){
+            new Customer("Simon"), new Customer("Kim")
+        }
+        public LinkedList<Country> ItineraryBuilder {get; } = new LinkedList<Country>();
+        public SortedDictionary<string, Tour> AllTours {get; private set;} = new SortedDictionary<string, Tour>();
+        public Stack<ItineraryChange> ChangeLog {get;} = new Stack<ItineraryChange>();
+        public Queue<(Customer TheCustomer, Tour TheTour)> BookingRequests {get;} = new Queue<(Customer, Tour)>();
+
+        public void Initialize(string csvFilePath){
+            CsvReader reader = new CsvReader(csvFilePath);
+            this.AllCountries = reader.ReadAllCountries().OrderBy(x => x.Name).ToList();
+            this.AllCountriesByKey = AllCountries.ToDictionary(x=> x.Code); 
+        }
+    }
+
+    private void btnBookTour_Click(object sender, RoutedEventArgs e){
+        Customer customer = this.lbxCustomer.SelectedItem as Customer;
+        List<Tour> requestedTour = GetRequestedTour();
+
+        foreach(Tour tour in requestedTours){
+            this.AllData.BookingRequests.Enqueue((customer, tour));
+        }
+    }
+
+    private void btnApprovedRequestClick(object sender, RoutedEventArgs e){
+        var request = AllData.BookingRequests.Dequeue();
+        request.TheCustomer.BookedTours.Add(request.TheTour);
+
+    }
+    ```
+- Dequeue() will throw an exception if the queue is empty.
+- Peeking the queue.
+    ```c#
+    private GetLatestBookingRequestText(){
+        return AllData.BookingRequests.Peek().ToString();
+    }
+    ```
+- Stack<T> also supports a Peek() method. You can enumerate both collections with a foreach loop but they don;t provide lookup.
+
+## Concurrency and concurrent collections
+
+- Concurrent queue
+    ```c#
+     private async void btnBookTour_Click(object sender, RoutedEventArgs e){
+        Customer customer = this.lbxCustomer.SelectedItem as Customer;
+        List<Tour> requestedTour = GetRequestedTour();
+
+        List<Task> tasks = new List<Task>();
+        foreach(Tour tour in requestedTours){
+            Task task = Task.Run(
+                () => this.AllData.BookingRequests.Enqueue((customer, tour))
+            );
+            await Task.WhenAll(tasks);
+        }
+    }
+
+     public class AppData{
+        
+        public List<Country> AllCountries {get; private set;}
+        public Dictionary<CountryCode, Country> AllCountriesByKey{get; private set;}
+        public List<Customer> Customers{get; private set;} = new List<Customer>(){
+            new Customer("Simon"), new Customer("Kim")
+        }
+        public LinkedList<Country> ItineraryBuilder {get; } = new LinkedList<Country>();
+        public SortedDictionary<string, Tour> AllTours {get; private set;} = new SortedDictionary<string, Tour>();
+        public Stack<ItineraryChange> ChangeLog {get;} = new Stack<ItineraryChange>();
+        public ConcurrentQueue<(Customer TheCustomer, Tour TheTour)> BookingRequests {get;} = new ConcurrentQueue<(Customer, Tour)>();
+
+        public void Initialize(string csvFilePath){
+            CsvReader reader = new CsvReader(csvFilePath);
+            this.AllCountries = reader.ReadAllCountries().OrderBy(x => x.Name).ToList();
+            this.AllCountriesByKey = AllCountries.ToDictionary(x=> x.Code); 
+        }
+    }
+    ```
+- YOu enqueue to a concurrent queue the same way as with a generic regular queue.
+- Concurrent queue has a trydequeue because there is no way to guarantee that another thread empties the queue just before you access it so the count property validation wont work for concurrent queue.
+    ```c#
+    private void btnApprovedRequestClick(object sender, RoutedEventArgs e){
+        //var request = AllData.BookingRequests.Dequeue();
+        bool success = AllData.BookingRequests.TryDequeue(out var request);
+        if(success){
+            request.TheCustomer.BookedTours.Add(request.TheTour);
+        }
+    }
+    ```
+- Try Peek
+    ```c#
+    private GetLatestBookingRequestText(){
+        var success = AllData.BookingRequests.TryPeek(out var request);
+        return success ? request.ToString() : null;
+    }
+    ```
