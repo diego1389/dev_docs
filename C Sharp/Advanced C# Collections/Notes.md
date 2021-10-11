@@ -535,3 +535,98 @@ lst.RemoveAll(x => someExpression(x));
         return success ? request.ToString() : null;
     }
     ```
+
+## Merging data with Hashsets and SortedSets
+
+- Remove duplicate countries (you can use Linq Distinct() but it is not very scalable)
+    ```c#
+    private HashSet<Country> GetCOuntriesInSelection(){
+        var countries = new HashSet<Country>();
+
+        List<Tour> selectedTours = GetRequestedTours();
+        foreach(Tour tour in selectedTours){
+            foreach(Country country in tour.Itinerary){
+                countries.Add(country);
+            }
+        }
+        return countries;
+    }
+    ```
+- Comparing sets and dictionary
+
+|Dictionary<TKey, TValue> |HashSet<T>  |
+|---|---|
+| Have keys | Dont have keys |
+| Key-based lookuup| Do not support lookup|
+| Keys are unique| Values are unique|
+| Adding duplicates throws exception| Duplicates are ignored|
+| Must compare items for equality| Must compare items for ordering|
+
+- Sorting items with SortedSet<T>
+    - Works just as a Set but it is sorted by default (but you need to define a comparer for complex objects).
+    ```c#
+    private SortedSet<Country> GetCOuntriesInSelection(){
+        var countries = new SortedSet<Country>(CountryNameComparer.Instance);
+
+        List<Tour> selectedTours = GetRequestedTours();
+        foreach(Tour tour in selectedTours){
+            foreach(Country country in tour.Itinerary){
+                countries.Add(country);
+            }
+        }
+        return countries;
+    }
+
+    public class CountryNameComparer : IComparer<Country>{
+        public static CountryNameComparer Instance {get;} = new CountryNameComparer();
+        private CountryNameComparer(){}
+        public int Compare(Country x, Country y){
+            return x.Name.CompareTo(y.Name);
+        }
+    }
+    ```
+- Merging sets with UnionWith()
+      ```c#
+    private SortedSet<Country> GetCOuntriesInSelection(){
+       List<Tour> selectedTours = GetRequestedTours();
+        if(selectedTours.Count == 0){
+            return new SortedSet<Country>(CountryNameComparer.Instance);
+        }
+
+        var allSets = new List<SortedSet<Country>>();
+
+        foreach(Tour tour in selectedTours){
+            SortedSet<Country> tourCountries = new SortedSet<Country>(tour.Itinerary, CountryName.Comparer.Instance);
+            allSets.Add(tourCountries);
+        }
+
+        SortedSet<Country> result = allSest[0];
+        for(int i = 1; i < allSets.Count; i++ ){
+            result.UnionWith(allSets[i]);
+        }
+        return result;
+
+    }
+    ```
+- Set intersection
+    ```c#
+    private SortedSet<Country> GetCOuntriesInSelection(){
+       List<Tour> selectedTours = GetRequestedTours();
+        if(selectedTours.Count == 0){
+            return new SortedSet<Country>(CountryNameComparer.Instance);
+        }
+
+        var allSets = new List<SortedSet<Country>>();
+
+        foreach(Tour tour in selectedTours){
+            SortedSet<Country> tourCountries = new SortedSet<Country>(tour.Itinerary, CountryName.Comparer.Instance);
+            allSets.Add(tourCountries);
+        }
+
+        SortedSet<Country> result = allSest[0];
+        for(int i = 1; i < allSets.Count; i++ ){
+            result.IntersectWith(allSets[i]);/*Returns only the common element*/
+        }
+        return result;
+    }
+    ```
