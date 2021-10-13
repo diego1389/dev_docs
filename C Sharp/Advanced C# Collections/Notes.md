@@ -630,3 +630,61 @@ lst.RemoveAll(x => someExpression(x));
         return result;
     }
     ```
+## Read-only and immutable collections
+
+- Preventing modifications.  
+- If the collection can be modified it opens a path for bugs. 
+- System.Collections.ObjectModel has more specialized collections.
+    ```c#
+    public class AppData{
+        
+        public ReadOnlyCollection<Country> AllCountries {get; private set;}
+        public ReadOnlyDictionary<CountryCode, Country> AllCountriesByKey{get; private set;}
+        public List<Customer> Customers{get; private set;} = new List<Customer>(){
+            new Customer("Simon"), new Customer("Kim")
+        }
+        public LinkedList<Country> ItineraryBuilder {get; } = new LinkedList<Country>();
+        public SortedDictionary<string, Tour> AllTours {get; private set;} = new SortedDictionary<string, Tour>();
+        public Stack<ItineraryChange> ChangeLog {get;} = new Stack<ItineraryChange>();
+        public ConcurrentQueue<(Customer TheCustomer, Tour TheTour)> BookingRequests {get;} = new ConcurrentQueue<(Customer, Tour)>();
+
+        public void Initialize(string csvFilePath){
+            CsvReader reader = new CsvReader(csvFilePath);
+            var countries = reader.ReadAllCountries().OrderBy(x => x.Name).ToList();
+            this.AllCountries = countries.AsReadOnly();
+            this.AllCountriesByKey = new ReadOnlyDictionary<CountryCode,  Country>(AllCountries.ToDictionary(x=> x.Code)); 
+        }
+    }
+    ```
+- The loophole in Read-only collection. If you modify the original list or dictionary it affects the read only collection as well (it changes its data set to put it some way). Read-only collections can be modified if you have a reference to the underlying collection. 
+- Immutable collections don't have this behavior.     
+    ```c#
+    public class AppData{
+        
+        public ImmutableArray<Country> AllCountries {get; private set;}
+        public ImmutableDictionary<CountryCode, Country> AllCountriesByKey{get; private set;}
+        public List<Customer> Customers{get; private set;} = new List<Customer>(){
+            new Customer("Simon"), new Customer("Kim")
+        }
+        public LinkedList<Country> ItineraryBuilder {get; } = new LinkedList<Country>();
+        public SortedDictionary<string, Tour> AllTours {get; private set;} = new SortedDictionary<string, Tour>();
+        public Stack<ItineraryChange> ChangeLog {get;} = new Stack<ItineraryChange>();
+        public ConcurrentQueue<(Customer TheCustomer, Tour TheTour)> BookingRequests {get;} = new ConcurrentQueue<(Customer, Tour)>();
+
+        public void Initialize(string csvFilePath){
+            CsvReader reader = new CsvReader(csvFilePath);
+            var countries = reader.ReadAllCountries().OrderBy(x => x.Name).ToList();
+            this.AllCountries = countries.ToImmutableArray();
+            this.AllCountriesByKey = AllCountries.ToImmutableDictionary(x => x.Code); 
+
+            countries.Add(new Country("Lilliput", "LIL", "somewhere", 1_000_000));
+        }
+    }
+    ```
+- Majority of collections have an immutable version. 
+- You can circumvent with reflection or unmanaged code though.
+
+|Immutable collections |Read-only collections  |
+|---|---|
+| Collections in their own right| Wrappers that guard other collections |
+| Thread-safe| Not thread-safe|
