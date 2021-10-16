@@ -688,3 +688,34 @@ lst.RemoveAll(x => someExpression(x));
 |---|---|
 | Collections in their own right| Wrappers that guard other collections |
 | Thread-safe| Not thread-safe|
+
+## Collection interfaces
+
+- IList<T> support must list features. 
+- IReadOnly<T> doesn't allow features to modify the collection. 
+- IEnumerable<T> allows something to be enumerated. All collections implement it. 
+    ```c#
+    IEnumerable<Tour> GetRequestedTours() => this.lbxToursToBook.SelectedItems.Cast<Tour>();//.ToList() ;
+
+    var selectedTours = GetRequestedTours();
+        //if(selectedTours.Count == 0){
+        if(selectedTours.Any()){ //IEnumerable doesnt have a Count
+            return new SortedSet<Country>(CountryNameComparer.Instance);
+        }
+
+        var allSets = new List<SortedSet<Country>>();
+
+        foreach(Tour tour in selectedTours){
+            SortedSet<Country> tourCountries = new SortedSet<Country>(tour.Itinerary, CountryName.Comparer.Instance);
+            allSets.Add(tourCountries);
+        }
+
+        SortedSet<Country> result = allSest[0];
+        for(int i = 1; i < allSets.Count; i++ ){
+            result.UnionWith(allSets[i]);
+        }
+        return result;
+
+    }
+    ```
+- 
