@@ -1,0 +1,33 @@
+﻿<Properties StartupConfiguration="{F20FA3DC-6600-4E18-9C24-E55F61880AC7}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="LINQSamples/ViewModelClasses/SamplesViewModel.cs">
+    <Files>
+      <File FileName="LINQSamples/Program.cs" Line="19" Column="31" />
+      <File FileName="LINQSamples/EntityClasses/Product.cs" />
+      <File FileName="LINQSamples/RepositoryClasses/ProductRepository.cs" />
+      <File FileName="LINQSamples/ViewModelClasses/SamplesViewModel.cs" Line="449" Column="10" />
+      <File FileName="LINQSamples/RepositoryClasses/ProductHelper.cs" Line="15" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="LINQSamples" expanded="True">
+            <Node name="LINQSamples" expanded="True">
+              <Node name="EntityClasses" expanded="True" />
+              <Node name="RepositoryClasses" expanded="True" />
+              <Node name="ViewModelClasses" expanded="True">
+                <Node name="SamplesViewModel.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.LINQSamples PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

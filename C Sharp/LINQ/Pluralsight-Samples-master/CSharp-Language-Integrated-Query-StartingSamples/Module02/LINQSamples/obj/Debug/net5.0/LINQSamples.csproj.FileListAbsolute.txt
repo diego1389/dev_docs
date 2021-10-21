@@ -1,0 +1,15 @@
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/bin/Debug/net5.0/LINQSamples.deps.json
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/bin/Debug/net5.0/LINQSamples.runtimeconfig.json
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/bin/Debug/net5.0/LINQSamples.runtimeconfig.dev.json
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/bin/Debug/net5.0/LINQSamples.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/bin/Debug/net5.0/ref/LINQSamples.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/bin/Debug/net5.0/LINQSamples.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/obj/Debug/net5.0/LINQSamples.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/obj/Debug/net5.0/LINQSamples.GeneratedMSBuildEditorConfig.editorconfig
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/obj/Debug/net5.0/LINQSamples.AssemblyInfoInputs.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/obj/Debug/net5.0/LINQSamples.AssemblyInfo.cs
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/obj/Debug/net5.0/LINQSamples.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/obj/Debug/net5.0/LINQSamples.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/obj/Debug/net5.0/ref/LINQSamples.dll
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/obj/Debug/net5.0/LINQSamples.pdb
+/Users/diego.guillen/Documents/GitHub/dev_docs/C Sharp/LINQ/Pluralsight-Samples-master/CSharp-Language-Integrated-Query-StartingSamples/Module02/LINQSamples/obj/Debug/net5.0/LINQSamples.genruntimeconfig.cache

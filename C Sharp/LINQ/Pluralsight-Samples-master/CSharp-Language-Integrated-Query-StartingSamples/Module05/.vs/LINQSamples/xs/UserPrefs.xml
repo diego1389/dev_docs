@@ -1,0 +1,31 @@
+﻿<Properties StartupConfiguration="{F20FA3DC-6600-4E18-9C24-E55F61880AC7}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="LINQSamples/EntityClasses/ProductIdComparer.cs">
+    <Files>
+      <File FileName="LINQSamples/ViewModelClasses/SamplesViewModel.cs" Line="250" Column="46" />
+      <File FileName="LINQSamples/Program.cs" />
+      <File FileName="LINQSamples/EntityClasses/Product.cs" />
+      <File FileName="LINQSamples/EntityClasses/ProductIdComparer.cs" Line="18" Column="6" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="LINQSamples" expanded="True">
+            <Node name="LINQSamples" expanded="True">
+              <Node name="EntityClasses" expanded="True">
+                <Node name="ProductIdComparer.cs" selected="True" />
+              </Node>
+              <Node name="ViewModelClasses" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.LINQSamples PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
