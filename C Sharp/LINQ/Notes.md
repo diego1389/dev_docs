@@ -695,5 +695,246 @@ Two LINQ syntaxis
         ResultText = $"Procut ID: {search} is in Products collection? {value}";
     }
     ```
+- ## Compare and union two collections
 
+- SequenceEqual: 
+    - Compares two collections for equality.
+    - Simple data types checks values.
+    - Object data types checks references. 
+    ```c#
+    bool value;
+    List<int> list1 = new List<int>{1,2,3,4,5};
+    List<int> list2 = new List<int>{1,2,3,4,5};
 
+    //Querysyntax
+    value = (from num in list1 select num).SequenceEqual(list2);
+    //Method syntax
+    value = list1.SequenceEqual(list2);
+    ```
+    - To use SequenceEqual with objects you need a comparer just as with Contains.
+    ```c#
+    //Querysyntax
+    value = (from prod in list1 select prod).SequenceEqual(list2, pc);
+    //Method syntax
+    value = list1.SequenceEqual(list2, pc);
+    ```
+- Except: find all values that are in one list but not in the other:
+    ```c#
+    List<int> exceptions;
+    List<int> list1 = new List<int>{1,2,3,4,5};
+    List<int> list2 = new List<int>{3,4,5};
+
+    //Querysyntax
+    exceptions = (from num in list1 select num).Except(list2).ToList(); //1 2
+    //Method syntax
+    exceptions = list1.Except(list2).ToList(); //1 2 
+    ```
+    - Except also need a comparer when used with objects.
+- Intersect
+    - Get common elements that exist in both lists
+    ```c#
+    //Querysyntax
+    Products = (from prod in list1 select prod).Intersect(list2, pc).ToList();
+    //Method syntax
+    Products = list1.Intersect(list2, pc).ToList();
+    ```
+- Union and Concat add the contents of two lists together. Union() checks for duplicates and Concat() does not. 
+    ```c#
+    //Querysyntax
+    Products = (from prod in list1 select prod).Union(list2, pc).ToList();
+    Products = (from prod in list1 select prod).Concat(list2).ToList();
+    //Method syntax
+    Products = list1.Union(list2, pc).ToList();
+    Products = list1.Union(list2).ToList();
+    ```
+ ## Joining two collections together
+
+ - Inner join:
+    ```c#
+    //Query syntax
+    var query = (from prod in Products join sale in Sales
+                on prod.ProductID equals sale.ProductID
+                select new {
+                    prod.ProductID,
+                    sale.LineTotal});
+    foreach(var item in query){
+        //item.LineTotal
+    }
+    //Method syntax
+    var query = Products.Join(Sales, prod => prod.ProductID, sale => sale.ProductID,
+    (prod, sale)=> new {
+        prod.ProductID,
+        sale.LineTotal
+    });
+    ```
+- Inner join with two fields:
+    ```c#
+    short qty = 6;
+        //Query syntax
+    var query = (from prod in Products join sale in Sales
+                on new {prod.ProductID, Qty = qty} 
+                equals {sale.ProductID, Qty = sale.OrderQty}
+                select new {
+                    prod.ProductID,
+                    sale.LineTotal});
+    foreach(var item in query){
+        //item.LineTotal
+    }
+    ```
+- Group join: one to many relation.
+    ```c#
+    public partial class ProductSales{
+        public Product Product{get; set;}
+        public IEnumerable<SalesOrderDetail> Sales {get; set;}
+    }
+    IEnumerable<ProductSales> grouped;
+    //Query syntax
+    grouped = (from prod in Products
+                join sale in Sales
+                on prod.ProductID equals sale.ProductID
+                into sales //new variable
+                select new ProductSales{
+                    Product = prod,
+                    Sales = sales //one-to-many
+                });
+    //Method syntax
+    grouped = Products.GroupJoin(Sales, prod => prod.ProductID,
+                                        sale => sale.ProductID,
+                                        (prod, sales)=> new ProductSales{
+                                            Product = prod,
+                                            Sales = sales.ToList();
+                                        });
+    ```
+- Left outer join
+    ```c#
+    /*Query syntax*/
+    var query = (from prod in Products
+                join sale in Sales
+                on prod.ProductID equals sale.ProductID
+                into sales //new variable
+                from sale in sales.DefaultIfEmpty()
+                select new {
+                    prod.ProductID,
+                    prod.Name,
+                    sale?.SalesOrderId,
+                    sale?.LineTotal
+                }).OrderBy(ps => ps.Name);
+    //Method syntax
+    var query = Products.SelectMany(sale => Sales.Where(s=>sale.ProductID == s.ProductID)
+                        .DefaultIfEmpty(), 
+                        (prod, sale)=> new{
+                            prod.ProductID,
+                            sale?.SalesOrderID
+                        }).OrderBy(ps => ps.Name);
+
+    ```
+ ## Creating a left outer join using Groupby
+
+```c#
+IEnumerable<IGrouping<string, Product>> sizeGroup;
+//Query syntax
+sizeGroup = (from prod in Products
+            orderby prod.Size
+            group prod by prod.Size);
+//MEthod syntax
+sizeGroup = Products.OrderBy(prod => prod.Size)
+                    .GroupBy(prod => prod.Size);
+
+foreach(var group in sizeGroup){
+    Console.WriteLine($"Key: {group.Key} Count: {group.Count}");
+    foreach(var prod in group){
+        Console.WriteLine($"ProductID: {prod.ProductID}"); //etc
+    }
+}
+```
+- Group by using into a select
+    ```c#
+    IEnumerable<IGrouping<string, Product>> sizeGroup;
+    //Query syntax
+    sizeGroup = (from prod in Products
+                orderby prod.Size
+                group prod by prod.Size into sizes
+                select sizes);
+    //MEthod syntax
+    sizeGroup = Products.OrderBy(prod => prod.Size)
+                        .GroupBy(prod => prod.Size);
+
+    foreach(var group in sizeGroup){
+        Console.WriteLine($"Key: {group.Key} Count: {group.Count}");
+        foreach(var prod in group){
+            Console.WriteLine($"ProductID: {prod.ProductID}"); //etc
+        }
+    }
+    ```
+- If you want to order by the key:
+    ```c#
+    IEnumerable<IGrouping<string, Product>> sizeGroup;
+    //Query syntax
+    sizeGroup = (from prod in Products
+                group prod by prod.Size into sizes
+                orderby sizes.Key
+                select sizes);
+        //MEthod syntax
+        sizeGroup = Products.GroupBy(prod => prod.Size)
+                            .OrderBy(sizes => sizes.Key)
+                            .Select(sizes => sizes);
+
+    foreach(var group in sizeGroup){
+        Console.WriteLine($"Key: {group.Key} Count: {group.Count}");
+        foreach(var prod in group){
+            Console.WriteLine($"ProductID: {prod.ProductID}"); //etc
+        }
+    }
+    ```
+- Filtering grouped results:
+    ```c#
+    IEnumerable<IGrouping<string, Product>> sizeGroup;
+    //Query syntax
+    sizeGroup = (from prod in Products
+                group prod by prod.Size into sizes
+                where sizes.Count() > 2
+                select sizes);
+    //MEthod syntax
+    sizeGroup = Products.GroupBy(prod => prod.Size)
+                        .Where(sizes => sizes.Count() > 2)
+                        .Select(sizes => sizes);
+
+    foreach(var group in sizeGroup){
+        Console.WriteLine($"Key: {group.Key} Count: {group.Count}");
+        foreach(var prod in group){
+            Console.WriteLine($"ProductID: {prod.ProductID}"); //etc
+        }
+    }
+    ```
+- Creating a subquery:
+    ```c#
+    public partial class SaleProducts{
+        public int SalesOrderId{get; set;}
+        public List<Product> Products{get; set;}
+    }
+
+    IEnumerable<SaleProducts> salesGroup;
+    //QuerySyntax
+    salesGroup = (from sale in Sales
+                group sale by sale.SalesOrderID
+                into sales
+                select new SaleProduct{
+                    SalesOrderId = sales.Key,
+                    Products = (from prod in Products
+                    join sale in Sales
+                    on prod.ProductID equals sale.ProductID
+                    where sale.SalesOrderId == sales.Key
+                    select prod).ToList()
+                })
+    //Method syntax
+    salesGroup = Sales.GroupBy(sale => sale.SalesOrderId)
+                    .Select(sales => new SaleProducts{
+                        SalesOrderId = sales.Key,
+                        Products = Products.Join(
+                            sales,
+                            prod => prod.ProductID,
+                            sale => sale.ProductID,
+                            (prod,sale)=> prod).ToList()
+                        )
+                    });
+    ```

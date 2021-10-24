@@ -13,8 +13,8 @@ namespace LINQSamples
         UseQuerySyntax = false
       };
 
-      // Call a sample method
-      vm.LINQContainsUsingComparer();
+            // Call a sample method
+            vm.SequenceEqualInteger();
 
       // Display Product Collection
       /*foreach (var item in vm.Products) {

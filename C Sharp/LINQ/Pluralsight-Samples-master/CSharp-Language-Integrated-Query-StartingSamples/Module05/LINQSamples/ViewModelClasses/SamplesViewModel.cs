@@ -265,5 +265,21 @@ namespace LINQSamples
             }
             ResultText = $"Procut ID: {search} is in Products collection? {value}";
         }
+
+        public void SequenceEqualInteger()
+        {
+            bool value;
+            List<int> list1 = new List<int>() { 1, 2, 3, 4, 5 };
+            List<int> list2 = new List<int>() { 1, 2, 3, 4, 5 };
+            if (UseQuerySyntax)
+            {
+                value = (from num in list1 select num).SequenceEqual(list2);
+            }
+            else
+            {
+                value = list1.SequenceEqual(list2); 
+            }
+            ResultText = $"Lists are equal? {value}";
+        }
     }
 }
