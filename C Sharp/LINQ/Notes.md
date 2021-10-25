@@ -938,3 +938,132 @@ foreach(var group in sizeGroup){
                         )
                     });
     ```
+## Aggregating data in collections
+
+- Count and Count using a filter:
+    ```c#
+    int value;
+    //Query syntax
+    value = (from prod in Products
+            select prod).Count();
+    //Method syntax
+    value = Products.Count();
+    ```
+    - Count filtered:
+    ```c#
+    int value;
+    string search = "Red";
+    //Query syntax
+    value = (from prod in Products
+            select prod).Count(prod => prod.Color == search);
+    /*
+    value = (from prod in Products
+            where prod.Color == search
+            select prod).Count();
+    */
+    //Method syntax
+    value = Products.Count(prod => prod.Color == search);
+    ```
+- Using Min() and Max()
+    ```c#
+    decimal? value;
+    //Query syntax
+    value = (from prod in Products
+            select prod.ListPrice).Min(); //Max()
+    //or
+    /*value = (from prod in Products
+            select prod).Min(prod => prod.ListPrice);*/
+
+    //Method syntax
+    value = Products.Min(prod => prod.ListPrice);//Max
+    ```
+- Using Average() and Sum()
+    ```c#
+    decimal? value;
+    //Query syntax
+    value = (from prod in Products
+            select prod.ListPrice).Average(); //Sum()
+    //or
+    /*value = (from prod in Products
+            select prod).Average(prod => prod.ListPrice);//Sum()*/
+
+    //Method syntax
+    value = Products.Average(prod => prod.ListPrice);//Sum
+    ```
+- Custom calculations:
+    - Iterate over collection
+    - Supply a custom method for calculating
+    - Returns a single value
+    ```c#
+    decimal value = 0;
+    //Query syntax
+    value = (from prod in Products select prod)
+            .Aggregate(0M, (sum, prod)=>
+            {
+                sum += prod.ListPrice
+            })
+    //Method syntax
+    value = Products.Aggregate(0M, (sum, prod)=> sum+=prod.ListPrice);
+    ```
+- Calculating aggregates for groups:
+    ```c#
+    //Query syntax
+    var stats = (from prod in Products
+                group prod by prod.Size into sizeGroup
+                where sizeGroup.Count() > 0
+                select new 
+                {
+                    Size = sizeGroup.Key,
+                    TotalProducts = sizeGroup.Count(),
+                    Max = sizeGroup.Max(s => s.ListPrice)
+                }
+                into result 
+                order by result.Size
+                select result);
+    //Method syntax
+    var stats = Products.GroupBy(prod => prod.Size)
+                        .Where(sizeGroup => sizeGroup.Count() > 0)
+                        .Select(sizeGroup=>new{
+                            Size = sizeGroup.Key,
+                            TotalProducts = sizeGroup.Count(),
+                            Max = sizeGroup.Max(s => s.ListPrice)
+                        })
+                        .OrderBy(result => result.Size)
+                        .Select(result =>  result);
+    ```
+
+## Deferred execution
+
+- Types of Linq execution:
+    - Deferred:
+        - Includes streaming and not streaming.
+            - Streaming:
+                - Results can be returned prior to the entire collection is read.
+                - Distinct, GroupBy, Join, Select, Skip, Take, Union, Where
+            - Non streaming: 
+                - All data must be read before a result can be returned. 
+                - Except, group by, groupjoin, intersect, join, orderby, thenby.
+        - A data structure ready to execute. The query is not executed until the value is needed.
+            - foreach
+            - Count
+            - ToList
+            - OrderBy, etc. 
+    - Immediate:
+        - Query is executed immediately.
+- Create a filter using streaming execution (similar to what Where() does under the hood).
+    ```c#
+    public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, Func<T, bool> predicate){
+        foreach(var item in source){
+            if(predicate(item))
+                yield return item; //yield returns control every time it finds something (it exits this method). 
+        }
+    }
+
+    IEnumerable<Product> query;
+    query = Products.Filter(prod => prod.Color == "Red");
+    ```
+- Always use the yield when creating custom extension methods to Linq.
+- For better performance first filter the data in one statement and apply order by in another one. 
+
+
+
