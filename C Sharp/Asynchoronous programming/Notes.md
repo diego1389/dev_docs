@@ -202,3 +202,227 @@
     - Slightly improve performance. 
     - The continuation shouldn't depend on the original context. 
     - .Net core doesn't use synchronization context so COnfigureAwait(false) is useless.
+    
+## Async await advanced topics:
+
+- IAsyncEnumerable<t> exposes an enumerator that provides asynchronous iteration over values of a specified type. 
+    ```c#
+    public class MockStockStreamService{
+        public async IAsyncEnumerable<StockPrice> GetAllStockPrices([IEnumeratorCancellation]CancellationToken cancellationToken = default){
+            await Task.Delay(500, cancellationToken);
+            yield return new StockPrice{...};
+            await Task.Delay(500, cancellationToken);
+            yield return new StockPrice{...};
+        }
+    }
+
+    private async void Search_Click(object sender, RoutedEventArgs e){
+        try{
+            var identifiers = StockIdentifier.Text.Split(' ', ',');
+            var data = new ObservableCollection<StockPrice>();
+            Stocks.ItemsSource = data;
+
+            var service = new MockStockStramService();
+            var enumerator = service.GetAllStockPrices();
+            await foreach(var price in enumerator.WithCancellation(CancellationToken.None)){
+                if(identifiers.Contains(price.Identifier)){
+                    data.Add(price);
+                }
+            }
+
+        }catch(Exception ex){
+            Notes.Text = ex.Message;
+        }
+    }
+
+    /*Real implementation:*/
+    public async IAsyncEnumerable<StockPrice> GetAllStockPrices([IEnumeratorCancellation]CancellationToken cancellationToken = default){
+        using var stream = new StreamReader(File.OpenRead("file.csv"));
+        await stream.ReadLineAsync(); //Skip header line
+        string line;
+        while((line = strea.ReadLineAsync()) != null){
+            if(cancellationToken.IsCancellationRequested) bread;
+            yield return StockPrice.FromCSV(line);
+        }
+    }
+    ```
+- StateMachine: 
+    - Keeps track of tasks.
+    - Executes the continuation.
+    - Provides the continuation with a result.
+    - Handles context switching. 
+    - Reports errors.
+- Each method marked as async will generate a state machine for that method. 
+- A deadlock may occur if two threads depend on each other and one is blocked. 
+
+## Asynchronous programming deep dive
+- Out of the box the Task does not automatically report progress. 
+- Progress<T> provides an IProgress<T> that invokes callbacks for each reported progress value. 
+    ```c#
+    try{
+        var progress = new Progress<IEnumerable<StockPrice>>();
+        progress.ProgressChanged += (_, stocks) =>{
+            Stock.Progress.Value += 1;
+        };
+        await SearchForStocks(progress);
+    }catch(Exception ex){
+
+    }
+
+    private async Task SearchForStocks(IProgress<IEnumerable<StockPrice>>){
+        var service = new StockService();
+         var loadingTasks = new List<Task<IEnumerable<StockPrice>>>();
+
+    foreach(var identifier in identifiers.Text.Split(' ', ',')){
+        var loadTask = service.GetStockPricesFor(identifier, CancellationToken.None);
+        loadingTasks.Add(loadTask); 
+        loadTask.ContinueWith(completedTask =>{
+            progress?.Report(completedTask.Result);
+            return completedTask.Result;
+        });
+    }
+
+    }
+    ```
+- Work with attached and detacched tasks:
+    ```c#
+     static async Task Main(string[] args)
+    {
+            Console.WriteLine("Starting");
+            await Task.Factory.StartNew(() => {
+                Task.Factory.StartNew(() => {
+                    Thread.Sleep(1000);
+                    Console.WriteLine("Completed 1");
+                });
+                Task.Factory.StartNew(() => {
+                    Thread.Sleep(2000);
+                    Console.WriteLine("Completed 2");
+                });
+                Task.Factory.StartNew(() => {
+                    Thread.Sleep(3000);
+                    Console.WriteLine("Completed 3");
+                });
+            });
+
+            Console.WriteLine("Completed");
+            Console.ReadLine();
+            /*Starting
+            Completed
+            Completed1
+            Completed2
+            Completed3*/
+    }
+    ```
+- By default a child task executes independently of its parent. Use AttachedToParent to make them sinchronized. (This doesn't work if the parent is configured as DenyChildAttached (its default)). 
+    ```c#
+    Console.WriteLine("Starting");
+        await Task.Factory.StartNew(() => {
+            Task.Factory.StartNew(() => {
+                Thread.Sleep(1000);
+                Console.WriteLine("Completed 1");
+            }, TaskCreationOptions.AttachedToParent);
+            Task.Factory.StartNew(() => {
+                Thread.Sleep(2000);
+                Console.WriteLine("Completed 2");
+            }, TaskCreationOptions.AttachedToParent);
+            Task.Factory.StartNew(() => {
+                Thread.Sleep(3000);
+                Console.WriteLine("Completed 3");
+            }, TaskCreationOptions.AttachedToParent);
+        });
+
+        Console.WriteLine("Completed");
+        Console.ReadLine();
+        /*Starting
+            Completed1
+            Completed2
+            Completed3
+            Completed*/
+    ```
+# Task parallel library
+
+## Getting started with parallel programing
+
+- Task executes only in one thread. 
+- Parallel Linq (PLINQ).
+- Parallel extensions: Build on-top of the Task in the Task Parallel library. 
+- The methods on Parallel will efficiently distribute the work on the available cores. 
+    ```c#
+    var bag = new ConcurrentBag<StockCalculation>();
+    Parallel.Invoke(
+        ()=>{
+            var msft = Calculate(stocks['MSFT']);
+            bag.Add(msft);
+        },
+        ()=>{
+            var googl = Calculate(stocks['GOOGL']);
+            bag.Add(googl);
+        },
+        ()=>{
+            var amaz = Calculate(stocks['AMAZ']);
+            bag.Add(amaz);
+        },
+    );
+
+    Stocks.ItemsSource = bag;
+    ```
+- ParallelOptions = configure maxdegreeofparalellism (number of cores/threads to use). 
+- Parallel.Invoke, Parallel.For and Parallel.ForEach block the calling thread until all the parallel operations completed. To avoid that you can use Task.Run to move it to another context (this reduces in one the number of thread available to process).
+    ```c#
+    private async void Search_Click(object sender, RoutedEventArgs e){
+        var bag = new ConcurrentBag<StockCalculation>();
+        await Task.Run(()=>{
+            Parallel.Invoke(
+                ()=>{
+                    var msft = Calculate(stocks['MSFT']);
+                    bag.Add(msft);
+                },
+                ()=>{
+                    var googl = Calculate(stocks['GOOGL']);
+                    bag.Add(googl);
+                },
+                ()=>{
+                    var amaz = Calculate(stocks['AMAZ']);
+                    bag.Add(amaz);
+                },
+            );
+        });
+        Stocks.ItemsSource = bag;
+    } 
+    ```
+- Aggregate exception:
+    - This will give you every exception from a different parallel operation as inner exceptions.
+    - Throwing an exception doesn't cancel a parallel operation. The exception is thrown until the entire collection of parallel operations is completed. 
+    ```c#
+    private async void Search_Click(object sender, RoutedEventArgs e){
+        var bag = new ConcurrentBag<StockCalculation>();
+        try{
+            await Task.Run(()=>{
+                    try{
+                        Parallel.Invoke(
+                            ()=>{
+                                var msft = Calculate(stocks['MSFT']);
+                                bag.Add(msft);
+                            },
+                            ()=>{
+                                var googl = Calculate(stocks['GOOGL']);
+                                bag.Add(googl);
+                            },
+                            ()=>{
+                                var amaz = Calculate(stocks['AMAZ']);
+                                bag.Add(amaz);
+                            },
+                        );
+                    }
+                    catch(Exception ex){
+                        throw ex;
+                    }
+                    
+                });
+        }catch(Exception ex){
+            Notes.Text = ex.Message;
+        }
+    
+        Stocks.ItemsSource = bag;
+    } 
+    ```
