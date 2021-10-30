@@ -426,3 +426,175 @@
         Stocks.ItemsSource = bag;
     } 
     ```
+- Paralell ForEach receives any IEnumerable as source. 
+    - Parallel ForEach and Parallel For return a ParallelLoopResult (and it has an IsCompleted property).
+    ```c#
+     private async void Search_Click(object sender, RoutedEventArgs e){
+        var bag = new ConcurrentBag<StockCalculation>();
+        try{
+            await Task.Run(()=>{
+                    try{
+                        Parallel.ForEach(stocks, (element)=>{
+                            var result = Calculate(element.Value);
+                            bag.Add(result);
+                        });
+                    }
+                    catch(Exception ex){
+                        throw ex;
+                    }
+                    
+                });
+        }catch(Exception ex){
+            Notes.Text = ex.Message;
+        }
+    
+        Stocks.ItemsSource = bag;
+    } 
+    ```
+    - Break won't automatically stop running operations. You must handle a requested break:
+    ```c#
+    Parallel.ForEach(stocks, (element, state)=>{
+        if(element.Key == "PS"){
+            state.Break();
+            //state.Stop(); //Other iterations will be able to see state.IsStopped property
+            return;
+        }else{   
+        var result = Calculate(element.Value);
+        bag.Add(result);
+        }
+    });
+    ```
+## Advanced Parallel Programming
+
+- Shared variables (regular For):
+    ```c#
+    static void Main(string[] args)
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        decimal total = 0;
+
+        for(int i=0; i < 100; i++)
+        {
+            total += Compute(i);
+        }
+        Console.WriteLine(total);
+        Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds}ms to run");
+    }
+
+    static Random random = new Random();
+    static decimal Compute(int value)
+    {
+        var randomMilliseconds = random.Next(10, 50);
+        var end = DateTime.Now + TimeSpan.FromMilliseconds(randomMilliseconds);
+        while(DateTime.Now < end)
+        {
+
+        }
+        return value + 0.5m;
+    }
+    ```
+- Shared variables (Parallel.For):
+    ```c#
+    class Program
+    {
+        static object syncRoot = new object();
+        static void Main(string[] args)
+        {
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            decimal total = 0;
+            Parallel.For(0, 100, (i) =>
+            {
+                var result = Compute(i);
+                lock (syncRoot)
+                {
+                    total += result;
+                }
+                /*Dont do the compute on the lock because it is a very expensive operation
+                lock (syncRoot)
+                {
+                    total += Compute(i);
+                }*/
+            });
+
+            Console.WriteLine(total);
+            Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds}ms to run");
+        }
+
+        static Random random = new Random();
+        static decimal Compute(int value)
+        {
+            var randomMilliseconds = random.Next(10, 50);
+            var end = DateTime.Now + TimeSpan.FromMilliseconds(randomMilliseconds);
+            while(DateTime.Now < end)
+            {
+
+            }
+            return value + 0.5m;
+        }
+    }
+    ```
+- Always prefer atomic operations over lock when possible as its less overheads and performs faster.
+- Interlocked from System.Threading provides atomic operations for variables that are shared by multiple threads. 
+- You cannot perform atomic operations with a decimal (only integers).
+    ```c#
+    static void Main(string[] args)
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        int total = 0;
+        Parallel.For(0, 100, (i) =>
+        {
+            var result = Compute(i);
+            Interlocked.Add(ref total, (int)result);
+            
+        });
+
+        Console.WriteLine(total);
+        Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds}ms to run");
+    }
+    ```
+- Interlocked.Exchange to work with reference types. 
+- Don't share lock objects. Each shared resource (total variable) should have its own lock object. 
+- Don't use a string as a lock, a type instance or the "this" keyword as lock. 
+- Cancel parallel operation. When a cancellation is detected no further iterations / operations will start.  
+    ```c#
+    static void Main(string[] args)
+    {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.CancelAfter(2000);
+
+        var parallelOptions = new ParallelOptions
+        {
+            CancellationToken = cancellationTokenSource.Token,
+            MaxDegreeOfParallelism = 1
+        };
+
+        int total = 0;
+        try
+        {
+            Parallel.For(0, 100, parallelOptions, (i) =>
+            {
+                var result = Compute(i);
+                Interlocked.Add(ref total, (int)result);
+
+            });
+        }
+        catch (OperationCanceledException ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        
+        Console.WriteLine(total);
+        Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds}ms to run");
+    }
+    /*The operation was canceled.
+    3403
+    It took 2391ms to run*/ //close to the 2000 requested
+    ```
+- ThreadLocal: provides storage that is local to a thread (Task in the Task.Parallel Library reuses threads). 
+- ThreadLocal / static data may be shared between multiple tasks that uses the same thread. 
