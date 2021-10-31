@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,20 +8,26 @@ namespace Paralellism
 {
     class Program
     {
-        static ThreadLocal<decimal?> threadLocal = new ThreadLocal<decimal?>();
+        
         static void Main(string[] args)
         {
-            var options = new ParallelOptions
-            {
-                MaxDegreeOfParallelism = 2
-            };
 
-            Parallel.For(0, 100, options, (i) =>
-            {
-                var currentValue = threadLocal.Value;
-                threadLocal.Value = Compute(i);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var result =
+            Enumerable.Range(0, 100)
+                .AsParallel()
+                .AsOrdered()
+                .Select(Compute)
+                .Take(10);
 
-            });
+            foreach (var item in result)
+            {
+                Console.WriteLine(item);
+            }
+
+        
+            Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds}ms to run"); 
             /*var stopwatch = new Stopwatch();
             stopwatch.Start();
 

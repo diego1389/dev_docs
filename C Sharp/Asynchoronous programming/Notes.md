@@ -598,3 +598,66 @@
     ```
 - ThreadLocal: provides storage that is local to a thread (Task in the Task.Parallel Library reuses threads). 
 - ThreadLocal / static data may be shared between multiple tasks that uses the same thread. 
+
+## PLINQ
+
+- Paralelize your LINQ to speed up execution. PLINQ will perform an internal analysis on the query to determine if it is suitable for parallelization. 
+- .AsParallel exposes a .WithCancellation(token) and .WithDegreeOfParallelism(2) methods. 
+- Don't overuse .AsParallel as it adds overhead. 
+- .AsSequential to get an Enumerable from a parallel query. 
+- If it is faster or unsafe it will run it sequentially unless you specify .WithExecutionMode(ParallelExecutionMode.ForceParallelism).
+- Concurrent Visualizer for Visual Studio 2019 extension.
+    ```c#
+    static void Main(string[] args)
+    {
+
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+        var result = 
+        Enumerable.Range(0, 100)
+            .Select(Compute)
+            .Sum();
+
+        Console.WriteLine(result);
+        Console.WriteLine($"It took {stopwatch.ElapsedMilliseconds}ms to run"); 
+        /*
+        5000.0
+        It took 2847ms to run*/
+    }
+    //Paralellism
+    var result = 
+            Enumerable.Range(0, 100)
+                .AsParallel()
+                .Select(Compute)
+                .Sum();
+    /*
+        5000.0
+        It took 443ms to run*/
+    ```
+- If we want to treat it as an ordered sequence to get the first 10 elements (this adds overhead and does not mean it executes it in order)
+    ```c#
+    var stopwatch = new Stopwatch();
+    stopwatch.Start();
+    var result =
+    Enumerable.Range(0, 100)
+        .AsParallel()
+        .AsOrdered()
+        .Select(Compute)
+        .Take(10);
+
+    foreach (var item in result)
+    {
+        Console.WriteLine(item);
+    }
+
+    /*0.5
+    1.5
+    2.5
+    3.5
+    4.5
+    5.5
+    6.5
+    7.5
+    8.5
+    9.5*/
+    ```
