@@ -1,8 +1,8 @@
 ﻿<Properties StartupConfiguration="{5085ACBD-18E4-4D5A-AFA9-0F38E26C2914}|Default">
-  <MonoDevelop.Ide.ItemProperties.Paralellism FirstBuild="True" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.ItemProperties.Paralellism PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Paralellism/Program.cs">
     <Files>
-      <File FileName="Paralellism/Program.cs" Line="1" Column="1" />
+      <File FileName="Paralellism/Program.cs" Line="28" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

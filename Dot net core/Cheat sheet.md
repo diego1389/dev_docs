@@ -1,4 +1,190 @@
-## Building your first ASP.Net Core Application
+# The complete guide to build restful apis with asp.net core.
+
+- Layout to configure the navigation bar, bootstrap, etc. 
+- wwwroot folder to store static files (html, cs, javascript).
+- appsettings.json to store db connection strings. Anything defined here can be accessed on runtime. 
+- Program.cs: entry point of the application. Main method with a build to create a host for the application. It also defines the Startup class (Startup.cs).
+- Startup.cs:
+    - ConfigureService
+        - Called by the runtime. 
+        - Use to add services to the container. 
+        - Dependency injection pattern. 
+    - Configure
+- Views and models:
+    - List.cshtml.cs
+    ```c#
+    namespace QuotesApi.Pages.Restaurants
+    {
+        public class ListModel : PageModel
+        {
+            public string Message { get; set; }
+            public void OnGet()
+            {
+                Message = "Hello world";
+            }
+        }
+    }
+    ```
+    - List.cshtml
+    ```html
+    @page
+    @model QuotesApi.Pages.Restaurants.ListModel
+    @{
+    }
+
+    <h1>Restaurant</h1>
+
+    @Model.Message
+    ```
+- Get message from appsettings.json:
+    ```json
+    {
+    "Logging": {
+        "LogLevel": {
+        "Default": "Information",
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information"
+        }
+    },
+    "AllowedHosts": "*",
+    "Message": "Hello from appsettings"
+    }
+    ```
+- List.cshtml.cs
+    ```c#
+    public class ListModel : PageModel
+    {
+        private readonly IConfiguration configuration;
+        public ListModel(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        public string Message { get; set; }
+        public void OnGet()
+        {
+            Message = configuration["Message"];
+        }
+    }
+    ```
+- Add interface and in memory data in new data project:
+    ```c#
+    using System.Collections.Generic;
+    using OdeToFood.Core;
+    using System.Linq;
+
+    namespace OdeToFood.Data
+    {
+        public interface IRestaurantData
+        {
+            IEnumerable<Restaurant> GetAll();
+        }
+
+        public class InMemoryRestaurant : IRestaurantData
+        {
+            List<Restaurant> restaurants;
+            public InMemoryRestaurant()
+            {
+                restaurants = new List<Restaurant>
+                {
+                    new Restaurant
+                    {
+                        Id = 1,
+                        Name = "Scotts Pizza",
+                        Location = "Maryland",
+                        Cuisine = CuisineType.Italian
+                    },
+                    new Restaurant
+                    {
+                        Id = 2,
+                        Name = "Cinnamon Club",
+                        Location = "San Francisco",
+                        Cuisine = CuisineType.None
+                    },
+                    new Restaurant
+                    {
+                        Id = 3,
+                        Name = "Joe's Tacos",
+                        Location = "New Mexico",
+                        Cuisine = CuisineType.Mexican
+                    }
+                };
+            }
+            public IEnumerable<Restaurant> GetAll()
+            {
+                return from restaurant in restaurants
+                    orderby restaurant.Name
+                    select restaurant;
+            }
+        }
+    }
+    ```
+- Configure project for dependency injection (use IRestaurantData) in Startup.cs ConfigureServices method:'
+    - Only do this in development, list is not thread safe. 
+    ```c#
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton<IRestaurantData, InMemoryRestaurant>();
+        services.AddRazorPages();
+    }
+    ```
+- Building the page model:
+    -List.cshtml.cs
+    ```c#
+    public class ListModel : PageModel
+    {
+        private readonly IConfiguration configuration;
+        private readonly IRestaurantData restaurantData;
+
+        public ListModel(IConfiguration configuration,
+            IRestaurantData restaurantData)
+        {
+            this.configuration = configuration;
+            this.restaurantData = restaurantData;
+        }
+
+        public string Message { get; set; }
+        public IEnumerable<Restaurant> Restaurants { get; set; }
+        public void OnGet()
+        {
+            Message = configuration["Message"];
+            Restaurants = restaurantData.GetAll();
+        }
+    }
+    ```
+- Display the information in the view:
+    - List.cshtml
+    ```html
+    @page
+    @model QuotesApi.Pages.Restaurants.ListModel
+    @{
+    }
+
+    <h1>Restaurants</h1>
+    <table class="table">
+        @foreach(var restaurant in Model.Restaurants)
+        {
+        <tr>
+            <td>
+                @restaurant.Name
+            </td>
+            <td>
+                @restaurant.Location
+            </td>
+            <td>
+                @restaurant.Cuisine
+            </td>
+        </tr>
+        }
+    </table>
+    ```
+
+## Working with models and model binding
+
+- Building a search form:
+
+# Building your first ASP.Net Core Application
 - Create ASP.Net core application
 - Select Asp.net core > 2.0
 - Empty
