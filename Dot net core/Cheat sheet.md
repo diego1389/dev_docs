@@ -183,6 +183,177 @@
 ## Working with models and model binding
 
 - Building a search form:
+    ```html
+    @page
+    @model QuotesApi.Pages.Restaurants.ListModel
+    @{
+    }
+
+    <h1>Restaurants</h1>
+    <form method="get" >
+        <div class="form-group">
+            <div class="input-group">
+                <input type="search"
+                        class="form-control"
+                        value=""
+                        name="searchTerm"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default">
+                        Search
+                    </button>
+                </span>
+            </div>
+        </div>
+    </form>
+    <table class="table">
+        @foreach(var restaurant in Model.Restaurants)
+        {
+        <tr>
+            <td>
+                @restaurant.Name
+            </td>
+            <td>
+                @restaurant.Location
+            </td>
+            <td>
+                @restaurant.Cuisine
+            </td>
+        </tr>
+        }
+    </table>
+    <div>@Model.Message</div>
+    ````
+    - List.cshtml.cs
+    ```c#
+    public void OnGet(string searchTerm)
+    {
+        Message = configuration["Message"];
+        Restaurants = restaurantData.GetRestaurantsByName(searchTerm);
+    }
+    ```
+- Use [BindProperty] to use a variable as an input and output variable. By default it works just for Post operations but you can add SupportGet. 
+    - List.cshtml
+    ```html
+    <form method="get" >
+        <div class="form-group">
+            <div class="input-group">
+                <input type="search"
+                        class="form-control"
+                        asp-for="SearchTerm"/> <!--Without @ (we're already working with instance of model)-->
+                <span class="input-group-btn">
+                    <button class="btn btn-default">
+                        Search
+                    </button>
+                </span>
+            </div>
+        </div>
+    </form>
+    ```
+    - List.cshtml.cs
+    ```c#
+    [BindProperty(SupportsGet =true)]
+    public string SearchTerm { get; set; }
+    public void OnGet()
+    {
+        Message = configuration["Message"];
+        Restaurants = restaurantData.GetRestaurantsByName(SearchTerm);
+    }
+    ```
+- Add detail view:
+    - Detal.cshtml
+    ```html
+    @page
+    @model QuotesApi.Pages.Restaurants.DetailModel
+    @{
+    }
+    <h2>@Model.Restaurant.Name</h2>
+    <div>
+        Id: @Model.Restaurant.Id
+    </div>
+    <div>
+        Location: @Model.Restaurant.Location
+    </div>
+    <div>
+        Cuisine: @Model.Restaurant.Cuisine
+    </div>
+    <a asp-page="./List" class="btn bnt-default">All restaurants</a>
+    ```
+- Modify the list to send the restaurantId:
+    -List.cshtml
+    ```html
+    <table class="table">
+    @foreach(var restaurant in Model.Restaurants)
+    {
+    <tr>
+        <td>
+            @restaurant.Name
+        </td>
+        <td>
+            @restaurant.Location
+        </td>
+        <td>
+            @restaurant.Cuisine
+        </td>
+        <td>
+            <a class="btn btn-default"
+               asp-page="./Detail" asp-route-restaurantId="@restaurant.Id">
+                Details
+            </a>
+        </td>
+    </tr>
+    }
+    </table>
+    ```
+- If you type https://localhost:5001/Restaurants/Detail/5 you get an error. You need to specify that the route requires a restaurantId parameter:
+    - Details.cshtml
+    ```html
+    @page "{restaurantId:int}"
+    @model QuotesApi.Pages.Restaurants.DetailModel
+    @{
+    }
+    <h2>@Model.Restaurant.Name</h2>
+    <div>
+        Id: @Model.Restaurant.Id
+    </div>
+    <div>
+        Location: @Model.Restaurant.Location
+    </div>
+    <div>
+        Cuisine: @Model.Restaurant.Cuisine
+    </div>
+    <a asp-page="./List" class="btn bnt-default">All restaurants</a>
+    ```
+- Show details 
+    -Details.cshtml.cs
+    ```c#
+    public class DetailModel : PageModel
+    {
+        private readonly IRestaurantData restaurantData;
+        public DetailModel(IRestaurantData restaurantData)
+        {
+            this.restaurantData = restaurantData;
+        }
+        public Restaurant Restaurant { get; set; }
+        public void OnGet(int restaurantId)
+        {
+            Restaurant = restaurantData.GetById(restaurantId);
+        }
+    }
+    ```
+- Handling bad request:
+    - Modify the OnGet() method to return an IActionResult.
+    - Detail.cshtml.cs
+    ```c#
+    public IActionResult OnGet(int restaurantId)
+    {
+        Restaurant = restaurantData.GetById(restaurantId);
+        if(Restaurant == null)
+        {
+            return RedirectToPage("./NotFound");
+        }
+        return Page();
+    }
+    ```
 
 # Building your first ASP.Net Core Application
 - Create ASP.Net core application

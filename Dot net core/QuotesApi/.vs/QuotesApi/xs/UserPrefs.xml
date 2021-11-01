@@ -1,30 +1,33 @@
 ﻿<Properties StartupConfiguration="{605CC0B4-3448-4699-B276-34E404B20A3B}|Default">
   <MonoDevelop.Ide.ItemProperties.QuotesApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="OdeToFood.Data/IRestaurantData.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="QuotesApi/Pages/Restaurants/NotFound.cshtml">
     <Files>
-      <File FileName="QuotesApi/Startup.cs" Line="1" Column="1" />
-      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml" Line="5" Column="1" />
-      <File FileName="QuotesApi/appsettings.json" Line="10" Column="37" />
-      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml.cs" Line="24" Column="6" />
-      <File FileName="OdeToFood.Core/Class1.cs" Line="1" Column="1" />
-      <File FileName="OdeToFood.Core/CuisineType.cs" Line="1" Column="1" />
-      <File FileName="OdeToFood.Data/IRestaurantData.cs" Line="1" Column="1" />
+      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml" Line="1" Column="6" />
+      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml.cs" Line="12" Column="2" />
+      <File FileName="QuotesApi/Pages/Restaurants/Detail.cshtml" Line="4" Column="2" />
+      <File FileName="QuotesApi/Pages/Restaurants/Detail.cshtml.cs" Line="22" Column="53" />
+      <File FileName="OdeToFood.Core/Restaurant.cs" Line="1" Column="1" />
+      <File FileName="OdeToFood.Data/IRestaurantData.cs" Line="46" Column="93" />
+      <File FileName="QuotesApi/Pages/Restaurants/NotFound.cshtml" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="QuotesApi" expanded="True">
             <Node name="OdeToFood.Core" expanded="True" />
-            <Node name="OdeToFood.Data" expanded="True">
-              <Node name="IRestaurantData.cs" selected="True" />
+            <Node name="OdeToFood.Data" expanded="True" />
+            <Node name="QuotesApi" expanded="True">
+              <Node name="Pages" expanded="True">
+                <Node name="Restaurants" expanded="True">
+                  <Node name="NotFound.cshtml" selected="True" />
+                </Node>
+              </Node>
             </Node>
-            <Node name="QuotesApi" expanded="True" />
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.OdeToFood.Data FirstBuild="True" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
