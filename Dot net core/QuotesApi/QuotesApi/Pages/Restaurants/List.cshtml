@@ -37,7 +37,14 @@
                 Details
             </a>
         </td>
+        <td>
+            <a class="btn btn-default"
+               asp-page="./Edit" asp-route-restaurantId="@restaurant.Id">
+                Edit
+            </a>
+        </td>
     </tr>
     }
 </table>
+<a asp-page=".\Edit" class="btn btn-default">Add New</a>
 <div>@Model.Message</div>

@@ -1,14 +1,16 @@
 ﻿<Properties StartupConfiguration="{605CC0B4-3448-4699-B276-34E404B20A3B}|Default">
   <MonoDevelop.Ide.ItemProperties.QuotesApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="QuotesApi/Pages/Restaurants/NotFound.cshtml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="QuotesApi/Program.cs">
     <Files>
-      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml" Line="1" Column="6" />
-      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml.cs" Line="12" Column="2" />
-      <File FileName="QuotesApi/Pages/Restaurants/Detail.cshtml" Line="4" Column="2" />
-      <File FileName="QuotesApi/Pages/Restaurants/Detail.cshtml.cs" Line="22" Column="53" />
-      <File FileName="OdeToFood.Core/Restaurant.cs" Line="1" Column="1" />
-      <File FileName="OdeToFood.Data/IRestaurantData.cs" Line="46" Column="93" />
-      <File FileName="QuotesApi/Pages/Restaurants/NotFound.cshtml" Line="1" Column="1" />
+      <File FileName="OdeToFood.Data/IRestaurantData.cs" Line="11" Column="26" IsPinned="True" />
+      <File FileName="OdeToFood.Core/Restaurant.cs" Line="1" Column="1" IsPinned="True" />
+      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml" Line="42" Column="32" />
+      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml.cs" />
+      <File FileName="QuotesApi/Pages/Restaurants/Edit.cshtml" Line="21" Column="73" />
+      <File FileName="QuotesApi/Pages/Restaurants/Edit.cshtml.cs" Line="44" Column="14" />
+      <File FileName="QuotesApi/Pages/Restaurants/Detail.cshtml.cs" />
+      <File FileName="QuotesApi/Pages/Restaurants/Detail.cshtml" />
+      <File FileName="QuotesApi/Program.cs" Line="16" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -19,9 +21,11 @@
             <Node name="QuotesApi" expanded="True">
               <Node name="Pages" expanded="True">
                 <Node name="Restaurants" expanded="True">
-                  <Node name="NotFound.cshtml" selected="True" />
+                  <Node name="Detail.cshtml" expanded="True" />
+                  <Node name="Edit.cshtml" expanded="True" />
                 </Node>
               </Node>
+              <Node name="Program.cs" selected="True" />
             </Node>
           </Node>
         </State>

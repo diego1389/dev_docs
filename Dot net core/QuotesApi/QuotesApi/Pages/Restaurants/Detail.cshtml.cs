@@ -14,6 +14,8 @@ namespace QuotesApi.Pages.Restaurants
             this.restaurantData = restaurantData;
         }
         public Restaurant Restaurant { get; set; }
+        [TempData]
+        public string Message { get; set; }
         public IActionResult OnGet(int restaurantId)
         {
             Restaurant = restaurantData.GetById(restaurantId);

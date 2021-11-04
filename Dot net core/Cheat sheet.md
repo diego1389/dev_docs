@@ -354,6 +354,282 @@
         return Page();
     }
     ```
+## Editing data with Razor pages
+
+- Add a new Edit view:
+    - Edit.cshtml
+    ```html
+    @page "{restaurantId:int}"
+    @model QuotesApi.Pages.Restaurants.EditModel
+    @{
+    }
+    <h2>Editing @Model.Restaurant.Name</h2>
+    <form method="post">
+        <input type="hidden" asp-for="Restaurant.Id" />
+        <div class="form-group">
+            <label asp-for="Restaurant.Name"></label>
+            <input asp-for="Restaurant.Name" class="form-control " />
+        </div>
+        <div class="form-group">
+            <label asp-for="Restaurant.Location"></label>
+            <input asp-for="Restaurant.Location" class="form-control " />
+        </div>
+        <div class="form-group">
+            <label asp-for="Restaurant.Cuisine "></label>
+            <select class="form-control" asp-for="Restaurant.Cuisine" asp-items="Model.Cuisines"></select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+    ```
+    - Edit.cshtml.cs
+    ```cs
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using OdeToFood.Core;
+    using OdeToFood.Data;
+
+    namespace QuotesApi.Pages.Restaurants
+    {
+        public class EditModel : PageModel
+        {
+            private readonly IRestaurantData restaurantData;
+            private readonly IHtmlHelper htmlHelper;
+
+            public Restaurant Restaurant  { get; set; }
+            public IEnumerable<SelectListItem> Cuisines { get; set; }
+
+            public EditModel(IRestaurantData restaurantData,
+                IHtmlHelper htmlHelper)
+            {
+                this.restaurantData = restaurantData;
+                this.htmlHelper = htmlHelper;
+            }
+
+            public IActionResult OnGet(int restaurantId)
+            {
+                Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+                Restaurant = restaurantData.GetById(restaurantId);
+                if(Restaurant == null)
+                {
+                    return RedirectToPage("./NotFound");
+                }
+                return Page();
+            }
+        }
+    }
+    ```
+- Post a new resturant.
+    - Edit.cshtml.cs
+    ```c#
+    using System.Collections.Generic;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using Microsoft.AspNetCore.Mvc.Rendering;
+    using OdeToFood.Core;
+    using OdeToFood.Data;
+
+    namespace QuotesApi.Pages.Restaurants
+    {
+        public class EditModel : PageModel
+        {
+            private readonly IRestaurantData restaurantData;
+            private readonly IHtmlHelper htmlHelper;
+
+            [BindProperty]
+            public Restaurant Restaurant  { get; set; }
+            public IEnumerable<SelectListItem> Cuisines { get; set; }
+
+            public EditModel(IRestaurantData restaurantData,
+                IHtmlHelper htmlHelper)
+            {
+                this.restaurantData = restaurantData;
+                this.htmlHelper = htmlHelper;
+            }
+
+            public IActionResult OnGet(int restaurantId)
+            {
+                Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+                Restaurant = restaurantData.GetById(restaurantId);
+                if(Restaurant == null)
+                {
+                    return RedirectToPage("./NotFound");
+                }
+                return Page();
+            }
+
+            public IActionResult OnPost()
+            {
+                Restaurant = restaurantData.Update(Restaurant);
+                restaurantData.Commit();
+                return Page(); 
+            }
+        }
+    }
+- You can add validations as DataAnnotations.
+    - You can also implement IValidatableObject for more complex validations
+    ```c#
+    using System.ComponentModel.DataAnnotations;
+    namespace OdeToFood.Core
+    {
+        public class Restaurant
+        {
+            public int Id { get; set; }
+            [Required, MaxLength(80)]
+            public string Name  { get; set; }
+            [Required, MaxLength(256)]
+            public string Location { get; set; }
+            public CuisineType Cuisine { get; set; }
+        }
+    }
+    ```
+- Verify validation errors with ModelState:
+    ```c#
+     public IActionResult OnPost()
+    {
+        Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+        if (ModelState.IsValid)
+        {
+            restaurantData.Update(Restaurant);
+            restaurantData.Commit();
+        }
+        return Page(); 
+    }
+    ```
+- Show validation errors to the user:
+    - Edit.cshtml
+    ```html
+    <form method="post">
+        <input type="hidden" asp-for="Restaurant.Id" />
+        <div class="form-group">
+            <label asp-for="Restaurant.Name"></label>
+            <input asp-for="Restaurant.Name" class="form-control " />
+            <span class="text-danger" asp-validation-for="Restaurant.Name"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Restaurant.Location"></label>
+            <input asp-for="Restaurant.Location" class="form-control " />
+            <span class="text-danger" asp-validation-for="Restaurant.Location"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Restaurant.Cuisine "></label>
+            <select class="form-control" asp-for="Restaurant.Cuisine" asp-items="Model.Cuisines"></select>
+            <span class="text-danger" asp-validation-for="Restaurant.Cuisine"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+    ```
+- You don't want to redirect the user to the same page once they finish a post operation because if they refresn the operation will be repetead (duplicate data, double charge in credit card, etc).
+    -Edit.cshtml.cs
+    ```c#
+        public IActionResult OnPost()
+    {
+        Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+        if (ModelState.IsValid)
+        {
+            restaurantData.Update(Restaurant);
+            restaurantData.Commit();
+            return RedirectToPage("./Detail", new { restaurantId = Restaurant.Id});
+        }
+        return Page(); 
+    }
+    ```
+- Add new restaurant:
+    - List.cshtml
+    ```html
+    <a asp-page=".\Edit" class="btn btn-primary">Add New</a>
+    ```
+    - Edit.cshtml
+    ```html
+    @page "{restaurantId:int?}"
+    ```
+    -Edit.cshtml.cs
+    ```c#
+     public IActionResult OnGet(int? restaurantId)
+    {
+        Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+        if (restaurantId.HasValue)
+        {
+            Restaurant = restaurantData.GetById(restaurantId.Value);
+            if (Restaurant == null)
+            {
+                return RedirectToPage("./NotFound");
+            }
+        }
+        else
+        {
+            Restaurant = new Restaurant();
+        }
+        
+
+        return Page();
+    }
+
+    public IActionResult OnPost()
+    {
+        
+        if (!ModelState.IsValid)
+        {
+            Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+            return Page();
+        }
+
+        if(Restaurant.Id > 0)
+        {
+            restaurantData.Update(Restaurant);
+        }
+        else
+        {
+            restaurantData.Add(Restaurant);
+        }
+
+        restaurantData.Commit();
+        return RedirectToPage("./Detail", new { restaurantId = Restaurant.Id });
+    }
+    ```
+- Confirming the last operation:
+    - If .netcore (RedirectToPage) doesn't find the value in the route it will place it in the query string.
+    - We an also use TempData dictionary.
+    - Edit.cshtml.cs
+    ```c#
+    public IActionResult OnPost()
+    {
+
+        if (!ModelState.IsValid)
+        {
+            Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+            return Page();
+        }
+
+        if (Restaurant.Id > 0)
+        {
+            restaurantData.Update(Restaurant);
+        }
+        else
+        {
+            restaurantData.Add(Restaurant);
+        }
+
+        restaurantData.Commit();
+        TempData["Message"] = "Restaurant saved";
+        return RedirectToPage("./Detail", new { restaurantId = Restaurant.Id });
+
+    }
+    ```
+    - Detail.cshtml.cs
+    ```c#
+    [TempData]
+    public string Message { get; set; }
+    ```
+    - Detail.cshtml
+    ```html
+    @if(Model.Message != null)
+    {
+        <div class="alert alert-info">@Model.Message</div>
+    }
+    ```
+
 
 # Building your first ASP.Net Core Application
 - Create ASP.Net core application
