@@ -629,6 +629,290 @@
         <div class="alert alert-info">@Model.Message</div>
     }
     ```
+## Working with SQL server and the Entity framework core
+
+- Install dependencies in the data project:
+    ```json
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.11">
+    ```
+- Create the DbContext class:
+    ```c#
+    using Microsoft.EntityFrameworkCore;
+    using OdeToFood.Core;
+
+    namespace OdeToFood.Data
+    {
+        public class OdeToFoodDbContext : DbContext
+        {
+            public DbSet<Restaurant> Restaurants { get; set; }
+        }
+    }
+    ```
+- dotnet ef dbcontext list
+- You can create the database using a migration (dotnet ef ... command).
+- Configure the DBContext:
+    ```c#
+    public class OdeToFoodDbContext : DbContext
+    {
+        public OdeToFoodDbContext(DbContextOptions<OdeToFoodDbContext> options) : base(options)
+        {
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new OdeToFoodConfiguration());
+        }
+
+        public DbSet<Restaurant> Restaurants { get; set; }
+    }
+    ```
+- OdeToFoodConfiguration.cs
+    ```c#
+    public class OdeToFoodConfiguration : IEntityTypeConfiguration<Restaurant>
+    {
+        public OdeToFoodConfiguration()
+        {
+        }
+
+        public void Configure(EntityTypeBuilder<Restaurant> builder)
+        {
+            builder.HasKey(prop => prop.Id);
+            builder.Property(prop => prop.Name)
+                .HasMaxLength(80)
+                .IsRequired();
+            builder.Property(prop => prop.Location)
+                .HasMaxLength(256)
+                .IsRequired();
+            builder.Property(prop => prop.Cuisine)
+                .IsRequired();
+        }
+    }
+    ```
+- Add connection string in appsettings.json:
+    ```json
+    {
+        "ConnectionStrings": {
+            "DefaultConnection": "Server=localhost;Port=5433;Database=Food;Username=postgres;Password=******"
+        },
+        "Logging": {
+            "LogLevel": {
+            "Default": "Information",
+            "Microsoft": "Warning",
+            "Microsoft.Hosting.Lifetime": "Information"
+            }
+        },
+        "AllowedHosts": "*",
+        "Message": "Hello from appsettings"
+    }
+    ```
+
+- Add a new class and implement IRestaurantData using entity framework dbcontext:
+    - Entity framework attach: to start tracking changes about this object that already exists in the db.
+    - SqlRestaurantData.cs
+    ```c#
+    using System.Collections.Generic;
+    using OdeToFood.Core;
+    using System.Linq;
+    using Microsoft.EntityFrameworkCore;
+
+    namespace OdeToFood.Data
+    {
+        public class SqlRestaurantData : IRestaurantData
+        {
+            private readonly OdeToFoodDbContext db;
+
+            public SqlRestaurantData(OdeToFoodDbContext db)
+            {
+                this.db = db;
+            }
+
+            public Restaurant Add(Restaurant newRestaurant)
+            {
+                db.Add(newRestaurant);
+                return newRestaurant;
+            }
+
+            public int Commit()
+            {
+                return db.SaveChanges(); //returns the number of rows affected
+            }
+
+            public Restaurant Delete(int id)
+            {
+                var restaurant = GetById(id);
+                if(restaurant != null)
+                {
+                    db.Restaurants.Remove(restaurant);
+                }
+                return restaurant;
+            }
+
+            public Restaurant GetById(int restaurantId)
+            {
+                return db.Restaurants.Find(restaurantId);
+            }
+
+            public IEnumerable<Restaurant> GetRestaurantsByName(string name)
+            {
+                var query = from r in db.Restaurants
+                            where r.Name.StartsWith(name) || string.IsNullOrEmpty(name)
+                            select r;
+
+                return query;
+            }
+
+            public Restaurant Update(Restaurant updatedRestaurant)
+            {
+                var entity = db.Restaurants.Attach(updatedRestaurant);
+                entity.State = EntityState.Modified;
+                return updatedRestaurant;
+            }
+        }
+    }
+    ```
+- Modifying the service register:
+    - AddScoped (dont use Singleton for data access). This means to have it scoped to a particular http request (an instance per request).
+    - Startup.cs
+    ```c#
+    public void ConfigureServices(IServiceCollection services)
+    {       
+        services.AddRazorPages();
+        services.AddDbContextPool<OdeToFoodDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))); //UseSqlServer
+        services.AddScoped<IRestaurantData, SqlRestaurantData>();
+    }
+    ```
+## Building a UI
+- The _ before a .cshtml file indicates this component is part of another view and it is not redirected to it directly.
+- @RenderBody in _layout page to render the pages content.
+- You can also use @RenderSection.
+    -_Layout.cshtml
+    ```html
+     <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+       @RenderSection("footer", required: false)
+    </footer>
+    ```
+- Use the footer section inside a view:
+    - List.cshtml
+    ```html
+    <a asp-page=".\Edit" class="btn btn-default">Add New</a>
+    @section footer{
+        <div>@Model.Message</div>
+    }
+    ```
+- Define a new delete razor page:
+    - To explicitly define a layout for a view:
+    - Delete.cshtml
+    ```html
+    @page "{restaurantid}"
+    @model QuotesApi.Pages.Restaurants.DeleteModel
+    @{
+        Layout = "_Layout2";
+    }
+    <h2>Delete!</h2>
+    <div class="alert alert-danger">
+        Are you sure you want to delete @Model.Restaurant.Name?
+    </div>
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Yes!</button>
+        <a asp-page="List" class="btn btn-default">Cancel</a>
+    </form>
+    ```
+    - Delete.cshtml.cs
+    ```c#
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using OdeToFood.Core;
+    using OdeToFood.Data;
+
+    namespace QuotesApi.Pages.Restaurants
+    {
+        public class DeleteModel : PageModel
+        {
+            private readonly IRestaurantData restaurantData;
+            public Restaurant Restaurant { get; set; }
+
+            public DeleteModel(IRestaurantData restaurantData)
+            {
+                this.restaurantData = restaurantData;
+            }
+
+            public IActionResult OnGet(int restaurantId)
+            {
+                Restaurant = restaurantData.GetById(restaurantId);
+                if(Restaurant == null)
+                {
+                    return RedirectToPage("./NotFound");
+                }
+                return Page();
+            }
+
+            public IActionResult OnPost(int restaurantId)
+            {
+                var restaurant = restaurantData.Delete(restaurantId);
+                restaurantData.Commit();
+
+                if(restaurant == null)
+                {
+                    return RedirectToPage("./NotFound");
+                }
+
+                TempData["Message"] = $"{restaurant.Name} was deleted";
+                return RedirectToPage("./List");
+            }
+        }
+    }
+    ```
+- _ViewStart.cshtml especifies that the views require a layout:
+    - _ViewStart.cshtml:
+    ```html
+    @{
+        Layout = "_Layout";
+    }
+    ```
+- Partial views:
+    - Add Razor view (it doesn't have a model).
+    - _Summary.cshtml
+    ```html
+    @using OdeToFood.Core 
+    @model Restaurant
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>@Model.Name</h3>
+        </div>
+        <div class="panel-body">
+            <span>Location: @Model.Location</span>
+            <span>Cuisine: @Model.Cuisine</span>
+        </div>
+        <div class="footer">
+            <a class="btn btn-default"
+            asp-page="./Detail" asp-route-restaurantId="@Model.Id">
+                Details
+            </a>
+            <a class="btn btn-default"
+            asp-page="./Edit" asp-route-restaurantId="@Model.Id">
+                Edit
+            </a>
+            <a class="btn btn-default"
+            asp-page="./Delete" asp-route-restaurantId="@Model.Id">
+                Delete
+            </a>
+        </div>
+    </div>
+    ```
 
 
 # Building your first ASP.Net Core Application
@@ -652,7 +936,7 @@
   
 - **Startup.cs**
     - Configure how the application behaves.
-    - Configure method configures the http processuing pipeline. Each http request will find the response to that request in this method. 
+    - Configure method configures the http processing pipeline. Each http request will find the response to that request in this method. 
     - You can customize the Configure method to use MVC.
     - There is no global.asax nor web.config. 
     - There is no configuration to hold items like database connection string, etc. 
