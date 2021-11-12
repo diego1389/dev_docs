@@ -6,9 +6,15 @@
 
   <ItemGroup>
     <None Remove="Pages\Restaurants\" />
+    <None Remove="ViewComponents\" />
+    <None Remove="Pages\Shared\Components\" />
+    <None Remove="Pages\Shared\Components\RestaurantCount\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\Restaurants\" />
+    <Folder Include="ViewComponents\" />
+    <Folder Include="Pages\Shared\Components\" />
+    <Folder Include="Pages\Shared\Components\RestaurantCount\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OdeToFood.Data\OdeToFood.Data.csproj">

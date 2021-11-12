@@ -1,15 +1,17 @@
 ﻿<Properties StartupConfiguration="{605CC0B4-3448-4699-B276-34E404B20A3B}|Default">
   <MonoDevelop.Ide.ItemProperties.QuotesApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="QuotesApi/Pages/Restaurants/_Summary.cshtml">
+  <MonoDevelop.Ide.Workbench ActiveDocument="QuotesApi/appsettings.Development.json">
     <Files>
-      <File FileName="QuotesApi/Pages/Shared/_Layout.cshtml" Line="23" Column="25" />
-      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml" Line="48" Column="17" />
-      <File FileName="QuotesApi/Pages/Restaurants/Delete.cshtml" Line="5" Column="2" />
-      <File FileName="QuotesApi/Pages/Restaurants/Delete.cshtml.cs" Line="42" Column="68" />
-      <File FileName="QuotesApi/Pages/Restaurants/Edit.cshtml.cs" Line="1" Column="1" />
-      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml.cs" Line="30" Column="10" />
-      <File FileName="QuotesApi/Pages/_ViewStart.cshtml" Line="1" Column="1" />
-      <File FileName="QuotesApi/Pages/Restaurants/_Summary.cshtml" Line="1" Column="1" />
+      <File FileName="QuotesApi/Pages/Shared/_Layout.cshtml" Line="41" Column="3" />
+      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml" Line="1" Column="1" />
+      <File FileName="QuotesApi/ViewComponents/RestaurantCountViewComponent.cs" Line="16" Column="1" />
+      <File FileName="QuotesApi/Pages/_ViewImports.cshtml" />
+      <File FileName="QuotesApi/Properties/launchSettings.json" Line="18" Column="1" />
+      <File FileName="QuotesApi/Startup.cs" Line="38" Column="1" />
+      <File FileName="QuotesApi/Program.cs" Line="16" Column="1" />
+      <File FileName="QuotesApi/Pages/Restaurants/List.cshtml.cs" Line="40" Column="2" />
+      <File FileName="QuotesApi/appsettings.Development.json" Line="1" Column="1" />
+      <File FileName="QuotesApi/appsettings.json" Line="13" Column="2" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -20,9 +22,18 @@
             <Node name="QuotesApi" expanded="True">
               <Node name="Pages" expanded="True">
                 <Node name="Restaurants" expanded="True">
-                  <Node name="_Summary.cshtml" selected="True" />
+                  <Node name="List.cshtml" expanded="True" />
                 </Node>
-                <Node name="Shared" expanded="True" />
+                <Node name="Shared" expanded="True">
+                  <Node name="Components" expanded="True">
+                    <Node name="RestaurantCount" expanded="True" />
+                  </Node>
+                </Node>
+              </Node>
+              <Node name="Properties" expanded="True" />
+              <Node name="ViewComponents" expanded="True" />
+              <Node name="appsettings.json" expanded="True">
+                <Node name="appsettings.Development.json" selected="True" />
               </Node>
             </Node>
           </Node>
@@ -35,7 +46,8 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/QuotesApi/OdeToFood.Data/OdeToFoodDbContext.cs" relfile="OdeToFood.Data/OdeToFoodDbContext.cs" line="13" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/QuotesApi/OdeToFood.Data/SqlRestaurantData.cs" relfile="OdeToFood.Data/SqlRestaurantData.cs" line="49" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/QuotesApi/QuotesApi/Startup.cs" relfile="QuotesApi/Startup.cs" line="38" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/QuotesApi/QuotesApi/Pages/Restaurants/List.cshtml.cs" relfile="QuotesApi/Pages/Restaurants/List.cshtml.cs" line="33" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

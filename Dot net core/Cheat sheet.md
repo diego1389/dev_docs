@@ -897,7 +897,7 @@
             <span>Location: @Model.Location</span>
             <span>Cuisine: @Model.Cuisine</span>
         </div>
-        <div class="footer">
+        <div class="panel-footer">
             <a class="btn btn-default"
             asp-page="./Detail" asp-route-restaurantId="@Model.Id">
                 Details
@@ -913,7 +913,233 @@
         </div>
     </div>
     ```
+- Rendering the partial view:
+    - List.cshtml
+    ```html
+    @foreach(var restaurant in Model.Restaurants)
+    {
+        <partial name="_Summary" model="restaurant"/>
+    }
+    ```
+- ViewComponents
+    - A ViewComponent doesn't respond to an http request (not OnGet or OnPost methods).
+    - It is embedded inside another view like th partial views.
+    - It is similar to MVC. 
+    - RestaurantCountViewComponent.cs
+    ```c#
+    using Microsoft.AspNetCore.Mvc;
+    using OdeToFood.Data;
 
+    namespace QuotesApi.ViewComponents
+    {
+        public class RestaurantCountViewComponent : ViewComponent 
+        {
+            private readonly IRestaurantData restaurantData;
+
+            public RestaurantCountViewComponent(IRestaurantData restaurantData)
+            {
+                this.restaurantData = restaurantData;
+            }
+
+            public IViewComponentResult Invoke()
+            {
+                var count = restaurantData.GetCountOfRestaurants();
+                return View(count); 
+            }
+        }
+    }
+    ```
+    - The view has to be in a folder the matches exactly the ViewComponent name (Shared/Components/RestaurantCount).
+    - We create it the view in the share folder because we want to use it in every page in the application.
+        - Shared/Components/RestaurantCount/Default.cshtml
+        ```html
+        @model int
+        <div class="well">
+            There are @Model restaurants here. <a asp-page="/Restaurants/List">See them all!</a>
+        </div>
+        ```
+    - We need a special taghelper to display the component:
+        - ViewImports.cshtml
+        ```html
+        @using QuotesApi
+        @namespace QuotesApi.Pages
+        @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+        @addTagHelper *, QuotesApi 
+        ```
+    - Render the ViewComponent:
+    - _Layout.html
+    ```html
+    <footer class="border-top footer text-muted">
+    <vc:restaurant-count></vc:restaurant-count>
+    @RenderSection("footer", required: false)
+    </footer>
+    ```
+## Integrating client side
+
+- Properties -> launchSettings.json to control environments (profile -> environment variables). 
+- Define environment specif scripts in views:
+    - ClientRestaurants.cshtml
+    ```html
+    <environment include="Development">
+        <script src="..."/>
+    </environment>
+    ```
+- The Startup.cs Configure configures the .net core application configuration.
+    - Add the middleware pipeline (every http request that comes to the application has to pass through that pipeline).
+
+## Working with the internals of Asp.net core
+
+- launchSettings.json to define how the application behaves.
+- To configure dotnet run behavior:
+    - launchSettings.json
+    ```json
+    "QuotesApi": {
+        "commandName": "Project",
+        "launchBrowser": true,
+        "applicationUrl": "https://localhost:5001;http://localhost:5000",
+        "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+    }
+    ```
+- Program.cs CreateWebHostBuilder method to create a web host. Default logging, settings, etc. Also defines the class that will configure the application (Startup class).
+- .Net core instanciates that class and call two methods: ConfigureServices and Configure.
+- Configure is used for to define the middleware the applicattion will use. 
+    - We install middleware by invoking extension methods of an object that implements IApplicationBuilder interface. 
+    - Procesing pipeline for http request messges.
+    - Logger -> Authorizer -> Router.
+    - The middleware pipeline is bidirectional: requests go in and responses flow out.
+    - Each piece of middleware should be able to inspect the incoming request and it's also going to know when the output response is occurring.
+    - Startup.cs
+    -  app.UseDeveloperExceptionPage(); is located at the beggining of the pipeline because it is also the last part that is gonna be called (display the exception page in the http response with a lot of detail so it is not used in prod).
+    - app.UseAuthentication() is used later in the pipeline so other pieces of middleware can use the identity of the user. 
+    ```c#
+       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorPages();
+        });
+    }
+    ```
+- A request delegate is a method that takes an http request as a parameter and returns a Task.
+- The http request is represent as the HttpContext object. 
+    - Startup.cs
+    ```c#
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        app.Use(SayHelloMiddleware);
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorPages();
+        });
+    }
+
+    private RequestDelegate SayHelloMiddleware(RequestDelegate next)
+    {
+        return async ctx =>
+        {
+            if (ctx.Request.Path.StartsWithSegments("/hello"))
+            {
+                await ctx.Response.WriteAsync("Hello, World!");
+            }
+            else
+            {
+                await next(ctx); //continue with the pipeline if route is different than /hello
+            }
+        
+        };
+    }
+    ```
+- Loggin application messages:
+    - List.cshtml.cs
+    ```c#
+    using Microsoft.Extensions.Logging;
+    using OdeToFood.Core;
+    using OdeToFood.Data;
+
+    namespace QuotesApi.Pages.Restaurants
+    {
+        public class ListModel : PageModel
+        {
+            private readonly IConfiguration configuration;
+            private readonly IRestaurantData restaurantData;
+            private readonly ILogger<ListModel> logger;
+
+            public ListModel(IConfiguration configuration,
+                IRestaurantData restaurantData,
+                ILogger<ListModel> logger)
+            {
+                this.configuration = configuration;
+                this.restaurantData = restaurantData;
+                this.logger = logger;
+            }
+
+            public string Message { get; set; }
+            public IEnumerable<Restaurant> Restaurants { get; set; }
+            [BindProperty(SupportsGet =true)]
+            public string SearchTerm { get; set; }
+            public void OnGet()
+            {
+                logger.LogError("Executing ListModel");
+                Message = configuration["Message"];
+                Restaurants = restaurantData.GetRestaurantsByName(SearchTerm);
+            }
+        }
+    }
+    ```
+- In .net core configuration settings are hierarchical (command line, appsettings.json, appsetings.{env.EnvironmentName}.json, environment variables, etc). 
+- To see this hierarchical level add another Message in appsettings.Development.json
+    - appsettings.Development.json
+    ```json
+    {
+    "Logging": {
+        "LogLevel": {
+        "Default": "Information",
+        "Microsoft": "Warning",
+        "Microsoft.Hosting.Lifetime": "Information"
+        }
+    },
+    "Message": "Hello from Dev appsettings"
+    }
+    ```
+    - Now the UI should display "Hello from Dev appsettings" since we run the application in development mode. It displayed the one from appsettings.json because we didn't have a Message in appsettings.Development.json
 
 # Building your first ASP.Net Core Application
 - Create ASP.Net core application

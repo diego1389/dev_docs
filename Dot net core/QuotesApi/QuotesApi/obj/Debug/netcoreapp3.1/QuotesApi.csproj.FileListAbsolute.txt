@@ -60,3 +60,5 @@
 /Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/QuotesApi/QuotesApi/bin/Debug/netcoreapp3.1/System.ComponentModel.Annotations.dll
 /Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/QuotesApi/QuotesApi/bin/Debug/netcoreapp3.1/System.Diagnostics.DiagnosticSource.dll
 /Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/QuotesApi/QuotesApi/obj/Debug/netcoreapp3.1/Razor/Pages/Restaurants/Delete.cshtml.g.cs
+/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/QuotesApi/QuotesApi/obj/Debug/netcoreapp3.1/Razor/Pages/Restaurants/_Summary.cshtml.g.cs
+/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/QuotesApi/QuotesApi/obj/Debug/netcoreapp3.1/Razor/Pages/Shared/Components/RestaurantCount/Default.cshtml.g.cs
