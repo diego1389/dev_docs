@@ -1141,6 +1141,36 @@
     ```
     - Now the UI should display "Hello from Dev appsettings" since we run the application in development mode. It displayed the one from appsettings.json because we didn't have a Message in appsettings.Development.json
 
+## Deploying asp.net core
+
+```bash
+dot net publish o c:\temp\odetofood
+```
+
+- Using MSBuild to execute npm.
+- The .csproject file in .Net is what we called the MSBuild file for a project. MSBuild understands how to process a csproj file and executes the instructions inside to build a project. 
+    ```xml
+    <Target Name="PostBuil" AfterTargets="ComputeFilesToPublish">
+        <Exec Command="npm install"/>
+    </Target>
+    ```
+- By default the node_modules is ignored in the git ignore. To avoid that:
+    ```xml
+    <ItemGroup>
+        <Content Include="node_modules/**" CopyToPublishDirectory="PreserveNewest"/>
+    </ItemGroup>
+    ```
+- We're telling MSBuild that the name of this target is PostBuild and we want to execuite what is inside of the target after it finishes another target (ComputeFilesToPublish).
+-Publish self-contained applications (they have everything that they need and don't share dependencies with other applications).
+- They are in WIndows RIDs for runtime identifiers
+    ```bash
+    dotnet publish -o c:\\temp\odetofood --self-contained -r win-x64
+    ```
+- For IIS you need AspNetCoreModuleV2 under Modules installed.
+- If we are going to use a user and password for a connection in prod we dont store that info in the appsettings.Production.json, we do it in an environment variable in the server.
+
+
+
 # Building your first ASP.Net Core Application
 - Create ASP.Net core application
 - Select Asp.net core > 2.0
