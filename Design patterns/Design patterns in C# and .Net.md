@@ -812,3 +812,173 @@
     ```
 - Functional builder
     - 
+
+## Abstract factory
+
+- This creates a set of related objects or dependent objects. 
+- The "family" of objects created by the factory is determined at run-time depending on the selection of concrete factory classes.
+- An abstract factory pattern acts as a super-factory that creates other factories. An abstract factory interface is responsible for creating a set of related objects or dependent objects without specifying their concrete classes. 
+-  We can say it is just an object maker which can create more than one type of object.
+
+- Elements: 
+    1. **Client** This class uses the Abstract Factory and Abstract Product interfaces to create a family of related objects.
+    2. **Abstract Factory** This is an interface that creates abstract products.
+    3. **Abstract Product** This is an interface that declares a type of product.
+    4. **Concrete Factory** This is a class that implements the abstract factory interface to create concrete products.
+    5. **Concrete Product**  This is a class that implements the abstract product interface to create products.
+- Real life example:
+    - Client.cs
+    ```c#
+    public class Client
+    {
+        private Packaging _packaging;
+        private DeliveryDocument _deliveryDocument;
+
+        public Client(PcknDelvFactory factory)
+        {
+            _packaging = factory.CreatePackaging();
+            _deliveryDocument = factory.CreateDeliveryDocument();
+        }
+
+        public Packaging ClientPackaging
+        {
+            get { return _packaging;  }
+        }
+
+        public DeliveryDocument ClientDocument
+        {
+            get { return _deliveryDocument; }
+        }
+    }
+    ```
+    - PcknDelvFactory.cs
+    ```c#
+    public abstract class PcknDelvFactory
+    {
+        public abstract Packaging CreatePackaging();
+        public abstract DeliveryDocument CreateDeliveryDocument();
+    }
+
+    public abstract class Packaging { }
+    public class StandardPackaging : Packaging { }
+    public class ShockProofPackaging : Packaging { }
+    public abstract class DeliveryDocument { }
+    public class Postal : DeliveryDocument { }
+    public class Courier : DeliveryDocument { }
+    ```
+    - StandardFactory.cs
+    ```c#
+    public class StandardFactory : PcknDelvFactory
+    {
+        public override DeliveryDocument CreateDeliveryDocument()
+        {
+            return new Postal();
+        }
+
+        public override Packaging CreatePackaging()
+        {
+            return new StandardPackaging();
+        }
+    }
+    ```
+    - DelicateFactory
+    ```c#
+    public class DelicateFactory : PcknDelvFactory
+    {
+        public override DeliveryDocument CreateDeliveryDocument()
+        {
+            return new Courier();
+        }
+
+        public override Packaging CreatePackaging()
+        {
+            return new ShockProofPackaging();
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+    static void Main(string[] args)
+    {
+        PcknDelvFactory sf = new StandardFactory();
+        Client standard = new Client(sf);
+
+        Console.WriteLine(standard.ClientPackaging.GetType().ToString());
+        Console.WriteLine(standard.ClientDocument.GetType().ToString());
+        Console.WriteLine("------------------");
+
+        PcknDelvFactory df = new DelicateFactory();
+        Client delicate = new Client(df);
+
+        Console.WriteLine(delicate.ClientPackaging.GetType().ToString());
+        Console.WriteLine(delicate.ClientDocument.GetType().ToString());
+        /*
+        DesignPatterns2.AbstractFactory.StandardPackaging
+        DesignPatterns2.AbstractFactory.Postal
+        ------------------
+        DesignPatterns2.AbstractFactory.ShockProofPackaging
+        DesignPatterns2.AbstractFactory.Courier             
+        */
+    }
+    ```
+- The example code above creates two client objects, each passing to a different type of factory constructor. Types of generated objects are accessed through the client's properties.  
+
+## Bridge pattern
+
+- It makes a bridge between two components. Here the component may be two classes or any other entity. So the Bridge Design Pattern basically makes a channel between two components. And in this way it helps to create a de-couple architecture. We can communicate with two classes through the bridge component without changing existing class definitions.
+
+- It makes abstraction over implementation.
+
+- Real life example:
+    - Your manager said that they want to use both C# and VB versions associated with sending mail from a database (so, in total three different ways). Now, let's implement this scenario using the Bridge Design Pattern. 
+    - IMessage.cs
+    ```c#
+    public interface IMessage
+    {
+        void Send();
+    }
+    ```
+    - CSharp_Mail.cs
+    ```c#
+    public class CSharp_Mail : IMessage
+    {
+        public void Send()
+        {
+            Console.WriteLine("Mail send from C# code");
+        }
+    }
+    ```
+    - VB_Mail.cs
+    ```c#
+    public class VB_Mail : IMessage
+    {
+        public void Send()
+        {
+            Console.WriteLine("Mail send from VB code");
+        }
+    }
+    ```
+    - The MailSendBridge class is creating one abstraction over the implementation of the actual mail sending mechanism that was defined by a different mail sending class
+    ```c#
+    public class MailSendBridge
+    {
+        public void SendFrom(IMessage mailProvider)
+        {
+            mailProvider.Send();
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MailSendBridge mb = new MailSendBridge();
+            CSharp_Mail csProvider = new CSharp_Mail();
+            VB_Mail vbProvider = new VB_Mail();
+            mb.SendFrom(csProvider);
+            mb.SendFrom(vbProvider);
+        }
+    }
+    ```

@@ -1,0 +1,38 @@
+﻿<Properties StartupConfiguration="{BEE27651-14C5-4954-81A3-546C1643616D}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns2/Bridge/MailSendBridge.cs">
+    <Files>
+      <File FileName="DesignPatterns2/Program.cs" Line="47" Column="40" />
+      <File FileName="DesignPatterns2/AbstractFactory/Client.cs" Line="2" Column="42" />
+      <File FileName="DesignPatterns2/AbstractFactory/PcknDelvFactory.cs" Line="12" Column="32" />
+      <File FileName="DesignPatterns2/AbstractFactory/StandardFactory.cs" Line="4" Column="5" />
+      <File FileName="DesignPatterns2/AbstractFactory/DelicateFactory.cs" Line="4" Column="4" />
+      <File FileName="DesignPatterns2/FactoryMethod/CreditCard.cs" Line="4" Column="12" />
+      <File FileName="DesignPatterns2/FactoryMethod/MoneyBackCreditCard.cs" Line="21" Column="1" />
+      <File FileName="DesignPatterns2/Bridge/CSharp_Mail.cs" Line="5" Column="1" />
+      <File FileName="DesignPatterns2/Bridge/IMessage.cs" Line="3" Column="3" />
+      <File FileName="DesignPatterns2/Bridge/Database_Mail.cs" Line="4" Column="1" />
+      <File FileName="DesignPatterns2/Bridge/VB_Mail.cs" Line="4" Column="3" />
+      <File FileName="DesignPatterns2/Bridge/MailSendBridge.cs" Line="5" Column="11" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="DesignPatterns2" expanded="True">
+            <Node name="DesignPatterns2" expanded="True">
+              <Node name="Bridge" expanded="True">
+                <Node name="MailSendBridge.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.DesignPatterns2 PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
