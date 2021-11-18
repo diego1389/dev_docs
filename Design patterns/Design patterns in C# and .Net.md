@@ -810,8 +810,6 @@
         }
     }
     ```
-- Functional builder
-    - 
 
 ## Abstract factory
 
@@ -980,5 +978,246 @@
             mb.SendFrom(csProvider);
             mb.SendFrom(vbProvider);
         }
+    }
+    ```
+## Prototype
+
+- Prototype means making a copy of something that exists.
+- Real life example: 
+    - Consider that you want to create one copy of an object multiple times. For your birthday you want to send an invitation letter to your friends, now the content and sender name will remain the same whereas the recipient name will only change. In this situation we can use a prototype of the invitation card for multiple friends.
+    - InvitationCard.cs
+    ```c#
+    public class InvitationCard
+    {
+        public String To;
+        public String Title;
+        public String Content;
+        public String SendBy;
+        public DateTime Date;
+
+        public String p_To
+        {
+            get { return To; }
+            set { To = value; }
+        }
+        public String p_Title
+        {
+            get { return Title; }
+            set { Title = value; }
+        }
+        public String p_content
+        {
+            get { return Content; }
+            set { Content = value; }
+        }
+        public String p_SendBy
+        {
+            get { return SendBy; }
+            set { SendBy = value; }
+        }
+        public DateTime p_Date
+        {
+            get { return Date; }
+            set { Date = value; }
+        }
+
+        public InvitationCard CloneMe()
+        {
+            return (InvitationCard)this.MemberwiseClone();
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            InvitationCard obj1 = new InvitationCard();
+            obj1.p_To = "Ram";
+            obj1.p_Title = "My birthday invitation";
+            obj1.p_content = "Hey guys !! I am throwing a cheers party in my home";
+            obj1.SendBy = "Sourav";
+            obj1.p_Date = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+            //Here our first object has created  
+            InvitationCard[] objList = new InvitationCard[5];
+            String[] nameList = { "Ram", "Shyam", "Hari", "Tapan", "Sukant" };
+            int i = 0;
+            foreach (String name in nameList)
+            {
+                //objList[i] = new InvitationCard();  
+                objList[i] = obj1.CloneMe();
+                objList[i].p_To = nameList[i];
+                i++;
+            }
+            // Print all Invitation Card here  
+            foreach (InvitationCard obj in objList)
+            {
+                Console.WriteLine("To :- " + obj.p_To);
+                Console.WriteLine("Title :- " + obj.p_Title);
+                Console.WriteLine("Content :- " + obj.p_content);
+                Console.WriteLine("Send By :- " + obj.p_SendBy);
+                Console.WriteLine("Date :- " + obj.Date);
+                Console.WriteLine("\n");
+            }
+        }
+    }
+    ```
+## Decorator
+
+- Attaches additional responsibilities to an object dynamically. This pattern provide a flexible alternative to subclassing for extending functionality.
+
+- Elements 
+    1. **Component:** defines the interface for objects that can have responsabilities added to them. 
+    2. **Concrete component:** defines an object to which additional responsabilities can be attached.
+    3. **Decorator:** mantains a reference to a Component object and defines an interface that conforms to components interface.
+    4. **Concrete decorator:** adds responsabilities to the component.
+
+- Real life example
+    - LibraryItem.cs (The 'Component' abstract class)
+    ```c#
+    public abstract class LibraryItem
+    {
+        public int NumCopies { get; set; }
+        public abstract void Display();
+    }
+    ```
+    - Book.cs (A 'Concrete component' abstact)
+    ```c#
+    public class Book : LibraryItem
+    {
+        private string author;
+        private string title;
+        // Constructor
+        public Book(string author, string title, int numCopies)
+        {
+            this.author = author;
+            this.title = title;
+            this.NumCopies = numCopies;
+        }
+        public override void Display()
+        {
+            Console.WriteLine("\nBook ------ ");
+            Console.WriteLine(" Author: {0}", author);
+            Console.WriteLine(" Title: {0}", title);
+            Console.WriteLine(" # Copies: {0}", NumCopies);
+        }
+    }
+    ```
+    - Video.cs (A 'Concrete component' abstact)
+    ```c#
+    public class Video : LibraryItem
+    {
+        private string director;
+        private string title;
+        private int playTime;
+        // Constructor
+        public Video(string director, string title, int numCopies, int playTime)
+        {
+            this.director = director;
+            this.title = title;
+            this.NumCopies = numCopies;
+            this.playTime = playTime;
+        }
+        public override void Display()
+        {
+            Console.WriteLine("\nVideo ----- ");
+            Console.WriteLine(" Director: {0}", director);
+            Console.WriteLine(" Title: {0}", title);
+            Console.WriteLine(" # Copies: {0}", NumCopies);
+            Console.WriteLine(" Playtime: {0}\n", playTime);
+        }
+    }
+    ```
+    - Decorator.cs (Decorator abstract class)
+    ```c#
+     public abstract class Decorator : LibraryItem
+    {
+        protected LibraryItem libraryItem;
+        // Constructor
+        public Decorator(LibraryItem libraryItem)
+        {
+            this.libraryItem = libraryItem;
+        }
+        public override void Display()
+        {
+            libraryItem.Display();
+        }
+    }
+    ```
+    - Borrowable.cs (Concrete decorator)
+    ```c#
+    public class Borrowable : Decorator
+    {
+        protected readonly List<string> borrowers = new List<string>();
+        // Constructor
+        public Borrowable(LibraryItem libraryItem)
+            : base(libraryItem)
+        {
+        }
+        public void BorrowItem(string name)
+        {
+            borrowers.Add(name);
+            libraryItem.NumCopies--;
+        }
+        public void ReturnItem(string name)
+        {
+            borrowers.Remove(name);
+            libraryItem.NumCopies++;
+        }
+        public override void Display()
+        {
+            base.Display();
+            foreach (string borrower in borrowers)
+            {
+                Console.WriteLine(" borrower: " + borrower);
+            }
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Create book
+            Book book = new Book("Worley", "Inside ASP.NET", 10);
+            book.Display();
+            // Create video
+            Video video = new Video("Spielberg", "Jaws", 23, 92);
+            video.Display();
+            // Make video borrowable, then borrow and display
+            Console.WriteLine("\nMaking video borrowable:");
+            Borrowable borrowvideo = new Borrowable(video);
+            borrowvideo.BorrowItem("Customer #1");
+            borrowvideo.BorrowItem("Customer #2");
+            borrowvideo.Display();
+        }
+
+            /*
+            Book ----- 
+             Author: Worley
+             Title: Inside ASP.NET
+             # Copies: 10
+
+            Video ----- 
+             Director: Spielberg
+             Title: Jaws
+             # Copies: 23
+             Playtime: 92
+
+
+            Making video borrowable:
+
+            Video ----- 
+             Director: Spielberg
+             Title: Jaws
+             # Copies: 21
+             Playtime: 92
+
+             borrower: Customer #1
+             borrower: Customer #2
+            */
     }
     ```

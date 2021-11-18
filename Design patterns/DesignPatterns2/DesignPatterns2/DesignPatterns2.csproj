@@ -8,9 +8,13 @@
   <ItemGroup>
     <None Remove="AbstractFactory\" />
     <None Remove="Bridge\" />
+    <None Remove="Prototype\" />
+    <None Remove="Decorator\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AbstractFactory\" />
     <Folder Include="Bridge\" />
+    <Folder Include="Prototype\" />
+    <Folder Include="Decorator\" />
   </ItemGroup>
 </Project>
