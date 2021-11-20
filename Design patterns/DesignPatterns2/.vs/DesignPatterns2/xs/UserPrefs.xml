@@ -1,22 +1,20 @@
 ﻿<Properties StartupConfiguration="{BEE27651-14C5-4954-81A3-546C1643616D}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns2/Decorator/Decorator.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns2/Program.cs">
     <Files>
-      <File FileName="DesignPatterns2/Prototype/InvitationCard.cs" Line="36" Column="10" />
-      <File FileName="DesignPatterns2/Program.cs" Line="136" Column="13" />
-      <File FileName="DesignPatterns2/Decorator/LibraryItem.cs" Line="7" Column="6" />
-      <File FileName="DesignPatterns2/Decorator/Book.cs" Line="22" Column="6" />
-      <File FileName="DesignPatterns2/Decorator/Video.cs" Line="5" Column="5" />
-      <File FileName="DesignPatterns2/Decorator/Borrowable.cs" Line="1" Column="1" />
-      <File FileName="DesignPatterns2/Decorator/Decorator.cs" Line="3" Column="4" />
+      <File FileName="DesignPatterns2/Facade/Credit.cs" Line="11" Column="6" />
+      <File FileName="DesignPatterns2/Facade/Customer.cs" Line="15" Column="6" />
+      <File FileName="DesignPatterns2/Facade/Loan.cs" Line="11" Column="6" />
+      <File FileName="DesignPatterns2/Facade/Mortgage.cs" Line="7" Column="1" />
+      <File FileName="DesignPatterns2/Program.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="DesignPatterns2" expanded="True">
             <Node name="DesignPatterns2" expanded="True">
-              <Node name="Decorator" expanded="True">
-                <Node name="Decorator.cs" selected="True" />
-              </Node>
+              <Node name="Decorator" expanded="True" />
+              <Node name="Facade" expanded="True" />
+              <Node name="Program.cs" selected="True" />
             </Node>
           </Node>
         </State>

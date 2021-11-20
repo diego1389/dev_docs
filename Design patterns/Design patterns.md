@@ -894,12 +894,6 @@ public abstract class Chatroom
 
 
 ```
-
-## Command
-
-1. 
-
-
 # Creational patterns
 
 ## Builder
@@ -1195,5 +1189,4 @@ public class PrototypeManager {
 9. When classes have a small, finite combination of states.
 10. Implement in those classes that make sense.
 
-## Prototype
 

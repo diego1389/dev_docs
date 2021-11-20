@@ -10,3 +10,4 @@
 /Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/obj/Debug/netcoreapp3.1/DesignPatterns2.dll
 /Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/obj/Debug/netcoreapp3.1/DesignPatterns2.pdb
 /Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/obj/Debug/netcoreapp3.1/DesignPatterns2.genruntimeconfig.cache
+/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/obj/Debug/netcoreapp3.1/DesignPatterns2.GeneratedMSBuildEditorConfig.editorconfig

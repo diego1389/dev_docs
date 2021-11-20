@@ -1221,3 +1221,116 @@
             */
     }
     ```
+## Facade
+
+- The Facade design pattern provides a unified interface to a set of interfaces in a subsystem. This pattern defines a higher-level interface that makes the subsystem easier to use.
+- Elements
+    1. **Facade** 
+    - Knows which subsystem classes are responsible for a request.
+    - Delegates client requests to appropriate subsystem objects.
+    2. **Subsystem classes**
+    - Implement subsystem functionality.
+    - Handle work assigned by the Facade object.
+    - Have no knowledge of the facade and keep no reference to it.
+- Real life example
+    - A MortgageApplication object which provides a simplified interface to a large subsystem of classes measuring the creditworthiness of an applicant.
+    - Bank.cs (subsystem class)
+    ```c#
+    public class Bank
+    {
+        public bool HasSufficientSavings(Customer c, int amount)
+        {
+            Console.WriteLine("Check bank for " + c.Name);
+            return true;
+        }
+    }
+    ```
+    - Credit.cs (subsystem class)
+    ```c#
+    public class Credit
+    {
+        public bool HasGoodCredit(Customer c)
+        {
+            Console.WriteLine("Check credit for " + c.Name);
+            return true;
+        }
+    }
+    ```
+    - Customer.cs
+    ```c#
+    public class Customer
+    {
+        private string name;
+        // Constructor
+        public Customer(string name)
+        {
+            this.name = name;
+        }
+        public string Name
+        {
+            get { return name; }
+        }
+    }
+    ```
+    - Loan.cs (subsystem class)
+    ```c#
+    public class Loan
+    {
+        public bool HasNoBadLoans(Customer c)
+        {
+            Console.WriteLine("Check loans for " + c.Name);
+            return true;
+        }
+    }
+    ```
+    - Mortgage.cs (Facade class)
+    ```c#
+    public class Mortgage
+    {
+        Bank bank = new Bank();
+        Loan loan = new Loan();
+        Credit credit = new Credit();
+        public bool IsEligible(Customer cust, int amount)
+        {
+            Console.WriteLine("{0} applies for {1:C} loan\n",
+                cust.Name, amount);
+            bool eligible = true;
+            // Check creditworthyness of applicant
+            if (!bank.HasSufficientSavings(cust, amount))
+            {
+                eligible = false;
+            }
+            else if (!loan.HasNoBadLoans(cust))
+            {
+                eligible = false;
+            }
+            else if (!credit.HasGoodCredit(cust))
+            {
+                eligible = false;
+            }
+            return eligible;
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+     class Program
+    {
+        static void Main(string[] args)
+        {
+            var mortgage = new Mortgage();
+            var customer = new Customer("Diego");
+            bool isEligible = mortgage.IsEligible(customer, 170000);
+
+            Console.WriteLine($@"{customer.Name} has been  {(isEligible ? "Approved" : "Rejected")}");
+
+        }
+    }
+
+    //Check bank for Diego
+    //Check loans for Diego
+    //Check credit for Diego
+    //Diego has been  Approved
+    ```
+ 
+    - 

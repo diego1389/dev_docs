@@ -2,6 +2,7 @@
 using DesignPatterns2.AbstractFactory;
 using DesignPatterns2.Bridge;
 using DesignPatterns2.Decorator;
+using DesignPatterns2.Facade;
 using DesignPatterns2.Prototype;
 
 namespace DesignPatterns2
@@ -92,7 +93,7 @@ namespace DesignPatterns2
     }*/
     #endregion
     #region Decorator
-    class Program
+    /*class Program
     {
         static void Main(string[] args)
         {
@@ -110,7 +111,44 @@ namespace DesignPatterns2
             borrowvideo.Display();
         }
 
-        /**/
+           
+            //Book ----- 
+             //Author: Worley
+             //Title: Inside ASP.NET
+             //# Copies: 10
+
+            //Video ----- 
+             //Director: Spielberg
+             //Title: Jaws
+             //# Copies: 23
+             //Playtime: 92
+
+
+            //Making video borrowable:
+
+            //Video ----- 
+            // Director: Spielberg
+             //Title: Jaws
+             //# Copies: 21
+             //Playtime: 92
+
+             //borrower: Customer #1
+             //borrower: Customer #2
+            
+    }*/
+    #endregion
+    #region Facade
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var mortgage = new Mortgage();
+            var customer = new Customer("Diego");
+            bool isEligible = mortgage.IsEligible(customer, 170000);
+
+            Console.WriteLine($@"{customer.Name} has been  {(isEligible ? "Approved" : "Rejected")}");
+
+        }
     }
     #endregion
 }
