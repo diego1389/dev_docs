@@ -1464,3 +1464,87 @@
     //The Healer has 40 health points and 13 of damage
     //The Warrior has 70 health points and 14 of damage
     ```
+## Proxy
+
+- The Proxy design pattern provides a surrogate or placeholder for another object to control access to it.
+- Elements:
+    1. **Proxy:** maintains a reference that lets the proxy access the real subject. Proxy may refer to a Subject if the RealSubject and Subject interfaces are the same.
+        - Provides an interface identical to Subject's so that a proxy can be substituted for for the real subject.
+        - Controls access to the real subject and may be responsible for creating and deleting it.
+        - Remote proxies are responsible for encoding a request and its arguments and for sending the encoded request to the real subject in a different address space.
+        - Virtual proxies may cache additional information about the real subject so that they can postpone accessing it. For example, the ImageProxy from the Motivation caches the real images's extent.
+        - Protection proxies check that the caller has the access permissions required to perform a request.
+    2. **Subject:** defines the common interface for RealSubject and Proxy so that a Proxy can be used anywhere a RealSubject is expected.
+    3. **RealSubject:** defines the real object that the proxy represents.
+- Real life example:  
+    - Proxy pattern for a Math object represented by a MathProxy object.
+    - IMath.cs (Subject interface)
+    ```c#
+    public interface IMath
+    {
+        double Add(double x, double y);
+        double Sub(double x, double y);
+        double Mul(double x, double y);
+        double Div(double x, double y);
+    }
+    ```
+    - Math.cs (RealSubject)
+    ```c#
+    public class Math : IMath
+    {
+        public double Add(double x, double y) => x + y;
+
+        public double Div(double x, double y) => x / y;
+
+        public double Mul(double x, double y) => x * y;
+
+        public double Sub(double x, double y) => x - y;
+    }
+    ```
+    - MathProxy.cs (Proxy)
+    ```c#
+     public class MathProxy : IMath
+    {
+        private Math math = new Math();
+
+        public double Add(double x, double y)
+        {
+            return math.Add(x, y);
+        }
+
+        public double Div(double x, double y)
+        {
+            return math.Div(x, y);
+        }
+
+        public double Mul(double x, double y)
+        {
+            return math.Mul(x, y);
+        }
+
+        public double Sub(double x, double y)
+        {
+            return math.Sub(x, y);
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MathProxy proxy = new MathProxy();
+            // Do the math
+            Console.WriteLine("4 + 2 = " + proxy.Add(4, 2));
+            Console.WriteLine("4 - 2 = " + proxy.Sub(4, 2));
+            Console.WriteLine("4 * 2 = " + proxy.Mul(4, 2));
+            Console.WriteLine("4 / 2 = " + proxy.Div(4, 2));
+        }
+    }
+    //4 + 2 = 6
+    //4 - 2 = 2
+    //4 * 2 = 8
+    //4 / 2 = 2
+    ```
+

@@ -6,6 +6,7 @@ using DesignPatterns2.Decorator;
 using DesignPatterns2.Facade;
 using DesignPatterns2.Flyweight;
 using DesignPatterns2.Prototype;
+using DesignPatterns2.Proxy;
 
 namespace DesignPatterns2
 {
@@ -27,13 +28,13 @@ namespace DesignPatterns2
 
             Console.WriteLine(delicate.ClientPackaging.GetType().ToString());
             Console.WriteLine(delicate.ClientDocument.GetType().ToString());
-            
+
             //DesignPatterns2.AbstractFactory.StandardPackaging
             //DesignPatterns2.AbstractFactory.Postal
             //------------------
             //DesignPatterns2.AbstractFactory.ShockProofPackaging
             //DesignPatterns2.AbstractFactory.Courier             
-            
+
         }
     }*/
     #endregion
@@ -113,7 +114,7 @@ namespace DesignPatterns2
             borrowvideo.Display();
         }
 
-           
+
             //Book ----- 
              //Author: Worley
              //Title: Inside ASP.NET
@@ -136,7 +137,7 @@ namespace DesignPatterns2
 
              //borrower: Customer #1
              //borrower: Customer #2
-            
+
     }*/
     #endregion
     #region Facade
@@ -154,7 +155,7 @@ namespace DesignPatterns2
     }*/
     #endregion
     #region Flyweight
-    class Program
+    /*class Program
     {
         static void Main(string[] args)
         {
@@ -167,7 +168,6 @@ namespace DesignPatterns2
 
             };
 
-
             CharacterFactory factory = new CharacterFactory();
             int damage = 10;
             // For each character use a flyweight object
@@ -178,6 +178,20 @@ namespace DesignPatterns2
                 character.Display(damage);
             }
 
+        }
+    }*/
+    #endregion
+    #region Proxy
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            MathProxy proxy = new MathProxy();
+            // Do the math
+            Console.WriteLine("4 + 2 = " + proxy.Add(4, 2));
+            Console.WriteLine("4 - 2 = " + proxy.Sub(4, 2));
+            Console.WriteLine("4 * 2 = " + proxy.Mul(4, 2));
+            Console.WriteLine("4 / 2 = " + proxy.Div(4, 2));
         }
     }
     #endregion

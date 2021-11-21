@@ -1,25 +1,28 @@
 ﻿<Properties StartupConfiguration="{BEE27651-14C5-4954-81A3-546C1643616D}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns2/Flyweight/CharacterTypes.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns2/Proxy/MathProxy.cs">
     <Files>
       <File FileName="DesignPatterns2/Facade/Credit.cs" Line="11" Column="6" />
       <File FileName="DesignPatterns2/Facade/Customer.cs" Line="15" Column="6" />
       <File FileName="DesignPatterns2/Facade/Loan.cs" Line="11" Column="6" />
       <File FileName="DesignPatterns2/Facade/Mortgage.cs" Line="7" Column="1" />
-      <File FileName="DesignPatterns2/Program.cs" Line="181" Column="1" />
+      <File FileName="DesignPatterns2/Program.cs" Line="188" Column="9" />
       <File FileName="DesignPatterns2/Flyweight/Character.cs" Line="8" Column="6" />
       <File FileName="DesignPatterns2/Flyweight/CharacterFactory.cs" Line="5" Column="1" />
       <File FileName="DesignPatterns2/Flyweight/Wizard.cs" Line="17" Column="6" />
       <File FileName="DesignPatterns2/Flyweight/Warrior.cs" Line="17" Column="6" />
       <File FileName="DesignPatterns2/Flyweight/Healer.cs" Line="17" Column="6" />
       <File FileName="DesignPatterns2/Flyweight/CharacterTypes.cs" Line="8" Column="6" />
+      <File FileName="DesignPatterns2/Proxy/IMath.cs" Line="9" Column="40" />
+      <File FileName="DesignPatterns2/Proxy/Math.cs" Line="5" Column="6" />
+      <File FileName="DesignPatterns2/Proxy/MathProxy.cs" Line="6" Column="10" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="DesignPatterns2" expanded="True">
             <Node name="DesignPatterns2" expanded="True">
-              <Node name="Flyweight" expanded="True">
-                <Node name="CharacterTypes.cs" selected="True" />
+              <Node name="Proxy" expanded="True">
+                <Node name="MathProxy.cs" selected="True" />
               </Node>
             </Node>
           </Node>

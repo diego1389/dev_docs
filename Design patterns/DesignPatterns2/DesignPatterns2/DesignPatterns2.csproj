@@ -12,6 +12,7 @@
     <None Remove="Decorator\" />
     <None Remove="Facade\" />
     <None Remove="Flyweight\" />
+    <None Remove="Proxy\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AbstractFactory\" />
@@ -20,5 +21,6 @@
     <Folder Include="Decorator\" />
     <Folder Include="Facade\" />
     <Folder Include="Flyweight\" />
+    <Folder Include="Proxy\" />
   </ItemGroup>
 </Project>
