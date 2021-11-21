@@ -13,6 +13,8 @@
     <None Remove="Facade\" />
     <None Remove="Flyweight\" />
     <None Remove="Proxy\" />
+    <None Remove="Iterator\" />
+    <None Remove="IteratorPattern\Indexers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AbstractFactory\" />
@@ -22,5 +24,7 @@
     <Folder Include="Facade\" />
     <Folder Include="Flyweight\" />
     <Folder Include="Proxy\" />
+    <Folder Include="IteratorPattern\" />
+    <Folder Include="IteratorPattern\Indexers\" />
   </ItemGroup>
 </Project>

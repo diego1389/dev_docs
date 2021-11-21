@@ -5,6 +5,8 @@ using DesignPatterns2.Bridge;
 using DesignPatterns2.Decorator;
 using DesignPatterns2.Facade;
 using DesignPatterns2.Flyweight;
+using DesignPatterns2.IteratorPattern;
+using DesignPatterns2.IteratorPattern.Indexers;
 using DesignPatterns2.Prototype;
 using DesignPatterns2.Proxy;
 
@@ -182,7 +184,7 @@ namespace DesignPatterns2
     }*/
     #endregion
     #region Proxy
-    class Program
+    /*class Program
     {
         static void Main(string[] args)
         {
@@ -192,6 +194,56 @@ namespace DesignPatterns2
             Console.WriteLine("4 - 2 = " + proxy.Sub(4, 2));
             Console.WriteLine("4 * 2 = " + proxy.Mul(4, 2));
             Console.WriteLine("4 / 2 = " + proxy.Div(4, 2));
+        }
+    }*/
+    #endregion
+    #region Iterator
+    /*class Program
+    {
+        static void Main(string[] args)
+        {
+            MathProxy proxy = new MathProxy();
+            // Do the math
+            Console.WriteLine("4 + 2 = " + proxy.Add(4, 2));
+            Console.WriteLine("4 - 2 = " + proxy.Sub(4, 2));
+            Console.WriteLine("4 * 2 = " + proxy.Mul(4, 2));
+            Console.WriteLine("4 / 2 = " + proxy.Div(4, 2));
+        }
+    }*/
+    #endregion
+    #region Iterator
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //Indexers
+            //var stringCollection = new SampleCollection<string>();
+            //stringCollection[0] = "Hello";
+            //stringCollection[99] = "World";
+
+            //Console.WriteLine(stringCollection[99]); //World
+
+
+            Collection collection = new Collection();
+            collection[0] = new Item("Item 0");
+            collection[1] = new Item("Item 1");
+            collection[2] = new Item("Item 2");
+            collection[3] = new Item("Item 3");
+            collection[4] = new Item("Item 4");
+            collection[5] = new Item("Item 5");
+            collection[6] = new Item("Item 6");
+            collection[7] = new Item("Item 7");
+            collection[8] = new Item("Item 8");
+            // Create iterator
+            Iterator iterator = collection.CreateIterator();
+            // Skip every other item
+            iterator.Step = 2;
+            Console.WriteLine("Iterating over collection:");
+            for (Item item = iterator.First();
+                !iterator.IsDone; item = iterator.Next())
+            {
+                Console.WriteLine(item.Name);
+            }
         }
     }
     #endregion

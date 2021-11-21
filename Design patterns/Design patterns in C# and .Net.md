@@ -1547,4 +1547,121 @@
     //4 * 2 = 8
     //4 / 2 = 2
     ```
+## Iterator
 
+- The Iterator design pattern provides a way to access the elements of an aggregate object sequentially without exposing its underlying representation.
+- Elements:
+    1. **Iterator:** defines an interface for accessing and traversing elements.
+    2. **ConcreteIterator:** implements the Iterator interface.
+        - Keeps track of the current position in the traversal of the aggregate.
+    3. **Aggregate:** 
+        - Defines an interface for creating an Iterator object.
+    4. **Concrete aggregate:**
+        - Implements the Iterator creation interface to return an instance of the proper ConcreteIterator
+- Indexers:
+    - Indexers allow instances of a class or struct to be indexed just like arrays. The indexed value can be set or retrieved without explicitly specifying a type or instance member. Indexers resemble properties except that their accessors take parameters.
+
+    - The following example defines a generic class with simple get and set accessor methods to assign and retrieve values. The Program class creates an instance of this class for storing strings:
+    - 
+- Real life example
+    -  Iterate over a collection of items and skip a specific number of items each iteration.
+    - Item.cs
+    ```c#
+    public class Item
+    {
+        string name;
+        // Constructor
+        public Item(string name)
+        {
+            this.name = name;
+        }
+        public string Name
+        {
+            get { return name; }
+        }
+    }
+    ```
+    - IAbstractCollection.cs (Aggregate)
+    ```c#
+    public interface IAbstractCollection
+    {
+        Iterator CreateIterator();
+    }
+    ```
+    - IAbstractIterator.cs (Iterator)
+    ```c#
+    public interface IAbstractIterator
+    {
+        Item First();
+        Item Next();
+        bool IsDone { get; }
+        Item CurrentItem { get; }
+    }
+    ```
+    - Iterator.cs (ConcreteIterator)
+    ```c#
+    public class Iterator : IAbstractIterator
+    {
+        Collection collection;
+        int current = 0;
+        int step = 1;
+        // Constructor
+        public Iterator(Collection collection)
+        {
+            this.collection = collection;
+        }
+        // Gets first item
+        public Item First()
+        {
+            current = 0;
+            return collection[current] as Item;
+        }
+        // Gets next item
+        public Item Next()
+        {
+            current += step;
+            if (!IsDone)
+                return collection[current] as Item;
+            else
+                return null;
+        }
+        // Gets or sets stepsize
+        public int Step
+        {
+            get { return step; }
+            set { step = value; }
+        }
+        // Gets current iterator item
+        public Item CurrentItem
+        {
+            get { return collection[current] as Item; }
+        }
+        // Gets whether iteration is complete
+        public bool IsDone
+        {
+            get { return current >= collection.Count; }
+        }
+    }
+    ```
+    - Collection.cs (ConcreteAggregate)
+    ```c#
+    public class Collection : IAbstractCollection
+    {
+        List<Item> items = new List<Item>();
+        public Iterator CreateIterator()
+        {
+            return new Iterator(this);
+        }
+        // Gets item count
+        public int Count
+        {
+            get { return items.Count; }
+        }
+        // Indexer
+        public Item this[int index]
+        {
+            get { return items[index]; }
+            set { items.Add(value); }
+        }
+    }
+    ```
