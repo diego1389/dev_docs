@@ -1332,5 +1332,135 @@
     //Check credit for Diego
     //Diego has been  Approved
     ```
- 
-    - 
+## FLyweight
+
+- The Flyweight design pattern uses sharing to support large numbers of fine-grained objects efficiently.
+- Elements
+    1. **Flyweight:** declares an interface through which flyweights can receive and act on extrinsic state (unique for each entity).
+    2. **Concrete Flyweight:** implements the Flyweight interface and adds storage for intrinsic state (sharable). Any state it stores must be intrinsic (independent of the concrete flyweight object's context).
+    3. **UnsharedConcreteFlyweight:** Not all Flyweight subclasses must be shared. The flyweight interface enables sharing but it does not enforce it. 
+    4. **Flyweight factory:** Creates and manages flyweight objects. Ensures that flyweight are shared properly. When a client requests a flyweight, the Flyweight factory objects assets an existing intance or creates one. 
+    5. **Client:** mantains a reference to flyweights. Computes or stores the extrinsic state of flyweights. 
+- Real life example: 
+    - A video game that uses flyweight pattern to get new characters.
+    - Character.cs (Flyweight abstract class)
+    ```c#
+    public abstract class Character
+    {
+        public int HealthPoints { get; set; }
+        public int Damage { get; set; }
+        public abstract void Display(int damage);
+    }
+    ```
+    - Wizard.cs (ConcreteFlyweight class)
+    ```c#
+     public class Wizard : Character
+    {
+        // Constructor
+        public Wizard()
+        {
+            HealthPoints = 50;
+        }
+        public override void Display(int damage)
+        {
+            this.Damage = damage;
+            string label = $"The {this.GetType().Name} has {HealthPoints} health points and {this.Damage} of damage";
+            Console.WriteLine(label);
+        }
+    }
+    ```
+    - Warrior.cs (ConcreteFlyweight class)
+    ```c#
+    public class Warrior : Character
+    {
+        // Constructor
+        public Warrior()
+        {
+            HealthPoints = 70;
+        }
+        public override void Display(int damage)
+        {
+            this.Damage = damage;
+            string label = $"The {this.GetType().Name} has {HealthPoints} health points and {this.Damage} of damage";
+            Console.WriteLine(label);
+        }
+    }
+    ```
+    - Healer.cs (ConcreteFlyweight class)
+    ```c#
+    public class Healer : Character
+    {
+        // Constructor
+        public Healer()
+        {
+            HealthPoints = 40;
+        }
+        public override void Display(int damage)
+        {
+            this.Damage = damage;
+            string label = $"The {this.GetType().Name} has {HealthPoints} health points and {this.Damage} of damage";
+            Console.WriteLine(label);
+        }
+    }
+    ```
+    - CharacterFactory.cs (Flyweight factory)
+    ```c#
+    public class CharacterFactory
+    {
+        private Dictionary<CharacterTypes, Character> characters = new Dictionary<CharacterTypes, Character>();
+        public Character GetCharacter(CharacterTypes key)
+        {
+            // Uses "lazy initialization"
+            Character character = null;
+            if (characters.ContainsKey(key))
+            {
+                character = characters[key];
+            }
+            else
+            {
+                switch (key)
+                {
+                    case CharacterTypes.Wizard: character = new Wizard(); break;
+                    case CharacterTypes.Warrior: character = new Warrior(); break;
+                    case CharacterTypes.Healer: character = new Healer(); break;
+                }
+                characters.Add(key, character);
+            }
+            return character;
+        }
+    }
+    ```
+    - CharacterTypes.cs
+    ```c#
+    public enum CharacterTypes
+    {
+        Wizard,
+        Warrior,
+        Healer
+    }
+    ```
+    - Program.cs
+    ```c#
+    List<CharacterTypes> characters = new List<CharacterTypes>
+    {
+        CharacterTypes.Wizard,
+        CharacterTypes.Warrior,
+        CharacterTypes.Healer,
+        CharacterTypes.Warrior
+
+    };
+
+    CharacterFactory factory = new CharacterFactory();
+    int damage = 10;
+    // For each character use a flyweight object
+    foreach (var c in characters)
+    {
+        damage++;
+        Character character = factory.GetCharacter(c);
+        character.Display(damage);
+    }
+    //The Wizard has 50 health points and 11 of damage
+    //The Warrior has 70 health points and 12 of damage
+    //The Healer has 40 health points and 13 of damage
+    //The Warrior has 70 health points and 14 of damage
+    ```
