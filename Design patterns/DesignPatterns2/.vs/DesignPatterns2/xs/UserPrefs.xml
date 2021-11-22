@@ -1,25 +1,35 @@
 ﻿<Properties StartupConfiguration="{BEE27651-14C5-4954-81A3-546C1643616D}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns2/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns2/Observer/Investor.cs">
     <Files>
-      <File FileName="DesignPatterns2/IteratorPattern/IAbstractCollection.cs" Line="1" Column="1" />
-      <File FileName="DesignPatterns2/IteratorPattern/IAbstractIterator.cs" Line="1" Column="1" />
-      <File FileName="DesignPatterns2/IteratorPattern/Iterator.cs" Line="6" Column="17" />
-      <File FileName="DesignPatterns2/IteratorPattern/Collection.cs" Line="6" Column="18" />
-      <File FileName="DesignPatterns2/IteratorPattern/Item.cs" Line="1" Column="1" />
+      <File FileName="DesignPatterns2/IteratorPattern/IAbstractCollection.cs" Line="4" Column="4" />
+      <File FileName="DesignPatterns2/IteratorPattern/IAbstractIterator.cs" Line="12" Column="1" />
+      <File FileName="DesignPatterns2/IteratorPattern/Iterator.cs" Line="4" Column="1" />
+      <File FileName="DesignPatterns2/IteratorPattern/Collection.cs" Line="6" Column="4" />
+      <File FileName="DesignPatterns2/IteratorPattern/Item.cs" Line="16" Column="6" />
       <File FileName="DesignPatterns2/IteratorPattern/Indexers/SampleCollection.cs" Line="14" Column="10" />
-      <File FileName="DesignPatterns2/Program.cs" Line="218" Column="15" />
+      <File FileName="DesignPatterns2/Program.cs" Line="277" Column="10" />
+      <File FileName="DesignPatterns2/FactoryMethod/Page.cs" Line="3" Column="4" />
+      <File FileName="DesignPatterns2/FactoryMethod/Document.cs" Line="20" Column="6" />
+      <File FileName="DesignPatterns2/FactoryMethod/Resume.cs" Line="11" Column="6" />
+      <File FileName="DesignPatterns2/FactoryMethod/EducationPage.cs" Line="4" Column="4" />
+      <File FileName="DesignPatterns2/FactoryMethod/ConclusionPage.cs" Line="10" Column="6" />
+      <File FileName="DesignPatterns2/FactoryMethod/IntroductionPage.cs" Line="10" Column="6" />
+      <File FileName="DesignPatterns2/FactoryMethod/ResultsPage.cs" Line="4" Column="5" />
+      <File FileName="DesignPatterns2/FactoryMethod/SkillsPage.cs" Line="11" Column="2" />
+      <File FileName="DesignPatterns2/FactoryMethod/Report.cs" Line="11" Column="6" />
+      <File FileName="DesignPatterns2/Observer/Stock.cs" Line="10" Column="19" />
+      <File FileName="DesignPatterns2/Observer/IInvestor.cs" Line="3" Column="2" />
+      <File FileName="DesignPatterns2/Observer/IBM.cs" Line="9" Column="10" />
+      <File FileName="DesignPatterns2/Observer/Investor.cs" Line="4" Column="28" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="DesignPatterns2" expanded="True">
             <Node name="DesignPatterns2" expanded="True">
-              <Node name="Facade" expanded="True" />
-              <Node name="IteratorPattern" expanded="True">
-                <Node name="Indexers" expanded="True" />
+              <Node name="Observer" expanded="True">
+                <Node name="Investor.cs" selected="True" />
               </Node>
-              <Node name="Prototype" expanded="True" />
-              <Node name="Program.cs" selected="True" />
             </Node>
           </Node>
         </State>

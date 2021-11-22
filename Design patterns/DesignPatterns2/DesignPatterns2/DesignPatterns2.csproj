@@ -15,6 +15,8 @@
     <None Remove="Proxy\" />
     <None Remove="Iterator\" />
     <None Remove="IteratorPattern\Indexers\" />
+    <None Remove="FactoryMethod\" />
+    <None Remove="Observer\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AbstractFactory\" />
@@ -26,5 +28,7 @@
     <Folder Include="Proxy\" />
     <Folder Include="IteratorPattern\" />
     <Folder Include="IteratorPattern\Indexers\" />
+    <Folder Include="FactoryMethod\" />
+    <Folder Include="Observer\" />
   </ItemGroup>
 </Project>

@@ -4,9 +4,11 @@ using DesignPatterns2.AbstractFactory;
 using DesignPatterns2.Bridge;
 using DesignPatterns2.Decorator;
 using DesignPatterns2.Facade;
+using DesignPatterns2.FactoryMethod;
 using DesignPatterns2.Flyweight;
 using DesignPatterns2.IteratorPattern;
 using DesignPatterns2.IteratorPattern.Indexers;
+using DesignPatterns2.Observer;
 using DesignPatterns2.Prototype;
 using DesignPatterns2.Proxy;
 
@@ -212,7 +214,7 @@ namespace DesignPatterns2
     }*/
     #endregion
     #region Iterator
-    class Program
+    /*class Program
     {
         static void Main(string[] args)
         {
@@ -244,6 +246,43 @@ namespace DesignPatterns2
             {
                 Console.WriteLine(item.Name);
             }
+        }
+    }*/
+    #endregion
+    #region FactoryMethod
+    /*class Program
+    {
+        static void Main(string[] args)
+        {
+            Document[] documents = new Document[2];
+            documents[0] = new Report();
+            documents[1] = new Resume();
+
+            foreach (var document in documents)
+            {
+                Console.WriteLine(document.GetType().Name);
+                foreach (var page in document.Pages)
+                {
+                    page.DisplayText();
+                }
+
+            }
+        }
+    }*/
+    #endregion
+    #region Observer
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IBM ibm = new IBM("IBM", 120.00);
+            ibm.Attach(new Investor("Sorros"));
+            ibm.Attach(new Investor("Berkshire"));
+            // Fluctuating prices will notify investors
+            ibm.Price = 120.10;
+            ibm.Price = 121.00;
+            ibm.Price = 120.50;
+            ibm.Price = 120.75;
         }
     }
     #endregion

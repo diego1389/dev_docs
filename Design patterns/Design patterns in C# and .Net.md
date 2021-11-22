@@ -921,6 +921,127 @@
     ```
 - The example code above creates two client objects, each passing to a different type of factory constructor. Types of generated objects are accessed through the client's properties.  
 
+## Factory method
+
+- Defines an interface for creating an object, but let subclasses decide which class to instantiate. This pattern lets a class defer instantiation to subclasses.
+
+- Elements:
+    1. **Product:** defines the interface of objects the factory method creates.
+    2. **Concrete product:** implements the Product interface.
+    3. **Creator:** declares the factory method, which returns an object of type Product. Creator may also define a default implementation of the factory method that returns a default ConcreteProduct object.
+    4. **ConcreteCreator:** overrides the factory method to return an instance of a ConcreteProduct.
+- Real life example:
+    - The Factory method offering flexibility in creating different documents. The derived Document classes Report and Resume instantiate extended versions of the Document class. Here, the Factory Method is called in the constructor of the Document base class.
+    - Page.cs (The 'Product' abstract class)
+    ```c#
+     public abstract class Page
+    {
+        public abstract void DisplayText();
+    }
+    ```
+    - Education page (concrete product classes)
+    ```c#
+     public class EducationPage : Page
+    {
+        public override void DisplayText()
+        {
+            Console.WriteLine("Education page info");
+        }
+    }
+     public class ConclusionPage : Page
+    {
+        public override void DisplayText()
+        {
+            Console.WriteLine("Conclusion page info");
+        }
+    }
+    public class IntroductionPage : Page
+    {
+        public override void DisplayText()
+        {
+            Console.WriteLine("Introduction page info");
+        }
+    }
+    public class ResultsPage : Page
+    {
+        public override void DisplayText()
+        {
+            Console.WriteLine("Result page info");
+        }
+    }
+     public class SkillsPage : Page
+    {
+        public override void DisplayText()
+        {
+            Console.WriteLine("Skills page info");
+        }
+    }
+    ```
+    - Document.cs (Creator)
+    ```c#
+    public abstract class Document
+    {
+        private List<Page> _pages = new List<Page>();
+        // Constructor calls abstract Factory method
+        public Document()
+        {
+            this.CreatePages();
+        }
+        public List<Page> Pages
+        {
+            get { return _pages; }
+        }
+        // Factory Method
+        public abstract void CreatePages();
+    }
+    ```
+    - Report.cs (Concrete creator)
+    ```c#
+     public class Report : Document
+    {
+        public override void CreatePages()
+        {
+            Pages.Add(new IntroductionPage());
+            Pages.Add(new ResultsPage());
+            Pages.Add(new ConclusionPage());
+        }
+    }
+    ```
+    - Resume.cs (Concrete creator)
+    ```c#
+    public class Resume : Document
+    {
+        public override void CreatePages()
+        {
+            Pages.Add(new SkillsPage());
+            Pages.Add(new EducationPage());
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+    Document[] documents = new Document[2];
+    documents[0] = new Report();
+    documents[1] = new Resume();
+
+    foreach (var document in documents)
+    {
+        Console.WriteLine(document.GetType().Name);
+        foreach (var page in document.Pages)
+        {
+            page.DisplayText();
+        }
+
+    }
+    //Report
+    //Introduction page info
+    //Result page info
+    //Conclusion page info
+    //Resume
+    //Skills page info
+    //Education page info
+    ```
+    - 
 ## Bridge pattern
 
 - It makes a bridge between two components. Here the component may be two classes or any other entity. So the Bridge Design Pattern basically makes a channel between two components. And in this way it helps to create a de-couple architecture. We can communicate with two classes through the bridge component without changing existing class definitions.
@@ -1665,3 +1786,124 @@
         }
     }
     ```
+## Observer 
+
+- Defines a one-to-many dependency between objects so that when one object changes state, all its dependents are notified and updated automatically.
+- Elements
+    1. **Subject:** knows its observers. Any number of Observer objects may observe a subject. Provides an interface for attaching and detaching Observer objects.
+    2. **Concrete subject:** stores state of interest to ConcreteObserver. Sends a notification to its observers when its state changes.
+    3. **Observer:** defines an updating interface for objects that should be notified of changes in a subject.
+    4. **ConcreteObserver:** maintains a reference to a ConcreteSubject object. Stores state that should stay consistent with the subject's. Implements the Observer updating interface to keep its state consistent with the subject's
+- Real life example
+    - Registered investors are notified every time a stock changes value.
+    - Stock.cs (The 'Subject' abstract class)
+    ```c#
+    public abstract class Stock
+    {
+        private string symbol;
+        private double price;
+        private List<IInvestor> investors = new List<IInvestor>();
+        // Constructor
+        public Stock(string symbol, double price)
+        {
+            this.symbol = symbol;
+            this.price = price;
+        }
+        public void Attach(IInvestor investor)
+        {
+            investors.Add(investor);
+        }
+        public void Detach(IInvestor investor)
+        {
+            investors.Remove(investor);
+        }
+        public void Notify()
+        {
+            foreach (IInvestor investor in investors)
+            {
+                investor.Update(this);
+            }
+            Console.WriteLine("");
+        }
+        // Gets or sets the price
+        public double Price
+        {
+            get { return price; }
+            set
+            {
+                if (price != value)
+                {
+                    price = value;
+                    Notify();
+                }
+            }
+        }
+        // Gets the symbol
+        public string Symbol
+        {
+            get { return symbol; }
+        }
+
+    }
+    - IBM.cs (Concrete subject class)
+    ```c#
+     public IBM(string symbol, double price)
+           : base(symbol, price)
+    {
+    }
+    ```
+    - IInvestor.cs (Observer interface)
+    ```c#
+    public interface IInvestor
+    {
+        void Update(Stock stock);
+    }
+    ```
+    - Investor.cs (Concrete observer)
+    ```c#
+     public class Investor : IInvestor
+    {
+        private string name;
+        private Stock stock;
+        // Constructor
+        public Investor(string name)
+        {
+            this.name = name;
+        }
+        public void Update(Stock stock)
+        {
+            Console.WriteLine("Notified {0} of {1}'s " +
+                "change to {2:C}", name, stock.Symbol, stock.Price);
+        }
+        // Gets or sets the stock
+        public Stock Stock
+        {
+            get { return stock; }
+            set { stock = value; }
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+    IBM ibm = new IBM("IBM", 120.00);
+    ibm.Attach(new Investor("Sorros"));
+    ibm.Attach(new Investor("Berkshire"));
+    // Fluctuating prices will notify investors
+    ibm.Price = 120.10;
+    ibm.Price = 121.00;
+    ibm.Price = 120.50;
+    ibm.Price = 120.75;
+    //Notified Sorros of IBM's change to $120.10
+    //Notified Berkshire of IBM's change to $120.10
+
+    //Notified Sorros of IBM's change to $121.00
+    //Notified Berkshire of IBM's change to $121.00
+
+    //Notified Sorros of IBM's change to $120.50
+    //Notified Berkshire of IBM's change to $120.50
+
+    //Notified Sorros of IBM's change to $120.75
+    //Notified Berkshire of IBM's change to $120.75
+    ```
+
+
