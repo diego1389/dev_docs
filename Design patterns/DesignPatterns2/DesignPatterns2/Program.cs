@@ -11,6 +11,7 @@ using DesignPatterns2.IteratorPattern.Indexers;
 using DesignPatterns2.Observer;
 using DesignPatterns2.Prototype;
 using DesignPatterns2.Proxy;
+using DesignPatterns2.Strategy;
 
 namespace DesignPatterns2
 {
@@ -271,7 +272,7 @@ namespace DesignPatterns2
     }*/
     #endregion
     #region Observer
-    class Program
+    /*class Program
     {
         static void Main(string[] args)
         {
@@ -283,6 +284,26 @@ namespace DesignPatterns2
             ibm.Price = 121.00;
             ibm.Price = 120.50;
             ibm.Price = 120.75;
+        }
+    }*/
+    #endregion
+    #region Strategy
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            SortedList studentRecords = new SortedList();
+            studentRecords.Add("Samual");
+            studentRecords.Add("Jimmy");
+            studentRecords.Add("Sandra");
+            studentRecords.Add("Vivek");
+            studentRecords.Add("Anna");
+            studentRecords.SetSortStrategy(new QuickSort());
+            studentRecords.Sort();
+            studentRecords.SetSortStrategy(new ReverseSort());
+            studentRecords.Sort();
+            studentRecords.SetSortStrategy(new MergeSort());
+            studentRecords.Sort();
         }
     }
     #endregion

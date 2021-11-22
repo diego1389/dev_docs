@@ -1905,5 +1905,94 @@
     //Notified Sorros of IBM's change to $120.75
     //Notified Berkshire of IBM's change to $120.75
     ```
+## Strategy
+-  Defines a family of algorithms, encapsulate each one, and make them interchangeable. This pattern lets the algorithm vary independently from clients that use it.
 
+- Elements:
+    1. **Strategy:** declares an interface common to all supported algorithms. Context uses this interface to call the algorithm defined by a ConcreteStrategy.
+    2. **Concrete strategy:** implements the algorithm using the Strategy interface.
+    3. **Context:** is configured with a ConcreteStrategy object. Maintains a reference to a Strategy object may define an interface that lets Strategy access its data.
+- Real life example:
+    - Strategy pattern which encapsulates sorting algorithms in the form of sorting objects. This allows clients to dynamically change sorting strategies including Quicksort, Shellsort, and Mergesort.
+    - SortStrategy.cs (Strategy abstract class)
+    ```c#
+    public abstract class SortStrategy
+    {
+        public abstract void Sort(List<string> list);
+    }
+    ```
+    - Quicksort.cs (Concrete strategy)
+    ```c#
+    public class QuickSort : SortStrategy
+    {
+        public override void Sort(List<string> list)
+        {
+            list.Sort();  // Default is Quicksort
+            Console.WriteLine("QuickSorted list ");
+        }
+    }
+    ```
+    - ReverseSort.cs (Concrete strategy)
+    ```c#
+    public class ReverseSort : SortStrategy
+    {
+        public override void Sort(List<string> list)
+        {
+            list.Reverse();
+            Console.WriteLine("ReverseSort list ");
+        }
+    }
+    ```
+    - SortedList.cs (The context class)
+    ```c#
+    public class SortedList
+    {
+        private List<string> list = new List<string>();
+        private SortStrategy sortstrategy;
+        public void SetSortStrategy(SortStrategy sortstrategy)
+        {
+            this.sortstrategy = sortstrategy;
+        }
+        public void Add(string name)
+        {
+            list.Add(name);
+        }
+        public void Sort()
+        {
+            sortstrategy.Sort(list);
+            // Iterate over list and display results
+            foreach (string name in list)
+            {
+                Console.WriteLine(" " + name);
+            }
+            Console.WriteLine();
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+    SortedList studentRecords = new SortedList();
+    studentRecords.Add("Samual");
+    studentRecords.Add("Jimmy");
+    studentRecords.Add("Sandra");
+    studentRecords.Add("Vivek");
+    studentRecords.Add("Anna");
+    studentRecords.SetSortStrategy(new QuickSort());
+    studentRecords.Sort();
+    studentRecords.SetSortStrategy(new ReverseSort());
+    studentRecords.Sort();
+    //QuickSorted list 
+    //Anna
+    //Jimmy
+    //Samual
+    //Sandra
+    //Vivek
+
+    //ReverseSort list 
+    //Vivek
+    //Sandra
+    //Samual
+    //Jimmy
+    //Anna
+    ```
 

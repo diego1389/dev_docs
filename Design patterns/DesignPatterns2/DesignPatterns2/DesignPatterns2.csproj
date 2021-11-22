@@ -17,6 +17,7 @@
     <None Remove="IteratorPattern\Indexers\" />
     <None Remove="FactoryMethod\" />
     <None Remove="Observer\" />
+    <None Remove="Strategy\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AbstractFactory\" />
@@ -30,5 +31,6 @@
     <Folder Include="IteratorPattern\Indexers\" />
     <Folder Include="FactoryMethod\" />
     <Folder Include="Observer\" />
+    <Folder Include="Strategy\" />
   </ItemGroup>
 </Project>
