@@ -9,6 +9,9 @@
         <State name="__root__">
           <Node name="DesignPatterns" expanded="True">
             <Node name="DesignPatterns" expanded="True">
+              <Node name="Dependencies" expanded="True">
+                <Node name="FrameworkReferences" expanded="True" />
+              </Node>
               <Node name="Program.cs" selected="True" />
             </Node>
           </Node>

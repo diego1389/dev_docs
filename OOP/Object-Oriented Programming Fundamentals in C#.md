@@ -6,7 +6,7 @@
     ```cs
     Customer customer = new Customer();
     ```
-- **Objects** exits only at runtime. When the application terminates the object is gone but the **classes** still exists.
+- **Objects** exist only at runtime. When the application terminates the object is gone but the **classes** still exists.
 
 - **Business objects** normally refers to a class, classes specifically defined for solving a business problem. 
 - A class is a cookie cutter with properties and actions to create the cookiess (objects). Each object defines its own values for the properties. 

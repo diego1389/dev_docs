@@ -89,7 +89,7 @@ public sealed class Singleton{
 
 13. Singleton can be passed as parameters and static class do not.
 
-14. Singleton can be assign to variables. 
+14. Singleton can be assigned to variables. 
 
 15. Singleton classes can be serialized, static don't.
 
@@ -99,13 +99,11 @@ public sealed class Singleton{
 public override void ConfigureServices(IServiceCollection services)
 	{
         services.AddTransient<IProveedorApiEndpoints, ProveedorApiEndpoints>(); //lifetime transiet, a new instance is provided any time a class request it
-        services.AddScoped<IRepositoriosEF, RepositoriosEF>(); /*lifetime scoped, the first request gets a new instance and the subsecuent request in that scope share the same instance*/ 
+        services.AddScoped<IRepositoriosEF, RepositoriosEF>(); /*lifetime scoped, one instance per request*/ 
 		services.AddSingleton<IConfiguracionDeServicios, ConfiguracionDeServicios>();/*life time single, every request get the same instance, lazy*/
         services.AddSingleton<IConfiguracionDeServicios>(new ConfiguracionDeServicios(_configuration)); //create instance up front, creates it when application starts */
     }
-
 ```
-
 
 ## State
 
@@ -117,13 +115,13 @@ public override void ConfigureServices(IServiceCollection services)
 
 4. The naive approach uses booleans to track the different states but every time it becomes harder to add different states and harder to manage. It is also difficult to extend.
 
-5. State design patter minimizes conditional complexity.
+5. State design pattern minimizes conditional complexity.
 
 6. It encapsulates state-specific behaviors within separate state objects.
 
 7. A class delegates the execution of its state-specific behaviors to one state object at a time.
 
-8. Thre main elements of the State pattern:
+8. Three main elements of the State pattern:
     1. Context: mantains an instance of a concrete state as the current state.
     2. Abstract state: defines an interface which encapsulates all state-specific behaviors.
     3. Concrete state: a subclass of the abstract state that implements behaviors to a particular state of context.

@@ -7,7 +7,7 @@ Object is a structure for incorporating data and the procedures for working with
 Abstraction
 __________________
 
- Abstraction: the objects incldude only the information that is relevant in the context of the application. 
+ Abstraction: the objects include only the information that is relevant in the context of the application. 
  Depending of the application some attributes of a certain object are important or not (like the color).
 
 
@@ -182,7 +182,7 @@ Framework base class library: Built on the top of the CLR. It has reference type
 
 Data classes: ADO.Net 
 
-Manifest: metadata about the assembly, its porpuse is to describe the assembly. Framework is hierarchically organized in namespaces. 
+Manifest: metadata about the assembly, its purpose is to describe the assembly. Framework is hierarchically organized in namespaces. 
 
 When .Net is compiled it is converted into a Portable executable (PE) file. 
 
@@ -193,10 +193,10 @@ accesssed through an instance of the class.
 
 A method signature is a combination of the name of the method and its parameter type list. 
 
-Polymorphism letse a base class dfine methods that must be implemented by any derived classes. The base class defines the message signature that derived 
+Polymorphism lets a base class define methods that must be implemented by any derived classes. The base class defines the message signature that derived 
 classes must adhere to, but the implementation is left up to the derived class. The client knows that inputs and outputs of the methods will be the same. 
 
-The derived classes may require aditional methods and properties.  
+The derived classes may require adittional methods and properties.  
 
 By default any C# class can be inherited. If you are not careful you can create chains that are hard to manage and debug.
  By using sealed modifier you can create classes that you know will not be derived from (sealed or final class). 
