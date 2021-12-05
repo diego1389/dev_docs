@@ -149,7 +149,7 @@ public override void ConfigureServices(IServiceCollection services)
 
 13. **Concrete states:** 
 
-    - Create a separate class for each state and implement the abstract class Booking state. 
+    - Create a separate class for each state and implement the abstract class BookingState. 
 
 14. **Context and state:**
 

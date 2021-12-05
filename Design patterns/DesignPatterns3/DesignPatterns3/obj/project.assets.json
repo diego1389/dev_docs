@@ -1,0 +1,108 @@
+{
+  "version": 3,
+  "targets": {
+    "net5.0": {
+      "stateless/5.11.0": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/stateless.dll": {}
+        },
+        "runtime": {
+          "lib/net5.0/stateless.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "stateless/5.11.0": {
+      "sha512": "5XXmdEQBOpgE90vqxfZH0ekdqfGB6xLe0Uyb7EyHr/fgv/zkZtDcru4KxRvAvWxE1u4c8MOZnOnXoRfQOfFnTg==",
+      "type": "package",
+      "path": "stateless/5.11.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Stateless.png",
+        "lib/net40/stateless.dll",
+        "lib/net40/stateless.xml",
+        "lib/net45/stateless.dll",
+        "lib/net45/stateless.xml",
+        "lib/net472/stateless.dll",
+        "lib/net472/stateless.xml",
+        "lib/net5.0/stateless.dll",
+        "lib/net5.0/stateless.xml",
+        "lib/netstandard1.0/stateless.dll",
+        "lib/netstandard1.0/stateless.xml",
+        "lib/netstandard2.0/stateless.dll",
+        "lib/netstandard2.0/stateless.xml",
+        "stateless.5.11.0.nupkg.sha512",
+        "stateless.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net5.0": [
+      "stateless >= 5.11.0"
+    ]
+  },
+  "packageFolders": {
+    "/Users/diego.guillen/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns3/DesignPatterns3/DesignPatterns3.csproj",
+      "projectName": "DesignPatterns3",
+      "projectPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns3/DesignPatterns3/DesignPatterns3.csproj",
+      "packagesPath": "/Users/diego.guillen/.nuget/packages/",
+      "outputPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns3/DesignPatterns3/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/diego.guillen/.config/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net5.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net5.0": {
+        "targetAlias": "net5.0",
+        "dependencies": {
+          "stateless": {
+            "target": "Package",
+            "version": "[5.11.0, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.403/RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

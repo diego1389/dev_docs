@@ -810,7 +810,227 @@
         }
     }
     ```
+## State
 
+- A pattern in which the object's behaviour is determined by its state. An object transitions from one state to another. 
+- A formalized construct which manages state and transitions is called a state machine. 
+- **Handmade state machines:**
+
+- Add a State and Trigger enums to list the possible states and the triggers that fire those transitions:
+    ```c#
+      public enum State
+    {
+        OffHook,
+        Connecting,
+        Connedted,
+        OnHold
+    }
+
+    public enum Trigger
+    {
+        CallDialed,
+        HangUp,
+        CallConnected,
+        PlacedOnHold,
+        TakeOffHold,
+        LeftMessage
+    }
+    ```
+- Create the state machine:
+    ```c#
+    class Program
+    {
+        private static Dictionary<State, List<(Trigger, State)>> rules
+            = new Dictionary<State, List<(Trigger, State)>>
+            {
+                [State.OffHook] = new List<(Trigger, State)>
+                {
+                    (Trigger.CallDialed, State.Connecting)
+                },
+                [State.Connecting] = new List<(Trigger, State)>
+                {
+                    (Trigger.HangUp, State.OffHook),
+                    (Trigger.CallConnected, State.Connedted)
+                },
+                [State.Connedted] = new List<(Trigger, State)>
+                {
+                    (Trigger.LeftMessage,State.OffHook),
+                    (Trigger.HangUp, State.OffHook),
+                    (Trigger.PlacedOnHold, State.OnHold)
+                },
+                [State.OnHold] = new List<(Trigger, State)>
+                {
+                    (Trigger.TakeOffHold, State.Connedted),
+                    (Trigger.HangUp, State.OffHook)
+                }
+            };
+
+        static void Main(string[] args)
+        {
+            //initial state
+            var state = State.OffHook;
+            while (true)
+            {
+                Console.WriteLine($"The phone is currently {state}");
+                Console.WriteLine($"Select a trigger:");
+                //display the possible triggers for that state
+                for (int i = 0; i < rules[state].Count; i++)
+                {
+                    var (t,_) = rules[state][i];
+                    Console.WriteLine($"{i}. {t}");
+                }
+
+                int input = int.Parse(Console.ReadLine());
+                //change the state according with the trigger selected by the user
+                var (_, s) = rules[state][input];
+                state = s;
+            }
+        }
+    }
+    ```
+- Switch-based state machine
+    - It is useful when you have small set of transitions.
+    - Add an enum with the possible states:
+    ```c#
+     public enum State
+    {
+        Locked,
+        Failed,
+        Unlocked
+    }
+    ```
+    - Add the switch-based state machine:
+    ```c#
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string code = "1234";
+            var state = State.Locked;
+
+            var entry = new StringBuilder();
+
+            while (true)
+            {
+                switch (state)
+                {
+                    case State.Locked:
+                        entry.Append(Console.ReadKey().KeyChar);
+                        if (entry.ToString() == code)
+                        {
+                            state = State.Unlocked;
+                            break;
+                        }
+                        if (!code.StartsWith(entry.ToString()))
+                        {
+                            //you can also use goto to go to another case without changing the state
+                            state = State.Failed;
+                            break;
+                        }
+                        break;
+                    case State.Failed:
+                        Console.CursorLeft = 0;
+                        Console.WriteLine("FAILED");
+                        entry.Clear();
+                        state = State.Locked;
+                        break;
+                    case State.Unlocked:
+                        Console.CursorLeft = 0;
+                        Console.WriteLine("UNLOCKED");
+                        return;
+                }
+            }
+        }
+    }
+    ```
+- Switch expressions
+    - Not switch statement. 
+    - Better approach than the previous one.
+    - Add state and action enums:
+    ```c#
+    public enum Chest
+    {
+        Open,
+        Closed,
+        Locked
+    }
+
+    public enum ChestAction
+    {
+        Open,
+        Close
+    }
+    ```
+    - Define the informal state machine:
+    ```c#
+    class Program
+    {
+        static Chest Manipulate(Chest chest, ChestAction action, bool haveKey)
+                => (chest, action, haveKey) switch
+                {
+                    (Chest.Locked, ChestAction.Open, true) => Chest.Open,
+                    (Chest.Closed, ChestAction.Open, _) => Chest.Open,
+                    (Chest.Open, ChestAction.Close, true) => Chest.Locked,
+                    (Chest.Open, ChestAction.Close, false) => Chest.Closed,
+                    _ => chest
+                };
+
+        static void Main(string[] args)
+        {
+            var chest = Chest.Locked;
+            Console.WriteLine($"Chest is {chest}");
+            chest = Manipulate(chest, ChestAction.Open, true);
+            Console.WriteLine($"Chest is {chest}");
+            chest = Manipulate(chest, ChestAction.Close, false);
+            Console.WriteLine($"Chest is {chest}");
+            chest = Manipulate(chest, ChestAction.Close, false);
+            Console.WriteLine($"Chest is {chest}");
+        }
+    }
+    ```
+- State machine with stateless
+    - Create a state machine using stateless library.
+    - Add state and activity for transitions:
+    ```c#
+    public enum Health
+    {
+        NonReproductive,
+        Pregnant,
+        Reproductive
+    }
+
+    public enum Activity
+    {
+        GiveBirth,
+        ReachPuberty,
+        HaveAbortion,
+        HaveUnprotectedSex,
+        Historectomy
+    }
+    ```
+    - Use stateless to configure the state machine:
+    ```c#
+     class Program
+    {
+        public static bool ParentsNotWatching { get; private set; }
+
+        static void Main(string[] args)
+        {
+            var machine = new StateMachine<Health, Activity>(Health.NonReproductive);
+            machine.Configure(Health.NonReproductive)
+                .Permit(Activity.ReachPuberty, Health.Reproductive);
+            machine.Configure(Health.Reproductive)
+                .Permit(Activity.Historectomy, Health.NonReproductive)
+                .PermitIf(Activity.HaveUnprotectedSex, Health.Pregnant,
+                () => ParentsNotWatching);
+            machine.Configure(Health.Pregnant)
+             .Permit(Activity.GiveBirth, Health.Reproductive)
+             .Permit(Activity.HaveAbortion, Health.Reproductive);
+
+            
+        }
+    }
+    ```
 ## Abstract factory
 
 - This creates a set of related objects or dependent objects. 

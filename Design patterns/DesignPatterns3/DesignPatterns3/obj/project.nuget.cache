@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "OgoVChyGx+tk362meZeu2AbXl4xIYRLbQffKewRzoPEbBwerQtSISy4oBauhNOuTtQCHdUoLD7GiptISnfWBtA==",
+  "success": true,
+  "projectFilePath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns3/DesignPatterns3/DesignPatterns3.csproj",
+  "expectedPackageFiles": [
+    "/Users/diego.guillen/.nuget/packages/stateless/5.11.0/stateless.5.11.0.nupkg.sha512"
+  ],
+  "logs": []
+}
