@@ -693,6 +693,16 @@ public class USSalesTaxStrategy : ISalesTaxStrategy
             }
         }
 
+
+    /*
+    Colleague2 receives notification message: Hello, World! (from c1)
+    Colleague1 receives notification message: hi, there! (from c2)
+*/
+```
+- Program.cs
+    ```c#
+    class Program
+    {
         static void Main(string[] args)
         {
             var mediator = new ConcreteMediator();
@@ -704,13 +714,8 @@ public class USSalesTaxStrategy : ISalesTaxStrategy
             c1.Send("Hello, World! (from c1)");
             c2.Send("hi, there! (from c2)");
         }
-
-    /*
-    Colleague2 receives notification message: Hello, World! (from c1)
-    Colleague1 receives notification message: hi, there! (from c2)
-*/
-
-```
+    }
+    ```
 5. To work  with n colleagues: 
 
 ```csharp
@@ -896,7 +901,7 @@ public abstract class Chatroom
 
 ## Builder
 
-1.  It deals with creating objects. Separate the construction of a complex object from its representation, so that the same construction proccess can create different representation.s.
+1.  It deals with creating objects. Separate the construction of a complex object from its representation, so that the same construction proccess can create different representation.
 
 2. The builder pattern removes any and all construction or initialization code from an object class and abstracts it out to an interface. Concrete classes dont deal with instantiating themselves. That's up to the director class, which controls where and with what data the concrete classes are 
 
@@ -907,7 +912,7 @@ public abstract class Chatroom
     4. Implement a director class.
     5. Update to a fluent builder variation. 
 
-4. Each concrete builder is in charge of keeping track of the representation of the complex object it creates, and retreiving that object when queried.
+4. Each concrete builder is in charge of keeping track of the representation of the complex object it creates, and retreiving that object when requeried.
 
 5. The director class handles the actual call to construct the complex object using t he concrete buildert. 
 
