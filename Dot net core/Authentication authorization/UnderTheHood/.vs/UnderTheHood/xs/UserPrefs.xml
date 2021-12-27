@@ -1,0 +1,36 @@
+﻿<Properties StartupConfiguration="{F5220448-1AEE-4E95-840F-145EA18F9240}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHood/Startup.cs">
+    <Files>
+      <File FileName="UnderTheHood/Pages/Account/Login.cshtml" Line="23" Column="39" />
+      <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" Line="37" Column="1" />
+      <File FileName="UnderTheHood/Program.cs" />
+      <File FileName="UnderTheHood/Pages/Account/Credential.cs" />
+      <File FileName="UnderTheHood/Startup.cs" Line="26" Column="27" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="UnderTheHood" expanded="True">
+            <Node name="UnderTheHood" expanded="True">
+              <Node name="Pages" expanded="True">
+                <Node name="Account" expanded="True">
+                  <Node name="Login.cshtml" expanded="True" />
+                </Node>
+              </Node>
+              <Node name="Startup.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.UnderTheHood PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/Account/Login.cshtml.cs" relfile="UnderTheHood/Pages/Account/Login.cshtml.cs" line="21" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
