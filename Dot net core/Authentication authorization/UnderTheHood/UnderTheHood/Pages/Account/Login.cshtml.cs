@@ -27,7 +27,8 @@ namespace UnderTheHood.Pages.Account
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, "admin"),
-                    new Claim(ClaimTypes.Email, "admin@test.com")
+                    new Claim(ClaimTypes.Email, "admin@test.com"),
+                    new Claim("Department", "HR")
                 };
 
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");

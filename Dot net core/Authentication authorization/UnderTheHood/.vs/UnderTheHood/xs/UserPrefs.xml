@@ -1,11 +1,18 @@
 ﻿<Properties StartupConfiguration="{F5220448-1AEE-4E95-840F-145EA18F9240}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHood/Startup.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHood/Pages/Index.cshtml.cs">
     <Files>
-      <File FileName="UnderTheHood/Pages/Account/Login.cshtml" Line="23" Column="39" />
-      <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" Line="37" Column="1" />
-      <File FileName="UnderTheHood/Program.cs" />
-      <File FileName="UnderTheHood/Pages/Account/Credential.cs" />
-      <File FileName="UnderTheHood/Startup.cs" Line="26" Column="27" />
+      <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" Line="34" Column="72" IsPinned="True" />
+      <File FileName="UnderTheHood/Pages/Shared/_ValidationScriptsPartial.cshtml" Line="1" Column="1" IsPinned="True" />
+      <File FileName="UnderTheHood/Program.cs" Line="16" Column="1" />
+      <File FileName="UnderTheHood/Startup.cs" Line="32" Column="1" />
+      <File FileName="UnderTheHood/Pages/Index.cshtml.cs" Line="23" Column="1" />
+      <File FileName="UnderTheHood/Pages/Index.cshtml" Line="7" Column="1" />
+      <File FileName="UnderTheHood/Pages/HumanResource.cshtml" Line="7" Column="47" />
+      <File FileName="UnderTheHood/Pages/Account/Login.cshtml" Line="1" Column="1" />
+      <File FileName="UnderTheHood/Pages/Account/Logout.cshtml" Line="1" Column="1" />
+      <File FileName="UnderTheHood/Pages/Shared/_LoginStatusPartial_.cshtml" Line="5" Column="64" />
+      <File FileName="UnderTheHood/Pages/Shared/_Layout.cshtml" Line="30" Column="59" />
+      <File FileName="UnderTheHood/Pages/Account/Logout.cshtml.cs" Line="16" Column="37" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -15,9 +22,14 @@
               <Node name="Pages" expanded="True">
                 <Node name="Account" expanded="True">
                   <Node name="Login.cshtml" expanded="True" />
+                  <Node name="Logout.cshtml" expanded="True" />
+                </Node>
+                <Node name="Shared" expanded="True" />
+                <Node name="HumanResource.cshtml" expanded="True" />
+                <Node name="Index.cshtml" expanded="True">
+                  <Node name="Index.cshtml.cs" selected="True" />
                 </Node>
               </Node>
-              <Node name="Startup.cs" selected="True" />
             </Node>
           </Node>
         </State>
@@ -29,7 +41,8 @@
   <MonoDevelop.Ide.ItemProperties.UnderTheHood PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/Account/Login.cshtml.cs" relfile="UnderTheHood/Pages/Account/Login.cshtml.cs" line="21" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Startup.cs" relfile="UnderTheHood/Startup.cs" line="32" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/Account/Login.cshtml.cs" relfile="UnderTheHood/Pages/Account/Login.cshtml.cs" line="27" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />

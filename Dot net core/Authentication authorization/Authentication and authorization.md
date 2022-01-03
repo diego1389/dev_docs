@@ -99,7 +99,7 @@
     ```c#
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddAuthentication().AddCookie("MyCookieAuth", options =>
+        services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
         {
             options.Cookie.Name = "MyCookieAuth";
         });
@@ -131,4 +131,138 @@
 
         return Page();
     }
+    ```
+- To actually read the cookie you need UseAuthorization
+    - Start.cs
+    ```c#
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapRazorPages();
+        });
+    }
+    ```
+- Now the cookie authentication appears under base.User.identities (Watch window) in index.cshtml.cs
+- Policy is formed by one or more requirements. 
+    - For each requirement it should be an authorization handler.
+    - IAuthorizationService.
+- To prevent unauthorized access to a page add [Authorize] data attribute in the code behind. It will go to the login page by default.
+- To change the default login page (path: /Account/Login)
+    ```c#
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
+            {
+                options.Cookie.Name = "MyCookieAuth";
+                options.LoginPath = "/Account2/Login";
+            });
+            services.AddRazorPages();
+        }
+    ```
+- Configure policy:
+    - Add new page (HUman resources
+    - Configure middleware:
+    ```c#
+    public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
+            {
+                options.Cookie.Name = "MyCookieAuth";
+                options.LoginPath = "/Account/Login";
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("MustBelongToHR", policy => policy.RequireClaim("Department", "HR"));
+            });
+            services.AddRazorPages();
+        }
+    ```
+    - Add Authorization data annotation in HR page
+    ```c#
+    [Authorize(Policy = "MustBelongToHR")]
+    public class HumanResourceModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+    ```
+    - Add the new claim in the login page:
+    ```c#
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid) return Page();
+        //Verify credential
+        if(Credential.UserName == "admin" && Credential.Password == "password")
+        {
+            //Create security context
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "admin"),
+                new Claim(ClaimTypes.Email, "admin@test.com"),
+                new Claim("Department", "HR")
+            };
+
+            var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
+
+            /*Serialize the claims principle into a stream, then encrypts that stream and save that as a cookie, right into the cookie inside the http context object*/
+            await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal);
+            return RedirectToPage("/Index");
+        }
+
+        return Page();
+    }
+    ```
+- Implementing logout page:
+    - Add logout page:
+    ```c#
+    public class LogoutModel : PageModel
+    {
+        public async Task<IActionResult> OnPostAsync()
+        {
+            await HttpContext.SignOutAsync("MyCookieAuth");
+            return RedirectToPage("Index");
+        }
+    }
+    ```
+    - Add a login status partial view:
+    ```html
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form method="post" class="form-inline" asp-page="/Account/Logout">
+            Welcome @User.Identity.Name
+            <button type="submit" class="ml-2 btn btn-link" >Logout</button>
+        </form>
+    }
+    else {
+        <a class="btn btn-link" asp-page="/Account/Login">Login</a>
+    }
+    ```
+    - Add the partial view in the _Layout
+    ```html
+     <div class="mr-2">
+        <partial name="_LoginStatusPartial_"/>
+    </div>
     ```
