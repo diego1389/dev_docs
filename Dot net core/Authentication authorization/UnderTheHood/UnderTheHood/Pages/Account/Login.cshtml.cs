@@ -28,7 +28,8 @@ namespace UnderTheHood.Pages.Account
                 {
                     new Claim(ClaimTypes.Name, "admin"),
                     new Claim(ClaimTypes.Email, "admin@test.com"),
-                    new Claim("Department", "HR")
+                    new Claim("Department", "HR"),
+                    new Claim("EmploymentDate", "2021-12-12")
                 };
 
                 var identity = new ClaimsIdentity(claims, "MyCookieAuth");

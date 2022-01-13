@@ -266,3 +266,108 @@
         <partial name="_LoginStatusPartial_"/>
     </div>
     ```
+- Custom policy based authorization
+    1. Add two classes to handle the custom authorization logic
+    ```c#
+    using System;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
+
+    namespace UnderTheHood.Authorization
+    {
+        public class HRManagerProbationRequirement : IAuthorizationRequirement
+        {
+            public HRManagerProbationRequirement(int probationMonths)
+            {
+                ProbationMonths = probationMonths;
+            }
+
+            public int ProbationMonths { get; }
+        }
+
+        public class HRManagerProbationRequirementHandler : AuthorizationHandler<HRManagerProbationRequirement>
+        {
+            protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HRManagerProbationRequirement requirement)
+            {
+                if(!context.User.HasClaim(claim => claim.Type == "EmploymentDate"))
+                {
+                    return Task.CompletedTask;
+                }
+
+                var empDate = DateTime.Parse(context.User.FindFirst(x => x.Type == "EmploymentDate").Value);
+                var period = DateTime.Now - empDate;
+                if(period.Days > 30 * requirement.ProbationMonths)
+                {
+                    context.Succeed(requirement);
+                }
+
+                return Task.CompletedTask;
+            }
+        }
+    }
+    ```
+    - Modify the ConfigureServices
+    ```c#
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
+        {
+            options.Cookie.Name = "MyCookieAuth";
+            options.LoginPath = "/Account/Login";
+        });
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("MustBelongToHR", policy => policy
+                .RequireClaim("Department", "HR")
+                .Requirements.Add(new HRManagerProbationRequirement(3)));
+        });
+        services.AddSingleton<IAuthorizationHandler, HRManagerProbationRequirementHandler>();
+        services.AddRazorPages();
+    }
+    ```
+    - Modify the login
+    ```c#
+    public async Task<IActionResult> OnPostAsync()
+    {
+        if (!ModelState.IsValid) return Page();
+        //Verify credential
+        if(Credential.UserName == "admin" && Credential.Password == "password")
+        {
+            //Create security context
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "admin"),
+                new Claim(ClaimTypes.Email, "admin@test.com"),
+                new Claim("Department", "HR"),
+                new Claim("EmploymentDate", "2021-12-12")
+            };
+
+            var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
+
+            /*Serialize the claims principle into a stream, then encrypts that stream and save that as a cookie, right into the cookie inside the http context object*/
+            await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal);
+            return RedirectToPage("/Index");
+        }
+
+        return Page();
+    }
+    ```
+- Cookie lifetime
+    - Startup.cs
+    ```c#
+     public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
+        {
+            options.Cookie.Name = "MyCookieAuth";
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+            options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
+        });
+    ...
+    }
+    ```
+    - A persistent cookie survives even if the browser closes.

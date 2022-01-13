@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using UnderTheHood.Authorization;
 
 namespace UnderTheHood
 {
@@ -27,12 +29,18 @@ namespace UnderTheHood
             {
                 options.Cookie.Name = "MyCookieAuth";
                 options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
             });
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("MustBelongToHR", policy => policy.RequireClaim("Department", "HR"));
+                options.AddPolicy("MustBelongToHR", policy => policy
+                    .RequireClaim("Department", "HR")
+                    .Requirements.Add(new HRManagerProbationRequirement(3)));
             });
+            services.AddSingleton<IAuthorizationHandler, HRManagerProbationRequirementHandler>();
             services.AddRazorPages();
         }
 
