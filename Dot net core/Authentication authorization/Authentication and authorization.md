@@ -371,3 +371,120 @@
     }
     ```
     - A persistent cookie survives even if the browser closes.
+    - Create persistent cookie:
+    - Add new property to credential:
+    ```c#
+    using System.ComponentModel.DataAnnotations;
+
+    namespace UnderTheHood.Pages.Account
+    {
+        public class Credential
+        {
+            [Required]
+            [Display(Name = "User Name")]
+            public string UserName { get; set; }
+            [Required]
+            [DataType(DataType.Password)]
+            public string Password { get; set; }
+
+            [Display(Name = "Remember me")]
+            public bool RememberMe { get; set; }
+            }
+    }
+    ```
+    - Modify login.cshtml
+    ```html
+    @page
+    @model UnderTheHood.Pages.Account.LoginModel
+    @{
+    }
+
+    <div class="container border" style="padding:20px">
+        <form method="post">
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Credential.UserName"></label>
+                </div>
+                <div class="col-5">
+                    <input type="text" asp-for="Credential.UserName" class="form-control" />
+                    <span class="text-danger" asp-validation-for="Credential.UserName"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <label asp-for="Credential.Password"></label>
+                </div>
+                <div class="col-5">
+                    <input type="password" asp-for="Credential.Password" class="form-control" />
+                    <span class="text-danger" asp-validation-for="Credential.Password"></span>
+                </div>
+            </div>
+            <div class="row form-check mb-2">
+                <div class="col-2">
+                    <input type="checkbox" asp-for="Credential.RememberMe" class="form-check-input"/>
+                    <label class="form-check-label" asp-for="Credential.RememberMe"></label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-2">
+                    <input type="submit" class="btn btn-primary" value="Login"/>
+                </div>
+            </div>
+        </form>
+    </div>
+    ```
+    - Add AuthenticationProperties (Login.cshtml.cs)
+    ```c#
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Claims;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+
+    namespace UnderTheHood.Pages.Account
+    {
+        public class LoginModel : PageModel
+        {
+            [BindProperty]
+            public Credential Credential { get; set; }
+            public void OnGet()
+            {
+            }
+
+            public async Task<IActionResult> OnPostAsync()
+            {
+                if (!ModelState.IsValid) return Page();
+                //Verify credential
+                if(Credential.UserName == "admin" && Credential.Password == "password")
+                {
+                    //Create security context
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, "admin"),
+                        new Claim(ClaimTypes.Email, "admin@test.com"),
+                        new Claim("Department", "HR"),
+                        new Claim("EmploymentDate", "2021-12-12")
+                    };
+
+                    var identity = new ClaimsIdentity(claims, "MyCookieAuth");
+                    ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
+
+                    var authProperties = new AuthenticationProperties
+                    {
+                        IsPersistent = Credential.RememberMe
+                    };
+
+                    /*Serialize the claims principle into a stream, then encrypts that stream and save that as a cookie, right into the cookie inside the http context object*/
+                    await HttpContext.SignInAsync("MyCookieAuth", claimsPrincipal, authProperties);
+                    return RedirectToPage("/Index");
+                }
+
+                return Page();
+            }
+        }
+    }
+    ```

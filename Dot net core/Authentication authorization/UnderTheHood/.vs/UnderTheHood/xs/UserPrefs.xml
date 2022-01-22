@@ -1,12 +1,14 @@
 ﻿<Properties StartupConfiguration="{F5220448-1AEE-4E95-840F-145EA18F9240}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHood/Startup.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHood/Pages/Account/Login.cshtml.cs">
     <Files>
-      <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" Line="27" Column="1" />
-      <File FileName="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" Line="20" Column="1" />
-      <File FileName="UnderTheHood/Startup.cs" Line="36" Column="1" />
+      <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" Line="52" Column="1" />
+      <File FileName="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" />
+      <File FileName="UnderTheHood/Startup.cs" Line="33" Column="1" />
       <File FileName="UnderTheHood/Pages/Index.cshtml" />
-      <File FileName="UnderTheHood/Pages/Shared/_Layout.cshtml" Line="26" Column="30" />
-      <File FileName="UnderTheHood/Program.cs" Line="24" Column="20" />
+      <File FileName="UnderTheHood/Pages/Shared/_Layout.cshtml" />
+      <File FileName="UnderTheHood/Program.cs" />
+      <File FileName="UnderTheHood/Pages/Account/Login.cshtml" Line="29" Column="30" />
+      <File FileName="UnderTheHood/Pages/Account/Credential.cs" Line="13" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -16,11 +18,12 @@
               <Node name="Authorization" expanded="True" />
               <Node name="Pages" expanded="True">
                 <Node name="Account" expanded="True">
-                  <Node name="Login.cshtml" expanded="True" />
+                  <Node name="Login.cshtml" expanded="True">
+                    <Node name="Login.cshtml.cs" selected="True" />
+                  </Node>
                 </Node>
                 <Node name="Shared" expanded="True" />
               </Node>
-              <Node name="Startup.cs" selected="True" />
             </Node>
           </Node>
         </State>

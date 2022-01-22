@@ -31,7 +31,7 @@ namespace UnderTheHood
                 options.LoginPath = "/Account/Login";
                 options.LogoutPath = "/Account/Logout";
                 options.AccessDeniedPath = "/Account/AccessDenied";
-                options.ExpireTimeSpan = TimeSpan.FromSeconds(30);
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(2);
             });
 
             services.AddAuthorization(options =>

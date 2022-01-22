@@ -1169,7 +1169,14 @@ dot net publish o c:\temp\odetofood
 - For IIS you need AspNetCoreModuleV2 under Modules installed.
 - If we are going to use a user and password for a connection in prod we dont store that info in the appsettings.Production.json, we do it in an environment variable in the server.
 
+Types of deployment:
 
+1. **Framework-dependent deployment (FDD):**
+    - Dependent upon the .NET Core installed on the target machine where you want to deploy your app. Framework-dependent deployment (FDD) is the default deployment mode in .NET Core app
+2. **Self-contained deployment (SCD):**
+    - The final application build contains all the app-specific code and its dependencies along with .NET Core libraries and .NET Core runtime. In this mode, it is not necessary to have .NET Core runtime install on the servers.
+3. **Framework-dependent executables (FDE):**
+    - It is exactly same as FDD but this mode produces the executable that can be run on any target machine. In this mode, we are not using dotnet utility to run our app.
 
 # Building your first ASP.Net Core Application
 - Create ASP.Net core application
