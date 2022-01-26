@@ -99,3 +99,122 @@
         `
     });
     ```
+- Referencing data in the template:
+    - We don't need to use computed function all the time.
+    ```js
+    new Vue({
+        el: '#app',
+        data:{
+          textInput : ''
+        },
+        computed:{
+          identicon : function(){
+            return jdenticon.toSvg(this.textInput, 200);
+          }
+        },
+        methods: {
+            onInput : function(event){
+                this.textInput = event.target.value;
+            }
+        },
+        template:`
+        <div>
+        <h3>My identicon generator</h3>
+        Input:
+        <input v-on:input="onInput"/>
+        <div>
+        Output:
+        {{textInput}}
+        </div>
+        </div>
+        `
+    });
+    ```
+- Expressions in templates:
+    ```js
+    new Vue({
+        el: '#app',
+        data:{
+          textInput : ''
+        },
+        computed:{
+          identicon : function(){
+            return jdenticon.toSvg(this.textInput, 200);
+          }
+        },
+        methods: {
+            onInput : function(event){
+                this.textInput = event.target.value;
+            }
+        },
+        template:`
+        <div>
+        <h3>My identicon generator</h3>
+        Input:
+        <input v-on:input="onInput"/>
+        <div>
+        Output:
+        {{textInput.split('').reverse().join('')}}
+        </div>
+        </div>
+        `
+    });
+    ```
+- But a better approach would be:
+    ```js
+    new Vue({
+        el: '#app',
+        data:{
+          textInput : ''
+        },
+        computed:{
+          identicon : function(){
+            return jdenticon.toSvg(this.textInput, 200);
+          },
+          reverse : function(){
+            return this.textInput.split('').reverse().join('');
+          }
+        },
+        methods: {
+            onInput : function(event){
+                this.textInput = event.target.value;
+            }
+        },
+        template:`
+        <div>
+        <h3>My identicon generator</h3>
+        Input:
+        <input v-on:input="onInput"/>
+        <div>
+        Output:
+        {{reverse}}
+        </div>
+        </div>
+        `
+    });
+    ```
+- Exercise:
+    ```js
+    const vm = new Vue({
+    el: '#root',
+    computed: {
+        printDay : function(){
+            const day = new Date().toLocaleString('en-us', {weekday:'long'});
+            if(day === 'Friday'){
+                return `Today is ${day} :)`;
+            }else{
+                return `Today is ${day} :(`;
+            }
+        }
+    },
+    template: `
+        <div class="date">
+        {{printDay}}
+        </div>
+    `
+    });
+    ```
+- Command to create a new project:
+    ```batch
+     vue create video-browser
+    ```
