@@ -334,3 +334,211 @@
     });
     app.mount('#app');
     ```
+- Components:
+    - Reusable pieces of code.
+    ```js
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const Hello = {
+    template : `
+        <h3>Hello component</h3>
+    `
+    }
+    const app = Vue.createApp({
+    components: {
+        Hello
+    },
+    template: `
+    <div>
+    <button v-on:click="increment">Increment</button>
+    <p>{{count}}</p>
+    <hello/>
+    <input type="text"
+        v-model="value"
+    />
+    <input type="radio"
+        v-model="radioValue"
+        value="a"/>
+    <input type="radio"
+        v-model="radioValue"
+        value="b"/>
+        {{radioValue}}
+    
+    <div class="red">
+        {{error}}
+    </div>
+    <div v-for="number in numbers"
+        v-bind:class="getClass(number)">
+        {{number}}
+    <div>
+    </div>
+    `,
+    data(){
+        return{
+        count: 0,
+        numbers: [1,2,3,4,5,6,7,8,9,10],
+        value: 'user',
+        radioValue : 'a'
+        }
+    },
+    computed:{
+        evenList(){
+        return this.numbers.filter(num => this.isEven(num))
+        },
+        error(){
+        return (this.value.length < 5) ?
+            'Must be greater than 5' :
+            '';
+        }
+    },
+    methods:{
+        getClass(number){
+        return this.isEven(number) ? 'blue' : 'red';
+        },
+        increment(){
+        this.count += 1;
+        },
+        isEven(number){
+        return number % 2 === 0;
+        }
+    }
+    });
+    app.mount('#app');
+    ```
+- Component props:
+    - Move the numbers logic to a separate component using props.
+    - You can directly use a v-for directive in the component tag (pass the number of each iteration as a prop).
+    ```js
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const Num = {
+    props: ['number'],
+    template : `
+        <div 
+        v-bind:class="getClass(number)"
+        >
+        {{number}}
+        </div>`,
+    methods: {
+        getClass(number){
+        return this.isEven(number) ? 'blue' : 'red';
+        },
+        isEven(number){
+        return number % 2 === 0;
+        }
+    }
+    }
+
+    const app = Vue.createApp({
+    components: {
+        Num
+    },
+    template: `
+    <div>
+        <button v-on:click="increment">Increment</button>
+        <p>{{count}}</p>
+        <input type="text"
+        v-model="value"
+        />
+        <input type="radio"
+        v-model="radioValue"
+        value="a"/>
+        <input type="radio"
+        v-model="radioValue"
+        value="b"/>
+        {{radioValue}}
+        
+        <div class="red">
+        {{error}}
+        </div>
+        <num
+            v-for="number in numbers" 
+            v-bind:number="number"/>
+    </div>
+    `,
+    data(){
+        return{
+        count: 0,
+        numbers: [1,2,3,4,5,6,7,8,9,10],
+        value: 'user',
+        radioValue : 'a'
+        }
+    },
+    computed:{
+        evenList(){
+        return this.numbers.filter(num => this.isEven(num))
+        },
+        error(){
+        return (this.value.length < 5) ?
+            'Must be greater than 5' :
+            '';
+        }
+    },
+    methods:{
+        increment(){
+        this.count += 1;
+        }
+    }
+    });
+    app.mount('#app');
+    ```
+- Child-parent communication with events (from the num component to the app component)
+    - You can access the prop value using this.prop
+    ```js
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const Num = {
+    props: ['number'],
+    template : `
+        <button 
+        v-bind:class="getClass(number)"
+        v-on:click="click"
+        >
+        {{number}}
+        </button>`,
+    methods: {
+        click(){
+        //you can access the prop value using this.prop
+        this.$emit('chosen', this.number);
+        },
+        getClass(number){
+        return this.isEven(number) ? 'blue' : 'red';
+        },
+        isEven(number){
+        return number % 2 === 0;
+        }
+    }
+    }
+    const app = Vue.createApp({
+    components: {
+        Num
+    },
+    template: `
+        <num
+            v-for="number in numbers" 
+            v-bind:number="number"
+            v-on:chosen="addNumber"/>
+            <hr/>
+            <num
+            v-for="number in numberHistory" 
+            v-bind:number="number"/>
+    `,
+    data(){
+        return{
+        numbers: [1,2,3,4,5,6,7,8,9,10],
+        numberHistory: []
+        }
+    },
+    computed:{
+        evenList(){
+        return this.numbers.filter(num => this.isEven(num))
+        },
+    },
+    methods:{
+        addNumber(number){
+        this.numberHistory.push(number);
+        }
+    }
+    });
+    app.mount('#app');
+    ```
