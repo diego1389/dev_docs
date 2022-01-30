@@ -1,220 +1,336 @@
-- **Vue template:** describes the structure and content of our app. Showing content to the users (HTML)
+- Create your first Vue Hello world.
+- index.html
     ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    </head>
+    <body>
+
     <div id="app">
-        <h3>My identicon generator</h3>
-        Input:
-        <input v-on:input="onInput"/>
-        <div>
-        Output:
-        </div>
+        <h1>Hello {{msg}}</h1>
     </div>
-    ```
-    - You can also define your template in the javascript side of the application.
-- **Vue instance:** describes what happens when a user interacts with our app. (JS)
-- el property: element. It is used to tie one view instance to a view template through an id.
-    ```js
-    new Vue({
-        el: '#app',
-        methods: {
-            onInput : function(event){
-                console.log(event.target.value);
+
+    <script type="module">
+        import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+        const app = Vue.createApp({
+        data(){
+            return{
+            msg: 'world'
             }
         }
-    });
+        });
+        app.mount('#app');
+    </script>
+
+    
+    </body>
+    </html>
     ```
-- A method is a function that it is going to be tied to our instance. 
-- Vue directives: a piece of template syntax inside of Vue that enhances the behaviour of normal html code.
-- Imperative vs declarative programming:
-    - Imperative: step by step. 
-    - Declarative: rules that our application should follow. 
-        - We start with an initial state and apply a set of rules to that state. 
-- **Data:** We are gonna define a data property inside of our Vue instance. The initial state of our instance.
-- **Methods:** function that update our data.
-- **Computed:** consume the data and get it into the actual template. Defines how to turn the current data into viewable values.
-    - Every time we want to calculate something before showing it on the screen we need to do it in the computed section. 
-- Final identicon demo:
-    - View template
-    ```html
-    <div id="app">
-        <h3>My identicon generator</h3>
-        Input:
-        <input v-on:input="onInput"/>
-        <div>
-        Output:
-        <div v-html="identicon"></div>
-        </div>
-    </div>
-    ```
-    - Vue instance:
+- Move the data and the template to index.js file (and add the src attribute to the script tag):
     ```js
-    new Vue({
-        el: '#app',
-        data:{
-          textInput : ''
-        },
-        computed:{
-          identicon : function(){
-            return jdenticon.toSvg(this.textInput, 200);
-          }
-        },
-        methods: {
-            onInput : function(event){
-                this.textInput = event.target.value;
-            }
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const app = Vue.createApp({
+    template: `
+    <h1>Hello {{msg}}</h1>
+    `,
+    data(){
+        return{
+        msg: 'world'
         }
+    }
     });
+    app.mount('#app');
     ```
-- Template placement:
-    - The template doesn't have to be inside an html file. You can use a template property:
-    ```html
-    <div id="app">
-    </div>
-    ```
+- Methods
+    - if you dont need to pass an argument you can just write the name of the method without ():
     ```js
-    new Vue({
-        el: '#app',
-        data:{
-          textInput : ''
-        },
-        computed:{
-          identicon : function(){
-            return jdenticon.toSvg(this.textInput, 200);
-          }
-        },
-        methods: {
-            onInput : function(event){
-                this.textInput = event.target.value;
-            }
-        },
-        template:`
-        <div>
-        <h3>My identicon generator</h3>
-        Input:
-        <input v-on:input="onInput"/>
-        <div>
-        Output:
-        <div v-html="identicon"></div>
-        </div>
-        </div>
-        `
-    });
-    ```
-- Referencing data in the template:
-    - We don't need to use computed function all the time.
-    ```js
-    new Vue({
-        el: '#app',
-        data:{
-          textInput : ''
-        },
-        computed:{
-          identicon : function(){
-            return jdenticon.toSvg(this.textInput, 200);
-          }
-        },
-        methods: {
-            onInput : function(event){
-                this.textInput = event.target.value;
-            }
-        },
-        template:`
-        <div>
-        <h3>My identicon generator</h3>
-        Input:
-        <input v-on:input="onInput"/>
-        <div>
-        Output:
-        {{textInput}}
-        </div>
-        </div>
-        `
-    });
-    ```
-- Expressions in templates:
-    ```js
-    new Vue({
-        el: '#app',
-        data:{
-          textInput : ''
-        },
-        computed:{
-          identicon : function(){
-            return jdenticon.toSvg(this.textInput, 200);
-          }
-        },
-        methods: {
-            onInput : function(event){
-                this.textInput = event.target.value;
-            }
-        },
-        template:`
-        <div>
-        <h3>My identicon generator</h3>
-        Input:
-        <input v-on:input="onInput"/>
-        <div>
-        Output:
-        {{textInput.split('').reverse().join('')}}
-        </div>
-        </div>
-        `
-    });
-    ```
-- But a better approach would be:
-    ```js
-    new Vue({
-        el: '#app',
-        data:{
-          textInput : ''
-        },
-        computed:{
-          identicon : function(){
-            return jdenticon.toSvg(this.textInput, 200);
-          },
-          reverse : function(){
-            return this.textInput.split('').reverse().join('');
-          }
-        },
-        methods: {
-            onInput : function(event){
-                this.textInput = event.target.value;
-            }
-        },
-        template:`
-        <div>
-        <h3>My identicon generator</h3>
-        Input:
-        <input v-on:input="onInput"/>
-        <div>
-        Output:
-        {{reverse}}
-        </div>
-        </div>
-        `
-    });
-    ```
-- Exercise:
-    ```js
-    const vm = new Vue({
-    el: '#root',
-    computed: {
-        printDay : function(){
-            const day = new Date().toLocaleString('en-us', {weekday:'long'});
-            if(day === 'Friday'){
-                return `Today is ${day} :)`;
-            }else{
-                return `Today is ${day} :(`;
-            }
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const app = Vue.createApp({
+    template: `
+    <button v-on:click="increment(5)">Increment</button>
+    <p>{{count}}</p>
+    `,
+    data(){
+        return{
+        count: 0
         }
     },
-    template: `
-        <div class="date">
-        {{printDay}}
-        </div>
-    `
+    methods:{
+        increment(val){
+        this.count += val;
+        }
+    }
     });
+    app.mount('#app');
     ```
-- Command to create a new project:
-    ```batch
-     vue create video-browser
+- Flow control:
+    ```js
+   import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const app = Vue.createApp({
+    template: `
+    <button v-on:click="increment">Increment</button>
+    <p>{{count}}</p>
+    <div v-if="isEven()">
+        Even
+    </div>
+    <div v-else>
+        Odd
+    </div>
+    `,
+    data(){
+        return{
+        count: 0
+        }
+    },
+    methods:{
+        increment(){
+        this.count += 1;
+        },
+        isEven(){
+        return this.count % 2 === 0;
+        }
+    }
+    });
+    app.mount('#app');
+    ```
+- Loops with v-for directive:
+    ```js
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const app = Vue.createApp({
+    template: `
+    <button v-on:click="increment">Increment</button>
+    <p>{{count}}</p>
+    <div v-for="number in numbers">
+        <div>
+            {{number}} 
+            <span v-if="isEven(number)"> is Even</span>
+            <span v-else>is Odd</span>
+        </div>
+    </div>
+    `,
+    data(){
+        return{
+        count: 0,
+        numbers: [1,2,3,4,5,6,7,8,9,10]
+        }
+    },
+    methods:{
+        increment(){
+        this.count += 1;
+        },
+        isEven(number){
+        return number % 2 === 0;
+        }
+    }
+    });
+    app.mount('#app');
+    ```
+- Computed properties. 
+    - They are derived data. It is often going to be a subset of some existing data.
+    - Computed properties are used to move your business logic out of your template.
+    - A function with no values
+    ```js
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const app = Vue.createApp({
+    template: `
+    <button v-on:click="increment">Increment</button>
+    <p>{{count}}</p>
+    <div v-for="number in evenList">
+    <div>
+        {{number}} is Even!
+    </div>
+    </div>
+    `,
+    data(){
+        return{
+        count: 0,
+        numbers: [1,2,3,4,5,6,7,8,9,10]
+        }
+    },
+    computed:{
+        evenList(){
+            return this.numbers.filter(num => this.isEven(num))
+        }
+    },
+    methods:{
+        increment(){
+        this.count += 1;
+        },
+        isEven(number){
+        return number % 2 === 0;
+        }
+    }
+    });
+    app.mount('#app');
+    ```
+- Class bindings:
+    ```js
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const app = Vue.createApp({
+    template: `
+    <div>
+    <button v-on:click="increment">Increment</button>
+    <p>{{count}}</p>
+    <div v-for="number in numbers"
+        v-bind:class="getClass(number)">
+        {{number}}
+    <div>
+    </div>
+    `,
+    data(){
+        return{
+        count: 0,
+        numbers: [1,2,3,4,5,6,7,8,9,10]
+        }
+    },
+    computed:{
+        evenList(){
+        return this.numbers.filter(num => this.isEven(num))
+        }
+    },
+    methods:{
+        getClass(number){
+            return this.isEven(number) ? 'blue' : 'red';
+        },
+        increment(){
+            this.count += 1;
+        },
+        isEven(number){
+            return number % 2 === 0;
+        }
+    }
+    });
+    app.mount('#app');
+    ```
+- Input validation (two way binding)
+    - Create a computed property for error instead of a new property in data section because it is derived data from the value property.
+    ```js
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const app = Vue.createApp({
+    template: `
+    <div>
+    <button v-on:click="increment">Increment</button>
+    <p>{{count}}</p>
+    <input 
+        v-bind:value="value"
+        v-on:input="input"
+    />
+    <div class="red">
+        {{error}}
+    </div>
+    <div v-for="number in numbers"
+        v-bind:class="getClass(number)">
+        {{number}}
+    <div>
+    </div>
+    `,
+    data(){
+        return{
+        count: 0,
+        numbers: [1,2,3,4,5,6,7,8,9,10],
+        value: 'user'
+        }
+    },
+    computed:{
+        evenList(){
+        return this.numbers.filter(num => this.isEven(num))
+        },
+        error(){
+        return (this.value.length < 5) ?
+            'Must be greater than 5' :
+            '';
+        }
+    },
+    methods:{
+        getClass(number){
+        return this.isEven(number) ? 'blue' : 'red';
+        },
+        increment(){
+        this.count += 1;
+        },
+        isEven(number){
+        return number % 2 === 0;
+        },
+        input($event){
+        this.value = $event.target.value;
+        }
+    }
+    });
+    app.mount('#app');
+    ```
+- The V-model
+    - A faster way to do two-way binding.
+    - You can get rid off v-bind and v-on and also of the input function. It does the binding automatically.
+    ```js
+    import * as Vue from 'vue/dist/vue.esm-bundler.js';
+
+    const app = Vue.createApp({
+    template: `
+    <div>
+    <button v-on:click="increment">Increment</button>
+    <p>{{count}}</p>
+    <input type="text"
+        v-model="value"
+    />
+    <input type="radio"
+        v-model="radioValue"
+        value="a"/>
+    <input type="radio"
+        v-model="radioValue"
+        value="b"/>
+        {{radioValue}}
+    
+    <div class="red">
+        {{error}}
+    </div>
+    <div v-for="number in numbers"
+        v-bind:class="getClass(number)">
+        {{number}}
+    <div>
+    </div>
+    `,
+    data(){
+        return{
+        count: 0,
+        numbers: [1,2,3,4,5,6,7,8,9,10],
+        value: 'user',
+        radioValue : 'a'
+        }
+    },
+    computed:{
+        evenList(){
+        return this.numbers.filter(num => this.isEven(num))
+        },
+        error(){
+        return (this.value.length < 5) ?
+            'Must be greater than 5' :
+            '';
+        }
+    },
+    methods:{
+        getClass(number){
+        return this.isEven(number) ? 'blue' : 'red';
+        },
+        increment(){
+        this.count += 1;
+        },
+        isEven(number){
+        return number % 2 === 0;
+        }
+    }
+    });
+    app.mount('#app');
     ```
