@@ -542,3 +542,633 @@
     });
     app.mount('#app');
     ```
+## User sign-up form with validation
+
+- Single file components:
+    - App.vue
+    ```js
+    <template>
+        App
+    </template>
+    <script>
+    export default {
+    
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+    - Index.html
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    </head>
+    <body>
+
+    <div id="app">
+    </div>
+
+    <script type="module" src="./index.js"> 
+    </script>
+
+    </body>
+    </html>
+    ```
+    - index.js
+    ```js
+    import {createApp} from 'vue';
+    import App from './App.vue';
+
+    const app = createApp(App);
+
+    app.mount('#app')
+    ```
+- Create and use MyButton custom component
+    - You can define your props as an array of string (as in the previous examples) or as objects (where you can specify the type of the prop).
+    - Style scoped means the styles are only applied inside the particular template.
+    - MyButton.vue
+    ```js
+    <template>
+    <button
+        v-bind:style="{background, color}"
+        v-bind:disabled="disabled"
+    >Button</button>
+    </template>
+    <script>
+    export default {
+    props:{
+        background:{
+            type: String
+        },
+        color:{
+            type: String
+        },
+        disabled:{
+            type: Boolean
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    button:disabled{
+        opacity: 0.5;
+    }
+    button{
+        background: none;
+        color: black;
+        border:none;
+        border-radius: 5px;
+        padding:10px 40px;
+        font-size: 16px;
+        cursor:pointer;
+    }
+    button:hover{
+        filter:brightness(125%);
+    }
+    </style>
+    ```
+    - App.vue
+    - MyInput.vue
+    ```js
+    <template>
+    <my-button
+        background="darkslateblue"
+        color="white"
+        :disabled="!valid"
+    />
+    </template>
+    <script>
+    import MyButton from './MyButton.vue';
+
+    export default {
+        data(){
+            return{
+                valid : true
+            }
+        },
+    components:{
+        MyButton
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- :for is short for v-bind:for. You can also pass javascript expressions with : (for example :rules)
+- Create a new input component:
+    ```js
+    <template>
+    <div class="label">
+        <label :for="name"> {{name}}</label>
+        <div class="error">{{error}}</div>
+    </div>
+    <input :id="name"
+            v-model="value"/>
+    </template>
+    <script>
+    export default {
+    props:{
+        name: {
+            type: String,
+            required: true
+        },
+        rules:{
+            type: Object,
+            default: {}
+        }
+        },
+        data(){
+            return{
+                value: ''
+            }
+        },
+        computed:{
+            error(){
+                if(this.rules.required && this.value.length === 0){
+                    return 'Value is required'
+                }
+                if(this.rules.min && this.value.length < this.rules.min){
+                    return `Value the min length is ${this.rules.min}`
+                }
+                return '';
+            }
+        }
+    }
+    </script>
+    <style scoped>
+        .input-wrapper{
+            display: flex;
+            flex-direction: column;
+        }
+        .error{
+            color:red;
+        }
+        .label{
+            display: flex;
+            justify-content: space-between;
+        }
+        input{
+            background: none;
+            color: black;
+            border: 1px solid silver;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+    </style>
+    ```
+    - App.vue
+    ```js
+    <template>
+    <my-input name="Username"
+        :rules="{required : true, min: 5}"
+        />
+    <my-button
+        background="darkslateblue"
+        color="white"
+        :disabled="!valid"
+    /> 
+    </template>
+    <script>
+    import MyButton from './MyButton.vue';
+    import MyInput from './MyInput.vue';
+
+    export default {
+        data(){
+            return{
+                valid : true
+            }
+        },
+    components:{
+        MyButton,
+        MyInput
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Rethinking the form state:
+    - Moving the state from the components to the parent using events.
+    - MyInput.vue
+    ```js
+    <template>
+    <div class="label">
+        <label :for="name"> {{name}}</label>
+        <div class="error">{{error}}</div>
+    </div>
+    <input :id="name"
+        :value="value"
+        @input="input"
+    />
+    </template>
+    <script>
+    export default {
+    props:{
+        name: {
+            type: String,
+            required: true
+        },
+        value:{
+            type: String,
+            required: true
+        },
+        rules:{
+            type: Object,
+            default: {}
+        }
+        },
+        methods:{
+            input($event){
+                this.$emit('update', {
+                    name: this.name.toLowerCase(),
+                    value: $event.target.value});
+            }
+        },
+        computed:{
+            error(){
+                if(this.rules.required && this.value.length === 0){
+                    return 'Value is required'
+                }
+                if(this.rules.min && this.value.length < this.rules.min){
+                    return `Value the min length is ${this.rules.min}`
+                }
+                return '';
+            }
+        }
+    }
+    </script>
+    <style scoped>
+        .input-wrapper{
+            display: flex;
+            flex-direction: column;
+        }
+        .error{
+            color:red;
+        }
+        .label{
+            display: flex;
+            justify-content: space-between;
+        }
+        input{
+            background: none;
+            color: black;
+            border: 1px solid silver;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+    </style>
+    ```
+    - App.vue
+    ```js
+   <template>
+    <my-input name="Username"
+        :rules="{required : true, min: 5}"
+        :value="username.value"
+        @update="update"
+        />
+    <my-input name="Password"
+        :rules="{required : true, min: 10}"
+        :value="password.value"
+        @update="update"
+        />
+    <my-button
+        background="darkslateblue"
+        color="white"
+        :disabled="!valid"
+    /> 
+    </template>
+    <script>
+    import MyButton from './MyButton.vue';
+    import MyInput from './MyInput.vue';
+
+    export default {
+        data(){
+            return{
+                valid : true,
+                username:{
+                    value: 'user',
+                    valid: false
+                },
+                password:{
+                    value: 'pass',
+                    valid: false
+                }
+            }
+        },
+        methods:{
+            //getting the properties using destructuring
+            update({name, value}){
+                this[name].value = value;
+            }
+        },
+        components:{
+            MyButton,
+            MyInput
+        }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Input is considered a presentational component. It has no local state. 
+- Validating the form:
+    - MyInput.vue
+    ```js
+    <template>
+    <div class="label">
+        <label :for="name"> {{name}}</label>
+        <div class="error">{{error}}</div>
+    </div>
+    <input :id="name"
+        :value="value"
+        @input="input"
+    />
+    </template>
+    <script>
+    export default {
+    props:{
+        name: {
+            type: String,
+            required: true
+        },
+        value:{
+            type: String,
+            required: true
+        },
+        rules:{
+            type: Object,
+            default: {}
+        },
+        error:{
+            type : String
+        }
+        },
+        created(){
+            this.$emit('update', {
+                name: this.name.toLowerCase(),
+                value: this.value,
+                error: this.validate(this.value)
+            });
+        },
+        methods:{
+            input($event){
+                this.$emit('update', {
+                    name: this.name.toLowerCase(),
+                    value: $event.target.value,
+                    error: this.validate($event.target.value)
+                });
+            },
+            validate(value){
+                if(this.rules.required && value.length === 0){
+                    return 'Value is required'
+                }
+                if(this.rules.min && value.length < this.rules.min){
+                    return `Value the min length is ${this.rules.min}`
+                }
+                return '';
+            }
+        }
+    }
+
+    </script>
+    <style scoped>
+        .input-wrapper{
+            display: flex;
+            flex-direction: column;
+        }
+        .error{
+            color:red;
+        }
+        .label{
+            display: flex;
+            justify-content: space-between;
+        }
+        input{
+            background: none;
+            color: black;
+            border: 1px solid silver;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+    </style>
+    ```
+    - App.vue
+    ```js
+    <template>
+    <my-input name="Username"
+        :rules="{required : true, min: 5}"
+        :value="username.value"
+        :error="username.error"
+        @update="update"
+        />
+    <my-input name="Password"
+        :rules="{required : true, min: 10}"
+        :value="password.value"
+        :error="password.error"
+        @update="update"
+        />
+    <my-button
+        background="darkslateblue"
+        color="white"
+        :disabled="!valid"
+    /> 
+    </template>
+    <script>
+    import MyButton from './MyButton.vue';
+    import MyInput from './MyInput.vue';
+
+    export default {
+        data(){
+            return{
+                valid : true,
+                username:{
+                    value: 'user',
+                    error: ''
+                },
+                password:{
+                    value: 'pass',
+                    error: ''
+                }
+            }
+        },
+        methods:{
+            update({name, value, error}){
+                this[name].value = value;
+                this[name].error = error;
+            }
+        },
+    components:{
+        MyButton,
+        MyInput
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Submitting the form:
+    - MyInput.vue
+    ```js
+    <template>
+    <div class="label">
+        <label :for="name"> {{name}}</label>
+        <div class="error">{{error}}</div>
+    </div>
+    <input :id="name"
+        :value="value"
+        :type="type"
+        @input="input"
+    />
+    </template>
+    <script>
+    export default {
+    emits: ['update'],
+    props:{
+        name: {
+            type: String,
+            required: true
+        },
+        value:{
+            type: String,
+            required: true
+        },
+        rules:{
+            type: Object,
+            default: {}
+        },
+        error:{
+            type : String
+        },
+        type:{
+            type: String,
+            default: 'text'
+        }
+        },
+        created(){
+            this.$emit('update', {
+                name: this.name.toLowerCase(),
+                value: this.value,
+                error: this.validate(this.value)
+            });
+        },
+        methods:{
+            input($event){
+                this.$emit('update', {
+                    name: this.name.toLowerCase(),
+                    value: $event.target.value,
+                    error: this.validate($event.target.value)
+                });
+            },
+            validate(value){
+                if(this.rules.required && value.length === 0){
+                    return 'Value is required'
+                }
+                if(this.rules.min && value.length < this.rules.min){
+                    return `Value the min length is ${this.rules.min}`
+                }
+                return '';
+            }
+        }
+    }
+    </script>
+    <style scoped>
+        .input-wrapper{
+            display: flex;
+            flex-direction: column;
+        }
+        .error{
+            color:red;
+        }
+        .label{
+            display: flex;
+            justify-content: space-between;
+        }
+        input{
+            background: none;
+            color: black;
+            border: 1px solid silver;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+        }
+    </style>
+    ```
+    - App.vue
+    ```js
+    <template>
+    <form @submit.prevent="submit">
+    <my-input name="Username"
+        :rules="{required : true, min: 5}"
+        :value="username.value"
+        :error="username.error"
+        @update="update"
+        />
+    <my-input name="Password"
+        :rules="{required : true, min: 10}"
+        :value="password.value"
+        :error="password.error"
+        type="password"
+        @update="update"
+        />
+        <my-button
+        background="darkslateblue"
+        color="white"
+        :disabled="!valid"
+    /> 
+    </form>
+    </template>
+    <script>
+    import MyButton from './MyButton.vue';
+    import MyInput from './MyInput.vue';
+
+    export default {
+        data(){
+            return{
+                username:{
+                    value: 'user',
+                    error: ''
+                },
+                password:{
+                    value: 'pass',
+                    error: ''
+                }
+            }
+        },
+        computed:{
+            valid(){
+                return (
+                    !this.username.error &&
+                    !this.password.error
+                )
+            }
+        },
+        methods:{
+            update({name, value, error}){
+                this[name].value = value;
+                this[name].error = error;
+            },
+            submit(){
+                console.log("Submit")
+            }
+        },
+    components:{
+        MyButton,
+        MyInput
+    },
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
