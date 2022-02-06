@@ -1172,3 +1172,174 @@
     <style scoped>
     </style>
     ```
+## Pokemon cards
+
+- Fetch an array of pokemons from the pokemon api:
+- Created and mounted life cycle hooks.
+    - Created goes first. It hasn't rendered anything yet.
+    - Mounted: ones the does finishes rendering. If you need to access something from the html you have to do it in the mounted hook. But it is not recommended to manipulate the html directly.
+```html
+<template>
+    <div class="card">
+        <div class="title">
+            Title
+        </div>
+         <div class="content">
+            Content
+        </div>
+         <div class="description">
+            Description
+        </div>
+    </div>
+</template>
+<script>
+const api = 'https://pokeapi.co/api/v2/pokemon';
+const ids = [1, 4, 7];
+
+export default {
+    data(){
+        return{
+            pokemon : []
+        }
+    },
+    created(){
+        this.fetchData();
+    },
+   methods:{
+       async fetchData(){
+           const responses = await Promise.all(
+                    ids.map(id=> window.fetch(`${api}/${id}`)
+                ));
+            const json = await Promise.all(
+                responses.map(data => data.json()
+            ));
+           
+           this.pokemon = json.map(data=>({
+                id: data.id,
+                name: data.name,
+                sprite: data.sprites.other['official-artwork'].front_default,
+                types: data.types.map(type => type.type.name)
+           }));
+       }
+   }
+}
+</script>
+<style scoped>
+    .card{
+        border: 1px solid silver;
+        border-radius: 8px;
+        max-width: 200px;
+        margin: 0 5px;
+        cursor: pointer;
+        box-shadow: 0px 1px 3px darkgrey;
+        transition: 0.2s;
+    }
+    .title, .content, .description{
+        padding: 16px;
+        text-transform: capitalize;
+        text-align: center;
+    }
+
+    .title, .content{
+        border-bottom: 1px solid silver;
+    }
+    .title{
+        font-size: 1.25em;
+    }
+    .card:hover{
+        transition: 0.2s;
+        box-shadow: 0px 1px 9px darkgrey;
+    }
+</style>
+```
+
+- Render the Pokemons!
+```html
+<template>
+    <div class="cards">
+        <div 
+            class="card"
+            v-for="p in pokemon"
+            :key="p.id">
+            <div class="title">
+                {{p.name}}
+            </div>
+            <div class="content">
+                <img :src="p.sprite"/>
+            </div>
+            <div class="description">
+                <div 
+                    v-for="type of p.types" 
+                    :key="type">
+                {{type}}
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+const api = 'https://pokeapi.co/api/v2/pokemon';
+const ids = [1, 4, 7];
+
+export default {
+    data(){
+        return{
+            pokemon : []
+        }
+    },
+    created(){
+        this.fetchData();
+    },
+   methods:{
+       async fetchData(){
+           const responses = await Promise.all(
+                    ids.map(id=> window.fetch(`${api}/${id}`)
+                ));
+            const json = await Promise.all(
+                responses.map(data => data.json()
+            ));
+           
+           this.pokemon = json.map(data=>({
+                id: data.id,
+                name: data.name,
+                sprite: data.sprites.other['official-artwork'].front_default,
+                types: data.types.map(type => type.type.name)
+           }));
+       }
+   }
+}
+</script>
+<style scoped>
+    .cards{
+        display: flex;
+    }
+    .card{
+        border: 1px solid silver;
+        border-radius: 8px;
+        max-width: 200px;
+        margin: 0 5px;
+        cursor: pointer;
+        box-shadow: 0px 1px 3px darkgrey;
+        transition: 0.2s;
+    }
+    .title, .content, .description{
+        padding: 16px;
+        text-transform: capitalize;
+        text-align: center;
+    }
+
+    .title, .content{
+        border-bottom: 1px solid silver;
+    }
+    .title{
+        font-size: 1.25em;
+    }
+    .card:hover{
+        transition: 0.2s;
+        box-shadow: 0px 1px 9px darkgrey;
+    }
+    img{
+        width: 100%;
+    }
+</style>
+```
