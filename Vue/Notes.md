@@ -1343,3 +1343,295 @@ export default {
     }
 </style>
 ```
+- Modular components with slots
+    - Card.vue
+    ```js
+    <template>
+        <div class="card">
+            <div class="title">
+                <slot name="title"/>
+            </div>
+            <div class="content">
+                <slot name="content"/>
+            </div>
+            <div class="description">
+                <slot name="description"/>
+            </div>
+        </div>
+    </template>
+    <script>
+    const api = 'https://pokeapi.co/api/v2/pokemon';
+    const ids = [1, 4, 7];
+
+    export default {
+
+    }
+    </script>
+    <style scoped>
+        .card{
+            border: 1px solid silver;
+            border-radius: 8px;
+            max-width: 200px;
+            margin: 0 5px;
+            cursor: pointer;
+            box-shadow: 0px 1px 3px darkgrey;
+            transition: 0.2s;
+        }
+        .title, .content, .description{
+            padding: 16px;
+            text-transform: capitalize;
+            text-align: center;
+        }
+
+        .title, .content{
+            border-bottom: 1px solid silver;
+        }
+        .title{
+            font-size: 1.25em;
+        }
+        .card:hover{
+            transition: 0.2s;
+            box-shadow: 0px 1px 9px darkgrey;
+        }
+    </style>
+    ```
+    - App.vue
+    ```js
+    <template>
+        <div class="cards">
+            <card
+                v-for="pokemon in pokemons"
+                :key="pokemon.id">
+                <template v-slot:title>
+                    {{pokemon.name}}
+                </template>
+                <template v-slot:content>
+                    <img :src="pokemon.sprite"/>
+                </template>  
+                <template v-slot:description>
+                    <div 
+                        v-for="type of pokemon.types" 
+                        :key="type">
+                            {{type}}
+                    </div>
+                </template>   
+            </card>
+        </div>
+    </template>
+    <script>
+    import Card from './Card.vue';
+    const api = 'https://pokeapi.co/api/v2/pokemon';
+    const ids = [1, 4, 7];
+
+    export default {
+        components:{
+            Card
+        },
+        data(){
+            return{
+                pokemons : []
+            }
+        },
+        created(){
+            this.fetchData();
+        },
+    methods:{
+        async fetchData(){
+            const responses = await Promise.all(
+                        ids.map(id=> window.fetch(`${api}/${id}`)
+                    ));
+                const json = await Promise.all(
+                    responses.map(data => data.json()
+                ));
+            
+            this.pokemons = json.map(data=>({
+                    id: data.id,
+                    name: data.name,
+                    sprite: data.sprites.other['official-artwork'].front_default,
+                    types: data.types.map(type => type.type.name)
+            }));
+        }
+    }
+    }
+    </script>
+    <style scoped>
+        img{
+            width: 100%;
+        }
+        .cards{
+            display: flex;
+        }
+    </style>
+    ```
+- Reusing code to fetch evolutions and class bindings. Separationg the business logic and the presentation components.
+    -App.vue
+    ```js
+    <template>
+    <pokemon-cards
+        :pokemons="pokemons"
+        @chosen="fetchEvolutions"
+        :selectedId="selectedId"/> 
+     <pokemon-cards
+        :pokemons="evolutions"/> 
+    </template>
+    <script>
+    import PokemonCards from './PokemonCards.vue';
+    const api = 'https://pokeapi.co/api/v2/pokemon';
+    const IDS = [1, 4, 7];
+
+    export default {
+        components:{
+            PokemonCards
+        },
+        data(){
+            return{
+                pokemons : [],
+                evolutions : [],
+                selectedId : null
+            }
+        },
+        async created(){
+            this.pokemons = await this.fetchData(IDS);
+        },
+    methods:{
+        async fetchData(ids){
+            const responses = await Promise.all(
+                        ids.map(id=> window.fetch(`${api}/${id}`)
+                    ));
+                const json = await Promise.all(
+                    responses.map(data => data.json()
+                ));
+            
+            return json.map(data=>({
+                    id: data.id,
+                    name: data.name,
+                    sprite: data.sprites.other['official-artwork'].front_default,
+                    types: data.types.map(type => type.type.name)
+            }));
+        },
+            async fetchEvolutions(pokemon){
+                this.evolutions = await this.fetchData(
+                    [pokemon.id + 1, pokemon.id + 2]
+                );
+                this.selectedId = pokemon.id;
+            }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+    - PokemonCards.vue
+    ```js
+    <template>
+    <div class="cards">
+        <card
+            v-for="pokemon in pokemons"
+            :key="pokemon.id"
+            @click="click(pokemon)"
+            :class="{opace :selectedId && pokemon.id !== selectedId}"
+            class="card">
+            <template v-slot:title>
+                {{pokemon.name}}
+            </template>
+             <template v-slot:content>
+                 <img :src="pokemon.sprite"/>
+            </template>  
+            <template v-slot:description>
+                <div 
+                    v-for="type of pokemon.types" 
+                    :key="type">
+                        {{type}}
+                </div>
+            </template>   
+        </card>
+    </div>
+    </template>
+    <script>
+    import Card from './Card.vue';
+    export default{
+        props: {
+            pokemons : {
+                type: Array,
+                default : []
+            },
+            selectedId :{
+                type: Number
+            }
+        },
+        components:{
+            Card
+        },
+        methods:{
+            click(pokemon){
+                this.$emit('chosen', pokemon);
+            }
+        }
+    }
+    </script>
+    <style scoped>
+        .card:hover{
+            opacity:1.0;
+        }
+        .opace{
+            opacity : 0.5;
+        }
+        img{
+            width: 100%;
+        }
+        .cards{
+            display: flex;
+        }
+    </style>
+    ```
+    - Card.vue
+    ```js
+    <template>
+    <div class="card">
+        <div class="title">
+            <slot name="title"/>
+        </div>
+        <div class="content">
+            <slot name="content"/>
+        </div>
+        <div class="description">
+            <slot name="description"/>
+        </div>
+    </div>
+    </template>
+    <script>
+    const api = 'https://pokeapi.co/api/v2/pokemon';
+    const ids = [1, 4, 7];
+
+    export default {
+
+    }
+    </script>
+    <style scoped>
+        .card{
+            border: 1px solid silver;
+            border-radius: 8px;
+            max-width: 200px;
+            margin: 0 5px;
+            cursor: pointer;
+            box-shadow: 0px 1px 3px darkgrey;
+            transition: 0.2s;
+        }
+        .title, .content, .description{
+            padding: 16px;
+            text-transform: capitalize;
+            text-align: center;
+        }
+
+        .title, .content{
+            border-bottom: 1px solid silver;
+        }
+        .title{
+            font-size: 1.25em;
+        }
+        .card:hover{
+            transition: 0.2s;
+            box-shadow: 0px 1px 9px darkgrey;
+        }
+    </style>
+    ```
