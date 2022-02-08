@@ -1635,3 +1635,378 @@ export default {
         }
     </style>
     ```
+## Composition API
+
+- Previously we used the options API, where you put everything in specific places (methods, data and computed).
+- In composition API everything goes inside the setup() method. It is more flexible.
+    - You have to be more explicit. You need to return every variable that you want to use in the template.
+    ```js
+    <template>
+    <div>
+        {{msg}}
+    </div>
+    </template>
+    <script>
+    export default {
+    setup(){
+        const msg = "Hello world";
+        return {
+            msg
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Reactivity with ref
+    - Decoupled reactivity. With the options API reactivity happened behind the scenes.
+    - The setup() function is only called once, when the component is first created.
+    - The options API is built on top of the composition API.
+    - When you want to render something in the template you don't have to specify object.value. This is called **ref unwrapping**
+    ```js
+    <template>
+    <button @click="increment">{{count}}</button>
+    </template>
+    <script>
+    import {ref} from 'vue';
+    export default {
+    setup(){
+        const count = ref(0);
+
+        const increment = () =>{
+            count.value++;
+        }
+
+        return {
+            count,
+            increment
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    button{
+        height: 200px;
+        width: 200px;
+        font-size: 40px;
+    }
+    </style>
+    ```
+- Reactive for Complex Values
+    - For reactive you don't have to specify the value keyword.
+    - For primitive data type you can only use ref. Reactive is used for objects.
+    ```js
+    <template>
+    <button @click="increment">{{count}}</button>
+    <button @click="increase('a')">{{numbers.a}}</button>
+    <button @click="increase('b')">{{numbers.b}}</button>
+    </template>
+    <script>
+    import {ref, reactive} from 'vue';
+    export default {
+    setup(){
+        const count = ref(0);
+        const numbers = reactive({
+            a:0,
+            b:0
+        });
+
+        const increment = () =>{
+            count.value++;
+        }
+
+        const increase = (n) =>{
+            numbers[n]++;
+        }
+
+        return {
+            count,
+            increment,
+            numbers,
+            increase
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    button{
+        height: 100px;
+        width: 100px;
+        font-size: 40px;
+    }
+    </style>
+    ```
+- Composing computed properties:
+    ```js
+    <template>
+    <button @click="increment">{{count}}</button>
+    <button @click="increase('a')">{{numbers.a}}</button>
+    <button @click="increase('b')">{{numbers.b}}</button>
+    <h3>{{total}}</h3>
+    </template>
+    <script>
+    import {ref, reactive, computed} from 'vue';
+    export default {
+    setup(){
+        const count = ref(0);
+        const numbers = reactive({
+            a:1,
+            b:2
+        });
+
+        const increment = () =>{
+            count.value++;
+        }
+
+        const increase = (n) =>{
+            numbers[n]++;
+        }
+
+        const total = computed(()=>{
+            return count.value + numbers.a + numbers.b; 
+        });
+
+        return {
+            count,
+            increment,
+            numbers,
+            increase,
+            total
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    button{
+        height: 100px;
+        width: 100px;
+        font-size: 40px;
+    }
+    </style>
+    ```
+- Watch and Watch Effect
+    - Every time a values change it fires the watch event. 
+    - This doesn't fire the first time at least you specify immediate : true.
+    ```js
+    <template>
+    <button @click="increment">{{count}}</button>
+    <button @click="increase('a')">{{numbers.a}}</button>
+    <button @click="increase('b')">{{numbers.b}}</button>
+    <h3>{{total}}</h3>
+    </template>
+    <script>
+    import {ref, reactive, computed, watch, watchEffect} from 'vue';
+    export default {
+    setup(){
+        let count = ref(0);
+        const numbers = reactive({
+            a:1,
+            b:2
+        });
+
+        const increment = () =>{
+            count.value++;
+        }
+
+        const increase = (n) =>{
+            numbers[n]++;
+        }
+
+        watch(numbers, (newVal) => {
+            console.log(`a: ${newVal.a} b: ${newVal.b}`);
+        })
+
+        watchEffect(() =>{
+            console.log(numbers.a);
+        });
+
+        const total = computed(()=>{
+            return count.value + numbers.a + numbers.b; 
+        });
+
+        return {
+            count,
+            increment,
+            numbers,
+            increase,
+            total
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    button{
+        height: 100px;
+        width: 100px;
+        font-size: 40px;
+    }
+    </style>
+    ```
+- Before and after with watch
+    - You can only use it with ref objects not with  reactive ones.
+    - You cannot pass an array into reactive.
+    ```js
+    <template>
+    <button @click="increment">{{count}}</button>
+    <button @click="a++">{{a}}</button>
+    <button @click="b++">{{b}}</button>
+    <h3>{{total}}</h3>
+    <div 
+        v-for="number in history"
+        :key="number">
+        {{number}}
+    </div>
+    </template>
+    <script>
+    import {ref, reactive, computed, watch, watchEffect} from 'vue';
+    export default {
+    setup(){
+        let count = ref(0);
+        let a = ref(0);
+        let b = ref(0);
+        const history = ref([]);
+
+        const increment = () =>{
+            count.value++;
+        }
+
+        watch([a,b], ([newA, newB], [oldA, oldB]) =>{
+            if(newA !== oldA){
+                history.value.push(`A: ${oldA} => ${newA}`);
+            }
+            if(newB !== oldB){
+                history.value.push(`B: ${oldB} => ${newB}`);
+            }
+        })
+
+        const total = computed(()=>{
+            return count.value + a.value + b.value; 
+        });
+
+        return {
+            a,
+            b,
+            count,
+            increment,
+            total,
+            history
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    button{
+        height: 100px;
+        width: 100px;
+        font-size: 40px;
+    }
+    </style>
+    ```
+- The useNumbers Composable.
+    - A composable to group functionality together.
+    - useNumbers.js
+    ```js
+    import {ref, reactive, computed, watch, watchEffect} from 'vue';
+
+    export function useNumbers(){
+        let a = ref(0);
+        let b = ref(0);
+        const history = ref([]);
+        
+        watch([a,b], ([newA, newB], [oldA, oldB]) =>{
+            if(newA !== oldA){
+                history.value.push(`A: ${oldA} => ${newA}`);
+            }
+            if(newB !== oldB){
+                history.value.push(`B: ${oldB} => ${newB}`);
+            }
+        })
+        
+        const total = computed(()=>{
+            return a.value + b.value; 
+        });
+
+        return{
+            a, b, history, total
+        }
+    }
+    ```
+    - App.vue
+    ```js
+    <template>
+    <button @click="increment">{{count}}</button>
+    <button @click="a++">{{a}}</button>
+    <button @click="b++">{{b}}</button>
+    <h3>{{total}}</h3>
+    <div 
+        v-for="number in history"
+        :key="number">
+        {{number}}
+    </div>
+    </template>
+    <script>
+    import {ref, reactive, computed, watch, watchEffect} from 'vue';
+    import {useNumbers} from './useNumbers.js';
+
+    export default {
+        setup(){
+            let count = ref(0);
+
+                const increment = () =>{
+                count.value++;
+            }
+
+                const {
+                    a, b, total, history
+                } = useNumbers();
+
+            return {
+                a,
+                b,
+                count,
+                increment,
+                total,
+                history
+            }
+        }
+    }
+    </script>
+    <style scoped>
+    button{
+        height: 100px;
+        width: 100px;
+        font-size: 40px;
+    }
+    </style>
+    ```
+    - You can even return the composable object directly:
+    ```js
+    <template>
+    <button @click="a++">{{a}}</button>
+    <button @click="b++">{{b}}</button>
+    <h3>{{total}}</h3>
+    <div 
+        v-for="number in history"
+        :key="number">
+        {{number}}
+    </div>
+    </template>
+    <script>
+    import {useNumbers} from './useNumbers.js';
+
+    export default {
+        setup(){
+            return useNumbers();
+        }
+    }
+    </script>
+    <style scoped>
+    button{
+        height: 100px;
+        width: 100px;
+        font-size: 40px;
+    }
+    </style>
+    ```
+- VueUse is a collection of Vue composition utilities you can import into your project.
