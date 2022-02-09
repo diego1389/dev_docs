@@ -1,4 +1,5 @@
 - Create your first Vue Hello world.
+- Course source code: https://github.com/lmiller1990/complete-vuejs
 - index.html
     ```html
     <!DOCTYPE html>
@@ -2010,3 +2011,704 @@ export default {
     </style>
     ```
 - VueUse is a collection of Vue composition utilities you can import into your project.
+
+## Composing a microblog
+
+- Create a global state inside a store and display it to the screen:
+    - store.js
+    ```js
+    import {reactive} from 'vue';
+
+    class Store{
+        constructor(){
+            this.state = reactive({
+                posts: [
+                    {
+                        id : 1,
+                        title: 'Title',
+                        content:  'Learning Vue.js 3'
+                    }
+                ]
+            })
+        }
+    }
+
+    export const store = new Store();
+    ```
+    - App.vue
+    ```js
+    <template>
+    <div
+        v-for="post in store.state.posts"
+        :key="post.id">
+        {{post.title}}
+    </div>
+    </template>
+    <script>
+    import {store} from './store.js';
+    export default {
+    setup(){
+        return{
+            store
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Render posts with the Card component
+    - Controls.vue
+    ```js
+    <template>
+    {{post}}
+    </template>
+    <script>
+
+    export default {
+        props:{
+            post : {
+                type : Object,
+                required: true
+            }
+        },
+    setup(props){
+        console.log("props", props)
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+    - store.js
+    ```js
+    import {reactive} from 'vue';
+
+    class Store{
+        constructor(){
+            this.state = reactive({
+                posts: [
+                    {
+                        id : 1,
+                        title: 'Title',
+                        content:  'Learning Vue.js 3',
+                        likes: 10,
+                        hashtags: [
+                            'vue',
+                            'javascript',
+                            'composition.API'
+                        ]
+                    }
+                ]
+            })
+        }
+    }
+
+    export const store = new Store();
+    ```
+    - App.vue
+    ```js
+    <template>
+    <card
+        v-for="post in store.state.posts"
+        :key="post.id">
+        <template v-slot:title>
+            {{post.title}}
+        </template>
+        <template v-slot:content>
+            {{post.content}}
+        </template>  
+        <template v-slot:description>
+            <controls :post="post"/>
+        </template>  
+    </card>
+    </template>
+    <script>
+    import {store} from './store.js';
+    import Card from '../pokemon/Card.vue';
+    import Controls from './Controls.vue';
+
+    export default {
+    setup(){
+            return{
+                store,
+                Controls,      
+                Card
+            }
+        }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- The hashtag component
+    - Hashtag.vue
+    ```js
+    <template>
+    <div>
+        #{{hashtag}}
+    </div>
+    </template>
+    <script>
+    export default {
+        props:{
+            hashtag:{
+                type : String
+            }
+        },
+        setup() {
+            
+        }
+    }
+    </script>
+    ```
+    - Controls.vue
+    ```js
+    <template>
+    <button>Like</button>{{post.likes}}
+    <hashtag 
+        v-for="hashtag in post.hashtags"
+        :key="hashtag"
+        :hashtag="hashtag"/>
+    </template>
+    <script>
+    import Hashtag from './Hashtag.vue'
+
+    export default {
+        props:{
+            post : {
+                type : Object,
+                required: true
+            }
+        },
+    setup(props){
+        return{
+            Hashtag
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+    - store.js
+    ```js
+    import {reactive} from 'vue';
+    import {testPosts} from './testPosts.js';
+
+    class Store{
+        constructor(){
+            this.state = reactive({
+                posts: testPosts
+            })
+        }
+    }
+
+    export const store = new Store();
+    ```
+- Emiting events with the composition API
+    - Hashtag.vue
+    ```js
+    <template>
+    <div 
+        class="hashtag"
+        @click="setHashtag">
+        #{{hashtag}}
+    </div>
+    </template>
+    <script>
+    export default {
+        props:{
+            hashtag:{
+                type : String,
+                required: true
+            }
+        },
+        emits: ['setHashtag'],
+        setup(props, ctx) {
+            const setHashtag = () =>{
+                ctx.emit('setHashtag', props.hashtag);
+            }
+
+            return{
+                setHashtag
+            }
+        }
+    }
+    </script>
+    <style scoped>
+        .hashtag{
+            text-decoration: underline;
+        }
+        .hashtag:hover{
+            color: cornflowerblue;
+        }
+    </style>
+    ```
+    - Controls.vue
+    ```js
+    <template>
+    <button>Like</button>{{post.likes}}
+    <hashtag 
+        v-for="hashtag in post.hashtags"
+        :key="hashtag"
+        :hashtag="hashtag"
+        @setHashtag="setHashtag"/>
+    </template>
+    <script>
+    import Hashtag from './Hashtag.vue'
+
+    export default {
+        props:{
+            post : {
+                type : Object,
+                required: true
+            }
+        },
+        emits: ['setHashtag'],
+    setup(props, ctx){
+            const setHashtag = (hashtag) =>{
+                ctx.emit('setHashtag', hashtag);
+            }
+            return{
+                setHashtag,
+                Hashtag
+            }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+    - App.vue
+    ```js
+    <template>
+    <card
+        v-for="post in store.state.posts"
+        :key="post.id">
+        <template v-slot:title>
+            {{post.title}}
+        </template>
+        <template v-slot:content>
+            {{post.content}}
+        </template>  
+        <template v-slot:description>
+            <controls :post="post"
+                @setHashtag="setHashtag"/>
+        </template>  
+    </card>
+    {{currentTag}}
+    </template>
+    <script>
+    import {store} from './store.js';
+    import Card from '../pokemon/Card.vue';
+    import Controls from './Controls.vue';
+    import {ref} from 'vue';
+
+    export default {
+    setup(){
+        const currentTag = ref(null);
+            const setHashtag = (hashtag) =>{
+                currentTag.value = hashtag
+            }
+        return{
+            store,
+            Controls,      
+            Card,
+            setHashtag,
+            currentTag
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Filtering posts with computed:
+    - App.vue
+    ```js
+    <template>
+    <card
+        v-for="post in filteredPosts"
+        :key="post.id">
+        <template v-slot:title>
+            {{post.title}}
+        </template>
+        <template v-slot:content>
+            {{post.content}}
+        </template>  
+        <template v-slot:description>
+            <controls :post="post"
+                @setHashtag="setHashtag"/>
+        </template>  
+    </card>
+    </template>
+    <script>
+    import {store} from './store.js';
+    import Card from '../pokemon/Card.vue';
+    import Controls from './Controls.vue';
+    import {ref, computed} from 'vue';
+
+    export default {
+    setup(){
+        const currentTag = ref(null);
+            const setHashtag = (hashtag) =>{
+                currentTag.value = hashtag
+            }
+
+            const filteredPosts = computed(()=>{
+                if(!currentTag.value){
+                    return store.state.posts;
+                }
+                return store.state.posts.filter(
+                    post => post.hashtags.includes(currentTag.value)
+                );
+            })
+        return{
+            filteredPosts,
+            Controls,      
+            Card,
+            setHashtag
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Refactoring with the posts store
+    - store.js
+    ```js
+    import {reactive} from 'vue';
+    import {testPosts} from './testPosts.js';
+
+    class Store{
+        constructor(){
+            this.state = reactive({
+                posts: testPosts,
+                currentTag: null
+            })
+        }
+
+        setHashtag(tag){
+            this.state.currentTag = tag;
+        }
+    }
+
+    export const store = new Store();
+    ```
+    - Hashtag.vue
+    ```js
+    <template>
+    <div 
+        class="hashtag"
+        @click="setHashtag">
+        #{{hashtag}}
+    </div>
+    </template>
+    <script>
+    import {store} from './store.js';
+    export default {
+        props:{
+            hashtag:{
+                type : String,
+                required: true
+            }
+        },
+        setup(props, ctx) {
+            const setHashtag = () =>{
+                store.setHashtag(props.hashtag);
+            }
+
+            return{
+                setHashtag
+            }
+        }
+    }
+    </script>
+    <style scoped>
+        .hashtag{
+            text-decoration: underline;
+        }
+        .hashtag:hover{
+            color: cornflowerblue;
+        }
+    </style>
+    ```
+    - App.vue
+    ```js
+    <template>
+    <card
+        v-for="post in filteredPosts"
+        :key="post.id">
+        <template v-slot:title>
+            {{post.title}}
+        </template>
+        <template v-slot:content>
+            {{post.content}}
+        </template>  
+        <template v-slot:description>
+            <controls :post="post"/>
+        </template>  
+    </card>
+    </template>
+    <script>
+    import {store} from './store.js';
+    import Card from '../pokemon/Card.vue';
+    import Controls from './Controls.vue';
+    import {computed} from 'vue';
+
+    export default {
+        components:{
+            Controls,
+            Card
+        },
+    setup(){
+            const filteredPosts = computed(()=>{
+                if(!store.state.currentTag){
+                    return store.state.posts;
+                }
+                return store.state.posts.filter(
+                    post => post.hashtags.includes(store.state.currentTag)
+                );
+            })
+        return{
+            filteredPosts
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+    - Controls.vue (doesn't need to emit the setHashtag anymore)
+    ```js
+    <template>
+    <button>Like</button>{{post.likes}}
+    <hashtag 
+        v-for="hashtag in post.hashtags"
+        :key="hashtag"
+        :hashtag="hashtag"/>
+    </template>
+    <script>
+    import Hashtag from './Hashtag.vue'
+
+    export default {
+        components:{
+            Hashtag
+        },
+        props:{
+            post : {
+                type : Object,
+                required: true
+            }
+        }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Liking a post:
+    - Controls.vue
+    ```js
+    <template>
+    <button @click="click">Like</button>{{post.likes}}
+    <hashtag 
+        v-for="hashtag in post.hashtags"
+        :key="hashtag"
+        :hashtag="hashtag"/>
+    </template>
+    <script>
+    import Hashtag from './Hashtag.vue';
+    import {store} from './store.js';
+
+    export default {
+        components:{
+            Hashtag
+        },
+        props:{
+            post : {
+                type : Object,
+                required: true
+            }
+        },
+        setup(props){
+            const click = () => {
+                store.incrementLike(props.post);
+            }
+            return{
+                click
+            }
+        }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+    - store.js
+    ```js
+    import {reactive} from 'vue';
+    import {testPosts} from './testPosts.js';
+
+    class Store{
+        constructor(){
+            this.state = reactive({
+                posts: testPosts,
+                currentTag: null
+            })
+        }
+
+        setHashtag(tag){
+            this.state.currentTag = tag;
+        }
+
+        incrementLike(post){
+            const thePost = this.state.posts.find(x=> {return x.id == post.id});
+            if(!thePost){
+                return;
+            }
+            thePost.likes++;
+        }
+    }
+
+    export const store = new Store();
+    ```
+- Searching for hashtags
+    - App.vue
+    ```js
+    <template>
+    <input 
+        :value="currentTag"
+        @input="setHashtag"/>
+    <card
+        v-for="post in filteredPosts"
+        :key="post.id">
+        <template v-slot:title>
+            {{post.title}}
+        </template>
+        <template v-slot:content>
+            {{post.content}}
+        </template>  
+        <template v-slot:description>
+            <controls :post="post"/>
+        </template>  
+    </card>
+    </template>
+    <script>
+    import {store} from './store.js';
+    import Card from '../pokemon/Card.vue';
+    import Controls from './Controls.vue';
+    import {computed} from 'vue';
+
+    export default {
+        components:{
+            Controls,
+            Card
+        },
+    setup(){
+        const setHashtag = ($event)=>{
+            store.setHashtag($event.target.value)
+        }
+            const filteredPosts = computed(()=>{
+                if(!store.state.currentTag){
+                    return store.state.posts;
+                }
+                return store.state.posts.filter(
+                    post => post.hashtags.includes(store.state.currentTag)
+                );
+            })
+        return{
+            filteredPosts,
+            currentTag: computed(()=> store.state.currentTag),
+            setHashtag
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Refactor
+    - store.js
+    ```js
+    import {reactive, computed} from 'vue';
+    import {testPosts} from './testPosts.js';
+
+    class Store{
+        constructor(){
+            this.state = reactive({
+                posts: testPosts,
+                currentTag: null
+            })
+        }
+
+        setHashtag(tag){
+            this.state.currentTag = tag;
+        }
+
+        incrementLike(post){
+            const thePost = this.state.posts.find(x=> {return x.id == post.id});
+            if(!thePost){
+                return;
+            }
+            thePost.likes++;
+        }
+
+        get filteredPosts(){
+            if(!store.state.currentTag){
+                return store.state.posts;
+            }
+            return store.state.posts.filter(
+                post => post.hashtags.includes(store.state.currentTag)
+            );
+        }
+    }
+
+    export const store = new Store();
+    ```
+    - App.vue
+    ```js
+    <template>
+    <input 
+        :value="currentTag"
+        @input="setHashtag"/>
+    <card
+        v-for="post in filteredPosts"
+        :key="post.id">
+        <template v-slot:title>
+            {{post.title}}
+        </template>
+        <template v-slot:content>
+            {{post.content}}
+        </template>  
+        <template v-slot:description>
+            <controls :post="post"/>
+        </template>  
+    </card>
+    </template>
+    <script>
+    import {store} from './store.js';
+    import Card from '../pokemon/Card.vue';
+    import Controls from './Controls.vue';
+    import {computed} from 'vue';
+
+    export default {
+        components:{
+            Controls,
+            Card
+        },
+    setup(){
+        const setHashtag = ($event)=>{
+            store.setHashtag($event.target.value)
+        }
+        return{
+            filteredPosts : computed(()=>store.filteredPosts),
+            currentTag: computed(()=> store.state.currentTag),
+            setHashtag
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
