@@ -3797,3 +3797,676 @@ export default {
     <style scoped>
     </style>
     ```
+
+## Capstone final project
+
+- Setup the store and the store modules:
+    - albums.js
+    ```js
+    export const albums = {
+        namespaced: true,
+        state(){
+            return{
+
+            }
+        },
+        mutations:{
+
+        },
+        actions:{
+            
+        }
+    }
+    ```    
+    - photos.js
+    ```js
+    export const photos = {
+        namespaced: true,
+        state(){
+            return{
+
+            }
+        },
+        mutations:{
+
+        },
+        actions:{
+            
+        }
+    }
+    ```
+    - store.js
+    ```js
+    import {createStore} from 'vuex';
+    import {albums} from './albums.js';
+    import {photos} from './photos.js';
+
+    export const store = createStore({
+        modules:{
+            albums,
+            photos
+        }
+    })
+    ```
+- Create the app generic layout
+    - Layout.vue
+    ```js
+    <template>
+    <div class="wrapper">
+        <div class="header">
+            <slot name="header"/>
+        </div>
+        <div class="main">
+            <div class="sidebar">
+                <slot name="sidebar"/>
+            </div>
+            <div class="content">
+                <slot name="content"/>
+            </div>
+            
+        </div>
+    </div>
+    </template>
+    <style scoped>
+        .wrapper {
+            height: 100vh;
+        }
+        .header {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 0 0 20px;
+            font-size: 20px;
+            font-family: Arial;
+        }
+        .main {
+            height: calc(100vh - 50px);
+            border-top: 2px solid silver;
+            display: flex;
+        }
+        .sidebar { 
+            padding: 10px;
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 300px;
+            border-right: 2px solid silver;
+        }
+        .content {
+            width: 100%;
+            margin: 10px;
+        }
+    </style>
+    ```
+- Fetching albums:
+    - App.vue
+    ```js
+    <template>
+    <layout>
+        <template v-slot:header>
+            Header
+        </template>
+        <template v-slot:sidebar>
+            <div 
+                v-for="album in albums"
+                :key="album.id">
+                {{album.title}}
+            </div>
+        </template>
+        <template v-slot:content>
+            Content
+        </template>
+    </layout>
+    </template>
+    <script>
+    import Layout from './Layout.vue';
+    import {ref, onMounted} from 'vue';
+    export default {
+    components:{
+        Layout
+    },
+    setup(){
+        const albums = ref([]);
+        onMounted(async() =>{
+            const res = await window.fetch('https://jsonplaceholder.typicode.com/albums');
+            const json = await res.json();
+                albums.value = json;
+        });
+
+        return{
+            albums
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    *{
+        box-sizing: border-box;
+    }
+    body{
+        margin: 0;
+    }
+    </style>
+    ```
+- Data fetching albums with vuex
+    - album.js
+    ```js
+    export const albums = {
+    namespaced: true,
+    state(){
+        return{
+            all: []
+        }
+    },
+    mutations:{
+        setAlbums(state, albums){
+            state.all = albums
+        }
+
+    },
+    actions:{
+        async fetch(ctx){
+            const res = await window.fetch('https://jsonplaceholder.typicode.com/albums');
+            const json = await res.json();
+            ctx.commit('setAlbums', json);
+        }
+        }
+    }
+    ```
+    - App.vue
+    ```js
+    <template>
+    <layout>
+        <template v-slot:header>
+            Header
+        </template>
+        <template v-slot:sidebar>
+            <div 
+                v-for="album in albums"
+                :key="album.id">
+                {{album.title}}
+            </div>
+        </template>
+        <template v-slot:content>
+            Content
+        </template>
+    </layout>
+    </template>
+    <script>
+    import Layout from './Layout.vue';
+    import {computed, onMounted} from 'vue';
+    import {useStore} from 'vuex';
+    export default {
+    components:{
+        Layout
+    },
+    setup(){
+        const store = useStore();
+        
+        const albums = computed(()=>{
+            return store.state.albums.all
+        })
+        onMounted(() =>{
+                store.dispatch('albums/fetch');
+        });
+
+        return{
+            albums
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    *{
+        box-sizing: border-box;
+    }
+    body{
+        margin: 0;
+    }
+    </style>
+    ```
+- Create the Album component
+
+    - Album.vue
+    ```js
+    <template>
+    <button @click="click">{{album.title}}</button>
+    </template>
+    <script>
+    import {useStore} from 'vuex';
+    export default {
+        setup(props) {
+            const store = useStore();
+            const click = () =>{
+                store.dispatch('photos/getByAlbum', {album : props.album});
+            }
+            return{
+                click
+            }
+        },
+        props:{
+            album:{
+                type: Object,
+                required: true
+            }
+        }
+    }
+    </script>
+    <style scoped>
+    button {
+    background: darkcyan;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 0 10px 5px 0;
+    font-size: 18px;
+    border-radius: 5px;
+    transition: .1s;
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-family: Arial;
+    }
+    button:hover {
+    filter: brightness(120%);
+    cursor: pointer;
+    transition: .1s;
+    }
+    </style>
+    ```
+- Fetching thousands of photos:
+    - photo.js
+    ```js
+    export const photos = {
+        namespaced: true,
+        state(){
+            return{
+                all : []
+            }
+        },
+        mutations:{
+            setPhotosForCurrentAlbum(state, photos){
+                state.all = photos;
+            }
+        },
+        actions:{
+            async getByAlbum(ctx, {album}){
+                const res = await window.fetch(`https://jsonplaceholder.typicode.com/photos?album=${album.id}`);
+                const json = await res.json();
+                ctx.commit('setPhotosForCurrentAlbum', json);
+            }
+        }
+    }
+    ```
+    - App.vue
+    ```js
+    <template>
+    <layout>
+        <template v-slot:header>
+            Header
+        </template>
+        <template v-slot:sidebar>
+            <album 
+                v-for="album in albums"
+                :key="album.id"
+                :album="album"/>
+        </template>
+        <template v-slot:content>
+            <img
+                v-for="photo in photos"
+                :key="photo.id"
+                :src="photo.thumbnailUrl"/>
+        </template>
+    </layout>
+    </template>
+    <script>
+    import Layout from './Layout.vue';
+    import Album from './Album.vue';
+    import {computed, onMounted} from 'vue';
+    import {useStore} from 'vuex';
+    export default {
+    components:{
+        Layout,
+        Album
+    },
+    setup(){
+        const store = useStore();
+
+        onMounted(() =>{
+                store.dispatch('albums/fetch');
+        });
+
+        const albums = computed(()=>{
+            return store.state.albums.all
+        })
+
+            const photos = computed(() =>{
+                return store.state.photos.all
+            });
+
+        return{
+            albums,
+            photos
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    *{
+        box-sizing: border-box;
+    }
+    body{
+        margin: 0;
+    }
+    </style>
+    ```
+- Adding routing:
+    - PhotoApp.vue
+    ```js
+    <template>
+    <layout>
+        <template v-slot:header>
+            Header
+        </template>
+        <template v-slot:sidebar>
+            <album 
+                v-for="album in albums"
+                :key="album.id"
+                :album="album"/>
+        </template>
+        <template v-slot:content>
+            <img
+                v-for="photo in photos"
+                :key="photo.id"
+                :src="photo.thumbnailUrl"/>
+        </template>
+    </layout>
+    </template>
+    <script>
+    import Layout from './Layout.vue';
+    import Album from './Album.vue';
+    import {computed, onMounted} from 'vue';
+    import {useStore} from 'vuex';
+    export default {
+    components:{
+        Layout,
+        Album
+    },
+    setup(){
+        const store = useStore();
+
+        onMounted(() =>{
+                store.dispatch('albums/fetch');
+        });
+
+        const albums = computed(()=>{
+            return store.state.albums.all
+        })
+
+            const photos = computed(() =>{
+                return store.state.photos.all
+            });
+
+        return{
+            albums,
+            photos
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    *{
+        box-sizing: border-box;
+    }
+    body{
+        margin: 0;
+    }
+    </style>
+    ```
+    - App.vue
+    ```js
+    <template>
+        <router-view/>
+    </template>
+    ```
+    - routes.js
+    ```js
+    import {createRouter, createWebHistory} from 'vue-router';
+    import PhotoApp from './PhotoApp.vue';
+
+    export const router = createRouter({
+        history: createWebHistory(),
+        routes: [
+            {
+                path: '/',
+                component: PhotoApp
+            }
+        ]
+    });
+    ```
+    - index.js
+    ```js
+    import {createApp} from 'vue';
+    import App from './App.vue';
+    import {store} from './store.js';
+    import {router} from './router.js';
+
+    const app = createApp(App);
+
+    app.use(store)
+    app.use(router)
+    app.mount('#app')
+    ```
+- Improved routing.
+    - <router-view/> will be dynamically replaced with whatever component is matched up to.
+    - WatchEffect to monitor the changes in the url
+    - router.js
+    ```js
+    import {createRouter, createWebHistory} from 'vue-router';
+    import PhotoApp from './PhotoApp.vue';
+    import PhotoView from './PhotoView.vue';
+
+    export const router = createRouter({
+        history: createWebHistory(),
+        routes: [
+            {
+                path: '/',
+                component: PhotoApp,
+                children: [
+                    {
+                    path: 'albums/:id',
+                    component: PhotoView
+                    }
+                ]
+            }
+        ]
+    });
+    ```
+    - photo.js
+    ```js
+    export const photos = {
+        namespaced: true,
+        state(){
+            return{
+                all : []
+            }
+        },
+        mutations:{
+            setPhotosForCurrentAlbum(state, photos){
+                state.all = photos;
+            }
+        },
+        actions:{
+            async getByAlbum(ctx, {albumId}){
+                const res = await window.fetch(`https://jsonplaceholder.typicode.com/photos?albumId=${albumId}`);
+                const json = await res.json();
+                ctx.commit('setPhotosForCurrentAlbum', json);
+            }
+        }
+    }
+    ```
+    - Album.vue
+    ```js
+    <template>
+    <router-link :to="`/albums/${album.id}`">
+        {{album.title}}
+    </router-link>
+    </template>
+    <script>
+    import {useStore} from 'vuex';
+    export default {
+        props:{
+            album:{
+                type: Object,
+                required: true
+            }
+        }
+    }
+    </script>
+    <style scoped>
+    a {
+    background: darkcyan;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 0 10px 5px 0;
+    font-size: 18px;
+    border-radius: 5px;
+    transition: .1s;
+    width: 100%;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    font-family: Arial;
+    }
+    a:hover {
+    filter: brightness(120%);
+    cursor: pointer;
+    transition: .1s;
+    }
+    </style>    
+    ```
+    - PhotoApp.vue
+    ```js
+    <template>
+    <layout>
+        <template v-slot:header>
+            Header
+        </template>
+        <template v-slot:sidebar>
+            <album 
+                v-for="album in albums"
+                :key="album.id"
+                :album="album"/>
+        </template>
+        <template v-slot:content>
+            <router-view/>
+        </template>
+    </layout>
+    </template>
+    <script>
+    import Layout from './Layout.vue';
+    import Album from './Album.vue';
+    import {computed, onMounted} from 'vue';
+    import {useStore} from 'vuex';
+    export default {
+    components:{
+        Layout,
+        Album
+    },
+    setup(){
+        const store = useStore();
+
+        onMounted(() =>{
+                store.dispatch('albums/fetch');
+        });
+
+        const albums = computed(()=>{
+            return store.state.albums.all
+        })
+
+        return{
+            albums
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    *{
+        box-sizing: border-box;
+    }
+    body{
+        margin: 0;
+    }
+    </style>
+    ```
+    - PhotoView.vue
+    ```js
+    <template>       
+    <img
+        v-for="photo in photos"
+        :key="photo.id"
+        :src="photo.thumbnailUrl"/>
+    </template>
+    <script>
+    import {computed, watchEffect} from 'vue';
+    import {useStore} from 'vuex';
+    import {useRoute} from 'vue-router';
+
+    export default{
+    setup(){
+            const store = useStore();
+            const route = useRoute();
+
+            watchEffect(()=>{
+                const id = route.params.id;
+                if(!id){
+                    return;
+                }
+                store.dispatch('photos/getByAlbum', {albumId :id});
+            })
+    
+            const photos = computed(() =>{
+                return store.state.photos.all
+            });
+
+            return{
+                photos
+            }
+    }
+        
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Vuex level caching
+    - photos.js
+    ```js
+    export const photos = {
+        namespaced: true,
+        state(){
+            return{
+                all : [],
+                cache: {}
+            }
+        },
+        mutations:{
+            setPhotosForCurrentAlbum(state, {photos, albumId}){
+                state.all = photos;
+                state.cache[albumId] = photos;
+            }
+        },
+        actions:{
+            async getByAlbum(ctx, {albumId}){
+                if(ctx.state.cache[albumId]){
+                    ctx.commit('setPhotosForCurrentAlbum', {photos: ctx.state.cache[albumId], albumId });
+                    return;
+                }
+                const res = await window.fetch(`https://jsonplaceholder.typicode.com/photos?albumId=${albumId}`);
+                const json = await res.json();
+                ctx.commit('setPhotosForCurrentAlbum', {photos: json, albumId });
+            }
+        }
+    }
+    ```
