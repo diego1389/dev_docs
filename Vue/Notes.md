@@ -2712,3 +2712,1088 @@ export default {
     <style scoped>
     </style>
     ```
+
+    ## Vue router fundamentals
+
+    - Create a router and register a new route
+    - router.js
+    ```js
+    import {
+    createWebHistory,
+    createRouter,
+    } from 'vue-router';
+    import Hello from './Hello.vue';
+
+    const router = createRouter({
+        history: createWebHistory(),
+        routes: [
+            {
+                path: '/hello',
+                component: Hello,
+            }
+        ]
+    })
+
+    export {router};
+    ```
+    - Install the router plugin:
+    - index.js
+    ```js
+    import {createApp} from 'vue';
+    import App from './App.vue';
+    import { router } from './router.js';
+    const app = createApp(App);
+
+    app.use(router)
+    app.mount('#app')
+    ```
+    - Hello.vue
+    ```js
+    <template>
+        Hello Route
+    </template>
+    <script>
+    export default{
+        setup() {
+            
+        }
+    }
+    </script>
+    ```
+    - App.vue. The <router-view> tag works as a slot.
+    ```js
+    <template>
+        <router-view/>
+    </template>
+    <script>
+    export default {
+    
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- The Router Link component
+    - router.js
+    ```js
+    import {
+        createWebHistory,
+        createRouter,
+    } from 'vue-router';
+    import Hello from './Hello.vue';
+    import Posts from './Posts.vue';
+
+    const router = createRouter({
+        history: createWebHistory(),
+        routes: [
+            {
+                path: '/hello',
+                component: Hello,
+            },
+            {
+                path: '/posts',
+                component: Posts
+            }
+        ]
+    })
+
+    export {router};
+    ```
+    - App.vue
+    ```js
+    <template>
+    <router-link to="/hello">
+        Hello
+    </router-link>
+    <router-link to="/posts">
+        Posts
+    </router-link>
+    <router-view/>
+    </template>
+    <script>
+    export default {
+    
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+    - Posts.vue
+    ```js
+    <template>
+    <h2>Posts</h2>
+    </template>
+    <script>
+
+    export default {
+        setup() {
+            
+        }
+    }
+    </script>
+    ```
+- Nested routes (posts/1) vs dynamic routes. Route params with the composition API:
+    - router.js
+    ```js
+    import {
+        createWebHistory,
+        createRouter,
+    } from 'vue-router';
+    import Hello from './Hello.vue';
+    import Posts from './Posts.vue';
+    import Post from './Post.vue';
+
+    const router = createRouter({
+        history: createWebHistory(),
+        routes: [
+            {
+                path: '/hello',
+                component: Hello,
+            },
+            {
+                path: '/posts',
+                component: Posts,
+                children: [
+                    {
+                        path: ':id',
+                        component: Post
+                    }
+                ]
+            }
+        ]
+    })
+
+    export {router};
+    ```
+    - Posts.vue
+    ```js
+    <template>
+    <h2>Posts</h2>
+    <ul>
+        <li v-for="post in testPosts"
+         :key="post.id">
+        <router-link        
+            :to="`/posts/${post.id}`">
+            {{post.title}}
+        </router-link>
+        </li>
+ 
+    </ul>
+
+    <router-view></router-view>
+    </template>
+    <script>
+    import {testPosts} from '../microblog/testPosts.js'
+
+    export default {
+        setup() {
+            return{
+                testPosts
+            }
+        }
+    }
+    </script>
+    ```
+    - Post.vue
+    ```js
+   <template>
+    <h4>{{post.title}}</h4>
+    <p>{{post.content}}</p>
+    </template>
+    <script>
+    import {computed} from 'vue';
+    import {useRoute} from 'vue-router';
+    import {testPosts} from '../microblog/testPosts.js'
+    export default {
+        setup(){
+            const route = useRoute();
+            const post = computed(() => testPosts.find(x => x.id === parseInt(route.params.id)))
+            return {
+                post
+            }
+        }
+    }
+    </script>
+    ```
+- New Post route
+    - router.js
+    ```js
+    import {
+    createWebHistory,
+    createRouter,
+    } from 'vue-router';
+    import Hello from './Hello.vue';
+    import Posts from './Posts.vue';
+    import Post from './Post.vue';
+    import NewPost from './NewPost.vue';
+
+    const router = createRouter({
+        history: createWebHistory(),
+        routes: [
+            {
+                path: '/hello',
+                component: Hello,
+            },
+            {
+                path: '/posts',
+                component: Posts,
+                children: [
+                    {
+                        path: 'new',
+                        component: NewPost
+                    },
+                    {
+                        path: ':id',
+                        component: Post
+                    }
+                ]
+            }
+        ]
+    })
+
+    export {router};
+    ```
+    - NewPost.vue
+    ```js
+    <template>
+    <h3>New Post</h3>
+    <form @submit.prevent="submit">
+        <input 
+            v-model="newPost.title"
+            placeholder="Title"/>
+        <br/>
+        <textarea
+            cols="50"
+            rows="10"
+            v-model="newPost.content"/>
+        <br/>
+        <button>Submit</button>
+    </form>
+    </template>
+    <script>
+    import {reactive} from 'vue';
+    export default {
+        setup() {
+            const newPost = reactive({
+                title : '',
+                content : ''
+            })
+
+            const submit = () => {
+                console.log("submit");
+            }
+            return{
+                newPost,
+                submit
+            }
+        },
+    }
+    </script>
+    ```
+- Posts.vue
+    ```js
+    <template>
+    <h2>Posts</h2>
+    <ul>
+        <li v-for="post in testPosts"
+         :key="post.id">
+        <router-link        
+            :to="`/posts/${post.id}`">
+            {{post.title}}
+        </router-link>
+        </li>
+ 
+    </ul>
+    <router-link
+        :to="`/posts/new`">
+        New
+    </router-link>
+    <router-view></router-view>
+    </template>
+    <script>
+    import {testPosts} from '../microblog/testPosts.js'
+
+    export default {
+        setup() {
+            return{
+                testPosts
+            }
+        }
+    }
+    </script>
+    ```
+- usePosts Composable / Add a new Post:
+    - usePosts.js
+    ```js
+    import {testPosts} from '../microblog/testPosts.js'
+    import { ref } from 'vue'
+
+    export function usePosts(){
+        const posts = ref(testPosts)
+
+        const addPost = (post)=>{
+            posts.value.push(post);
+        }
+        return {
+            posts,
+            addPost
+        }
+    }
+    ```
+    - Posts.vue
+    ```js
+    <template>
+    <h2>Posts</h2>
+    <router-link
+        :to="`/posts/new`">
+         New Post
+    </router-link>
+    <ul>
+        <li v-for="post in posts"
+         :key="post.id">
+        <router-link        
+            :to="`/posts/${post.id}`">
+            {{post.title}}
+        </router-link>
+        </li>
+ 
+    </ul>
+
+    <router-view></router-view>
+    </template>
+    <script>
+    import {usePosts} from './usePosts.js'
+
+    export default {
+        setup() {
+            const postsStore = usePosts();
+            return{
+                posts : postsStore.posts
+            }
+        }
+    }
+    </script>
+    ```
+    - Post.vue
+    ```js
+    <template>
+    <h4>{{post.title}}</h4>
+    <p>{{post.content}}</p>
+    </template>
+    <script>
+    import {computed} from 'vue';
+    import {useRoute} from 'vue-router';
+    import {usePosts} from './usePosts.js'
+
+    export default {
+        setup(){
+            const route = useRoute();
+            const postsStore = usePosts();
+            const post = computed(() => postsStore.posts.value.find(x => x.id === parseInt(route.params.id)))
+            return {
+                post
+            }
+        }
+    }
+    </script>
+    ```
+    - NewPost.vue
+    ```js
+    <template>
+    <h3>New Post</h3>
+    <form @submit.prevent="submit">
+    <input 
+        v-model="newPost.title"
+        placeholder="Title"/>
+    <br/>
+    <textarea
+        cols="50"
+        rows="10"
+        v-model="newPost.content"/>
+    <br/>
+    <button>Submit</button>
+    </form>
+    </template>
+    <script>
+    import {reactive} from 'vue';
+    import {usePosts} from './usePosts.js'
+
+    export default {
+        setup() {
+            const postsStore = usePosts();
+
+            const newPost = reactive({
+                title : '',
+                content : ''
+            })
+
+            const submit = () => {
+                postsStore.addPost({
+                    id : postsStore.posts.value.length +1,
+                    title: newPost.title,
+                    content: newPost.content
+                })
+            }
+            return{
+                newPost,
+                submit
+            }
+        },
+    }
+    </script>
+    ```
+- Redirects with Vue router:
+    - NewPost.vue
+    ```js
+    <template>
+    <h3>New Post</h3>
+    <form @submit.prevent="submit">
+    <input 
+        v-model="newPost.title"
+        placeholder="Title"/>
+    <br/>
+    <textarea
+        cols="50"
+        rows="10"
+        v-model="newPost.content"/>
+    <br/>
+    <button>Submit</button>
+    </form>
+    </template>
+    <script>
+    import {reactive} from 'vue';
+    import {usePosts} from './usePosts.js'
+    import {useRouter} from 'vue-router';
+
+    export default {
+        setup() {
+            const postsStore = usePosts();
+            const router = useRouter();
+
+            const newPost = reactive({
+                title : '',
+                content : ''
+            })
+
+            const submit = () => {
+                const id = postsStore.posts.value.length +1;
+                postsStore.addPost({
+                    id,
+                    title: newPost.title,
+                    content: newPost.content
+                })
+                router.push(`/posts/${id}`);
+            }
+            return{
+                newPost,
+                submit
+            }
+        },
+    }
+    </script>
+    ```
+- Refactor to options API:
+    - NewPost.vue
+    ```js
+    <template>
+    <h3>New Post</h3>
+    <form @submit.prevent="submit">
+    <input 
+        v-model="newPost.title"
+        placeholder="Title"/>
+    <br/>
+    <textarea
+        cols="50"
+        rows="10"
+        v-model="newPost.content"/>
+    <br/>
+    <button>Submit</button>
+    </form>
+    </template>
+    <script>
+    export default {
+        data(){
+            return{
+                newPost : {
+                    title : '',
+                    content: ''
+                }
+            }
+        },
+        emits: ['createPost'],
+        methods:{
+                submit(){
+                    this.$emit('createPost',
+                    {
+                        title: this.newPost.title,
+                        content: this.newPost.content
+                    })
+                }
+            }
+        }
+    </script>
+    ```
+    - Posts.vue
+    ```js
+    <template>
+    <h2>Posts</h2>
+    <router-link
+        :to="`/posts/new`">
+         New Post
+    </router-link>
+    <ul>
+        <li v-for="post in posts"
+         :key="post.id">
+        <router-link        
+            :to="`/posts/${post.id}`">
+            {{post.title}}
+        </router-link>
+        </li>
+ 
+    </ul>
+
+    <router-view
+        :posts="posts"
+        @createPost="createPost"/>
+    </template>
+    <script>
+    import {testPosts} from '../microblog/testPosts.js'
+
+    export default {
+    data(){
+        return{
+            posts: testPosts
+        }
+    },
+    methods:{
+        createPost(newPost){
+            const id = this.posts.length +1;
+            this.posts.push({
+                id,
+                title: newPost.title,
+                content: newPost.content
+            })
+                this.$router.push(`/posts/${id}`);
+        }
+    }
+    }
+    </script>
+    ```
+    - Post.vue
+    ```js
+    <template>
+    <h4>{{post.title}}</h4>
+    <p>{{post.content}}</p>
+    </template>
+    <script>
+
+
+    export default {
+        props:{
+            posts : {
+                type : Array,
+                default : []
+            }
+        },
+        computed:{
+            post(){
+                return this.posts.find(x => x.id === parseInt(this.$route.params.id))
+            }
+        }
+    }
+    </script>
+    ```
+## Vuex fundamentals
+
+- State management. Create your first store:
+
+    - store.js
+    ```js
+    import {createStore} from 'vuex';
+
+    export const store = createStore({
+        state(){
+            return{
+                count : 0
+            }
+        }
+    })
+    ```
+    -App.vue
+    ```js
+    <template>
+    {{store.state.count}}
+    </template>
+    <script>
+    import {useStore} from 'vuex';
+    export default {
+    setup(){
+        const store = useStore()
+        return{
+            store
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Do not manipulate the state directly. Use a mutation to have one centralize the state manipuation. This is more scalable.
+- A mutation is a special method to update the state. You don't call the mutation directly, you rather commit it.
+- You can pass the value to update using a payload. If you need to pass multiple values you can pass an object. 
+    - store.js
+    ```js
+    import {createStore} from 'vuex';
+
+    export const store = createStore({
+        state(){
+            return{
+                count : 0
+            }
+        },
+        mutations:{
+            //destructuring the payload
+            increment(state, {number}){
+                state.count+= number;
+            }
+        }
+    })
+    ```
+    - App.vue
+    ```js
+    <template>
+    {{store.state.count}}
+    <button @click="click">Increment</button>
+    </template>
+    <script>
+    import {useStore} from 'vuex';
+    export default {
+    setup(){
+        const store = useStore()
+
+        const click = () =>{
+            store.commit('increment', {number:7});
+        }
+        return{
+            store,
+            click
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- More mutations:
+    - store.js
+    ```js
+    import {createStore} from 'vuex';
+
+    export const store = createStore({
+        state(){
+            return{
+                postId : null
+            }
+        },
+        mutations:{
+            setPostId(state, postId){
+                state.postId = postId;
+            }
+        }
+    })
+    ```
+    - App.vue
+    ```js
+    <template>
+    <button
+        v-for="post in posts"
+        :key="post.id"
+        @click="click(post)">
+        {{post.title}}
+        </button>
+        {{postId}}
+    </template>
+    <script>
+    import {useStore} from 'vuex';
+    import {computed} from 'vue';
+    export default {
+    setup(){
+        const store = useStore()
+        const posts =[
+            {id: 1, title: 'Post #1'},
+            {id: 2, title: 'Post #2'}
+        ]
+
+        const click = (post)=>{
+            store.commit('setPostId', post.id);
+        }
+        return{
+            postId: computed(()=>store.state.postId),
+            posts,
+            click
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Dispatching actions
+    - store.js
+    ```js
+    import {createStore} from 'vuex';
+    const delay = () => new Promise(res => setTimeout(res,1000));
+    import {testPosts} from '../microblog/testPosts';
+    export const store = createStore({
+        state(){
+            return{
+                postId : null
+            }
+        },
+        mutations:{
+            setPostId(state, postId){
+                state.postId = postId;
+            }
+        },
+        actions:{
+            async fetchPosts(ctx, payload){
+                await delay();
+                console.log(payload);
+            }
+        }
+    })
+    ```
+    - App.vue
+    ```js
+    <template>
+    <button
+        v-for="post in posts"
+        :key="post.id"
+        @click="click(post)">
+        {{post.title}}
+        </button>
+        {{postId}}
+    </template>
+    <script>
+    import {useStore} from 'vuex';
+    import {computed, onMounted} from 'vue';
+    export default {
+    setup(){
+        const store = useStore()
+        const posts =[
+            {id: 1, title: 'Post #1'},
+            {id: 2, title: 'Post #2'}
+        ]
+
+        const click = (post)=>{
+            store.commit('setPostId', post.id);
+        }
+
+        const fetchData = () => {
+            store.dispatch('fetchPosts', 'POST');
+        }
+
+        onMounted(()=>{
+            fetchData();
+        });
+
+        return{
+            postId: computed(()=>store.state.postId),
+            posts,
+            click
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Mocking the server and fetching posts
+    - store.js
+    ```js
+    import {createStore} from 'vuex';
+    const delay = () => new Promise(res => setTimeout(res,1000));
+    import {testPosts} from '../microblog/testPosts';
+    export const store = createStore({
+        state(){
+            return{
+                postId : null,
+                posts : []
+            }
+        },
+        mutations:{
+            setPostId(state, postId){
+                state.postId = postId;
+            },
+            setPosts(state, posts){
+                state.posts = posts
+            }
+        },
+        actions:{
+            async fetchPosts(ctx){
+                await delay();
+                ctx.commit('setPosts', testPosts);
+            }
+        }
+    })
+    ```
+    - App.vue
+    ```js
+    <template>
+    <button
+        v-for="post in posts"
+        :key="post.id"
+        @click="click(post)">
+        {{post.title}}
+        </button>
+        {{postId}}
+    </template>
+    <script>
+    import {useStore} from 'vuex';
+    import {computed, onMounted} from 'vue';
+    export default {
+    setup(){
+        const store = useStore()
+
+        const click = (post)=>{
+            store.commit('setPostId', post.id);
+        }
+
+        const fetchData = () => {
+            store.dispatch('fetchPosts');
+        }
+
+        onMounted(()=>{
+            fetchData();
+        });
+
+        return{
+            postId: computed(()=>store.state.postId),
+            posts : computed(()=> store.state.posts),
+            click
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Showing the current post / Vuex getters
+    - store.js
+    ```js
+    import {createStore} from 'vuex';
+    const delay = () => new Promise(res => setTimeout(res,1000));
+    import {testPosts} from '../microblog/testPosts';
+    export const store = createStore({
+        state(){
+            return{
+                postId : null,
+                posts : []
+            }
+        },
+        mutations:{
+            setPostId(state, postId){
+                state.postId = postId;
+            },
+            setPosts(state, posts){
+                state.posts = posts
+            }
+        },
+        actions:{
+            async fetchPosts(ctx){
+                await delay();
+                ctx.commit('setPosts', testPosts);
+            }
+        },
+        getters:{
+            currentPost(state){
+                return state.posts.find(p => p.id === state.postId);
+            }
+        }
+    })
+    ```
+    - App.vue
+    ```js
+    <template>
+    <button
+        v-for="post in posts"
+        :key="post.id"
+        @click="click(post)">
+        {{post.title}}
+        </button>
+        {{postId}}
+    <div v-if="currentPost">
+        <h2>
+            {{currentPost.title}}
+        </h2>
+        <h4>
+             {{currentPost.content}}
+        </h4>
+    </div>
+    </template>
+    <script>
+    import {useStore} from 'vuex';
+    import {computed, onMounted} from 'vue';
+    export default {
+    setup(){
+        const store = useStore()
+
+        const click = (post)=>{
+            store.commit('setPostId', post.id);
+        }
+
+        const fetchData = () => {
+            store.dispatch('fetchPosts');
+        }
+
+        onMounted(()=>{
+            fetchData();
+        });
+
+        return{
+            postId: computed(()=>store.state.postId),
+            posts : computed(()=> store.state.posts),
+            currentPost: computed(()=> store.getters.currentPost),
+            click
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Scaling Vuex with modules
+    - Always keep your state in modules don't use a single global store.
+    - store.js
+    ```js
+    import {createStore} from 'vuex';
+    import {testPosts} from '../microblog/testPosts';
+
+    const delay = () => new Promise(res => setTimeout(res,1000));
+    const posts ={
+        namespaced:true,
+        state(){
+            return{
+                postId : null,
+                all : []
+            }
+        },
+        mutations:{
+            setPostId(state, postId){
+                state.postId = postId;
+            },
+            setPosts(state, posts){
+                state.all = posts
+            }
+        },
+        actions:{
+            async fetch(ctx){
+                await delay();
+                ctx.commit('setPosts', testPosts);
+            }
+        },
+        getters:{
+            currentPost(state){
+                return state.all.find(p => p.id === state.postId);
+            }
+        }
+    }
+    export const store = createStore({
+        modules:{
+            posts
+        }
+    })
+    ```
+    - App.vue
+    ```js
+    <template>
+    <button
+        v-for="post in posts"
+        :key="post.id"
+        @click="click(post)">
+        {{post.title}}
+        </button>
+        {{postId}}
+    <div v-if="currentPost">
+        <h2>
+            {{currentPost.title}}
+        </h2>
+        <h4>
+             {{currentPost.content}}
+        </h4>
+    </div>
+    </template>
+    <script>
+    import {useStore} from 'vuex';
+    import {computed, onMounted} from 'vue';
+    export default {
+    setup(){
+        const store = useStore()
+
+        const click = (post)=>{
+            store.commit('posts/setPostId', post.id);
+        }
+
+        const fetchData = () => {
+            store.dispatch('posts/fetch');
+        }
+
+        onMounted(()=>{
+            fetchData();
+        });
+
+        return{
+            postId: computed(()=>store.state.posts.postId),
+            posts : computed(()=> store.state.posts.all),
+            currentPost: computed(()=> store.getters['posts/currentPost']),
+            click
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
+- Refactor to the options API
+    - App.vue
+    ```js
+    <template>
+    <button
+        v-for="post in posts"
+        :key="post.id"
+        @click="click(post)">
+        {{post.title}}
+        </button>
+        {{postId}}
+    <div v-if="currentPost">
+        <h2>
+            {{currentPost.title}}
+        </h2>
+        <h4>
+             {{currentPost.content}}
+        </h4>
+    </div>
+    </template>
+    <script>
+    export default {
+    created(){
+        this.$store.dispatch('posts/fetch');
+    },
+    computed:{
+        posts(){
+                return this.$store.state.posts.all;         
+        },
+        currentPost(){
+            return this.$store.getters['posts/currentPost'];
+        }
+    },
+    methods:{
+        click(post){
+            this.$store.commit('posts/setPostId', post.id);
+        }
+    }
+    }
+    </script>
+    <style scoped>
+    </style>
+    ```
