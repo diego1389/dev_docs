@@ -490,4 +490,33 @@
     ```
 ## Secure Web APIs
 
-- Add a new project ASP.NET core web application
+- Add a new project ASP.NET core web application.
+- Create and consume a Web API. 
+- Install Asp.net.core.http.extension
+- Add http client configuration (Startup.cs)
+    ```cs
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddAuthentication("MyCookieAuth").AddCookie("MyCookieAuth", options =>
+        {
+            options.Cookie.Name = "MyCookieAuth";
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(2);
+        });
+
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("MustBelongToHR", policy => policy
+                .RequireClaim("Department", "HR")
+                .Requirements.Add(new HRManagerProbationRequirement(3)));
+        });
+        services.AddSingleton<IAuthorizationHandler, HRManagerProbationRequirementHandler>();
+        services.AddRazorPages();
+        services.AddHttpClient("OurWebApi", client =>
+        {
+            client.BaseAddress = new Uri("https://localhost:44326");
+        });
+    }
+    ```

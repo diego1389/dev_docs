@@ -8,9 +8,12 @@
   <ItemGroup>
     <None Remove="Pages\Account\" />
     <None Remove="Authorization\" />
+    <None Remove="Microsoft.AspNetCore.Http.Extensions" />
+    <None Remove="DTO\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\Account\" />
     <Folder Include="Authorization\" />
+    <Folder Include="DTO\" />
   </ItemGroup>
 </Project>

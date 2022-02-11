@@ -1,27 +1,28 @@
 ﻿<Properties StartupConfiguration="{D60B1540-4126-4B6E-96AF-6977A93EF450}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="WebApi/Models/WeatherForecast.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="WebApi/Controllers/WeatherForecastController.cs">
     <Files>
-      <File FileName="WebApi/Startup.cs" Line="51" Column="28" />
-      <File FileName="WebApi/Controllers/HomeController.cs" Line="15" Column="9" />
+      <File FileName="WebApi/Startup.cs" Line="26" Column="10" />
+      <File FileName="WebApi/Properties/launchSettings.json" Line="1" Column="1" />
+      <File FileName="UnderTheHood/Startup.cs" Line="48" Column="18" />
+      <File FileName="UnderTheHood/Pages/HumanResource.cshtml.cs" Line="25" Column="27" />
       <File FileName="WebApi/Program.cs" Line="1" Column="1" />
-      <File FileName="WebApi/Models/WeatherForecast.cs" Line="7" Column="9" />
+      <File FileName="WebApi/Controllers/WeatherForecastController.cs" Line="21" Column="10" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="UnderTheHood" expanded="True">
             <Node name="WebApi" expanded="True">
-              <Node name="Controllers" expanded="True" />
-              <Node name="Models" expanded="True">
-                <Node name="WeatherForecast.cs" selected="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="WeatherForecastController.cs" selected="True" />
               </Node>
             </Node>
             <Node name="WebProject" expanded="True">
-              <Node name="Authorization" expanded="True" />
+              <Node name="Dependencies" expanded="True" />
+              <Node name="DTO" expanded="True" />
               <Node name="Pages" expanded="True">
-                <Node name="Account" expanded="True">
-                  <Node name="Login.cshtml" expanded="True" />
-                </Node>
+                <Node name="Account" expanded="True" />
+                <Node name="HumanResource.cshtml" expanded="True" />
               </Node>
             </Node>
           </Node>
@@ -38,10 +39,14 @@
       <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/Account/Login.cshtml.cs" relfile="UnderTheHood/Pages/Account/Login.cshtml.cs" line="27" column="1" />
       <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="17" column="1" />
       <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="28" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Startup.cs" relfile="UnderTheHood/Startup.cs" line="33" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/WebApi/Controllers/WeatherForecastController.cs" relfile="WebApi/Controllers/WeatherForecastController.cs" line="21" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/WebApi/Startup.cs" relfile="WebApi/Startup.cs" line="31" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MultiItemStartupConfigurations />
+  <MultiItemStartupConfigurations>
+    <MultiItemSolutionRunConfiguration Id="Multiple" Name="Multiple">
+      <Items>
+        <StartupItem ItemId="{D60B1540-4126-4B6E-96AF-6977A93EF450}" ItemName="WebApi" ConfigurationId="Default" />
+        <StartupItem ItemId="{F5220448-1AEE-4E95-840F-145EA18F9240}" ItemName="WebProject" ConfigurationId="UnderTheHood" />
+      </Items>
+    </MultiItemSolutionRunConfiguration>
+  </MultiItemStartupConfigurations>
 </Properties>
