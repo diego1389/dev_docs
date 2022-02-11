@@ -1,6 +1,6 @@
 - Authentication: verify you are who you say you are and generate the security context.
 
-- Security context: all you identity info that is relevant to the facility.
+- Security context: all your identity info that is relevant to the facility.
     - Contains all the information the user has (user name, addresses, etc).
     - Encapsulated into one single object: claims principal. Object that represents the security context of the user (it is the user).
     - It can have one or many identities.
@@ -488,3 +488,6 @@
         }
     }
     ```
+## Secure Web APIs
+
+- Add a new project ASP.NET core web application

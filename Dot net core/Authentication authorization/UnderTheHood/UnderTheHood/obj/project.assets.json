@@ -13,9 +13,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/UnderTheHood.csproj",
-      "projectName": "UnderTheHood",
-      "projectPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/UnderTheHood.csproj",
+      "projectUniqueName": "/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/WebProject.csproj",
+      "projectName": "WebProject",
+      "projectPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/WebProject.csproj",
       "packagesPath": "/Users/diego.guillen/.nuget/packages/",
       "outputPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/obj/",
       "projectStyle": "PackageReference",
@@ -61,7 +61,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.403/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.405/RuntimeIdentifierGraph.json"
       }
     }
   }

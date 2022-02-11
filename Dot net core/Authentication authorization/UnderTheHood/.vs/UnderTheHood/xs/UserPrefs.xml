@@ -1,28 +1,27 @@
-﻿<Properties StartupConfiguration="{F5220448-1AEE-4E95-840F-145EA18F9240}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHood/Pages/Account/Login.cshtml.cs">
+﻿<Properties StartupConfiguration="{D60B1540-4126-4B6E-96AF-6977A93EF450}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="WebApi/Models/WeatherForecast.cs">
     <Files>
-      <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" Line="52" Column="1" />
-      <File FileName="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" />
-      <File FileName="UnderTheHood/Startup.cs" Line="33" Column="1" />
-      <File FileName="UnderTheHood/Pages/Index.cshtml" />
-      <File FileName="UnderTheHood/Pages/Shared/_Layout.cshtml" />
-      <File FileName="UnderTheHood/Program.cs" />
-      <File FileName="UnderTheHood/Pages/Account/Login.cshtml" Line="29" Column="30" />
-      <File FileName="UnderTheHood/Pages/Account/Credential.cs" Line="13" Column="1" />
+      <File FileName="WebApi/Startup.cs" Line="51" Column="28" />
+      <File FileName="WebApi/Controllers/HomeController.cs" Line="15" Column="9" />
+      <File FileName="WebApi/Program.cs" Line="1" Column="1" />
+      <File FileName="WebApi/Models/WeatherForecast.cs" Line="7" Column="9" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="UnderTheHood" expanded="True">
-            <Node name="UnderTheHood" expanded="True">
+            <Node name="WebApi" expanded="True">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="WeatherForecast.cs" selected="True" />
+              </Node>
+            </Node>
+            <Node name="WebProject" expanded="True">
               <Node name="Authorization" expanded="True" />
               <Node name="Pages" expanded="True">
                 <Node name="Account" expanded="True">
-                  <Node name="Login.cshtml" expanded="True">
-                    <Node name="Login.cshtml.cs" selected="True" />
-                  </Node>
+                  <Node name="Login.cshtml" expanded="True" />
                 </Node>
-                <Node name="Shared" expanded="True" />
               </Node>
             </Node>
           </Node>
@@ -30,15 +29,18 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.WebApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.WebProject PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.ItemProperties.UnderTheHood PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/Account/Login.cshtml.cs" relfile="UnderTheHood/Pages/Account/Login.cshtml.cs" line="27" column="1" />
       <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="17" column="1" />
       <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="28" column="1" />
       <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Startup.cs" relfile="UnderTheHood/Startup.cs" line="33" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/WebApi/Controllers/WeatherForecastController.cs" relfile="WebApi/Controllers/WeatherForecastController.cs" line="21" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/WebApi/Startup.cs" relfile="WebApi/Startup.cs" line="31" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
