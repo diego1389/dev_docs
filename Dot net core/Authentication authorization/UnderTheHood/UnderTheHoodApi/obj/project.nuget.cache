@@ -1,8 +1,18 @@
 {
   "version": 2,
-  "dgSpecHash": "96PmYnQlQyAPWNCyqYSf4H5Mnqs38wz8JHbAzNv3c9aBc/Y04eMuwLwH4p87auj9O4z+YmXCIz2P/fiYr8NKXQ==",
+  "dgSpecHash": "xIGgD7F7DjU4Ly/KeGniz3mahcvk4N17rAWgCl/pX4KP/KHMNyrJoEb+cy1PpmCbAPCaztCzXSvR6t3AyseJIw==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHoodApi/UnderTheHoodApi.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/Users/diego.guillen/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/5.0.6/microsoft.aspnetcore.authentication.jwtbearer.5.0.6.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.csharp/4.5.0/microsoft.csharp.4.5.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.identitymodel.jsonwebtokens/6.16.0/microsoft.identitymodel.jsonwebtokens.6.16.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.identitymodel.logging/6.16.0/microsoft.identitymodel.logging.6.16.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.identitymodel.protocols/6.7.1/microsoft.identitymodel.protocols.6.7.1.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.identitymodel.protocols.openidconnect/6.7.1/microsoft.identitymodel.protocols.openidconnect.6.7.1.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.identitymodel.tokens/6.16.0/microsoft.identitymodel.tokens.6.16.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/system.identitymodel.tokens.jwt/6.16.0/system.identitymodel.tokens.jwt.6.16.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/system.security.cryptography.cng/4.5.0/system.security.cryptography.cng.4.5.0.nupkg.sha512"
+  ],
   "logs": []
 }

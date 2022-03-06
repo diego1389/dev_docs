@@ -586,3 +586,110 @@
         </table>
     </div>
     ```
+- JWT token (Json Web Token): 
+- Same process as the Cookie, the JWT will be carried by the browser in the http request and http response header instead of the cookie. 
+- It has three different parts:
+    1. Hashing algorithm.
+    2. Claims (user info).
+    3. Hashed claims. 
+- Process: you take the claims, take your chosen hashing algorithm. Apply your secret key the signing process and this generates the hashed claims. It is a one way process. You cannot reverse the process to retrieve the claims. It is a base-64 string. Don't put any sensitive information in the claims. 
+- When you want to verify the JWT you repeat the same process. Only the people who have the key can do the process. You do the same process and compare the two hashed claims to see if it is valid. 
+- For JWT we don't need the identity. 
+- You need to install a new nuget package in order to generate the JWT: System.Identity.Model.Tokens.Jwt and also the Microsoft.AspNetCore.Authentication.JwtBearer. 
+- Create a new Auth controller under the API project to generate a JWT token:
+- In appsettings.development add a new secret key to read:
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "SecretKey" :  "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
+}
+
+```
+- AuthController.cs
+```cs
+using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
+using System.Text;
+
+namespace UnderTheHoodApi.Controllers
+{
+    [Route("[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly IConfiguration configuration;
+
+        public AuthController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        [HttpPost]
+        public IActionResult Authenticate([FromBody] Credential credential)
+        {
+            if (credential.UserName == "admin" && credential.Password == "password")
+            {
+                //Create security context
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, "admin"),
+                    new Claim(ClaimTypes.Email, "admin@test.com"),
+                    new Claim("Department", "HR"),
+                    new Claim("EmploymentDate", "2020-12-12")
+                };
+
+                var expiresAt = DateTime.UtcNow.AddMinutes(10);
+
+                return Ok(new
+                {
+                    access_token = CreateToken(claims, expiresAt),
+                    expires_at = expiresAt
+                });
+            }
+
+            ModelState.AddModelError("Unauthorized", "You are not authorized to access the endpoint");
+            return Unauthorized(ModelState);
+        }
+
+        private string CreateToken(IEnumerable<Claim> claims, DateTime expiresAt) {
+            var secretKey = Encoding.ASCII.GetBytes(configuration.GetValue<string>("SecretKey"));
+            var jwt = new JwtSecurityToken(
+                claims : claims,
+                notBefore : DateTime.UtcNow,
+                expires: expiresAt,
+                signingCredentials: new SigningCredentials(
+                        new SymmetricSecurityKey(secretKey),
+                        SecurityAlgorithms.HmacSha256Signature
+                    )
+                );
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
+    }
+
+    public class Credential
+    {
+        public string UserName { get; set; }
+        public string Password { get; set; }
+    }
+}
+```
+- Get the token using Postman (Post tohttps://localhost:42678/auth).
+- Body:
+```json
+{
+    "userName" : "admin",
+    "password" : "password" 
+}
+```
