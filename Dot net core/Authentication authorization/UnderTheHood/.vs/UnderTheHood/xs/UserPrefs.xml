@@ -1,27 +1,39 @@
-﻿<Properties StartupConfiguration="{D60B1540-4126-4B6E-96AF-6977A93EF450}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="WebApi/Controllers/WeatherForecastController.cs">
+﻿<Properties StartupConfiguration="Multiple">
+  <MonoDevelop.Ide.ItemProperties.UnderTheHoodApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHood/Pages/Account/Login.cshtml.cs">
     <Files>
-      <File FileName="WebApi/Startup.cs" Line="26" Column="10" />
-      <File FileName="WebApi/Properties/launchSettings.json" Line="1" Column="1" />
-      <File FileName="UnderTheHood/Startup.cs" Line="48" Column="18" />
-      <File FileName="UnderTheHood/Pages/HumanResource.cshtml.cs" Line="25" Column="27" />
-      <File FileName="WebApi/Program.cs" Line="1" Column="1" />
-      <File FileName="WebApi/Controllers/WeatherForecastController.cs" Line="21" Column="10" />
+      <File FileName="UnderTheHood/Startup.cs" Line="49" Column="10" />
+      <File FileName="UnderTheHood/Pages/HumanResource.cshtml.cs" Line="26" Column="1" />
+      <File FileName="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" Line="28" Column="1" />
+      <File FileName="UnderTheHood/Program.cs" Line="16" Column="1" />
+      <File FileName="UnderTheHood/WebProject.csproj" Line="1" Column="1" />
+      <File FileName="UnderTheHoodApi/Controllers/WeatherForecastController.cs" Line="30" Column="42" />
+      <File FileName="UnderTheHoodApi/Properties/launchSettings.json" Line="24" Column="26" />
+      <File FileName="UnderTheHood/DTO/WeatherForecastDTO.cs" Line="4" Column="36" />
+      <File FileName="UnderTheHoodApi/WeatherForecast.cs" Line="1" Column="1" />
+      <File FileName="UnderTheHood/Pages/HumanResource.cshtml" Line="16" Column="1" />
+      <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" Line="27" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="UnderTheHood" expanded="True">
-            <Node name="WebApi" expanded="True">
-              <Node name="Controllers" expanded="True">
-                <Node name="WeatherForecastController.cs" selected="True" />
-              </Node>
+            <Node name="UnderTheHoodApi" expanded="True">
+              <Node name="Controllers" expanded="True" />
+              <Node name="Properties" expanded="True" />
             </Node>
             <Node name="WebProject" expanded="True">
-              <Node name="Dependencies" expanded="True" />
+              <Node name="Dependencies" expanded="True">
+                <Node name="PackageDependencies" expanded="True" />
+              </Node>
+              <Node name="Authorization" expanded="True" />
               <Node name="DTO" expanded="True" />
               <Node name="Pages" expanded="True">
-                <Node name="Account" expanded="True" />
+                <Node name="Account" expanded="True">
+                  <Node name="Login.cshtml" expanded="True">
+                    <Node name="Login.cshtml.cs" selected="True" />
+                  </Node>
+                </Node>
                 <Node name="HumanResource.cshtml" expanded="True" />
               </Node>
             </Node>
@@ -30,21 +42,21 @@
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.WebApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.ItemProperties.WebProject PreferredExecutionTarget="/Applications/Google Chrome.app" />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/Account/Login.cshtml.cs" relfile="UnderTheHood/Pages/Account/Login.cshtml.cs" line="27" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="17" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="28" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/Account/Login.cshtml.cs" relfile="UnderTheHood/Pages/Account/Login.cshtml.cs" line="27" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="17" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="28" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/HumanResource.cshtml.cs" relfile="UnderTheHood/Pages/HumanResource.cshtml.cs" line="26" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations>
     <MultiItemSolutionRunConfiguration Id="Multiple" Name="Multiple">
       <Items>
-        <StartupItem ItemId="{D60B1540-4126-4B6E-96AF-6977A93EF450}" ItemName="WebApi" ConfigurationId="Default" />
+        <StartupItem ItemId="{0983E1E5-48F2-4149-93A2-E11D7F94E2BD}" ItemName="UnderTheHoodApi" ConfigurationId="Default" />
         <StartupItem ItemId="{F5220448-1AEE-4E95-840F-145EA18F9240}" ItemName="WebProject" ConfigurationId="UnderTheHood" />
       </Items>
     </MultiItemSolutionRunConfiguration>

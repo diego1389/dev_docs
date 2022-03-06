@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -24,8 +22,8 @@ namespace UnderTheHood.Pages
 
         public async Task OnGetAsync()
         {
-            /*var httpClient = httpClientFactory.CreateClient("OurWebApi");
-            WeatherForecastItems = await httpClient.GetFromJsonAsync<List<WeatherForecastDTO>>("WeatherForecast");*/
+            var httpClient = httpClientFactory.CreateClient("OurWebApi");
+            WeatherForecastItems = await httpClient.GetFromJsonAsync<List<WeatherForecastDTO>>("WeatherForecast");
         }
     }
 }

@@ -1,8 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "LwTW/ki5puW6p87q44t28OiwE//f7p2H7wX1MhXo0PgnA6duDJETEoEqeazGYw0lwqDw9ySPBHrsXfH2h0CTnQ==",
+  "dgSpecHash": "Na1d2BoKDDQxlEvZobMq9+dlGiPlxzOTauzwoFBhqsXwglUHhr8CsLJ6PMXV2YGO8lZEMnO5RkLxp98MBx+9tg==",
   "success": true,
-  "projectFilePath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/WebProject.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/WebProject.csproj",
+  "expectedPackageFiles": [
+    "/Users/diego.guillen/.nuget/packages/microsoft.aspnetcore.http.abstractions/2.2.0/microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.aspnetcore.http.extensions/2.2.0/microsoft.aspnetcore.http.extensions.2.2.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.aspnetcore.http.features/2.2.0/microsoft.aspnetcore.http.features.2.2.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.extensions.fileproviders.abstractions/2.2.0/microsoft.extensions.fileproviders.abstractions.2.2.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.extensions.primitives/2.2.0/microsoft.extensions.primitives.2.2.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.net.http.headers/2.2.0/microsoft.net.http.headers.2.2.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/system.buffers/4.5.0/system.buffers.4.5.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/system.memory/4.5.1/system.memory.4.5.1.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/system.runtime.compilerservices.unsafe/4.5.1/system.runtime.compilerservices.unsafe.4.5.1.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/system.text.encodings.web/4.5.0/system.text.encodings.web.4.5.0.nupkg.sha512"
+  ],
   "logs": []
 }

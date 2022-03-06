@@ -70,7 +70,7 @@
             }
 
             public void OnPost()
-            {
+            {';
 
             }
         }
@@ -180,7 +180,7 @@
         }
     ```
 - Configure policy:
-    - Add new page (HUman resources
+    - Add new page (HUman resources)s
     - Configure middleware:
     ```c#
     public void ConfigureServices(IServiceCollection services)
@@ -490,9 +490,9 @@
     ```
 ## Secure Web APIs
 
-- Add a new project ASP.NET core web application.
+- Add a new project ASP.NET core API application (WeatherForecast example).
 - Create and consume a Web API. 
-- Install Asp.net.core.http.extension
+- Install Asp.net.core.http.extension in WebApp project.
 - Add http client configuration (Startup.cs)
     ```cs
     public void ConfigureServices(IServiceCollection services)
@@ -516,7 +516,73 @@
         services.AddRazorPages();
         services.AddHttpClient("OurWebApi", client =>
         {
-            client.BaseAddress = new Uri("https://localhost:44326");
+            client.BaseAddress = new Uri("https://localhost:42678/"); //New web API url
         });
     }
+    ```
+    - Retrieve the WeatherForecast items from the WebAPI inside the HR view (WebApp project)
+    - HumanResources.cshtml.cs
+    ```cs
+    using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Net.Http.Json;
+    using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.RazorPages;
+    using WebProject.DTO;
+
+    namespace UnderTheHood.Pages
+    {
+        [Authorize(Policy = "MustBelongToHR")]
+        public class HumanResourceModel : PageModel
+        {
+            private readonly IHttpClientFactory httpClientFactory;
+            [BindProperty]
+            public List<WeatherForecastDTO> WeatherForecastItems { get; set; }
+            public HumanResourceModel(IHttpClientFactory httpClientFactory)
+            {
+                this.httpClientFactory = httpClientFactory;
+            }
+
+            public async Task OnGetAsync()
+            {
+                var httpClient = httpClientFactory.CreateClient("OurWebApi");
+                WeatherForecastItems = await httpClient.GetFromJsonAsync<List<WeatherForecastDTO>>("WeatherForecast");
+            }
+        }
+    }
+    ```
+    - Display the elements in the screen:
+    - HumanResources.cshtml
+    ```html
+    @page
+    @model UnderTheHood.Pages.HumanResourceModel
+    @{
+    }
+
+    <div>
+        <h1 class="display-4">Human Resources</h1>
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>Date</td>
+                <td>Temp C</td>
+                <td>Temp F</td>
+                <td>Summary</td>
+            </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.WeatherForecastItems)
+                {
+                    <tr>
+                        <td>@item.Date.ToShortDateString()</td>
+                        <td>@item.TemperatureC</td>
+                        <td>@item.TemperatureF</td>
+                        <td>@item.Summary</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
     ```
