@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Na1d2BoKDDQxlEvZobMq9+dlGiPlxzOTauzwoFBhqsXwglUHhr8CsLJ6PMXV2YGO8lZEMnO5RkLxp98MBx+9tg==",
+  "dgSpecHash": "1UPRxctwlVuAd0DZsGG9GOVWkYR4WzolYcLsVIhw9p77mm9yRuEuSs+nVcf6u5Tb2LHVWcQ5QimyLxOuRcN26g==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/WebProject.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "/Users/diego.guillen/.nuget/packages/microsoft.extensions.fileproviders.abstractions/2.2.0/microsoft.extensions.fileproviders.abstractions.2.2.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/microsoft.extensions.primitives/2.2.0/microsoft.extensions.primitives.2.2.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/microsoft.net.http.headers/2.2.0/microsoft.net.http.headers.2.2.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.buffers/4.5.0/system.buffers.4.5.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.memory/4.5.1/system.memory.4.5.1.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.runtime.compilerservices.unsafe/4.5.1/system.runtime.compilerservices.unsafe.4.5.1.nupkg.sha512",

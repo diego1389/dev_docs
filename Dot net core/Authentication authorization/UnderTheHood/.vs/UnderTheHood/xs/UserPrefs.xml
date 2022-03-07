@@ -1,24 +1,24 @@
 ﻿<Properties StartupConfiguration="Multiple">
   <MonoDevelop.Ide.ItemProperties.UnderTheHoodApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHoodApi/appsettings.Development.json">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHoodApi/Controllers/WeatherForecastController.cs">
     <Files>
-      <File FileName="UnderTheHoodApi/Controllers/AuthController.cs" Line="43" Column="29" />
+      <File FileName="UnderTheHood/Pages/HumanResource.cshtml.cs" Line="39" Column="1" />
+      <File FileName="UnderTheHoodApi/Controllers/AuthController.cs" Line="65" Column="1" />
+      <File FileName="UnderTheHood/Authorization/JWToken.cs" Line="10" Column="34" />
       <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" Line="27" Column="1" />
-      <File FileName="UnderTheHood/Program.cs" Line="16" Column="1" />
-      <File FileName="UnderTheHoodApi/Program.cs" Line="16" Column="1" />
-      <File FileName="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" Line="28" Column="1" />
-      <File FileName="UnderTheHood/Pages/HumanResource.cshtml.cs" Line="26" Column="1" />
-      <File FileName="UnderTheHoodApi/appsettings.Development.json" Line="9" Column="12" />
+      <File FileName="UnderTheHood/Pages/Account/Credential.cs" Line="1" Column="1" />
+      <File FileName="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" Line="20" Column="1" />
+      <File FileName="UnderTheHoodApi/Controllers/WeatherForecastController.cs" Line="30" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="UnderTheHood" expanded="True">
             <Node name="UnderTheHoodApi" expanded="True">
-              <Node name="Controllers" expanded="True" />
-              <Node name="appsettings.json" expanded="True">
-                <Node name="appsettings.Development.json" selected="True" />
+              <Node name="Controllers" expanded="True">
+                <Node name="WeatherForecastController.cs" selected="True" />
               </Node>
+              <Node name="appsettings.json" expanded="True" />
             </Node>
             <Node name="WebProject" expanded="True">
               <Node name="Dependencies" expanded="True" />
@@ -42,10 +42,7 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/Account/Login.cshtml.cs" relfile="UnderTheHood/Pages/Account/Login.cshtml.cs" line="27" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="17" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Authorization/HRManagerProbationRequirement.cs" relfile="UnderTheHood/Authorization/HRManagerProbationRequirement.cs" line="28" column="1" />
-      <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/Pages/HumanResource.cshtml.cs" relfile="UnderTheHood/Pages/HumanResource.cshtml.cs" line="26" column="1" />
+      <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHoodApi/Controllers/WeatherForecastController.cs" relfile="UnderTheHoodApi/Controllers/WeatherForecastController.cs" line="29" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations>
