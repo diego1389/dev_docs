@@ -872,3 +872,263 @@ namespace UnderTheHood.Pages
     }
 }
 ```
+- Store and reuse token in session.
+- Refactor HumanResources.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
+using UnderTheHood.Pages.Account;
+using WebProject.Authorization;
+using WebProject.DTO;
+
+namespace UnderTheHood.Pages
+{
+    [Authorize(Policy = "MustBelongToHR")]
+    public class HumanResourceModel : PageModel
+    {
+        private readonly IHttpClientFactory httpClientFactory;
+        [BindProperty]
+        public List<WeatherForecastDTO> WeatherForecastItems { get; set; }
+        public HumanResourceModel(IHttpClientFactory httpClientFactory)
+        {
+            this.httpClientFactory = httpClientFactory;
+        }
+
+        public async Task OnGetAsync()
+        {
+            WeatherForecastItems = await InvokeEndpoint<List<WeatherForecastDTO>>("OurWebApi", "WeatherForecast");
+        }
+
+        private async Task<T> InvokeEndpoint<T>(string clientName, string url)
+        {
+            //get token from session
+            JwtToken token = null;
+            var strToken = HttpContext.Session.GetString("access_token");
+            if (string.IsNullOrEmpty(strToken))
+                token = await Authenticate();
+            else
+                token = JsonConvert.DeserializeObject<JwtToken>(strToken);
+
+            if (token == null || string.IsNullOrEmpty(token.AccessToken) || token.ExpiresAt <= DateTime.UtcNow)
+                token = await Authenticate();
+
+            var httpClient = httpClientFactory.CreateClient(clientName);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
+            return await httpClient.GetFromJsonAsync<T>(url);
+        }
+
+        private async Task<JwtToken> Authenticate()
+        {
+            var httpClient = httpClientFactory.CreateClient("OurWebApi");
+            var response = await httpClient.PostAsJsonAsync("auth", new Credential { UserName = "admin", Password = "password" });
+            response.EnsureSuccessStatusCode();
+            string jwtToken = await response.Content.ReadAsStringAsync();
+            HttpContext.Session.SetString("access_token", jwtToken);
+            return JsonConvert.DeserializeObject<JwtToken>(jwtToken);          
+        }
+    }
+}
+```
+- Apply Policy to WebApi endpoint:
+
+- Add policy to WeatherForecast controller:
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
+namespace UnderTheHoodApi.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    [Authorize(policy:"AdminOnly")]
+    public class WeatherForecastController : ControllerBase
+    {
+        private static readonly string[] Summaries = new[]
+        {
+            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        };
+
+        private readonly ILogger<WeatherForecastController> _logger;
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        {
+            _logger = logger;
+        }
+
+        [HttpGet]
+        public IEnumerable<WeatherForecast> Get()
+        {
+            var rng = new Random();
+            return Enumerable.Range(1, 10).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = rng.Next(-20, 55),
+                Summary = Summaries[rng.Next(Summaries.Length)]
+            })
+            .ToArray();
+        }
+    }
+}
+```
+- Add policy in Configure  services add authorization:
+```cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+
+namespace UnderTheHoodApi
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<string>("SecretKey"))),
+                    ValidateLifetime = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly",
+                    policy => policy.RequireClaim("Admin"));
+            });
+            services.AddControllers();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
+    }
+}
+```
+- Add Admin claim in AuthController:
+```cs
+using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
+using System.Text;
+
+namespace UnderTheHoodApi.Controllers
+{
+    [Route("[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly IConfiguration configuration;
+
+        public AuthController(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        [HttpPost]
+        public IActionResult Authenticate([FromBody] Credential credential)
+        {
+            if (credential.UserName == "admin" && credential.Password == "password")
+            {
+                //Create security context
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, "admin"),
+                    new Claim(ClaimTypes.Email, "admin@test.com"),
+                    new Claim("Department", "HR"),
+                    new Claim("Admin", "true"),
+                    new Claim("EmploymentDate", "2020-12-12")
+                };
+
+                var expiresAt = DateTime.UtcNow.AddMinutes(10);
+
+                return Ok(new
+                {
+                    access_token = CreateToken(claims, expiresAt),
+                    expires_at = expiresAt
+                });
+            }
+
+            ModelState.AddModelError("Unauthorized", "You are not authorized to access the endpoint");
+            return Unauthorized(ModelState);
+        }
+
+        private string CreateToken(IEnumerable<Claim> claims, DateTime expiresAt) {
+            var secretKey = Encoding.ASCII.GetBytes(configuration.GetValue<string>("SecretKey"));
+            var jwt = new JwtSecurityToken(
+                claims : claims,
+                notBefore : DateTime.UtcNow,
+                expires: expiresAt,
+                signingCredentials: new SigningCredentials(
+                        new SymmetricSecurityKey(secretKey),
+                        SecurityAlgorithms.HmacSha256Signature
+                    )
+                );
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
+    }
+}
+```

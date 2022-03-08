@@ -32,6 +32,7 @@ namespace UnderTheHoodApi.Controllers
                     new Claim(ClaimTypes.Name, "admin"),
                     new Claim(ClaimTypes.Email, "admin@test.com"),
                     new Claim("Department", "HR"),
+                    new Claim("Admin", "true"),
                     new Claim("EmploymentDate", "2020-12-12")
                 };
 
