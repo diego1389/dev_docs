@@ -1132,3 +1132,7 @@ namespace UnderTheHoodApi.Controllers
     }
 }
 ```
+
+## ASP.NET Core identity
+
+- 
