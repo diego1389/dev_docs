@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApp_Security.Data;
 
 namespace WebApp_Security
 {
@@ -23,6 +26,28 @@ namespace WebApp_Security
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDBContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
+            services.AddIdentity<IdentityUser, IdentityRole>(
+                    options =>
+                    {
+                        options.Password.RequiredLength = 8;
+                        options.Password.RequireLowercase = true;
+                        options.Password.RequireUppercase = true;
+
+                        options.Lockout.MaxFailedAccessAttempts = 5;
+                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
+                        options.User.RequireUniqueEmail = true;
+                    }
+                )
+                .AddEntityFrameworkStores<ApplicationDBContext>();
+
+            services.ConfigureApplicationCookie(options => {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/AccessDenied";
+            });
             services.AddRazorPages();
         }
 
@@ -44,7 +69,7 @@ namespace WebApp_Security
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

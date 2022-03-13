@@ -6625,7 +6625,7 @@
       "outputPath": "/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/WebApp_Security/WebApp_Security/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/diego.guillen/.config/NuGet/NuGet.Config"
+        "/Users/diego.guillen/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -6692,7 +6692,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.405/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.406/RuntimeIdentifierGraph.json"
       }
     }
   }

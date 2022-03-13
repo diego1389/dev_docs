@@ -1135,4 +1135,194 @@ namespace UnderTheHoodApi.Controllers
 
 ## ASP.NET Core identity
 
-- 
+- Add a new .net core web api project.
+- Install Aspnetcore.identy, aspnetcore.identity.entityframeworkcore, entityframeworkcore.design, entityframeworkcore.sqlserver and entityframeworkcore.tools nuget packages.
+- Add a new Application identity context class under a new Data folder:
+- ApplicationDBContext
+```c#
+using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+
+namespace WebApp_Security.Data
+{
+    public class ApplicationDBContext : IdentityDbContext
+    {
+        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options): base(options)
+        {
+
+        }
+    }
+}
+```
+- Configure Startup.cs (WebApp project)
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using WebApp_Security.Data;
+
+namespace WebApp_Security
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDBContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
+            services.AddRazorPages();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
+        }
+    }
+}
+```
+-appsettings.Development.json
+```json
+{
+  "DetailedErrors": true,
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "ConnectionStrings": {
+    "Default": "Server=localhost,1433\\Catalog=AppUsers;Database=AppUsers;User=sa;Password=Strong.Pwd-123;"
+  }
+}
+```
+- Execute commands (version for Mac running SQL server in Docker container). Navigate to the web app project and run the following commands:
+    1. dotnet restore
+    2. dotnet tool install --global dotnet-ef
+    3. dotnet-ef
+    4. dotnet ef migrations add initial
+    5. dotnet ef database update //this creates the new database AppUsers (with the tables already created)
+- Configure WebApp to use Identity:
+- Startup.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using WebApp_Security.Data;
+
+namespace WebApp_Security
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDBContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
+            services.AddIdentity<IdentityUser, IdentityRole>(
+                    options =>
+                    {
+                        options.Password.RequiredLength = 8;
+                        options.Password.RequireLowercase = true;
+                        options.Password.RequireUppercase = true;
+
+                        options.Lockout.MaxFailedAccessAttempts = 5;
+                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
+                        options.User.RequireUniqueEmail = true;
+                    }
+                )
+                .AddEntityFrameworkStores<ApplicationDBContext>();
+
+            services.ConfigureApplicationCookie(options => {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/AccessDenied";
+            });
+            services.AddRazorPages();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
+        }
+    }
+}
+```
