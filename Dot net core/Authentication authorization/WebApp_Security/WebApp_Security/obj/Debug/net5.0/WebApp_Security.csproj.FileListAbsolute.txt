@@ -74,3 +74,5 @@
 /Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/WebApp_Security/WebApp_Security/obj/Debug/net5.0/WebApp_Security.pdb
 /Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/WebApp_Security/WebApp_Security/obj/Debug/net5.0/WebApp_Security.genruntimeconfig.cache
 /Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/WebApp_Security/WebApp_Security/obj/Debug/net5.0/WebApp_Security.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/WebApp_Security/WebApp_Security/obj/Debug/net5.0/Razor/Pages/Account/Register.cshtml.g.cs
+/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/WebApp_Security/WebApp_Security/obj/Debug/net5.0/Razor/Pages/Account/Login.cshtml.g.cs

@@ -1326,3 +1326,494 @@ namespace WebApp_Security
     }
 }
 ```
+- User registration:
+- Add a new razor page:
+- Register.cshtml
+```html
+@page
+@model WebApp_Security.Pages.Account.RegisterModel
+@{
+}
+<p>
+    <h3>User Registration</h3>
+</p>
+<div class="container border" style="padding:20px">
+    <form method="post">
+        <div class="text-danger" asp-validation-summary="All"></div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="RegisterViewModel.Email"></label>
+            </div>
+            <div class="col-5">
+                <input type="text" asp-for="RegisterViewModel.Email" class="form-control" />
+                <span class="text-danger" asp-validation-for="RegisterViewModel.Email"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="RegisterViewModel.Password"></label>
+            </div>
+            <div class="col-5">
+                <input type="password" asp-for="RegisterViewModel.Password" class="form-control" />
+                <span class="text-danger" asp-validation-for="RegisterViewModel.Password"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <input type="submit" class="btn btn-primary" value="Login" />
+            </div>
+        </div>
+    </form>
+</div>
+```
+- Register.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace WebApp_Security.Pages.Account
+{
+    public class RegisterModel : PageModel
+    {
+        private readonly UserManager<IdentityUser> userManager;
+
+        [BindProperty]
+        public RegisterViewModel RegisterViewModel { get; set; }
+
+        public RegisterModel(UserManager<IdentityUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+
+        public void OnGet()
+        {
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid) return Page();
+
+            //Create the user
+            var user = new IdentityUser
+            {
+                Email = RegisterViewModel.Email,
+                UserName = RegisterViewModel.Email
+            };
+            var result = await this.userManager.CreateAsync(user, RegisterViewModel.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToPage("Account/Login");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("Register", error.Description);
+                }
+                return Page();
+            }
+        }
+    }
+    public class RegisterViewModel
+    {
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(dataType:DataType.Password)]
+        public string Password { get; set; }
+    }
+}
+```
+- User login
+- Add login razor page:
+- Login.cshtml:
+```html
+@page
+@model WebApp_Security.Pages.Account.LoginModel
+@{
+}
+<p>
+    <h3>User</h3>
+</p>
+<div class="container border" style="padding:20px">
+    <form method="post">
+        <div class="text-danger" asp-validation-summary="All"></div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Credential.Email"></label>
+            </div>
+            <div class="col-5">
+                <input type="text" asp-for="Credential.Email" class="form-control" />
+                <span class="text-danger" asp-validation-for="Credential.Email"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="Credential.Password"></label>
+            </div>
+            <div class="col-5">
+                <input type="password" asp-for="Credential.Password" class="form-control" />
+                <span class="text-danger" asp-validation-for="Credential.Password"></span>
+            </div>
+        </div>
+        <div class="row form-check mb-2">
+            <div class="col-2">
+                <input type="checkbox" asp-for="Credential.RememberMe" class="form-check-input" />
+                <label class="form-check-label" asp-for="Credential.RememberMe"></label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <input type="submit" class="btn btn-primary" value="Login" />
+            </div>
+        </div>
+    </form>
+</div>
+```
+- Login.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace WebApp_Security.Pages.Account
+{
+    public class LoginModel : PageModel
+    {
+        private readonly SignInManager<IdentityUser> signInManager;
+
+        [BindProperty]
+        public CredentialViewModel Credential { get; set; }
+
+        public LoginModel(SignInManager<IdentityUser> signInManager)
+        {
+            this.signInManager = signInManager;
+        }
+
+        public void OnGet()
+        {
+        }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid) return Page();
+            var result = await signInManager.PasswordSignInAsync(this.Credential.Email,
+                this.Credential.Password,
+                this.Credential.RememberMe,
+                false);
+
+            if (result.Succeeded)
+            {
+                return RedirectToPage("/Index");
+            }
+            else
+            {
+                if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError("Login","User is locked out");
+                }
+                else
+                {
+                    ModelState.AddModelError("Login", "Failed to login");
+                }
+                return Page();
+            }
+        }
+    }
+    public class CredentialViewModel
+    {
+        [Required]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Display(Name = "Remember me")]
+        public bool RememberMe { get; set; }
+    }
+}
+```
+- Index.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+
+namespace WebApp_Security.Pages
+{
+    [Authorize]
+    public class IndexModel : PageModel
+    {
+        private readonly ILogger<IndexModel> _logger;
+
+        public IndexModel(ILogger<IndexModel> logger)
+        {
+            _logger = logger;
+        }
+
+        public void OnGet()
+        {
+
+        }
+    }
+}
+```
+- If you only want to allow login to users that have confirmed their email add a new option in Startup.cs:
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using WebApp_Security.Data;
+
+namespace WebApp_Security
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDBContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
+            services.AddIdentity<IdentityUser, IdentityRole>(
+                    options =>
+                    {
+                        options.Password.RequiredLength = 8;
+                        options.Password.RequireLowercase = true;
+                        options.Password.RequireUppercase = true;
+
+                        options.Lockout.MaxFailedAccessAttempts = 5;
+                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
+                        options.User.RequireUniqueEmail = true;
+                        options.SignIn.RequireConfirmedEmail = true;
+                    }
+                )
+                .AddEntityFrameworkStores<ApplicationDBContext>();
+
+            services.ConfigureApplicationCookie(options => {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/AccessDenied";
+            });
+            services.AddRazorPages();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
+        }
+    }
+}
+```
+- Email confirmation flow
+- Startup.cs (add default token provider)
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using WebApp_Security.Data;
+
+namespace WebApp_Security
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
+        public IConfiguration Configuration { get; }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<ApplicationDBContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString("Default"));
+            });
+            services.AddIdentity<IdentityUser, IdentityRole>(
+                    options =>
+                    {
+                        options.Password.RequiredLength = 8;
+                        options.Password.RequireLowercase = true;
+                        options.Password.RequireUppercase = true;
+
+                        options.Lockout.MaxFailedAccessAttempts = 5;
+                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+
+                        options.User.RequireUniqueEmail = true;
+                        options.SignIn.RequireConfirmedEmail = true;
+                    }
+                )
+                .AddEntityFrameworkStores<ApplicationDBContext>()
+                .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(options => {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/AccessDenied";
+            });
+            services.AddRazorPages();
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            });
+        }
+    }
+}
+```
+- Modify Register.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace WebApp_Security.Pages.Account
+{
+    public class RegisterModel : PageModel
+    {
+        private readonly UserManager<IdentityUser> userManager;
+
+        [BindProperty]
+        public RegisterViewModel RegisterViewModel { get; set; }
+
+        public RegisterModel(UserManager<IdentityUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+
+        public void OnGet()
+        {
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid) return Page();
+
+            //Create the user
+            var user = new IdentityUser
+            {
+                Email = RegisterViewModel.Email,
+                UserName = RegisterViewModel.Email
+            };
+            var result = await this.userManager.CreateAsync(user, RegisterViewModel.Password);
+            if (result.Succeeded)
+            {
+                var confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+                return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
+                    values: new { userId = user.Id, token = confirmationToken}));
+                //return RedirectToPage("Account/Login");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("Register", error.Description);
+                }
+                return Page();
+            }
+        }
+    }
+    public class RegisterViewModel
+    {
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(dataType:DataType.Password)]
+        public string Password { get; set; }
+    }
+}
+```
