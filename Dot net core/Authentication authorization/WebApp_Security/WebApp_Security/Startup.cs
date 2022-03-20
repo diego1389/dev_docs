@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApp_Security.Data;
+using WebApp_Security.Data.Account;
 
 namespace WebApp_Security
 {
@@ -29,7 +30,7 @@ namespace WebApp_Security
             services.AddDbContext<ApplicationDBContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
             });
-            services.AddIdentity<IdentityUser, IdentityRole>(
+            services.AddIdentity<User, IdentityRole>(
                     options =>
                     {
                         options.Password.RequiredLength = 8;

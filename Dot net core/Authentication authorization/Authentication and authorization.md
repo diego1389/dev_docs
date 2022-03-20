@@ -1817,3 +1817,382 @@ namespace WebApp_Security.Pages.Account
     }
 }
 ```
+- Confirm email:
+- ConfirmEmail.cshtml:
+```html
+@page
+@model WebApp_Security.Pages.Account.ConfirmEmailModel
+@{
+}
+<h3>@Model.Message</h3>
+```
+- ConfirmEmail.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace WebApp_Security.Pages.Account
+{
+    public class ConfirmEmailModel : PageModel
+    {
+        private readonly UserManager<IdentityUser> userManager;
+        [BindProperty]
+        public string Message { get; set; }
+        public ConfirmEmailModel(UserManager<IdentityUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+        public async Task<IActionResult> OnGetAsync(string userId, string token)
+        {
+            var user = await this.userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var result = await this.userManager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    this.Message = "Email address is successfully confirmed";
+                    return Page();
+                }
+
+            }
+            this.Message = "Failed to validate email";
+            return Page();
+        }
+    }
+}
+```
+- ConfirmEmail.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace WebApp_Security.Pages.Account
+{
+    public class ConfirmEmailModel : PageModel
+    {
+        private readonly UserManager<IdentityUser> userManager;
+        [BindProperty]
+        public string Message { get; set; }
+        public ConfirmEmailModel(UserManager<IdentityUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+        public async Task<IActionResult> OnGetAsync(string userId, string token)
+        {
+            var user = await this.userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                var result = await this.userManager.ConfirmEmailAsync(user, token);
+                if (result.Succeeded)
+                {
+                    this.Message = "Email address is successfully confirmed. Proceed to login";
+                    return Page();
+                }
+
+            }
+            this.Message = "Failed to validate email";
+            return Page();
+        }
+    }
+}
+```
+- Sign out.
+- Copy the logout partial view:
+```html
+@if (User.Identity.IsAuthenticated)
+{
+    <form method="post" class="form-inline" asp-page="/Account/Logout">
+        Welcome @User.Identity.Name
+        <button type="submit" class="ml-2 btn btn-link">Logout</button>
+    </form>
+}
+else
+{
+    <a class="btn btn-link" asp-page="/Account/Login">Login</a>
+}
+```
+- Account/Logout.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace WebApp_Security.Pages.Account
+{
+    public class LogoutModel : PageModel
+    {
+        private readonly SignInManager<IdentityUser> signInManager;
+
+        public LogoutModel(SignInManager<IdentityUser> signInManager)
+        {
+            this.signInManager = signInManager;
+        }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            await this.signInManager.SignOutAsync();
+            return RedirectToPage("/Account/Login");
+        }
+    }
+}
+```
+- Add the partial view to the layout
+- Collecting more user info with IdentityUser schema change:
+- Modify Register to accept Department and Position information:
+- Register.cshtml
+```html
+@page
+@model WebApp_Security.Pages.Account.RegisterModel
+@{
+}
+<p>
+    <h3>User Registration</h3>
+</p>
+<div class="container border" style="padding:20px">
+    <form method="post">
+        <div class="text-danger" asp-validation-summary="All"></div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="RegisterViewModel.Email"></label>
+            </div>
+            <div class="col-5">
+                <input type="text" asp-for="RegisterViewModel.Email" class="form-control" />
+                <span class="text-danger" asp-validation-for="RegisterViewModel.Email"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="RegisterViewModel.Password"></label>
+            </div>
+            <div class="col-5">
+                <input type="password" asp-for="RegisterViewModel.Password" class="form-control" />
+                <span class="text-danger" asp-validation-for="RegisterViewModel.Password"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="RegisterViewModel.Department"></label>
+            </div>
+            <div class="col-5">
+                <input type="text" asp-for="RegisterViewModel.Department" class="form-control" />
+                <span class="text-danger" asp-validation-for="RegisterViewModel.Department"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <label asp-for="RegisterViewModel.Position"></label>
+            </div>
+            <div class="col-5">
+                <input type="text" asp-for="RegisterViewModel.Position" class="form-control" />
+                <span class="text-danger" asp-validation-for="RegisterViewModel.Position"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2">
+                <input type="submit" class="btn btn-primary" value="Login" />
+            </div>
+        </div>
+    </form>
+</div>
+```
+- Register.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace WebApp_Security.Pages.Account
+{
+    public class RegisterModel : PageModel
+    {
+        private readonly UserManager<IdentityUser> userManager;
+
+        [BindProperty]
+        public RegisterViewModel RegisterViewModel { get; set; }
+
+        public RegisterModel(UserManager<IdentityUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+
+        public void OnGet()
+        {
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid) return Page();
+
+            //Create the user
+            var user = new IdentityUser
+            {
+                Email = RegisterViewModel.Email,
+                UserName = RegisterViewModel.Email
+            };
+            var result = await this.userManager.CreateAsync(user, RegisterViewModel.Password);
+            if (result.Succeeded)
+            {
+                var confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+                return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
+                    values: new { userId = user.Id, token = confirmationToken}));
+                //return RedirectToPage("Account/Login");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("Register", error.Description);
+                }
+                return Page();
+            }
+        }
+    }
+    public class RegisterViewModel
+    {
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(dataType:DataType.Password)]
+        public string Password { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+    }
+}
+```
+- Create a new User class that extends IdentityUser
+```c#
+using System;
+using Microsoft.AspNetCore.Identity;
+
+namespace WebApp_Security.Data.Account
+{
+    public class User : IdentityUser
+    {
+        public string Department { get; set; }
+        public string Position { get; set; }
+    }
+}
+```
+-  Replace of the ocurrences of IdentityUser for User (except the one in the User class itself).
+- Modify Register.cshtml.cs to map the new properties:
+```c#
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApp_Security.Data.Account;
+
+namespace WebApp_Security.Pages.Account
+{
+    public class RegisterModel : PageModel
+    {
+        private readonly UserManager<User> userManager;
+
+        [BindProperty]
+        public RegisterViewModel RegisterViewModel { get; set; }
+
+        public RegisterModel(UserManager<User> userManager)
+        {
+            this.userManager = userManager;
+        }
+
+        public void OnGet()
+        {
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid) return Page();
+
+            //Create the user
+            var user = new User
+            {
+                Email = RegisterViewModel.Email,
+                UserName = RegisterViewModel.Email,
+                Department = RegisterViewModel.Department,
+                Position = RegisterViewModel.Position
+            };
+            var result = await this.userManager.CreateAsync(user, RegisterViewModel.Password);
+            if (result.Succeeded)
+            {
+                var confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+                return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
+                    values: new { userId = user.Id, token = confirmationToken}));
+                //return RedirectToPage("Account/Login");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("Register", error.Description);
+                }
+                return Page();
+            }
+        }
+    }
+    public class RegisterViewModel
+    {
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(dataType:DataType.Password)]
+        public string Password { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+    }
+}
+```
+- Modify the DbContext (ApplicationDBContext):
+```c#
+using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using WebApp_Security.Data.Account;
+
+namespace WebApp_Security.Data
+{
+    public class ApplicationDBContext : IdentityDbContext<User>
+    {
+        public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options): base(options)
+        {
+
+        }
+    }
+}
+```
+- New migration command and update database command. It adds a Department and Position columns in AspNetUsers table.

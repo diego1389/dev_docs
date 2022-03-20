@@ -1,13 +1,17 @@
 ﻿<Properties StartupConfiguration="Multiple">
   <MonoDevelop.Ide.ItemProperties.UnderTheHoodApi PreferredExecutionTarget="/Applications/Google Chrome.app" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHood/Pages/Account/Login.cshtml.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UnderTheHood/Pages/Shared/_Layout.cshtml">
     <Files>
       <File FileName="UnderTheHoodApi/Controllers/AuthController.cs" Line="31" Column="18" />
       <File FileName="UnderTheHoodApi/Controllers/WeatherForecastController.cs" />
       <File FileName="UnderTheHoodApi/Startup.cs" />
-      <File FileName="UnderTheHood/Pages/Account/Login.cshtml" Line="5" Column="1" />
-      <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" Line="15" Column="21" />
-      <File FileName="UnderTheHood/Authorization/Credential.cs" Line="5" Column="28" />
+      <File FileName="UnderTheHood/Pages/Account/Login.cshtml" />
+      <File FileName="UnderTheHood/Pages/Account/Login.cshtml.cs" />
+      <File FileName="UnderTheHood/Authorization/Credential.cs" />
+      <File FileName="UnderTheHood/Pages/Account/Logout.cshtml" />
+      <File FileName="UnderTheHood/Pages/Account/Logout.cshtml.cs" />
+      <File FileName="UnderTheHood/Pages/Shared/_LoginStatusPartial_.cshtml" />
+      <File FileName="UnderTheHood/Pages/Shared/_Layout.cshtml" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -23,9 +27,11 @@
               <Node name="DTO" expanded="True" />
               <Node name="Pages" expanded="True">
                 <Node name="Account" expanded="True">
-                  <Node name="Login.cshtml" expanded="True">
-                    <Node name="Login.cshtml.cs" selected="True" />
-                  </Node>
+                  <Node name="Login.cshtml" expanded="True" />
+                  <Node name="Logout.cshtml" expanded="True" />
+                </Node>
+                <Node name="Shared" expanded="True">
+                  <Node name="_Layout.cshtml" selected="True" />
                 </Node>
                 <Node name="HumanResource.cshtml" expanded="True" />
               </Node>

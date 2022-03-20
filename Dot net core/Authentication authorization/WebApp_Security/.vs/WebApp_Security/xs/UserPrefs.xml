@@ -1,8 +1,9 @@
 ﻿<Properties StartupConfiguration="{CD14E501-58C1-4FC2-8A00-1B44E35CB01D}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="WebApp_Security/Startup.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="WebApp_Security/Migrations/20220319234930_user.cs">
     <Files>
-      <File FileName="WebApp_Security/Pages/Account/Register.cshtml.cs" Line="43" Column="78" />
-      <File FileName="WebApp_Security/Startup.cs" Line="47" Column="1" />
+      <File FileName="WebApp_Security/Pages/Account/Register.cshtml.cs" Line="39" Column="54" />
+      <File FileName="WebApp_Security/Data/ApplicationDBContext.cs" Line="11" Column="10" />
+      <File FileName="WebApp_Security/Migrations/20220319234930_user.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -12,16 +13,24 @@
               <Node name="Dependencies" expanded="True">
                 <Node name="PackageDependencies" expanded="True" />
               </Node>
-              <Node name="Data" expanded="True" />
+              <Node name="Data" expanded="True">
+                <Node name="Account" expanded="True" />
+              </Node>
+              <Node name="Migrations" expanded="True">
+                <Node name="20220313033424_initial.cs" expanded="True" />
+                <Node name="20220319234930_user.cs" selected="True" />
+              </Node>
               <Node name="Pages" expanded="True">
                 <Node name="Account" expanded="True">
+                  <Node name="ConfirmEmail.cshtml" expanded="True" />
                   <Node name="Login.cshtml" expanded="True" />
+                  <Node name="Logout.cshtml" expanded="True" />
                   <Node name="Register.cshtml" expanded="True" />
                 </Node>
+                <Node name="Shared" expanded="True" />
                 <Node name="Index.cshtml" expanded="True" />
               </Node>
               <Node name="appsettings.json" expanded="True" />
-              <Node name="Startup.cs" selected="True" />
             </Node>
           </Node>
         </State>
