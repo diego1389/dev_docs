@@ -2196,3 +2196,221 @@ namespace WebApp_Security.Data
 }
 ```
 - New migration command and update database command. It adds a Department and Position columns in AspNetUsers table.
+- Collect more information with claims:
+- Modify Register.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApp_Security.Data.Account;
+
+namespace WebApp_Security.Pages.Account
+{
+    public class RegisterModel : PageModel
+    {
+        private readonly UserManager<User> userManager;
+
+        [BindProperty]
+        public RegisterViewModel RegisterViewModel { get; set; }
+
+        public RegisterModel(UserManager<User> userManager)
+        {
+            this.userManager = userManager;
+        }
+
+        public void OnGet()
+        {
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid) return Page();
+
+            //Create the user
+            var user = new User
+            {
+                Email = RegisterViewModel.Email,
+                UserName = RegisterViewModel.Email
+            };
+
+            var claimDepartment = new Claim("Department", RegisterViewModel.Department);
+            var claimPosition = new Claim("Position", RegisterViewModel.Position);
+            var result = await this.userManager.CreateAsync(user, RegisterViewModel.Password);
+            if (result.Succeeded)
+            {
+                await this.userManager.AddClaimAsync(user, claimDepartment);
+                await this.userManager.AddClaimAsync(user, claimPosition);
+                var confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
+                return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
+                    values: new { userId = user.Id, token = confirmationToken}));
+                //return RedirectToPage("Account/Login");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("Register", error.Description);
+                }
+                return Page();
+            }
+        }
+    }
+    public class RegisterViewModel
+    {
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(dataType:DataType.Password)]
+        public string Password { get; set; }
+
+        [Required]
+        public string Department { get; set; }
+
+        [Required]
+        public string Position { get; set; }
+    }
+}
+```
+- This will add the department and position information in AspNetUserClaims table.
+- Roles. A role is a very simple claim. 
+- Create a user profile page:
+- User profile.cshtml
+```html
+@page
+@model WebApp_Security.Pages.Account.UserProfileModel
+@{
+}
+<form method="post">
+    <div class="text-danger" asp-validation-summary="All"></div>
+    <div class="form-group row">
+        <div class="col-2">
+            <label asp-for="UserProfile.Email"></label>
+        </div>
+        <div class="col-5">
+            <input type="text" asp-for="UserProfile.Email" class="form-control" readonly />
+            <span class="text-danger" asp-validation-for="UserProfile.Email"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            <label asp-for="UserProfile.Department"></label>
+        </div>
+        <div class="col-5">
+            <input type="text" asp-for="UserProfile.Department" class="form-control" />
+            <span class="text-danger" asp-validation-for="UserProfile.Department"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            <label asp-for="UserProfile.Position"></label>
+        </div>
+        <div class="col-5">
+            <input type="text" asp-for="UserProfile.Position" class="form-control" />
+            <span class="text-danger" asp-validation-for="UserProfile.Position"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-2">
+            <input type="submit" class="btn btn-primary" value="Save" />
+        </div>
+    </div>
+</form>
+@if (!string.IsNullOrEmpty(Model.SucessMessage))
+{
+    <div class="alert alert-success" role="alert">
+        @Model.SucessMessage
+    </div>
+}
+```
+- UserProfile.cshtml.cs
+```c#
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebApp_Security.Data.Account;
+
+
+namespace WebApp_Security.Pages.Account
+{
+    [Authorize]
+    public class UserProfileModel : PageModel
+    {
+        private readonly UserManager<User> userManager;
+
+        [BindProperty]
+        public UserProfileViewModel UserProfile { get; set; }
+        [BindProperty]
+        public string SucessMessage { get; set; }
+
+        public UserProfileModel(UserManager<User> userManager)
+        {
+            this.userManager = userManager;
+            this.UserProfile = new UserProfileViewModel();
+            this.SucessMessage = string.Empty;
+        }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            var (user, departmentClaim, positionClaim) = await GetUserInfoAsync();
+
+            this.UserProfile.Department = departmentClaim?.Value;
+            this.UserProfile.Position = positionClaim?.Value;
+            this.UserProfile.Email = user.Email;
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid) return Page();
+
+            try {
+                var (user, departmentClaim, positionClaim) = await GetUserInfoAsync();
+                await userManager.ReplaceClaimAsync(user, departmentClaim, new Claim(departmentClaim.Type, UserProfile.Department));
+                await userManager.ReplaceClaimAsync(user, positionClaim, new Claim(positionClaim.Type, UserProfile.Position));
+            }
+            catch
+            {
+                ModelState.AddModelError("UserProfile", "Error occured when saving user profile");
+            }
+
+            this.SucessMessage = "The user profile was saved successfully";
+            return Page();
+        }
+
+        private async Task<(Data.Account.User, Claim, Claim)> GetUserInfoAsync()
+        {
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            var claims = await userManager.GetClaimsAsync(user);
+
+            var departmentClaim = claims.FirstOrDefault(x => x.Type == "Department");
+            var position = claims.FirstOrDefault(x => x.Type == "Position");
+
+            return (user, departmentClaim, position);
+        }
+    }
+
+    public class UserProfileViewModel
+    {
+        public string Email { get; set; }
+        [Required]
+        public string Department { get; set; }
+        [Required]
+        public string Position { get; set; }
+    }
+}
+```

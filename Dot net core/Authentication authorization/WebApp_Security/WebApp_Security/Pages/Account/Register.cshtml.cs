@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -34,13 +35,16 @@ namespace WebApp_Security.Pages.Account
             var user = new User
             {
                 Email = RegisterViewModel.Email,
-                UserName = RegisterViewModel.Email,
-                Department = RegisterViewModel.Department,
-                Position = RegisterViewModel.Position
+                UserName = RegisterViewModel.Email
             };
+
+            var claimDepartment = new Claim("Department", RegisterViewModel.Department);
+            var claimPosition = new Claim("Position", RegisterViewModel.Position);
             var result = await this.userManager.CreateAsync(user, RegisterViewModel.Password);
             if (result.Succeeded)
             {
+                await this.userManager.AddClaimAsync(user, claimDepartment);
+                await this.userManager.AddClaimAsync(user, claimPosition);
                 var confirmationToken = await this.userManager.GenerateEmailConfirmationTokenAsync(user);
                 return Redirect(Url.PageLink(pageName: "/Account/ConfirmEmail",
                     values: new { userId = user.Id, token = confirmationToken}));
