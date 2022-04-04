@@ -21,7 +21,7 @@
 
     console.log("value after loop "+ i); //Error, i is not defined
     ```
-- **const** when something should change.
+- **const** when something shouldn't change.
     ```js
     const i = 2;
     console.log(i);
