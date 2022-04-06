@@ -62,7 +62,7 @@
 - Open-Closed principle
     - Classes should be open for extension and close for modification. 
     - You can use inheritance (enhancing the capabilities using interfaces). 
-    - You should able to extend the functionality but they should be close for modification. You shouldn't have to go back into BetterFilter and starting adding things. Instead if you want more functionality you make new classes and you implement ISpecification and you feed those into something that has already been shipped. You don't to ship the functionality of BetterFilter to your customers but you can ship additional modules which implement a high specification and which make use of better filter. 
+    - You should be able to extend the functionality but they should be close for modification. You shouldn't have to go back into BetterFilter and starting adding things. Instead if you want more functionality you make new classes and you implement ISpecification and you feed those into something that has already been shipped. You don't to ship the functionality of BetterFilter to your customers but you can ship additional modules which implement a high specification and which make use of better filter. 
     ```c#
     public enum Color
     {
