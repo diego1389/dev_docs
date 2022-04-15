@@ -1,9 +1,12 @@
 h1, h2, h3, h4, p, li{
     font-family: sans-serif;
+    color: #444;
+}
+h1, h2, h3{
+    color: #1098ad;
 }
 
 h1{
-    color: blue;
     font-size: 26px;
     font-family: sans-serif;
     text-transform: uppercase;
@@ -58,3 +61,18 @@ li{
 .related-posts-list{
     list-style: none;
 }
+
+.main-header{
+    background-color: #eceaea;
+}
+
+aside{
+    background-color: #eceaea;
+    /*border: 5px solid #1098ad; border is a short hand property because you can assign multiple properties to it*/
+    border-top: 5px solid #1098ad; 
+    border-bottom: 5px solid #1098ad;
+}
+
+/* body{
+    background-color: red;
+} */
