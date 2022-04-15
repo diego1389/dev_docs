@@ -1,3 +1,7 @@
+h1, h2, h3, h4, p, li{
+    font-family: sans-serif;
+}
+
 h1{
     color: blue;
     font-size: 26px;
@@ -6,30 +10,51 @@ h1{
     font-style: italic;
 }
 
+/* footer p{
+    font-size: 14px;
+} */
+
 h2{
     font-size: 40px;
-    font-family: sans-serif;
 }
 
 h3{
     font-size: 30px;
-    font-family: sans-serif;
 }
 
 h4{
     font-size: 20px;
-    font-family: sans-serif;
     text-transform: uppercase;
     text-align: center;
 }
 
 p{
     font-size: 22px;
-    font-family: sans-serif;
     line-height: 1.5;/*space between paragraph lines*/
 }
 
 li{
     font-size: 20px;
-    font-family: sans-serif;
+}
+/*
+#article header p{
+    font-style: italic;
+}
+*/
+#author{ /*id selector*/
+    font-style: italic;
+    font-size: 18px;
+}
+
+#copyright{
+    font-size: 14px;
+}
+
+.related-author{ /*class selector*/
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.related-posts-list{
+    list-style: none;
 }
