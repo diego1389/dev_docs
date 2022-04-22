@@ -76,3 +76,18 @@ aside{
 /* body{
     background-color: red;
 } */
+
+li:first-child{ /*sub classes selectors*/
+    font-weight: bold;
+}
+li:last-child{
+    font-style: italic;
+}
+li:nth-child(2){
+    color: red;
+}
+
+li:nth-child(even){ /*even*/
+    color: green;
+}
+

@@ -170,7 +170,7 @@
     function sum(...numberList){
         return numberList.reduce(
             function(total, num){
-                return total+num
+                return total+num;/*total: 10 => total: 15*/
             }
         )
     }
@@ -535,6 +535,7 @@
 
     console.log(Hero.getHero());//true
     ```
+
 - Subclasses and prototypal inheritance:
     - super() is going to run the parent's constructor.
     - in case of having variables or methods with the same name it goes child first.
@@ -628,10 +629,11 @@
         console.log(array2);//[ 'a' ]
         console.log(array);//[ 1, 'a', 3, 4, 'b', 'c' ]
         ```
-    - splice does mutate the array. Arguments:
+    - splice ([Splice() documentation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)) does mutate the array. Arguments:
         - 1. Where to start
-        - 2. How many to
-        - 3. What to insert
+        - 2. Delete count
+        - 3. What to insert (item, item2, ...itemN)
+    * Check documentation: 
         ```js
         const monthsDiscount = ["Jan", "Mar", "Jul", "Nov"];
         monthsDiscount.splice(2, 0, "Jun");//[ 'Jan', 'Mar', 'Jun', 'Jul', 'Nov' ]
@@ -780,8 +782,9 @@
     }
 
     let myCar = new Car("red", "Suzuki","Vitara");
-    console.log(myCar.color);
+    console.log(myCar.color); //red
     ```
+-----------------------------------------------------STOPPED HERE----------------------
 - Javascript works with an event queue separate from the main thread. The events queue can check for things to execute.
 - Functions are first class objects:
     - You can pass them around

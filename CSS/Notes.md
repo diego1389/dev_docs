@@ -499,3 +499,21 @@ aside{
     background-color: red;
 } */
 ```
+### Pseudo-classes
+
+```css
+li:first-child{ /*sub classes selectors gets the first element of a container*/
+    font-weight: bold;
+}
+li:last-child{
+    font-style: italic;
+}
+li:nth-child(2){
+    color: red;
+}
+
+li:nth-child(even){ /*even*/
+    color: green;
+}
+```
+### Styling hyperlinks 
