@@ -1,7 +1,8 @@
-h1, h2, h3, h4, p, li{
-    font-family: sans-serif;
+body{
     color: #444;
+    font-family: sans-serif;
 }
+
 h1, h2, h3{
     color: #1098ad;
 }
@@ -49,10 +50,6 @@ li{
     font-size: 18px;
 }
 
-#copyright{
-    font-size: 14px;
-}
-
 .related-author{ /*class selector*/
     font-size: 18px;
     font-weight: bold;
@@ -91,3 +88,40 @@ li:nth-child(even){ /*even*/
     color: green;
 }
 
+/*styling links*/
+a:link{
+    color: #1098ad;
+    text-decoration: none;
+}
+
+a:visited{
+    color: #1098ad;
+}
+
+a:hover{
+    color: orangered;
+    font-weight: bold;
+    text-decoration: underline orangered;
+}
+
+a:active{
+    background-color: black;
+    font-style: italic;
+}
+
+#copyright{
+    font-size: 14px;
+}
+/*
+.copyright{
+    font-size: 18px;
+    color: blue;
+}
+
+.text{
+    color: yellow;
+}
+
+footer p{
+    color: green !important;
+}*/

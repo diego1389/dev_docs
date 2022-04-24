@@ -517,3 +517,74 @@ li:nth-child(even){ /*even*/
 }
 ```
 ### Styling hyperlinks 
+
+- a:link targets all the anchors that have an href attribute. 
+```css
+/*styling links*/
+a:link{
+    color: #1098ad;
+    text-decoration: none;
+}
+
+a:visited{
+    color: #1098ad;
+}
+
+a:hover{
+    color: orangered;
+    font-weight: bold;
+    text-decoration: underline orangered;
+}
+
+a:active{
+    background-color: black;
+    font-style: italic;
+}
+```
+
+### Developer tools
+### Conflicts between selectors
+- All the rules are applied but if there is a conflict in a property there is a certain hierarchy. From highest to lowest priority:
+1. Declarations marked !import (try not to use it)
+2. Inline style (shouldn't do it).
+3. Id selectors. If there is more than one applies the last one.  (#)
+4. Class selectors or pseudo class selector. (:) If there is more than one applies the last one. 
+5. Element selector (p, li, etc). If there is more than one applies the last one. 
+6. Universal selector (*)
+  ```html
+    <footer>
+      <p id="copyright" class="copyright text">Copyright &copy; 2027 by The Code Magazine.</p>
+    </footer>
+  ```
+  ```css
+  /*Ti applies font-size 14px and color yellow because text class comes last*/
+  #copyright{
+    font-size: 14px;
+  }
+
+  .copyright{
+      font-size: 18px;
+      color: blue;
+  }
+
+  .text{
+      color: yellow;
+  }
+
+  footer p{
+      color: green;
+  }
+  ```
+
+### Inheritance
+- If we set some properties (only certain properties like text and color, it doesn't work for border for example) in the body it will inherit them to the page's elements. Then it will get overriden when necesary using classes selectors, ids selectors, elements selectors, pseudo classes, etc. 
+```css
+body{
+    color: #444;
+    font-family: sans-serif;
+}
+
+h1, h2, h3{
+    color: #1098ad;
+}
+```

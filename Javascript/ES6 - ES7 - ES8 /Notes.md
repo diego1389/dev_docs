@@ -784,7 +784,6 @@
     let myCar = new Car("red", "Suzuki","Vitara");
     console.log(myCar.color); //red
     ```
------------------------------------------------------STOPPED HERE----------------------
 - Javascript works with an event queue separate from the main thread. The events queue can check for things to execute.
 - Functions are first class objects:
     - You can pass them around
@@ -800,7 +799,7 @@
 
     run(printUpper, `Diego`);//DIEGO
     ```
-- Callback its a function that will be call later on, it will be called back.
+- Callback its a function that will be called later on, it will be called back.
     ```js
     function a(x){
         console.log(x);
@@ -955,7 +954,6 @@
     console.log("last line of the code")
     /*Call one: 
     last line of the code
-    Hint: hit control+c anytime to enter REPL.
     2 seconds have passed*/
 
     //----------------
@@ -1002,7 +1000,6 @@
     two();
     console.log("last line of the code")
     /*last line of the code
-    Hint: hit control+c anytime to enter REPL.
     Inside two: 
     2 seconds have passed*/
     ```
@@ -1314,14 +1311,14 @@
     };
 
     const handler1 = {
-    get: function(target, prop, receiver) {
-        //target: { secret: 'easily scared', eyeCount: 4 }
-		//prop: propName (eyeCount, secret).	
-        if (prop === 'secret') {
-        return `${target.secret.substr(0, 4)} ... shhhh!`;
+        get: function(target, prop, receiver) {
+            //target: { secret: 'easily scared', eyeCount: 4 }
+            //prop: propName (eyeCount, secret).	
+            if (prop === 'secret') {
+                return `${target.secret.substr(0, 4)} ... shhhh!`;
+            }
+            return Reflect.get(...arguments);//Same as: return Reflect.get(target, prop, receiver);
         }
-        return Reflect.get(...arguments);//Same as: return Reflect.get(target, prop, receiver);
-    }
     };
 
     const proxy1 = new Proxy(monster1, handler1);
@@ -1400,6 +1397,8 @@
     console.log(Reflect.getOwnPropertyDescriptor(bandit, 'attack'));
     /*{ value: 15, writable: false, enumerable: false, configurable: false }*/
     ```
+
+---------------------------STOPPED HERE---------------
 - Generator functions provide a powerful alternative: they allow you to define an iterative algorithm by writing a single function whose execution is not continuous. Generator functions are written using the function* syntax. When called, generator functions do not initially execute their code. Instead, they return a special type of iterator, called a Generator. When a value is consumed by calling the generator's next method, the Generator function executes until it encounters the yield keyword. The function can be called as many times as desired, and returns a new Generator each time. Each Generator may only be iterated once.
     ```js
     function* aGenerator(){
