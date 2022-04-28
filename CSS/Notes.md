@@ -588,3 +588,14 @@ h1, h2, h3{
     color: #1098ad;
 }
 ```
+- Universal selector (*) will get inherithed by all the elements (body selector only works for certain properties like text and color). It is the one with the lowest priority. 
+
+### The CSS box model
+- Content: (text, images, etc) width and height area.
+- Border: (inside of the element).
+- Padding: invisible space inside of the element, it is around the content.
+- Margin: space outside of the element, between elements. 
+- Fill area: some properties (like background image) include not only the content area but also the margin and the padding. That's the fill area. 
+
+- Final element width = left border + left padding + width + right padding + right border
+- Final element height = top border + top padding + height + bottom padding + bottom border. 
