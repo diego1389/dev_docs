@@ -599,3 +599,29 @@ h1, h2, h3{
 
 - Final element width = left border + left padding + width + right padding + right border
 - Final element height = top border + top padding + height + bottom padding + bottom border. 
+```css
+.main-header{
+    background-color: #eceaea;
+    /*padding: 20px;*/
+    padding: 20px 40px;/*20px top and bottom and 40 px left and right*/
+}
+```
+- Add margin between list elements but not between the last li element and the bottom section:
+```css
+li{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+li:last-child{
+    margin-bottom: 0;
+}
+```
+- Reset the page margin and padding at the beginning of the project:
+```css
+* {
+    margin: 0;
+    padding: 0;
+}
+```
+- When setting space between elements stick to one side (top or bottom). Don't mix them. For example set only margin-bottom for all the elements. 
