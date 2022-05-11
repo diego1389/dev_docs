@@ -6,6 +6,16 @@
 body{
     color: #444;
     font-family: sans-serif;
+    position: relative;
+}
+
+button{
+    font-size: 22px;
+    padding: 20px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
 }
 
 .main-header{
@@ -13,18 +23,27 @@ body{
     /*padding: 20px;*/
     padding: 20px 40px;/*20px top and bottom and 40 px left and right*/
     margin-bottom: 60px;
+    height: 80px;
 }
 
 .post-header{
     margin-bottom: 40px;
 }
 
+article{
+    margin-bottom: 60px;
+}
+
+nav{
+    font-size: 18px;
+}
 aside{
     background-color: #eceaea;
     /*border: 5px solid #1098ad; border is a short hand property because you can assign multiple properties to it*/
     border-top: 5px solid #1098ad; 
     border-bottom: 5px solid #1098ad;
     padding: 50px 0;
+    width: 500px;
 }
 
 h1, h2, h3{
@@ -134,9 +153,31 @@ a:active{
     font-style: italic;
 }
 
+.post-image{
+    width: 100%;
+    height: auto;
+}
+
+nav a:link{
+    margin-right: 30px;
+    margin-top: 10px ;
+    display: inline-block;
+}
+
+nav a:link:last-child{
+    margin-right: 0;
+}
+
 #copyright{
     font-size: 14px;
 }
+.container{
+    width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin: 0 auto;
+}
+
 /*
 .copyright{
     font-size: 18px;

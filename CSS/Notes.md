@@ -625,3 +625,81 @@ li:last-child{
 }
 ```
 - When setting space between elements stick to one side (top or bottom). Don't mix them. For example set only margin-bottom for all the elements. 
+- Collapsing margins: when we have two margins that occupy the same space only one of them is visible on the page. 
+- Centering our page. Place everything inside a container (div). 
+```css
+.container{
+    width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin: 0 auto;
+}
+```
+### Types of boxes
+- Block level boxes occupy all the space horizontally. 
+  - Are formatted visually as blocks.
+  - Ocuppy 100 % of parent element's width, no matter the content.
+  - Elements are stacked vertically by default, one after another.
+  - Most of the elements are block-level boxes: body, main, header, footer, section, nav, div, h1-h6, p, ul, ol, li, etc.
+  - To transform an inline element to a block element:
+    ```css
+    display: block;
+    ```
+- Inline boxes:
+  - Occupies only the space necessary for its content.
+  - Causes no line breaks after or before the element. 
+  - Box model applies in a different way: heights and widths do not apply.
+  - Paddings and margins are applied only horizontally (left and right).
+  - Some elements: a, img, strong, em, buttom, etc.
+  - To transform a block element into an inline element:
+    ```css
+    display: inline;
+    ```
+- Inline-block boxes:
+  - Look ike inline from the outside but behaves like block-level on the inside.  
+  - Occupies only content's space.
+  - Causes no line-breaks.
+  - Box model applies (can apply height, width, margin and padding). 
+
+     ```css
+    nav a:link{
+        margin-right: 30px;
+        margin-top: 10px ;
+        display: inline-block;
+    }
+
+    nav a:link:last-child{
+        margin-right: 0;
+    }
+    ```
+  - Images are inline-block elements. 
+  ### Absolute positioning
+
+  - Normal flow:
+    - Default positioning.
+    - Element is in flow.
+    - Elements are laid out according to their order in the html code. 
+    - Default position: position relative. 
+  - Absolute positioning:
+    - position: absolute.
+    - out of flow.
+    - No impact on surronding elements (might overlap them).
+    - We use top, bottom, left or right to offset the element from its relatively positioned container. 
+    - It is position in relation to the viewport. 
+    - To absolute position an element we need to make position relative in the parent (the element we want our element to be absolutelity positioned from). 
+    ```css
+    body{
+      color: #444;
+      font-family: sans-serif;
+      position: relative;
+    }
+
+    button{
+        font-size: 22px;
+        padding: 20px;
+        cursor: pointer;
+        position: absolute;
+        bottom: 50px;
+        right: 50px;
+    }
+    ```
