@@ -703,3 +703,46 @@ li:last-child{
         right: 50px;
     }
     ```
+
+  ### Pseudo elements:
+  - Pseudo elements are elements that don't exist in the html but we can select and style using CSS. F.e: first letter of a paragraph or first line, etc. 
+  - Pseudo classes are selected with one : and pseudo elements are selected with two ::
+  ```css
+  h1::first-letter{
+    font-style: normal;
+    margin-right: 5px;
+  }
+
+  p::first-line{
+    color: red;
+  }
+  ```
+  - Sibling selector: they belong to the same parent element. 
+  - Adjancent selector: the sibling that comes right after the one that you're selecting. 
+  - Select the paragraphs that come after h3:
+  ```css
+  h3 + p::first-line{
+    color: red;
+  }
+  ```
+  - After pseudo-element (create an html element through css):
+  ```css
+  h2{
+      font-size: 40px;
+      margin-bottom: 30px;
+      position: relative;
+  }
+
+  h2::after{
+      content: "TOP";
+      background-color: #ffe70e;
+      color: #444;
+      font-size: 16px;
+      font-weight:  bold;
+      display: inline-block;
+      padding: 5px 10px;
+      position: absolute;
+      top: -15px;
+      right: -25px;
+  }
+  ```
