@@ -746,3 +746,40 @@ li:last-child{
       right: -25px;
   }
   ```
+
+  ## Layouts: floats, flexbox and CSS grid
+
+  ### The way of building layouts
+
+  - The way text, images and other content is placed and arranged on a webpage.
+  - Page layout gives the page a visual structure into which we place our content. 
+  - Component layout: made of smaller pieces of content that have to be arranged in a certain way.
+  - Float layouts (legacy), flexbox and css grid.
+  - Flexbox: 1 dimensional row without using floats. Perfect for component layouts.
+  - CSS grid. Two dimentional grid. Perfect for page layouts and complex components.
+  ### Using floats:
+  ```html
+  <img
+        src="img/laura-jones.jpg"
+        alt="Headshot of Laura Jones"
+        class="author-image"
+    />
+
+    <p id="author" class="author">Posted by <strong>Laura Jones</strong> on Monday, June 21st 2027</p>  
+  ```
+  - You can type "lorem" in VS code and it will add some lorem ipsum for you. 
+  ```css
+  .author-image{
+      float: left;
+  }
+
+  .author{
+      margin-left: 10px;
+      margin-top: 10px;
+      float:left;
+  }
+  ```
+  - Option + Up or Option + down to move code around. 
+  - Collapsing elements if you set float on all the children of an element it looses its height because float makes the elements "external" to the rest of the page. 
+  - Float is different than absolute positioning. They are not a positing scheme. Still they are out of flow. Floated elements DO impact surrounding elements, text and inline elements will wrap around the floated element. 
+  - The container element will not adjust its height to the element. 

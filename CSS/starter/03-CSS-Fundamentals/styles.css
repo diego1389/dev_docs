@@ -217,3 +217,21 @@ nav a:link:last-child{
 footer p{
     color: green !important;
 }*/
+
+.author-image{
+    float: left;
+}
+
+.author{
+    margin-top: 10px;
+    margin-left: 10px;
+    float:left;
+}
+
+h1{
+    float: left;
+}
+
+nav{
+    float: right;
+}
