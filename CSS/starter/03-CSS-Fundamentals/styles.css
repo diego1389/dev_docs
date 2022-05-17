@@ -1,6 +1,7 @@
 *{
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body{
@@ -23,7 +24,6 @@ button{
     /*padding: 20px;*/
     padding: 20px 40px;/*20px top and bottom and 40 px left and right*/
     margin-bottom: 60px;
-    height: 80px;
 }
 
 .post-header{
@@ -42,8 +42,7 @@ aside{
     /*border: 5px solid #1098ad; border is a short hand property because you can assign multiple properties to it*/
     border-top: 5px solid #1098ad; 
     border-bottom: 5px solid #1098ad;
-    padding: 50px 0;
-    width: 500px;
+    padding: 50px 40px;
 }
 
 h1, h2, h3{
@@ -138,6 +137,7 @@ li:last-child{
 
 .related-posts-list{
     list-style: none;
+    margin-left: 0;
 }
 
 /* body{
@@ -198,7 +198,7 @@ nav a:link:last-child{
     font-size: 14px;
 }
 .container{
-    width: 700px;
+    width: 1200px;
     margin-left: auto;
     margin-right: auto;
     margin: 0 auto;
@@ -234,4 +234,24 @@ h1{
 
 nav{
     float: right;
+}
+
+.clear-fix::after{
+    content: '';
+    display: block;
+    clear:both;
+}
+
+article{
+    width: 825px;
+    float: left;
+}
+
+aside{
+    width: 300px;
+    float: right;
+}
+
+footer{
+    clear: both;
 }
