@@ -1023,3 +1023,73 @@ aside{
     box-sizing: border-box;
   }
   ```
+  ### Introduction to Flexbox
+
+  - Set the display property in an html container to flex to align the elements inside it side by side. 
+  ```css
+    .container {
+    /* STARTER */
+    font-family: sans-serif;
+    background-color: #ddd;
+    font-size: 40px;
+    margin: 40px;
+
+    /* FLEXBOX */
+    display: flex;
+  }
+  ```
+  - The elements inside the container (children) are called the flex items:
+  ```html
+    <body>
+    <div class="container">
+      <div class="el el--1">HTML</div>
+      <div class="el el--2">and</div>
+      <div class="el el--3">CSS</div>
+      <div class="el el--4">are</div>
+      <div class="el el--5">amazing</div>
+      <div class="el el--6">languages</div>
+      <div class="el el--7">to</div>
+      <div class="el el--8">learn</div>
+    </div>
+  </body>
+  ```
+  - Vertically all the flex items are as tall as the biggest element (the biggest height). 
+  - To center items vertically:
+  ```css
+  .container {
+    /* STARTER */
+    font-family: sans-serif;
+    background-color: #ddd;
+    font-size: 40px;
+    margin: 40px;
+
+    /* FLEXBOX */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*justify-content: space-between;*/
+  }
+  ```
+## Flexbox overview
+
+- A set of related CSS properties for building 1-dimensional layouts.
+- The main idea is that empty space inside a container element can be automatically divided by its child elements.
+- Makes it easy to automatically align items to one another inside one parent, both horizontally and vertically. 
+- Flexbox is perfect for replacing floats. 
+- Flexbox terminology:
+  - Flex container (display: flex).
+    - gap (default 0 | length)
+    - justify-content (default flex-start | flex-end | center). To align main axis
+    - align-items (default stretch | flex-start | flex-end | center | baseline). To align cross axis.
+    - flex-direction
+    - flex-wrap
+    -align-content
+  - Flex items:
+    - align-self (default auto | stretch | flex-start | flex-end | center | baseline)
+    - flex-grow
+    - flex-shrink
+    - flex-basis
+    - flex
+    - order (controls order of items). 
+  - Main axis: direction in which items are layout.
+  - Cross axis: perpendicular axis.
