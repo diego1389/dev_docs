@@ -1093,3 +1093,158 @@ aside{
     - order (controls order of items). 
   - Main axis: direction in which items are layout.
   - Cross axis: perpendicular axis.
+  
+### Spacing and aligning flex items
+
+- To move the first element to the top (cross-alignment) but leave the rest of the flex items centered aligned:
+  ```css
+  .el--1 {
+    background-color: blueviolet;
+    align-self: flex-start;
+  }
+  .el--2 {
+    background-color: orangered;
+  }
+  .el--3 {
+    background-color: green;
+    height: 150px;
+  }
+  .el--4 {
+    background-color: goldenrod;
+  }
+  .el--5 {
+    background-color: palevioletred;
+  }
+  .el--6 {
+    background-color: steelblue;
+  }
+  .el--7 {
+    background-color: yellow;
+  }
+  .el--8 {
+    background-color: crimson;
+  }
+
+  .container {
+    /* STARTER */
+    font-family: sans-serif;
+    background-color: #ddd;
+    font-size: 40px;
+    margin: 40px;
+
+    /* FLEXBOX */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ```
+- To stretch a flex item (takes all the vertical height as the element with the highest height in the container):
+```css
+  .el--5 {
+    background-color: palevioletred;
+    align-self: stretch;
+  }
+```
+- The order of all the elements by default is zero. To move an element to the first position set an order smaller than 0. To move it to the end set an order bigger than 0,
+```css
+  .el--6 {
+    background-color: steelblue;
+    order: -1;
+  }
+```
+- To set space between the elements use gap (you can also use margin but better use gap). Gap doesn't add margin to the flex items;
+```css
+ .container {
+    /* STARTER */
+    font-family: sans-serif;
+    background-color: #ddd;
+    font-size: 40px;
+    margin: 40px;
+
+    /* FLEXBOX */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    /*justify-content: space-between;*/
+  }
+```
+
+### The flex property
+
+- To size flex items. 
+- Default values:
+```css
+.el{
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+}
+```
+- Flex-basis: instead of the width property. When elements have content bigger it extends to display all the content. It is like a recommendation to the browser but it is not a rigid width. If there is not enough room in the container it can "balance" the width between the elements. 
+- That can be changed with the flex-shrink property. If you set it to 0 it won't fit it the container but it will set the exact value specified in flex-basis property. 
+```css
+.el{
+    flex-basis: 200px;
+    flex-shrink: 0;
+  }
+```
+- Flex-grow to specify if elements are allowed to grow as much as they can or not. 
+- If you set flex-grow to 1 it will evenly divide the container's space:
+```css
+.el{
+    /* flex-basis: 200px; */
+    flex-shrink: 0;
+    flex-grow: 1;
+  }
+```
+- You can set flex-grow to just one flex element. It will take all the remaining space (or divide the remaining space evenly between the items that you specify flex-grow:1).
+```css
+.el--1 {
+  background-color: blueviolet;
+  align-self: flex-start;
+  flex-grow: 1;
+}
+.el--2 {
+  background-color: orangered;
+}
+.el--3 {
+  background-color: green;
+  height: 150px;
+}
+.el--4 {
+  background-color: goldenrod;
+  flex-grow: 1;
+}
+.el--5 {
+  background-color: palevioletred;
+  align-self: stretch;
+  order: 1;
+}
+.el--6 {
+  background-color: steelblue;
+  order: -1;
+}
+.el--7 {
+  background-color: yellow;
+}
+.el--8 {
+  background-color: crimson;
+}
+
+.container {
+  /* STARTER */
+  font-family: sans-serif;
+  background-color: #ddd;
+  font-size: 40px;
+  margin: 40px;
+
+  /* FLEXBOX */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*justify-content: space-between;*/
+}
+```
+- If you set flex-grow: 1 in all the elements except one and set flex-grow: 2 on that element it will take double of the avalailable empty space (not double the element) than the others. 
+- Flex property itself is a short-hand for the previous three properties. flex-grow: 1 is the same as flex: 1. 
