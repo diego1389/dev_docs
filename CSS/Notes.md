@@ -1248,3 +1248,428 @@ aside{
 ```
 - If you set flex-grow: 1 in all the elements except one and set flex-grow: 2 on that element it will take double of the avalailable empty space (not double the element) than the others. 
 - Flex property itself is a short-hand for the previous three properties. flex-grow: 1 is the same as flex: 1. 
+
+### Modify the project using flexbox instead of floats:
+
+- index.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>The Basic Language of the Web: HTML</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"/>
+  </head>
+
+  <body>
+    <!--
+    <h1>The Basic Language of the Web: HTML</h1>
+    <h2>The Basic Language of the Web: HTML</h2>
+    <h3>The Basic Language of the Web: HTML</h3>
+    <h4>The Basic Language of the Web: HTML</h4>
+    <h5>The Basic Language of the Web: HTML</h5>
+    <h6>The Basic Language of the Web: HTML</h6>
+    -->
+    <div class="container">
+      <header class="main-header clear-fix">
+        <h1>📘 The Code Magazine</h1>
+  
+        <nav>
+          <a href="blog.html">Blog</a>
+          <a href="#">Challenges</a>
+          <a href="flexbox.html">Flexbox</a>
+          <a href="css-grid.html">CSS Grid</a>
+        </nav>
+      </header>
+  
+      <article>
+        <header class="post-header">
+          <h2>The Basic Language of the Web: HTML</h2>
+          <div class="author-box"> 
+              <img
+                src="img/laura-jones.jpg"
+                alt="Headshot of Laura Jones"
+                class="author-image"
+                height="50"
+                width="50"
+              />
+              
+              <p id="author" class="author">Posted by <strong>Laura Jones</strong> on 
+                Monday, June 21st 2027</p>
+            </div>            
+          <img
+            src="img/post-img.jpg"
+            alt="HTML code on a screen"
+            width="500"
+            height="200"
+            class="post-image"
+          />
+        </header>
+  
+        <p>
+          All modern websites and web applications are built using three
+          <em>fundamental</em>
+          technologies: HTML, CSS and JavaScript. These are the languages of the
+          web.
+        </p>
+  
+        <p>
+          In this post, let's focus on HTML. We will learn what HTML is all about,
+          and why you too should learn it.
+        </p>
+  
+        <h3>What is HTML?</h3>
+        <p>
+          HTML stands for <strong>H</strong>yper<strong>T</strong>ext
+          <strong>M</strong>arkup <strong>L</strong>anguage. It's a markup
+          language that web developers use to structure and describe the content
+          of a webpage (not a programming language).
+        </p>
+        <p>
+          HTML consists of elements that describe different types of content:
+          paragraphs, links, headings, images, video, etc. Web browsers understand
+          HTML and render HTML code as websites.
+        </p>
+        <p>In HTML, each element is made up of 3 parts:</p>
+  
+        <ol>
+          <li>The opening tag</li>
+          <li>The closing tag</li>
+          <li>The actual element</li>
+        </ol>
+  
+        <p>
+          You can learn more at
+          <a
+            href="https://developer.mozilla.org/en-US/docs/Web/HTML"
+            target="_blank"
+            >MDN Web Docs</a
+          >.
+        </p>
+  
+        <h3>Why should you learn HTML?</h3>
+  
+        <p>
+          There are countless reasons for learning the fundamental language of the
+          web. Here are 5 of them:
+        </p>
+  
+        <ul>
+          <li>To be able to use the fundamental web dev language</li>
+          <li>
+            To hand-craft beautiful websites instead of relying on tools like
+            Worpress or Wix
+          </li>
+          <li>To build web applications</li>
+          <li>To impress friends</li>
+          <li>To have fun 😃</li>
+        </ul>
+  
+        <p>Hopefully you learned something new here. See you next time!</p>
+      </article>
+  
+      <aside>
+        <h4>Related posts</h4>
+  
+        <ul class="related-posts-list">
+          <li class="related-post">
+            <img
+              src="img/related-1.jpg"
+              alt="Person programming"
+              width="75"
+              width="75"
+            />
+            <div>
+              <a href="#" class="related-link">How to Learn Web Development</a>
+              <p class="related-author">By Jonas Schmedtmann</p>
+            </div>
+          </li>
+          <li class="related-post"> 
+            <img src="img/related-2.jpg" alt="Lightning" width="75" heigth="75" />
+            <div>
+              <a href="#" class="related-link">The Unknown Powers of CSS</a>
+              <p class="related-author">By Jim Dillon</p>
+            </div>
+          </li>
+          <li class="related-post">
+            <img
+              src="img/related-3.jpg"
+              alt="JavaScript code on a screen"
+              width="75"
+              height="75"
+            />
+            <div>
+              <a href="#" class="related-link">Why JavaScript is Awesome</a>
+              <p class="related-author">By Matilda</p>
+            </div>
+          </li>
+        </ul>
+      </aside>
+  
+      <footer>
+        <!--<p id="copyright" class="copyright text">Copyright &copy; 2027 by The Code Magazine.</p>-->
+        <p id="copyright">Copyright &copy; 2027 by The Code Magazine.</p>
+      </footer>
+    </div>
+    <button>❤️ Like</button>
+  </body>
+</html>
+```
+```css
+.main-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.author-box{
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;;
+}
+
+.author{
+    margin-bottom: 0;
+    margin-left: 15px;
+}
+
+.related-post{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.related-author{
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: italic;
+}
+
+.related-link:link, .related-link:active, .related-link:hover, .related-link:visited{
+    font-size: 17px;
+    font-weight: bold;
+    font-style: normal;
+    margin-bottom: 5px;
+    display: block;
+}
+```
+### Building a simple flexbox layout
+
+```html
+<div class="row">
+<article>
+  <header class="post-header">
+    <h2>The Basic Language of the Web: HTML</h2>
+    <div class="author-box"> 
+      <img
+      src="img/laura-jones.jpg"
+      alt="Headshot of Laura Jones"
+      class="author-image"
+      height="50"
+      width="50"
+      />
+      
+      <p id="author" class="author">Posted by <strong>Laura Jones</strong> on 
+        Monday, June 21st 2027</p>
+      </div>            
+      <img
+      src="img/post-img.jpg"
+      alt="HTML code on a screen"
+      width="500"
+      height="200"
+      class="post-image"
+      />
+    </header>
+    
+    <p>
+      All modern websites and web applications are built using three
+      <em>fundamental</em>
+      technologies: HTML, CSS and JavaScript. These are the languages of the
+      web.
+    </p>
+    
+    <p>
+      In this post, let's focus on HTML. We will learn what HTML is all about,
+      and why you too should learn it.
+    </p>
+    
+    <h3>What is HTML?</h3>
+    <p>
+      HTML stands for <strong>H</strong>yper<strong>T</strong>ext
+      <strong>M</strong>arkup <strong>L</strong>anguage. It's a markup
+      language that web developers use to structure and describe the content
+      of a webpage (not a programming language).
+    </p>
+    <p>
+      HTML consists of elements that describe different types of content:
+      paragraphs, links, headings, images, video, etc. Web browsers understand
+      HTML and render HTML code as websites.
+    </p>
+    <p>In HTML, each element is made up of 3 parts:</p>
+    
+    <ol>
+      <li>The opening tag</li>
+      <li>The closing tag</li>
+      <li>The actual element</li>
+    </ol>
+    
+    <p>
+      You can learn more at
+      <a
+      href="https://developer.mozilla.org/en-US/docs/Web/HTML"
+      target="_blank"
+      >MDN Web Docs</a
+      >.
+    </p>
+    
+    <h3>Why should you learn HTML?</h3>
+    
+    <p>
+      There are countless reasons for learning the fundamental language of the
+      web. Here are 5 of them:
+    </p>
+    
+    <ul>
+      <li>To be able to use the fundamental web dev language</li>
+      <li>
+        To hand-craft beautiful websites instead of relying on tools like
+        Worpress or Wix
+      </li>
+      <li>To build web applications</li>
+      <li>To impress friends</li>
+      <li>To have fun 😃</li>
+    </ul>
+    
+    <p>Hopefully you learned something new here. See you next time!</p>
+  </article>
+  
+  <aside>
+    <h4>Related posts</h4>
+    
+    <ul class="related-posts-list">
+      <li class="related-post">
+        <img
+        src="img/related-1.jpg"
+        alt="Person programming"
+        width="75"
+        width="75"
+        />
+        <div>
+          <a href="#" class="related-link">How to Learn Web Development</a>
+          <p class="related-author">By Jonas Schmedtmann</p>
+        </div>
+      </li>
+      <li class="related-post"> 
+        <img src="img/related-2.jpg" alt="Lightning" width="75" heigth="75" />
+        <div>
+          <a href="#" class="related-link">The Unknown Powers of CSS</a>
+          <p class="related-author">By Jim Dillon</p>
+        </div>
+      </li>
+      <li class="related-post">
+        <img
+        src="img/related-3.jpg"
+        alt="JavaScript code on a screen"
+        width="75"
+        height="75"
+        />
+        <div>
+          <a href="#" class="related-link">Why JavaScript is Awesome</a>
+          <p class="related-author">By Matilda</p>
+        </div>
+      </li>
+    </ul>
+  </aside>
+</div>
+```
+```css
+.row{
+    display: flex;
+    gap: 75px;
+    margin-bottom: 60px;
+    align-items: flex-start;
+}
+
+article{
+    flex: 1;
+    margin-bottom: 0;
+}
+
+aside{
+    flex: 0 0 300px;
+}
+```
+### Introduction to CSS Grid
+
+- Display: grid
+- Two dimensional layout: columns and rows.
+- To create two columns, one of 250px and another of 150px:
+```css
+  .container--1 {
+    /* STARTER */
+    font-family: sans-serif;
+    background-color: #ddd;
+    font-size: 40px;
+    margin: 40px;
+
+    /* CSS GRID */
+    display: grid;
+    grid-template-columns: 250px 150px;
+  }
+```
+- The following code creates a 4 columns by two rows with the elements inside the container:
+```html
+ <div class="container--1">
+  <div class="el el--1">(1) HTML</div>
+  <div class="el el--2">(2) and</div>
+  <div class="el el--3">(3) CSS</div>
+  <div class="el el--4">(4) are</div>
+  <div class="el el--5">(5) amazing</div>
+  <div class="el el--6">(6) languages</div>
+  <div class="el el--7">(7) to</div>
+  <div class="el el--8">(8) learn</div>
+</div>
+```
+```css
+  .container--1 {
+    /* STARTER */
+    font-family: sans-serif;
+    background-color: #ddd;
+    font-size: 32px;
+    margin: 40px;
+
+    /* CSS GRID */
+    display: grid;
+    grid-template-columns: 200px 200px 100px 100px;
+  }
+```
+
+|(1) HTML   | (2) and   | (3) CSS   | (4) are  |
+|---|---|---|---|
+| (5) amazing  | (6) languages   | (7) to   | (8) learn   |
+- The entire row got the height of the element (grid item) with the highest value (height property). 
+- We can also size the row:
+```css
+.container{
+  grid-template-rows: 300px 200px;
+}
+```
+- You can also specify gap to set space between grid items. You can set different gap for the column and for the row.
+```css
+.container--1 {
+    /* STARTER */
+    font-family: sans-serif;
+    background-color: #ddd;
+    font-size: 32px;
+    margin: 40px;
+
+    /* CSS GRID */
+    display: grid;
+    grid-template-columns: 200px 200px 100px 100px;
+    grid-template-rows: 300px 200px;
+    /*gap: 20px;*/
+    column-gap: 20px;
+    row-gap: 60px;
+  }
+```
