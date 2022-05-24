@@ -1673,3 +1673,54 @@ aside{
     row-gap: 60px;
   }
 ```
+### CSS grid overview
+
+- Set CSS properties to build 2 dimensional layouts.
+- Divide a container element into rows and columns that can be filled with its child elements. 
+- Less nested html and easier to read CSS.
+- Is not meant to replace flexbox. They work together. Need a 1D layout? Flexbox. Need a 2D layout? Use CSS Grid.
+- Grid container.
+  - grid-template-rows: <track-size>
+  - grid-template-columns: <track-size>
+  - row-gap: **0** | length
+  - column-gap: **0** | length
+  - justify-items: **stretch** | start | center | end
+  - align-items: **stretch** | start | center | end
+  - justify-content: **stretch** | start | center | end
+
+- Grid items. 
+  - grid-column: start line | end line
+  - grid-row: start line | end line
+  - justify-self: **stretch** | start | center | end
+  - align-self: **stretch** | start | center | end
+- Row axis
+- Column axis. We cannot change direction of axis. 
+- Grid lines that divide the columns and the rows. They are numbered. Those numbers are important because we can place a grid item in a specific place using that number.
+- Grid cells might be filled by a grid item or not.
+- Gutter or gaps (spaces).
+- Grid track/row (can be a row or a column). Two row tracks and two column tracks.
+
+### Sizing grid columns and rows
+
+- 1 fr (fraction) will take all the remaining available space to grow. If you set more than one element with 1 fr they will share the available space. 
+- If you use 2fr and the other 1fr the 2fr will take double the space than the 1fr.
+- You can also use auto property. This means the column will take only the necessary space to fill its content. 
+```css
+.container--1 {
+  /* STARTER */
+  font-family: sans-serif;
+  background-color: #ddd;
+  font-size: 32px;
+  margin: 40px;
+
+  /* CSS GRID */
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  grid-template-rows: 300px 200px;
+  column-gap: 10px;
+  row-gap: 40px;
+  }
+```
+- repeat property (how many columns you want and its size)
+- repeat (4, 1fr) //same as 1fr 1fr 1fr 1fr
+- using 1fr for the grid-template-rows will take the height of the highest element. If you dont define a height for the container it will take the height required to display its content.
