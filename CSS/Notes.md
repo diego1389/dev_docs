@@ -1724,3 +1724,118 @@ aside{
 - repeat property (how many columns you want and its size)
 - repeat (4, 1fr) //same as 1fr 1fr 1fr 1fr
 - using 1fr for the grid-template-rows will take the height of the highest element. If you dont define a height for the container it will take the height required to display its content.
+
+### Placing and spacing elements
+
+- You can verify the column and row numbers in grid section in dev tools.
+- It is set at grid item level. To move element-8 in first row and between 2 and 3 columns:
+```css
+ .el--8 {
+    background-color: crimson;
+    grid-column: 2 / 3; /*start at column 2 and end in column 3*/
+    grid-row: 1 / 2;
+  }
+```
+- We can omit the number after / if it is +2
+- You can also use span keyword to specify how many columns do you want it to take:
+```css
+.el--8 {
+    background-color: crimson;
+    grid-column: 2 / span 3; /*start at column 2 and end in column 3*/
+    grid-row: 1 / 2;
+  }
+```
+- You can use -1 to span to the end:
+```css
+.el--8 {
+  background-color: crimson;
+  grid-column: 2 / -1; /*start at column 2 and end in column 3*/
+  grid-row: 1 / 2;
+}
+```
+### Aligning grid items and tracks
+
+- Align the grid tracks inside of the grid container (distributing empty space):
+- content properties align tracks inside of the container. justify is horizontally on the row axis and align is vertically.
+```css
+.container--2 {
+  /* STARTER */
+  font-family: sans-serif;
+  background-color: black;
+  font-size: 40px;
+  margin: 40px;
+
+  width: 1000px;
+  height: 600px;
+
+  /* CSS GRID */
+  display: grid;
+  grid-template-columns: 125px 200px 125px;
+  grid-template-rows: 250px 100px;
+  gap: 50px;
+
+  justify-content: center;
+  /* justify-content:  space-between; */
+  align-content: center;
+
+}
+```
+- Align items inside cells, moving items around inside the cells:
+
+```css
+  .container--2 {
+    /* STARTER */
+    font-family: sans-serif;
+    background-color: black;
+    font-size: 40px;
+    margin: 40px;
+
+    width: 1000px;
+    height: 600px;
+
+    /* CSS GRID */
+    display: grid;
+    grid-template-columns: 125px 200px 125px;
+    grid-template-rows: 250px 100px;
+    gap: 50px;
+
+    justify-content: center;
+    /* justify-content:  space-between; */
+    align-content: center;
+
+    align-items: center;
+    justify-items: center;
+  }
+```
+- justify-items and align-items by default are set to stretch.
+- You can override them individually (align-self):
+```css
+.container--2 {
+    /* STARTER */
+    font-family: sans-serif;
+    background-color: black;
+    font-size: 40px;
+    margin: 40px;
+
+    width: 1000px;
+    height: 600px;
+
+    /* CSS GRID */
+    display: grid;
+    grid-template-columns: 125px 200px 125px;
+    grid-template-rows: 250px 100px;
+    gap: 50px;
+
+    justify-content: center;
+    /* justify-content:  space-between; */
+    align-content: center;
+
+    align-items: center;
+    justify-items: center;
+  }
+
+  .el--1 {
+    background-color: blueviolet;
+    align-self: end;
+  }
+```
