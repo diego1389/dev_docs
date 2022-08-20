@@ -1,3 +1,6 @@
+
+
+
 # Design patterns:
 
 - Are common architectural approaches.
@@ -2067,9 +2070,12 @@
     }
     - IBM.cs (Concrete subject class)
     ```c#
-     public IBM(string symbol, double price)
-           : base(symbol, price)
+     public class IBM : Stock
     {
+        public IBM(string symbol, double price)
+           : base(symbol, price)
+        {
+        }
     }
     ```
     - IInvestor.cs (Observer interface)

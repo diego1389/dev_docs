@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "5Eevcyn3a5++F1Oql0z2e6OAfMDAvjgGIw6dH2uYr2shOEaw+LTfDLCZxef6Zet3VikOVe0sET+W1noSl8etKA==",
+  "dgSpecHash": "clIy+i+z8AEGZcorTAqvkIStQwNbTNZd1J80G8myOEsEPTSAn2WV5bj2Niarj7Vp+7guCyzJf9Zl/luzvaTzeg==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Dot net core/Authentication authorization/UnderTheHood/UnderTheHood/WebProject.csproj",
   "expectedPackageFiles": [
@@ -14,7 +14,8 @@
     "/Users/diego.guillen/.nuget/packages/system.buffers/4.5.0/system.buffers.4.5.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.memory/4.5.1/system.memory.4.5.1.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.runtime.compilerservices.unsafe/4.5.1/system.runtime.compilerservices.unsafe.4.5.1.nupkg.sha512",
-    "/Users/diego.guillen/.nuget/packages/system.text.encodings.web/4.5.0/system.text.encodings.web.4.5.0.nupkg.sha512"
+    "/Users/diego.guillen/.nuget/packages/system.text.encodings.web/4.5.0/system.text.encodings.web.4.5.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.netcore.app.host.osx-x64/5.0.17/microsoft.netcore.app.host.osx-x64.5.0.17.nupkg.sha512"
   ],
   "logs": []
 }

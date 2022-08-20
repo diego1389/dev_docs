@@ -128,7 +128,7 @@ lst.RemoveAll(x => someExpression(x));
     }
     ```
 - Override Equality for keys
-    - Override also the == operator toe create a more predictable behaviour (not needed for dictionary equality)
+    - Override also the == operator to create a more predictable behaviour (not needed for dictionary equality)
     - C# requires that if you override the Equals operator you should override the NotEquals operator.
     ```c#
        public class CountryCode{

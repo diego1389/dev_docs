@@ -1,30 +1,37 @@
 ﻿<Properties StartupConfiguration="{BEE27651-14C5-4954-81A3-546C1643616D}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns2/Program.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DesignPatterns2/Observer/Investor.cs">
     <Files>
       <File FileName="DesignPatterns2/Strategy/SortStrategy.cs" Line="5" Column="4" />
       <File FileName="DesignPatterns2/Strategy/SortedList.cs" Line="28" Column="6" />
       <File FileName="DesignPatterns2/Program.cs" Line="304" Column="35" />
-      <File FileName="DesignPatterns2/Strategy/ShellSort.cs" Line="17" Column="6" />
       <File FileName="DesignPatterns2/Strategy/QuickSort.cs" Line="13" Column="6" />
+      <File FileName="DesignPatterns2/Observer/IBM.cs" Line="4" Column="4" />
+      <File FileName="DesignPatterns2/Observer/IInvestor.cs" Line="1" Column="1" />
+      <File FileName="DesignPatterns2/Observer/Investor.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="DesignPatterns2" expanded="True">
             <Node name="DesignPatterns2" expanded="True">
+              <Node name="Observer" expanded="True">
+                <Node name="Investor.cs" selected="True" />
+              </Node>
               <Node name="Strategy" expanded="True" />
-              <Node name="Program.cs" selected="True" />
             </Node>
           </Node>
         </State>
       </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State />
+      </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
-  <MonoDevelop.Ide.ItemProperties.DesignPatterns2 PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.DesignPatterns2 PreferredExecutionTarget="MonoDevelop.Default" />
 </Properties>

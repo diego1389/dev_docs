@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/DesignPatterns2.csproj": {}
+    "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/DesignPatterns2.csproj": {}
   },
   "projects": {
-    "/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/DesignPatterns2.csproj": {
+    "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/DesignPatterns2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/DesignPatterns2.csproj",
+        "projectUniqueName": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/DesignPatterns2.csproj",
         "projectName": "DesignPatterns2",
-        "projectPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/DesignPatterns2.csproj",
+        "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/DesignPatterns2.csproj",
         "packagesPath": "/Users/diego.guillen/.nuget/packages/",
-        "outputPath": "/Users/diego.guillen/Documents/GitHub/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/obj/",
+        "outputPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/DesignPatterns2/DesignPatterns2/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/diego.guillen/.config/NuGet/NuGet.Config"
+          "/Users/diego.guillen/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -52,7 +52,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.403/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.301/RuntimeIdentifierGraph.json"
         }
       }
     }
