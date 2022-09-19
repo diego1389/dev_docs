@@ -1,0 +1,15 @@
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/bin/Debug/net6.0/Examples1
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/bin/Debug/net6.0/Examples1.deps.json
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/bin/Debug/net6.0/Examples1.runtimeconfig.json
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/bin/Debug/net6.0/Examples1.dll
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/bin/Debug/net6.0/Examples1.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/Examples1.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/Examples1.GeneratedMSBuildEditorConfig.editorconfig
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/Examples1.AssemblyInfoInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/Examples1.AssemblyInfo.cs
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/Examples1.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/Examples1.dll
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/refint/Examples1.dll
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/Examples1.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/Examples1.genruntimeconfig.cache
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Examples1/obj/Debug/net6.0/ref/Examples1.dll

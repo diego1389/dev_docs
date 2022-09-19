@@ -89,15 +89,15 @@
     `,
     data(){
         return{
-        count: 0
+            count: 0
         }
     },
     methods:{
         increment(){
-        this.count += 1;
+            this.count += 1;
         },
         isEven(){
-        return this.count % 2 === 0;
+            return this.count % 2 === 0;
         }
     }
     });
@@ -121,16 +121,16 @@
     `,
     data(){
         return{
-        count: 0,
-        numbers: [1,2,3,4,5,6,7,8,9,10]
+            count: 0,
+            numbers: [1,2,3,4,5,6,7,8,9,10]
         }
     },
     methods:{
         increment(){
-        this.count += 1;
+            this.count += 1;
         },
         isEven(number){
-        return number % 2 === 0;
+            return number % 2 === 0;
         }
     }
     });
@@ -166,10 +166,10 @@
     },
     methods:{
         increment(){
-        this.count += 1;
+            this.count += 1;
         },
         isEven(number){
-        return number % 2 === 0;
+            return number % 2 === 0;
         }
     }
     });
@@ -240,33 +240,33 @@
     `,
     data(){
         return{
-        count: 0,
-        numbers: [1,2,3,4,5,6,7,8,9,10],
-        value: 'user'
+            count: 0,
+            numbers: [1,2,3,4,5,6,7,8,9,10],
+            value: 'user'
         }
     },
     computed:{
         evenList(){
-        return this.numbers.filter(num => this.isEven(num))
+            return this.numbers.filter(num => this.isEven(num))
         },
         error(){
-        return (this.value.length < 5) ?
-            'Must be greater than 5' :
-            '';
+            return (this.value.length < 5) ?
+                'Must be greater than 5' :
+                '';
         }
     },
     methods:{
         getClass(number){
-        return this.isEven(number) ? 'blue' : 'red';
+            return this.isEven(number) ? 'blue' : 'red';
         },
         increment(){
-        this.count += 1;
+            this.count += 1;
         },
         isEven(number){
-        return number % 2 === 0;
+            return number % 2 === 0;
         },
         input($event){
-        this.value = $event.target.value;
+            this.value = $event.target.value;
         }
     }
     });
@@ -305,31 +305,31 @@
     `,
     data(){
         return{
-        count: 0,
-        numbers: [1,2,3,4,5,6,7,8,9,10],
-        value: 'user',
-        radioValue : 'a'
+            count: 0,
+            numbers: [1,2,3,4,5,6,7,8,9,10],
+            value: 'user',
+            radioValue : 'a'
         }
     },
     computed:{
         evenList(){
-        return this.numbers.filter(num => this.isEven(num))
+            return this.numbers.filter(num => this.isEven(num))
         },
         error(){
-        return (this.value.length < 5) ?
-            'Must be greater than 5' :
-            '';
+            return (this.value.length < 5) ?
+                'Must be greater than 5' :
+                '';
         }
     },
     methods:{
         getClass(number){
-        return this.isEven(number) ? 'blue' : 'red';
+            return this.isEven(number) ? 'blue' : 'red';
         },
         increment(){
-        this.count += 1;
+            this.count += 1;
         },
         isEven(number){
-        return number % 2 === 0;
+            return number % 2 === 0;
         }
     }
     });
@@ -376,31 +376,31 @@
     `,
     data(){
         return{
-        count: 0,
-        numbers: [1,2,3,4,5,6,7,8,9,10],
-        value: 'user',
-        radioValue : 'a'
+            count: 0,
+            numbers: [1,2,3,4,5,6,7,8,9,10],
+            value: 'user',
+            radioValue : 'a'
         }
     },
     computed:{
         evenList(){
-        return this.numbers.filter(num => this.isEven(num))
+            return this.numbers.filter(num => this.isEven(num))
         },
         error(){
-        return (this.value.length < 5) ?
-            'Must be greater than 5' :
-            '';
+            return (this.value.length < 5) ?
+                'Must be greater than 5' :
+                '';
         }
     },
     methods:{
         getClass(number){
-        return this.isEven(number) ? 'blue' : 'red';
+            return this.isEven(number) ? 'blue' : 'red';
         },
         increment(){
-        this.count += 1;
+            this.count += 1;
         },
         isEven(number){
-        return number % 2 === 0;
+            return number % 2 === 0;
         }
     }
     });
@@ -413,21 +413,21 @@
     import * as Vue from 'vue/dist/vue.esm-bundler.js';
 
     const Num = {
-    props: ['number'],
-    template : `
-        <div 
-        v-bind:class="getClass(number)"
-        >
-        {{number}}
-        </div>`,
-    methods: {
-        getClass(number){
-        return this.isEven(number) ? 'blue' : 'red';
-        },
-        isEven(number){
-        return number % 2 === 0;
+        props: ['number'],
+        template : `
+            <div 
+            v-bind:class="getClass(number)"
+            >
+            {{number}}
+            </div>`,
+        methods: {
+            getClass(number){
+                return this.isEven(number) ? 'blue' : 'red';
+            },
+            isEven(number){
+                return number % 2 === 0;
+            }
         }
-    }
     }
 
     const app = Vue.createApp({
@@ -459,25 +459,25 @@
     `,
     data(){
         return{
-        count: 0,
-        numbers: [1,2,3,4,5,6,7,8,9,10],
-        value: 'user',
-        radioValue : 'a'
+            count: 0,
+            numbers: [1,2,3,4,5,6,7,8,9,10],
+            value: 'user',
+            radioValue : 'a'
         }
     },
     computed:{
         evenList(){
-        return this.numbers.filter(num => this.isEven(num))
+            return this.numbers.filter(num => this.isEven(num))
         },
         error(){
-        return (this.value.length < 5) ?
-            'Must be greater than 5' :
-            '';
+            return (this.value.length < 5) ?
+                'Must be greater than 5' :
+                '';
         }
     },
     methods:{
         increment(){
-        this.count += 1;
+            this.count += 1;
         }
     }
     });
@@ -500,13 +500,13 @@
     methods: {
         click(){
         //you can access the prop value using this.prop
-        this.$emit('chosen', this.number);
+            this.$emit('chosen', this.number);
         },
         getClass(number){
-        return this.isEven(number) ? 'blue' : 'red';
+            return this.isEven(number) ? 'blue' : 'red';
         },
         isEven(number){
-        return number % 2 === 0;
+            return number % 2 === 0;
         }
     }
     }
@@ -526,18 +526,18 @@
     `,
     data(){
         return{
-        numbers: [1,2,3,4,5,6,7,8,9,10],
-        numberHistory: []
+            numbers: [1,2,3,4,5,6,7,8,9,10],
+            numberHistory: []
         }
     },
     computed:{
         evenList(){
-        return this.numbers.filter(num => this.isEven(num))
+            return this.numbers.filter(num => this.isEven(num))
         },
     },
     methods:{
         addNumber(number){
-        this.numberHistory.push(number);
+            this.numberHistory.push(number);
         }
     }
     });
