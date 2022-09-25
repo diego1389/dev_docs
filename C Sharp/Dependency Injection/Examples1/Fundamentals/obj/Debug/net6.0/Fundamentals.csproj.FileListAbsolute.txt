@@ -1,0 +1,15 @@
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/bin/Debug/net6.0/Fundamentals
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/bin/Debug/net6.0/Fundamentals.deps.json
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/bin/Debug/net6.0/Fundamentals.runtimeconfig.json
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/bin/Debug/net6.0/Fundamentals.dll
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/bin/Debug/net6.0/Fundamentals.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/Fundamentals.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/Fundamentals.GeneratedMSBuildEditorConfig.editorconfig
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/Fundamentals.AssemblyInfoInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/Fundamentals.AssemblyInfo.cs
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/Fundamentals.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/Fundamentals.dll
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/refint/Fundamentals.dll
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/Fundamentals.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/Fundamentals.genruntimeconfig.cache
+/Users/diego.guillen/Documents/Github/dev_docs/C Sharp/Dependency Injection/Examples1/Fundamentals/obj/Debug/net6.0/ref/Fundamentals.dll
