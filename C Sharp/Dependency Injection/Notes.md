@@ -184,7 +184,7 @@ app.Run();
 ```
 - Dependency lifetimes:
 
-    - Transient:  anytime you require a new instance of that class will be created (a new IdGenerator is created anytime you call it).
+- **Transient:**  anytime you require a new instance of that class will be created (a new IdGenerator is created anytime you call it).
 - Program.cs (register IdGenerator as transient)
 ```csharp
 using WeatherApiTest.Filter;
@@ -237,7 +237,7 @@ namespace WeatherApiTest.Controllers
     }
 }
 ```
-- IdGenerator.cs (new service)
+- IdGenerator.cs (new service).
 ```csharp
 using System;
 namespace WeatherApiTest.Services
@@ -281,4 +281,58 @@ namespace WeatherApiTest.Filter
     }
 }
 ```
-- Since you registered the IdGenerator as transient when you call the Get method in Postman it returns a new Guid and the OnActionExecuting and ActionExecutedContext get a different Guid since it creates a new instance of IdGenerator for the filter and another one for the get request. 
+- Since you registered the IdGenerator as transient when you call the Get method in Postman it returns a new Guid and the OnActionExecuting and ActionExecutedContext get a different Guid since it creates a new instance of IdGenerator for the filter class and another one for the get request (lifetimecontroller class). 
+- **Singleton lifetime:** a single instance of the class through the lifetime of the application. Thread safety issues. 
+- Program.cs
+    ```csharp
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddScoped<LifetimeIndicatorFilter>();
+    builder.Services.AddSingleton<IdGenerator>();
+    ```
+- We get the same Guid from the LifetimeController class and the LifetimeIndicatorFilter class (even if we make the call from Postman multiple times). It uses the same instance for each request. 
+
+- **Scoped lifetime:** 
+- It creates a new instance each time you make a request. You get the same IdGenerator intance in LifetimeIndicatorFilter and LifetimeController classes but if you make a new request you get a different Guid (but still the same for both classes). 
+
+- Difference between GetService and GetRequiredService is that the latest throws an exception if you don't specify the service implementation (services.AddSingleton<Application>() for example):
+- Program.cs
+```c#
+var services = new ServiceCollection();
+
+services.AddSingleton<IWeatherService, OpenWeatherService>();
+//services.AddSingleton<Application>();
+
+var serviceProvider = services.BuildServiceProvider();
+
+var app = serviceProvider.GetService<Application>();
+var application = serviceProvider.GetRequiredService<Application>();
+
+await application.RunAsync(args);
+```
+- It is recommended to use GetRequiredService.
+## Registration approaches:
+- Program.cs
+- Explicit resolving dependencies (it is preferred to use the generic version when possible):
+```c#
+//generic version
+//builder.Services.AddScoped<LifetimeIndicatorFilter>();
+
+//is the same as:
+builder.Services.AddScoped(provider =>
+{
+    var idGenerator = provider.GetRequiredService<IdGenerator>();
+    var logger = provider.GetRequiredService<ILogger<LifetimeIndicatorFilter>>();
+
+    return new LifetimeIndicatorFilter(idGenerator, logger);
+});
+
+//generic
+//builder.Services.AddScoped<IdGenerator>();
+
+//is the same as: 
+builder.Services.AddScoped(_ => new IdGenerator());
+
+var app = builder.Build();
+```
+- IN netcore 3.1 instead of builder.Services you have services in the ConfigureServices method. 
