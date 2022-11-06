@@ -335,4 +335,248 @@ builder.Services.AddScoped(_ => new IdGenerator());
 
 var app = builder.Build();
 ```
-- IN netcore 3.1 instead of builder.Services you have services in the ConfigureServices method. 
+- In netcore 3.1 instead of builder.Services you have services in the ConfigureServices method. 
+
+## Resolving dependencies
+
+* Resolving dependencies from constructor:
+- WeatherForecastController.cs
+```c# 
+private readonly ILogger<WeatherForecastController> _logger;
+
+public WeatherForecastController(ILogger<WeatherForecastController> logger)
+{
+    _logger = logger;
+}
+```
+- Program.cs
+```c#
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped(provider =>
+{
+    var logger = provider.GetRequiredService<ILogger<DurationLoggerFilter>>();
+    ret
+```
+- Resolving dependencies from the method (not recommended unless you really only need the dependency for that method):
+- WeatherForecastController.cs
+```c#
+[HttpGet(Name = "GetWeatherForecast")]
+public IEnumerable<WeatherForecast> Get([FromServices] ILogger<WeatherForecastController> logger)
+{
+    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+    {
+        Date = DateTime.Now.AddDays(index),
+        TemperatureC = Random.Shared.Next(-20, 55),
+        Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+    })
+    .ToArray();
+}
+```
+- You can resolve the dependencies from the HttpContext (not recommended better use constructor).
+```c#
+ [HttpGet(Name = "GetWeatherForecast")]
+    public IEnumerable<WeatherForecast> Get()
+    {
+        var serviceProvider = HttpContext.RequestServices;
+        var result = serviceProvider.GetRequiredService<ILogger<WeatherForecastController>>();
+
+
+        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        })
+        .ToArray();
+    }
+```
+- Resolving dependencies from Action Filters as Attributes (they cannot have constructor). //The bad way
+- DurationLoggerAttribute.cs
+```c#
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace ResolvingDeps.WebApi.Attributes;
+
+public class DurationLoggerAttribute : Attribute, IAsyncActionFilter
+{
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    {
+        var sw = Stopwatch.StartNew();
+        try
+        {
+            await next();
+        }
+        finally
+        {
+            var serviceProvider = context.HttpContext.RequestServices;
+            var logger = serviceProvider.GetRequiredService<ILogger<DurationLoggerAttribute>>();
+            var text = $"Request completed in {sw.ElapsedMilliseconds}ms";
+            logger.LogInformation(text);
+            //Console.WriteLine(text);
+        }
+    }
+}
+```
+Resolving dependencies from Action Filters as Attributes (they cannot have constructor). //The good way using Service Filters:
+1. Change Program.cs to register the filter:
+```c#
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped(provider =>
+{
+    var logger = provider.GetRequiredService<ILogger<DurationLoggerFilter>>();
+    return new DurationLoggerFilter(logger);
+});
+```
+2. Change the Controller method:
+```c#
+   [HttpGet("weather")]
+    [ServiceFilter(typeof(DurationLoggerFilter))]
+    public IEnumerable<WeatherForecast> Get()
+    {
+        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            })
+            .ToArray();
+    }
+}
+```
+3. Define the filter:
+```c#
+using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace ResolvingDeps.WebApi.Filters;
+
+public class DurationLoggerFilter : IAsyncActionFilter
+{
+    private readonly ILogger<DurationLoggerFilter> _logger;
+
+    public DurationLoggerFilter(ILogger<DurationLoggerFilter> logger)
+    {
+        _logger = logger;
+    }
+
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    {
+        var sw = Stopwatch.StartNew();
+        try
+        {
+            await next();
+        }
+        finally
+        {
+            var text = $"Request completed in {sw.ElapsedMilliseconds}ms";
+            _logger.LogInformation(text);
+        }
+    }
+}
+```
+- Resolving dependencies from middleware:
+- DurationLoggerMiddleware.cs
+```c#
+using System.Diagnostics;
+
+namespace ResolvingDeps.WebApi.Middlewares;
+
+public class DurationLoggerMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly ILogger<DurationLoggerMiddleware> _logger;
+
+    public DurationLoggerMiddleware(RequestDelegate next,
+        ILogger<DurationLoggerMiddleware> logger)
+    {
+        _next = next;
+        _logger = logger;
+    }
+
+    public async Task InvokeAsync(HttpContext context)
+    {
+        var sw = Stopwatch.StartNew();
+        try
+        {
+            await _next(context);
+        }
+        finally
+        {
+            var text = $"Request completed in {sw.ElapsedMilliseconds}ms";
+            _logger.LogInformation(text);
+        }
+    }
+}
+```
+- Register middleware in Program.cs
+```c#
+app.UseMiddleware<DurationLoggerMiddleware>();
+```
+- Resolving dependencies in Minimal Api
+- PRogram.cs
+```c#
+using ResolvingDeps.MinimalApi;
+
+var builder = WebApplication.CreateBuilder(args);
+
+var app = builder.Build();
+
+app.MapGet("weather", (ILogger<Program> logger) =>
+{
+    var weatherSummaries = new[]
+    {
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    };
+
+    var weather = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        {
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = weatherSummaries[Random.Shared.Next(weatherSummaries.Length)]
+        }).ToArray();
+    logger.LogInformation("Hi from logger.");
+    return Results.Ok(weather);
+});
+
+app.Run();
+```
+- Resolve dependencies in Razor Views & Pages
+- ServiceToInject.cs
+```c#
+namespace ResolvingDeps.Mvc;
+
+public class ServiceToInject
+{
+    public string Message => "I was injected!";
+}
+```
+- Index.cshtml
+```html
+@{
+    ViewData["Title"] = "Home Page";
+}
+@inject ServiceToInject ServiceToInject
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <p>@ServiceToInject.Message</p>
+</div>
+```
