@@ -580,3 +580,37 @@ public class ServiceToInject
     <p>@ServiceToInject.Message</p>
 </div>
 ```
+- Resolving dependencies in Hosted Services (it uses the constructor).
+- Program.cs
+```c#
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHostedService<BackgroundTicker>();
+```
+- Background Ticker
+```c#
+namespace ResolvingDeps.WebApi.HostedServices;
+
+public class BackgroundTicker : BackgroundService
+{
+    private readonly ILogger<BackgroundTicker> _logger;
+
+    public BackgroundTicker(ILogger<BackgroundTicker> logger)
+    {
+        _logger = logger;
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            _logger.LogInformation($"Hi from {nameof(BackgroundTicker)}");
+            await Task.Delay(1000, stoppingToken);
+        }
+    }
+}
+```
+## Deep dive
+
+- You don't everything needs to be dependency injected. Only the dependencies need to use interfaces. 
+- Don't hide business logic inside the mappers. 
+- Mappers should not be injected and should not use an interface. Use that only for required dependencies. 
