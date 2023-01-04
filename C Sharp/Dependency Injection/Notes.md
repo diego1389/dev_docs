@@ -614,3 +614,192 @@ public class BackgroundTicker : BackgroundService
 - You don't everything needs to be dependency injected. Only the dependencies need to use interfaces. 
 - Don't hide business logic inside the mappers. 
 - Mappers should not be injected and should not use an interface. Use that only for required dependencies. 
+- Program.cs
+```c#
+builder.Services.AddSingleton<SingletonService>();
+builder.Services.AddScoped<ScopedService>();
+builder.Services.AddTransient<TransientService>();
+```
+- SingletonService.cs
+```c#
+using System;
+namespace WeatherApiTest.Services
+{
+	public class SingletonService
+	{
+		private readonly TransientService _transientService;
+
+		public SingletonService(TransientService transientService)
+		{
+			_transientService = transientService;
+        }
+
+		//public Guid Id { get; } = Guid.NewGuid();
+		public Guid Id => _transientService.Id;
+	}
+}
+```
+- Even though the Singleton service inject a transient service it still will return the same instance every single time you call it in the controller (the same id). The constructor will only be called once. 
+- lifetimecontroller.cs
+```c#
+using System;
+using Microsoft.AspNetCore.Mvc;
+using WeatherApiTest.Filter;
+using WeatherApiTest.Services;
+
+namespace WeatherApiTest.Controllers
+{
+    [ApiController]
+    public class LifetimeController : ControllerBase
+    {
+        //private readonly IdGenerator _idGenerator;
+
+        //public LifetimeController(IdGenerator idGenerator)
+        //{
+        //    this._idGenerator = idGenerator;
+        //}
+
+        private readonly SingletonService _singletonService;
+        private readonly TransientService _transientService;
+        private readonly ScopedService _scopedService;
+
+        public LifetimeController(ScopedService scopedService, TransientService transientService, SingletonService singletonService)
+        {
+            _scopedService = scopedService;
+            _transientService = transientService;
+            _singletonService = singletonService;
+        }
+
+        [HttpGet("lifetime")]
+        //[ServiceFilter(typeof(LifetimeIndicatorFilter))]
+        public IActionResult Get()
+        {
+            //var id = _idGenerator.Id;
+            var ids = new
+            {
+                SingleonId = _singletonService.Id,
+                TransientId = _transientService.Id,
+                ScopedId = _scopedService.Id
+            };
+
+            return Ok(ids);
+        }
+    }
+}
+```
+- A circular dependency: ServiceA is injected in constructor in ServiceB and ServiceB is injected in constructor in ServiceA.
+- Registering open generics (for example ILoggerAddapter<TType>):
+```c#
+builder.Services.AddTransient(typeof(ILoggerAdapter<>), typeof(LoggerAddapter<>));
+```
+- Registering multiple interface implementations. If I register multiple interface implementations it will get the latest registered because it is a queue.
+- Program.cs
+```c#
+builder.Services.AddTransient<IWeatherService, OpenWeatherService>();
+builder.Services.AddTransient<IWeatherService, InMemoryWeatherService>();
+```
+- We can also get an IEnumerable in the constructor to decide which implementation we want to use:
+- WeatherForecastController
+    ```c#
+    [HttpGet(Name = "GetWeatherForecast")]
+    public async IEnumerable<WeatherForecast> Get()
+    {
+        var first = _weatherServices.First();
+        WeatherForecast weather = await first.GetCurrentWeatherAsync("London");
+    }
+    ```
+- The ServiceDescriptor describes how a service should be registered. 
+```c#
+builder.Services.AddTransient<IWeatherService, OpenWeatherService>();
+
+/*Same as: */
+var weatherServiceDescriptor =
+    new ServiceDescriptor(typeof(IWeatherService), typeof(OpenWeatherService), ServiceLifetime.Transient);
+
+builder.Services.Add(weatherServiceDescriptor);
+```
+- Add and TryAdd. With TryAdd, if you already something that resolves an interface it will not add it. For example if you already have an OpenWeatherService for IWeatherService it will not add the InMemoryWeatherService implementation. You can also use TryAddTransient, TryAddScoped, TryAddSingleton.
+
+- TryAddEnumerable. 
+- Replacing dependencies:
+    - Before the builder.Build() you can manipulate the service collection anyway you want. 
+    - Remove all dependencies from one type:
+    ```c#
+    builder.Services.AddTransient<IWeatherService, OpenWeatherService>();
+    builder.Services.RemoveAll(typeof(IWeatherService));
+    ```
+    - You can also remove from an specific index:
+    ```c#
+    builder.Services.RemoveAt(190);//don't use an specific number
+    ```
+
+- Cleaning up service registration
+    - Create a new class (Weather Service Registration)
+    ```c#
+	public static class WeatherServiceRegistration
+	{
+		public static IServiceCollection AddWeatherServices(this IServiceCollection services)
+		{
+            //services.AddTransient<IWeatherService, OpenWeatherService>();
+            var openWeatherServiceDescriptor =
+                new ServiceDescriptor(typeof(IWeatherService), typeof(OpenWeatherService), ServiceLifetime.Transient);
+
+            var weatherServiceDescriptor =
+                new ServiceDescriptor(typeof(IWeatherService), typeof(OpenWeatherService), ServiceLifetime.Transient);
+
+
+            services.Add(weatherServiceDescriptor);
+            services.Add(openWeatherServiceDescriptor);
+
+            return services;
+        }
+    }
+    ```
+    - Program.cs:
+    ```c#
+    builder.Services.AddWeatherServices();
+    ```
+## Advanced techniques
+
+- Creating a custom scope
+    - Scope-less services defined as Scoped are treated as singletons. In this example it returns the same Id value:
+    ```c#
+    using CustomScope.ConsoleApp;
+    using Microsoft.Extensions.DependencyInjection;
+
+    var services = new ServiceCollection();
+
+    services.AddScoped<ExampleService>();
+
+    var serviceProvider = services.BuildServiceProvider();
+
+    var exampleService1 = serviceProvider.GetRequiredService<ExampleService>();
+    var exampleService2 = serviceProvider.GetRequiredService<ExampleService>();
+
+    Console.WriteLine(exampleService1.Id);
+    Console.WriteLine(exampleService2.Id);
+    ```
+    - To create a new scope:
+    ```c#
+    using CustomScope.ConsoleApp;
+    using Microsoft.Extensions.DependencyInjection;
+
+    var services = new ServiceCollection();
+
+    services.AddScoped<ExampleService>();
+
+    var serviceProvider = services.BuildServiceProvider();
+    var serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
+
+    using (var serviceScope = serviceScopeFactory.CreateScope())
+    {
+        var exampleService1 = serviceScope.ServiceProvider.GetRequiredService<ExampleService>();
+        Console.WriteLine(exampleService1.Id);
+    }
+
+    using (var serviceScope = serviceScopeFactory.CreateScope())
+    {
+        var exampleService2 = serviceScope.ServiceProvider.GetRequiredService<ExampleService>();
+        Console.WriteLine(exampleService2.Id);
+    }
+    ```
