@@ -803,3 +803,245 @@ builder.Services.Add(weatherServiceDescriptor);
         Console.WriteLine(exampleService2.Id);
     }
     ```
+- Service locator anti-pattern.
+    - Do not inject the service provider to locate services, instead of that inject the services that you need in each class. 
+
+- When service locator makes sense:
+- Create handlers folder:
+- IHandler interface
+```c#
+using System;
+namespace MultiFunction.ConsoleApp.Handlers
+{
+	public interface IHandler
+	{
+		Task HandleAsync();
+	}
+}
+```
+- GetCurrentLondonWeatherHandler
+```c#
+using System;
+using MultiFunction.ConsoleApp.Console;
+using MultiFunction.ConsoleApp.Weather;
+
+namespace MultiFunction.ConsoleApp.Handlers
+{
+    [CommandName("weather")]
+    public class GetCurrentLondonWeatherHandler : IHandler
+    {
+        private readonly IConsoleWriter _consoleWriter;
+        private readonly IWeatherService _weatherService;
+
+        public GetCurrentLondonWeatherHandler(IConsoleWriter consoleWriter,
+            IWeatherService weatherService)
+        {
+            _consoleWriter = consoleWriter;
+            _weatherService = weatherService;
+        }
+
+
+        public async Task HandleAsync()
+        {
+            var weather = await _weatherService.GetCurrentWeatherAsync("London");
+            double? value = (weather?.Main?.Temp != null) ? weather?.Main?.Temp : 100;
+
+            _consoleWriter.WriteLine($"The temperature in London is {value} C");
+        }
+    }
+}
+```
+- GetCurrentTimeHandler
+```c#
+using System;
+using MultiFunction.ConsoleApp.Console;
+using MultiFunction.ConsoleApp.Time;
+
+namespace MultiFunction.ConsoleApp.Handlers
+{
+    [CommandName("time")]
+    public class GetCurrentTimeHandler : IHandler
+    {
+        private readonly IConsoleWriter _consoleWriter;
+        private readonly IDateTimeProvider _dateTimeProvider;
+
+        public GetCurrentTimeHandler(IConsoleWriter consoleWriter,
+            IDateTimeProvider dateTimeProvider)
+        {
+            _consoleWriter = consoleWriter;
+            _dateTimeProvider = dateTimeProvider;
+        }
+
+        public Task HandleAsync()
+        {
+            var timeNow = _dateTimeProvider.DateTimeNow;
+            _consoleWriter.WriteLine($"The current time is {timeNow:O}");
+            return Task.CompletedTask;
+        }
+    }
+}
+```
+- HandlerOrchestator
+```c#
+using System;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace MultiFunction.ConsoleApp.Handlers
+{
+	public class HandlerOrchestator
+	{
+		private readonly Dictionary<string, Type> _handlerTypes = new();
+
+		private readonly IServiceScopeFactory _serviceScopeFactory;
+
+		public HandlerOrchestator(IServiceScopeFactory serviceScopeFactory)
+		{
+			_serviceScopeFactory = serviceScopeFactory;
+			RegisterCommandHandler();
+		}
+
+        public IHandler? GetHandlerForCommandName(string command)
+		{
+			var handlerType = _handlerTypes.GetValueOrDefault(command);
+			if (handlerType is null)
+				return null;
+
+			using var serviceScope = _serviceScopeFactory.CreateScope();
+			return (IHandler) serviceScope.ServiceProvider.GetRequiredService(handlerType);
+		}
+
+        private void RegisterCommandHandler()
+        {
+			//Assembly scanning...
+			var handlerTypes = HandlerExtensions.GetHandlerTypesForAssembly(typeof(IHandler).Assembly);
+
+			foreach (var handlerType in handlerTypes)
+			{
+				var commandNameAttribute = handlerType.GetCustomAttribute<CommandNameAttribute>();
+				if(commandNameAttribute is null)
+				{
+					continue;
+				}
+				var commandName = commandNameAttribute.CommandName;
+				_handlerTypes[commandName] = handlerType;
+			}
+        }
+    }
+}
+```
+- CommandNameAttribute
+```c#
+using System;
+namespace MultiFunction.ConsoleApp.Handlers
+{
+	[AttributeUsage(AttributeTargets.Class)]
+	public class CommandNameAttribute :Attribute
+	{
+		public string CommandName { get; set; }
+
+		public CommandNameAttribute(string commandName)
+		{
+			CommandName = commandName;
+		}
+	}
+}
+```
+- HandlerExtensions
+```c#
+using System;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
+namespace MultiFunction.ConsoleApp.Handlers
+{
+	public static class HandlerExtensions
+	{
+		public static void AddCommandHandlers(this IServiceCollection services, Assembly assembly)
+		{
+            var handlerTypes = GetHandlerTypesForAssembly(assembly);
+
+            foreach (var handlerType in handlerTypes)
+            {
+                services.TryAddTransient(handlerType);
+            }
+		}
+
+        public static IEnumerable<TypeInfo> GetHandlerTypesForAssembly(Assembly assembly)
+        {
+            var handlerTypes = assembly.DefinedTypes
+                .Where(x => !x.IsInterface && !x.IsAbstract
+                && typeof(IHandler).IsAssignableFrom(x));
+
+            return handlerTypes;
+        }
+    }
+}
+```
+- Application.cs
+```c#
+using MultiFunction.ConsoleApp.Console;
+using MultiFunction.ConsoleApp.Handlers;
+
+namespace MultiFunction.ConsoleApp;
+
+public class Application
+{
+    private readonly IConsoleWriter _consoleWriter;
+    private readonly HandlerOrchestator _handlerOrchestator;
+
+    public Application(IConsoleWriter consoleWriter,
+        HandlerOrchestator handlerOrchestator)
+    {
+        _consoleWriter = consoleWriter;
+        _handlerOrchestator = handlerOrchestator;
+    }
+
+    public async Task RunAsync(string[] args)
+    {
+        var command = args[0];
+
+        var handler = _handlerOrchestator.GetHandlerForCommandName(command);
+        if (handler == null)
+        {
+            _consoleWriter.WriteLine($"No handler found for command name {command}");
+            return;
+        }
+        await handler.HandleAsync();
+    }
+}
+```
+- Program.cs
+```c#
+using MultiFunction.ConsoleApp.Console;
+using MultiFunction.ConsoleApp.Handlers;
+
+namespace MultiFunction.ConsoleApp;
+
+public class Application
+{
+    private readonly IConsoleWriter _consoleWriter;
+    private readonly HandlerOrchestator _handlerOrchestator;
+
+    public Application(IConsoleWriter consoleWriter,
+        HandlerOrchestator handlerOrchestator)
+    {
+        _consoleWriter = consoleWriter;
+        _handlerOrchestator = handlerOrchestator;
+    }
+
+    public async Task RunAsync(string[] args)
+    {
+        var command = args[0];
+
+        var handler = _handlerOrchestator.GetHandlerForCommandName(command);
+        if (handler == null)
+        {
+            _consoleWriter.WriteLine($"No handler found for command name {command}");
+            return;
+        }
+        await handler.HandleAsync();
+    }
+}
+```
