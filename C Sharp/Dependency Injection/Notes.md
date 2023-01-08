@@ -1045,3 +1045,369 @@ public class Application
     }
 }
 ```
+- Avoid capturing dependencies:
+    - Even if IWeatherService was registered as Transient if you call it outside of the MapGet scope it will be resolved as a singleton. TO handle it as trasient inject IWeatherService in the MapGetScope:
+    ```c#
+    //var weatherService = app.Services.GetRequiredService<IWeatherService>();
+
+    app.MapGet("weather/{city}",
+        async ([FromRoute] string city, IWeatherService weatherService) =>
+    {
+        var weather = await weatherService.GetCurrentWeatherAsync(city);
+        return weather == null ? Results.NotFound() : Results.Ok(weather);
+    });
+    ```
+- Avoid multiple service providers. 
+- Creating decorators. Refactor the following code using DI and decorator pattern (it breaks single responsability principle).
+```c#
+using System.Diagnostics;
+using System.Net;
+using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
+
+namespace MultiFunction.ConsoleApp.Weather;
+
+public class OpenWeatherService : IWeatherService
+{
+    private const string OpenWeatherApiKey = "f539ebbe9ad5228403f6c267b7b7743c";
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILogger<OpenWeatherService> _logger;
+
+    public OpenWeatherService(IHttpClientFactory httpClientFactory,
+        ILogger<OpenWeatherService> logger)
+    {
+        _httpClientFactory = httpClientFactory;
+        _logger = logger;
+    }
+
+    public async Task<WeatherResponse?> GetCurrentWeatherAsync(string city)
+    {
+        var sw = Stopwatch.StartNew();
+
+        try
+        {
+            var url = $"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={OpenWeatherApiKey}&units=metric";
+            var _httpClient = _httpClientFactory.CreateClient();
+            var weatherResponse = await _httpClient.GetAsync(url);
+            if (weatherResponse.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            var weather = await weatherResponse.Content.ReadFromJsonAsync<WeatherResponse>();
+            return weather;
+        }
+        finally
+        {
+            sw.Stop();
+            _logger.LogInformation("Weather retrieval for city {0}, {1} ms", city, sw.ElapsedMilliseconds);
+        }      
+    }
+}
+```
+- Add decorator class:
+    - LoggedWeatherService.cs
+    ```c#
+    using System;
+    using System.Diagnostics;
+    using System.Net;
+    using System.Net.Http;
+    using System.Net.Http.Json;
+    using Microsoft.Extensions.Logging;
+    using Weather.Api.Weather;
+
+    namespace Weather.Api.Weather;
+
+    public class LoggedWeatherService : IWeatherService
+    {
+        private readonly IWeatherService _weatherService;  //OpenWeatherService
+        private readonly ILogger<IWeatherService> _logger;
+
+        public LoggedWeatherService(IWeatherService weatherService, ILogger<IWeatherService> logger)
+        {
+            _weatherService = weatherService;
+            _logger = logger; 
+        }
+
+        public async Task<WeatherResponse> GetCurrentWeatherAsync(string city)
+        {
+            var sw = Stopwatch.StartNew();
+
+            try
+            {
+                return await _weatherService.GetCurrentWeatherAsync(city);
+            }
+            finally
+            {
+                sw.Stop();
+                _logger.LogInformation("Weather retrieval for city {0}, {1} ms", city, sw.ElapsedMilliseconds);
+            }
+        }
+    }
+    ```
+    - Change OpenWeatherService class:
+    ```c#
+    using System.Diagnostics;
+    using System.Net;
+
+    namespace Weather.Api.Weather;
+
+    public class OpenWeatherService : IWeatherService
+    {
+        private const string OpenWeatherApiKey = "f539ebbe9ad5228403f6c267b7b7743c";
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public OpenWeatherService(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
+
+        public async Task<WeatherResponse?> GetCurrentWeatherAsync(string city)
+        {
+            var url = $"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={OpenWeatherApiKey}&units=metric";
+            var _httpClient = _httpClientFactory.CreateClient();
+            var weatherResponse = await _httpClient.GetAsync(url);
+            if (weatherResponse.StatusCode == HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            var weather = await weatherResponse.Content.ReadFromJsonAsync<WeatherResponse>();
+            return weather;
+        }
+    }
+    ```
+    - Change Program.cs
+    ```c#
+    builder.Services.AddTransient<OpenWeatherService>();
+    builder.Services.AddTransient<IWeatherService>(provider =>
+        new LoggedWeatherService(provider.GetRequiredService<OpenWeatherService>(),
+            provider.GetRequiredService<ILogger<IWeatherService>>()));
+    ```
+- The future of dependency injection. 
+    - Install Jab nuget package
+    - MyServiceProvider.cs
+    ```c#
+    using System;
+    using Jab;
+
+    namespace DependencyInjectionFuture.ConsoleApp
+    {
+        [ServiceProvider]
+        [Transient(typeof(IConsoleWriter), typeof(ConsoleWriter))]
+        public partial class MyServiceProvider
+        {
+
+        }
+    }
+    ```
+    - Program.cs
+    ```c#
+    using DependencyInjectionFuture.ConsoleApp;
+
+    Console.WriteLine();
+
+    var serviceProvider = new MyServiceProvider();
+    var consoleWriter = serviceProvider.GetService<IConsoleWriter>();
+
+    consoleWriter.WriteLine("Hi From Source generated DI");
+    ```
+## Extending Dependency Injection with Scrutor
+
+- Scrutor library to extend the built-in DI container with extra functionality. 
+- Install Scrutor and change the previous decorator Program.cs configuration:
+    ```c#
+    builder.Services.AddTransient<IWeatherService, OpenWeatherService>();
+    //builder.Services.AddTransient<IWeatherService>(provider =>
+    //    new LoggedWeatherService(provider.GetRequiredService<OpenWeatherService>(),
+    //        provider.GetRequiredService<ILogger<IWeatherService>>()));
+    builder.Services.Decorate<IWeatherService, LoggedWeatherService>();
+    ```
+- Refactoring lecture (bette way to handle the Stopwatch approach from previous lessons).
+- Create TimedLogOperation class:
+```c#
+using System;
+using System.Diagnostics;
+
+namespace Weather.Api.Logging
+{
+    public class TimedLogOperation<T> : IDisposable
+    {
+        private readonly ILoggerAdapter<T> _logger;
+        private readonly LogLevel _logLevel;
+        private readonly string _message;
+        private readonly object?[] _args;
+        private readonly Stopwatch _stopwatch;
+
+        public TimedLogOperation(ILoggerAdapter<T> logger,
+            LogLevel logLevel,
+            string message,
+            object?[] args)
+        {
+            _logger = logger;
+            _logLevel = logLevel;
+            _message = message;
+            _args = args;
+            _stopwatch = Stopwatch.StartNew();
+        }
+    
+        public void Dispose()
+        {
+            _stopwatch.Stop();
+            _logger.Log(_logLevel, $"{_message} completed in {_stopwatch.ElapsedMilliseconds} ms", _args);
+        }
+    }
+}
+```
+- Add a new method to ILoggerAdapter and implement it
+```c#
+namespace Weather.Api.Logging;
+
+public interface ILoggerAdapter<TType>
+{
+    void Log(LogLevel logLevel, string template, params object[] args);
+
+    void LogInformation(string template, params object[] args);
+
+    IDisposable TimedOperation(string template, params object[] args); 
+}
+```
+```c#
+namespace Weather.Api.Logging;
+
+public class LoggerAdapter<TType> : ILoggerAdapter<TType>
+{
+    private readonly ILogger<LoggerAdapter<TType>> _logger;
+
+    public LoggerAdapter(ILogger<LoggerAdapter<TType>> logger)
+    {
+        _logger = logger;
+    }
+
+    public void Log(LogLevel logLevel, string template, params object[] args)
+    {
+        _logger.Log(logLevel, template, args);
+    }
+
+    public void LogInformation(string template, params object[] args)
+    {
+        Log(LogLevel.Information, template, args);
+    }
+
+    public IDisposable TimedOperation(string template, params object[] args)
+    {
+        return new TimedLogOperation<TType>(this, LogLevel.Information, template, args);
+    }
+}
+```
+- Change LoggedWeatherService:
+```c#
+using System.Diagnostics;
+using Weather.Api.Logging;
+
+namespace Weather.Api.Weather;
+
+public class LoggedWeatherService : IWeatherService
+{
+    private readonly IWeatherService _weatherService; //<-- OpenWeatherService
+    private readonly ILoggerAdapter<IWeatherService> _logger;
+
+    public LoggedWeatherService(IWeatherService weatherService,
+        ILoggerAdapter<IWeatherService> logger)
+    {
+        _weatherService = weatherService;
+        _logger = logger;
+    }
+
+    public async Task<WeatherResponse?> GetCurrentWeatherAsync(string city)
+    {
+        using var _ = _logger.TimedOperation("Weather retrieval for city: {0}", city);
+        return await _weatherService.GetCurrentWeatherAsync(city);
+    }
+}
+```
+- Service registration by scanning. Application on startup will scan the code and automatically register services. 
+- Include Microsoft.Extensions.DependencyInjection and Scrutor.
+- To scan all the classes of the current project (console.app) project and resolve them with its matching interface (IExampleA -> ExampleA, etc) do the following:
+```c#
+using Microsoft.Extensions.DependencyInjection;
+using ScrutorScanning.ConsoleApp.Services;
+
+var services = new ServiceCollection();
+
+var serviceProvider = services.BuildServiceProvider();
+
+services.Scan(selector =>
+{
+    selector.FromAssemblyOf<Program>()
+        .AddClasses(f => f.InExactNamespaces("ScrutorScanning.ConsoleApp.Services"))
+        .AsMatchingInterface();
+});
+
+PrintRegisteredService(services);
+
+void PrintRegisteredService(IServiceCollection serviceCollection)
+{
+    foreach (var service in serviceCollection)
+    {
+        Console.WriteLine($"{service.ServiceType.Name} -> {service.ImplementationType?.Name} as {service.Lifetime.ToString()}");
+    }
+}
+```
+- You can also use as ImplementedInterface() and it will resolve the service with its interface regardless of the service name. It will check only if the service class implements the interface. 
+- The default is Transient. You can override that:
+```c#
+using Microsoft.Extensions.DependencyInjection;
+using ScrutorScanning.ConsoleApp.Services;
+
+var services = new ServiceCollection();
+
+var serviceProvider = services.BuildServiceProvider();
+
+services.Scan(selector =>
+{
+    selector.FromAssemblyOf<Program>()
+        .AddClasses(f => f.InExactNamespaces("ScrutorScanning.ConsoleApp.Services"))
+        .AsImplementedInterfaces()
+        .WithSingletonLifetime();
+});
+
+PrintRegisteredService(services);
+
+void PrintRegisteredService(IServiceCollection serviceCollection)
+{
+    foreach (var service in serviceCollection)
+    {
+        Console.WriteLine($"{service.ServiceType.Name} -> {service.ImplementationType?.Name} as {service.Lifetime.ToString()}");
+    }
+}
+/*IExampleAService -> ExampleAService as Singleton
+IExampleBService -> ExampleBService as Singleton
+IExampleCService -> ExampleCService as Singleton */
+```
+- You can also cange the filter:
+```c#
+using Microsoft.Extensions.DependencyInjection;
+using ScrutorScanning.ConsoleApp.Services;
+
+var services = new ServiceCollection();
+
+var serviceProvider = services.BuildServiceProvider();
+
+services.Scan(selector =>
+{
+    selector.FromAssemblyOf<Program>()
+        .AddClasses(f => f.Where(t => t.Name.EndsWith("Service")))
+        .AsImplementedInterfaces()
+        .WithSingletonLifetime();
+});
+
+PrintRegisteredService(services);
+
+void PrintRegisteredService(IServiceCollection serviceCollection)
+{
+    foreach (var service in serviceCollection)
+    {
+        Console.WriteLine($"{service.ServiceType.Name} -> {service.ImplementationType?.Name} as {service.Lifetime.ToString()}");
+    }
+}
+```
+- You can chain AddClasses multiple times and also more than one FromAssemblyOf to use multiple assemblies. 
