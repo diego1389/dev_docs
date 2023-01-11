@@ -1411,3 +1411,115 @@ void PrintRegisteredService(IServiceCollection serviceCollection)
 }
 ```
 - You can chain AddClasses multiple times and also more than one FromAssemblyOf to use multiple assemblies. 
+- Interface making: 
+    - Create IScopedService, ITransientService, ISingletonService interfaces and add it to your services (serviceA, serviceB, serviceC):
+    ```c#
+    namespace ScrutorScanning.ConsoleApp.Services;
+
+    public class ExampleAService : IExampleAService, ISingletonService
+    {
+
+    }
+
+    public interface IExampleAService
+    {
+
+    }
+    ```
+    - In Program.cs
+    ```c#
+    services.Scan(selector =>
+    {
+        selector.FromAssemblyOf<Program>()
+            .AddClasses(f => f.AssignableTo<ISingletonService>())
+                .AsImplementedInterfaces()
+                .WithSingletonLifetime()
+
+            .AddClasses(f => f.AssignableTo<ITransientService>())
+                .AsImplementedInterfaces()
+                .WithTransientLifetime()
+
+            .AddClasses(f => f.AssignableTo<IScopedService>())
+            .AsImplementedInterfaces()
+                .WithScopedLifetime();
+
+    });
+    ```
+- Attribute marking:
+    - Add Transient, Scoped and Singleton attributes:
+    - ScopedAttribute.cs
+    ```c#
+    using System;
+    namespace ScrutorScanning.ConsoleApp.Attributes
+    {
+        [AttributeUsage(AttributeTargets.Class)]
+        public class ScopedAttribute : Attribute
+        {
+        }
+    }
+    ```
+    - Add the attribute to the service class:
+    ```c#
+    using ScrutorScanning.ConsoleApp.Attributes;
+    namespace ScrutorScanning.ConsoleApp.Services;
+
+    [Scoped]
+    public class ExampleCService : IExampleCService
+    {
+
+    }
+
+    public interface IExampleCService
+    {
+
+    }
+    ```
+    - Program.cs
+    ```c#
+    services.Scan(selector =>
+    {
+        selector.FromAssemblyOf<Program>()
+            .AddClasses(f => f.WithAttribute<SingletonAttribute>())
+                .AsImplementedInterfaces()
+                .WithSingletonLifetime()
+
+            .AddClasses(f => f.WithAttribute<TransientAttribute>())
+                .AsImplementedInterfaces()
+                .WithTransientLifetime()
+
+            .AddClasses(f => f.WithAttribute<ScopedAttribute>())
+            .AsImplementedInterfaces()
+                .WithScopedLifetime();
+
+    });
+    ```
+- Using the ServiceDescriptor attribute: 
+ - ServiceA service class:
+ ```c#
+ using Microsoft.Extensions.DependencyInjection;
+using Scrutor;
+using ScrutorScanning.ConsoleApp.Attributes;
+
+namespace ScrutorScanning.ConsoleApp.Services;
+
+[ServiceDescriptor(typeof(IExampleAService), ServiceLifetime.Singleton)]
+public class ExampleAService : IExampleAService
+{
+
+}
+
+public interface IExampleAService
+{
+
+}
+ ```
+ - Program.cs
+ ```c#
+ services.Scan(selector =>
+{
+    selector.FromAssemblyOf<Program>()
+        .AddClasses()
+        .UsingAttributes();
+});
+ ```
+- Using registration strategies:
