@@ -1523,3 +1523,101 @@ public interface IExampleAService
 });
  ```
 - Using registration strategies:
+- Add two attributes to a service:
+    ```c#
+    using ScrutorScanning.ConsoleApp.Attributes;
+
+    namespace ScrutorScanning.ConsoleApp.Services;
+
+    [Singleton]
+    [Transient]
+    public class ExampleBService : IExampleBService
+    {
+
+    }
+
+    public interface IExampleBService
+    {
+
+    }
+    ```
+- Program.cs
+```c#
+services.Scan(selector =>
+{
+    selector.FromAssemblyOf<Program>()
+        .AddClasses(f => f.WithAttribute<SingletonAttribute>())
+            .AsImplementedInterfaces()
+            .WithSingletonLifetime()
+
+        .AddClasses(f => f.WithAttribute<TransientAttribute>())
+            .AsImplementedInterfaces()
+            .WithTransientLifetime()
+
+        .AddClasses(f => f.WithAttribute<ScopedAttribute>())
+           .AsImplementedInterfaces()
+            .WithScopedLifetime();
+});
+/*IExampleAService -> ExampleAService as Singleton
+IExampleBService -> ExampleBService as Singleton
+IExampleBService -> ExampleBService as Transient
+IExampleCService -> ExampleCService as Scoped */
+```
+- You can add registration strategy to skip the second attribute if there is already an existing one:
+    ```c#
+     selector.FromAssemblyOf<Program>()
+        .AddClasses(f => f.WithAttribute<SingletonAttribute>())
+            .AsImplementedInterfaces()
+            .WithSingletonLifetime()
+
+        .AddClasses(f => f.WithAttribute<TransientAttribute>())
+            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+            .AsImplementedInterfaces()
+            .WithTransientLifetime()
+
+        .AddClasses(f => f.WithAttribute<ScopedAttribute>())
+           .AsImplementedInterfaces()
+            .WithScopedLifetime();
+    /*IExampleAService -> ExampleAService as Singleton
+    IExampleBService -> ExampleBService as Singleton
+    IExampleCService -> ExampleCService as Scoped */
+    ```
+- You can use RegistrationStrategy.Throw to throw an exception if the service is already registered (recommended option. 
+
+## Creating our own Dependency Injection framework
+
+- Setup: 
+    - Create console app.
+    - Add ConsoleWriter class
+    ```c#
+    using System;
+    namespace ConsumerConsoleApp
+    {
+        public class ConsoleWriter : IConsoleWriter
+        {
+            public void WriteLine(string text)
+            {
+                Console.WriteLine(text);
+            }
+        }
+
+        public interface IConsoleWriter
+        {
+            void WriteLine(string text);
+        }
+    }
+    ```
+    - Program.cs (it is going to consume the DI fw)
+    ```c#
+    using ConsumerConsoleApp;
+
+    var services = new ServiceCollection();
+
+    services.AddSingleton<IConsoleWriter, ConsoleWriter>();
+
+    var serviceProvider = services.BuildServiceProvider();
+
+    var service = serviceProvider.GetRequiredService();
+
+    service.WriteLine("Hello from DI");
+    ```
