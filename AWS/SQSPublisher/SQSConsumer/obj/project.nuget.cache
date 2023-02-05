@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "tRz3WMy4fanSWXhiRbxo8gYbD/eWNxOwCZyXEQAlA+XM0635FD+aoupNyirRzZ10oXlnIIFauKf5sQS4j3TfgA==",
+  "success": true,
+  "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/AWS/SQSPublisher/SQSConsumer/SQSConsumer.csproj",
+  "expectedPackageFiles": [
+    "/Users/diego.guillen/.nuget/packages/awssdk.core/3.7.104.2/awssdk.core.3.7.104.2.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/awssdk.sqs/3.7.100.67/awssdk.sqs.3.7.100.67.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,5 @@
+﻿<Properties StartupConfiguration="{814ADBE0-0EA1-4796-B693-A32213F6FB65}|Default">
+  <MonoDevelop.Ide.ItemProperties.SQSPublisher PreferredExecutionTarget="MonoDevelop.Default" />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.ItemProperties.SQSConsumer FirstBuild="True" PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>
