@@ -1,5 +1,31 @@
-﻿<Properties StartupConfiguration="{814ADBE0-0EA1-4796-B693-A32213F6FB65}|Default">
-  <MonoDevelop.Ide.ItemProperties.SQSPublisher PreferredExecutionTarget="MonoDevelop.Default" />
+﻿<Properties StartupConfiguration="{A8AB4BA6-A576-45E7-ADAF-9DE14822CF14}|https">
   <MultiItemStartupConfigurations />
-  <MonoDevelop.Ide.ItemProperties.SQSConsumer FirstBuild="True" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.ItemProperties.Consumers.Api PreferredExecutionTarget="/Applications/Google Chrome.app" FirstBuild="True" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.SQSPublisher PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.ItemProperties.SQSConsumer PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/AWS/SQSPublisher/SQSPublisher/Program.cs" relfile="SQSPublisher/Program.cs" line="6" column="1" />
+    <Breakpoint file="/Users/diego.guillen/Documents/Github/dev_docs/AWS/SQSPublisher/SQSPublisher/Program.cs" relfile="SQSPublisher/Program.cs" line="9" column="1" />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="SQSConsumer/Program.cs">
+    <Files>
+      <File FileName="SQSPublisher/Program.cs" />
+      <File FileName="SQSPublisher/CustomerCreated.cs" />
+      <File FileName="SQSConsumer/Program.cs" Line="17" Column="2" />
+      <File FileName="SQSConsumer/CustomerCreated.cs" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="SQSPublisher" expanded="True">
+            <Node name="Customers.API" expanded="True" />
+            <Node name="SQSConsumer" expanded="True" />
+            <Node name="SQSPublisher" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
 </Properties>

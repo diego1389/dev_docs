@@ -85,3 +85,116 @@
         await Task.Delay(1000);
     }
     ```
+- Publish message from API:
+    - ISqsMessenger.cs interface:
+    ```c#
+     using System;
+    using Amazon.SQS.Model;
+
+    namespace Consumers.Api.Messaging
+    {
+        public interface ISqsMessenger
+        {
+            Task<SendMessageResponse> SendMessageAsync<T>(T message);
+        }
+    }
+    ```
+    - SQSMessenger.cs
+    ```c#
+    using System;
+    using System.Text.Json;
+    using Amazon.SQS;
+    using Amazon.SQS.Model;
+    using Microsoft.Extensions.Options;
+
+    namespace Consumers.Api.Messaging
+    {
+        public class SqsMessenger : ISqsMessenger
+        {
+            private readonly IAmazonSQS _sqs;
+            private readonly IOptions<QueueSettings> _queeSettings;
+            private string? _queueUrl;
+
+            public SqsMessenger(IAmazonSQS sqs, IOptions<QueueSettings> queueSettings)
+            {
+                _queeSettings = queueSettings;
+                _sqs = sqs;
+            }
+
+            private async Task<string> GetQueueUrlAsync()
+            {
+                if (_queueUrl is not null)
+                    return _queueUrl;
+
+                var queueUrlResponse = await _sqs.GetQueueUrlAsync(_queeSettings.Value.QueueName);
+                _queueUrl = queueUrlResponse.QueueUrl;
+                return _queueUrl;
+            }
+
+            public async Task<SendMessageResponse> SendMessageAsync<T>(T message)
+            {
+                
+                var sendMessageRequest = new SendMessageRequest
+                {
+                    QueueUrl = await GetQueueUrlAsync(),
+                    MessageBody = JsonSerializer.Serialize(message),
+                    MessageAttributes = new Dictionary<string, MessageAttributeValue>
+                    {
+                        {
+                            "MessageType", new MessageAttributeValue
+                            {
+                                DataType = "String",
+                                StringValue = typeof(T).Name
+                            }
+                        }
+                    }
+                };
+
+                return await _sqs.SendMessageAsync(sendMessageRequest);
+            }
+        }
+    }
+    ```
+    - QueueSettings.cs
+    ```c#
+    using System;
+    namespace Consumers.Api.Messaging
+    {
+        public class QueueSettings
+        {
+            public required string QueueName { get; set; }
+        }
+    }
+    ```
+    - Inject the MessagingService in the service that you want:
+    ```c#
+    using System;
+    using Consumers.Api.Messaging;
+
+    namespace Consumers.Api.Services
+    {
+        public class CustomerService
+        {
+            private readonly ISqsMessenger _sqsMessenger;
+
+            public CustomerService(ISqsMessenger sqsMessenger)
+            {
+                _sqsMessenger = sqsMessenger;
+            }
+
+            public async Task<bool> CreateAsync()
+            {
+                var customer = new Customer
+                {
+                    Name = "Diego",
+                    LastName = "Guillen"
+                };
+
+                CustomerMessage customerMessage = customer.ToCustomerMessage();
+
+                await _sqsMessenger.SendMessageAsync(customerMessage);
+                return true;
+            }
+        }
+    }
+    ```

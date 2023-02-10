@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "MMbNFwDfAm1srW/1fyEOp4NA0mmf/wfwMBSPNauy+d7aqItQxYGCnN49RmKSvnHFTky4qW+LDx2YhweYPLA9ZA==",
+  "dgSpecHash": "sOuMj1gC2XrJ6I0iuxpKwUah3oI3G0MfnLE522A7/p1W/uZIZh7e6ehwv1oKBj1lO/LxW3ocGaS597p4nxLuKw==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/AWS/SQSPublisher/SQSPublisher/SQSPublisher.csproj",
   "expectedPackageFiles": [

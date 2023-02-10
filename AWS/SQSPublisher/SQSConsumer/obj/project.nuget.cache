@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "tRz3WMy4fanSWXhiRbxo8gYbD/eWNxOwCZyXEQAlA+XM0635FD+aoupNyirRzZ10oXlnIIFauKf5sQS4j3TfgA==",
+  "dgSpecHash": "diHU4j4b1AsKOZp0xez4VEP8UX8X2mqoVkBsr5IQgO4uUjJUwjbVYw6Wx6ZBAKZRpHOU4i1fsMu4wBCicqyFhA==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/AWS/SQSPublisher/SQSConsumer/SQSConsumer.csproj",
   "expectedPackageFiles": [
