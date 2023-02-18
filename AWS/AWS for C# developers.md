@@ -198,3 +198,250 @@
         }
     }
     ```
+
+## Implementing the consumer
+
+- Install MediatR library
+- Create Messages folder:
+- ISqsMessage.cs
+    ```c#
+    using System;
+    using MediatR;
+
+    namespace CustomerConsumer.Api.Messages
+    {
+        public interface ISqsMessage : IRequest
+        {
+
+        }
+    }
+    ```
+- CustomerMessages.cs:
+    ```c#
+    using System;
+
+    namespace CustomerConsumer.Api.Messages
+    {
+        public class CustomerCreated : ISqsMessage
+        {
+            public required string FirstName { get; init; }
+            public required string GitHubUser { get; init; }
+            public required string Email { get; init; }
+        }
+
+        public class CustomerUpdated : ISqsMessage
+        {
+            public required string FirstName { get; init; }
+            public required string GitHubUser { get; init; }
+            public required string Email { get; init; }
+        }
+    }
+    ```
+- appSettings.json:
+    ```js
+    {
+    "Queue": {
+        "Name": "customers" 
+    },
+    "Logging": {
+        "LogLevel": {
+        "Default": "Information",
+        "Microsoft.AspNetCore": "Warning"
+        }
+    },
+    "AllowedHosts": "*"
+    }
+    ```
+- Add Handlers folder:
+- CustomerCreatedHandler.cs:
+    ```c#
+    using System;
+    using CustomerConsumer.Api.Messages;
+    using MediatR;
+
+    namespace CustomerConsumer.Api.Handlers
+    {
+        public class CustomerCreatedHandler : IRequestHandler<CustomerCreated>
+        {
+            private readonly ILogger<CustomerCreatedHandler> _logger;
+
+            public CustomerCreatedHandler(ILogger<CustomerCreatedHandler> logger)
+            {
+                _logger = logger;
+            }
+
+            public Task<Unit> Handle(CustomerCreated request, CancellationToken cancellationToken)
+            {
+                _logger.LogInformation(request.FirstName);
+                return Unit.Task;
+            }
+        }
+    }
+    ```
+- CustomerUpdateHandler.cs
+    ```c#
+    using System;
+    using CustomerConsumer.Api.Messages;
+    using MediatR;
+
+    namespace CustomerConsumer.Api.Handlers
+    {
+        public class CustomerUpdatedHandler : IRequestHandler<CustomerUpdated>
+        {
+            private readonly ILogger<CustomerUpdatedHandler> _logger;
+
+            public CustomerUpdatedHandler(ILogger<CustomerUpdatedHandler> logger)
+            {
+                _logger = logger;
+            }
+
+            public Task<Unit> Handle(CustomerUpdated request, CancellationToken cancellationToken)
+            {
+                _logger.LogInformation(request.GitHubUser);
+                return Unit.Task;
+            }
+        }
+    }
+    ```
+- Create the service:
+- QueueConsumerService.cs:
+    ```c#
+    using System;
+    using System.Text.Json;
+    using Amazon.SQS;
+    using Amazon.SQS.Model;
+    using CustomerConsumer.Api.Messages;
+    using MediatR;
+    using Microsoft.Extensions.Options;
+
+    namespace CustomerConsumer.Api
+    {
+        public class QueueConsumerService : BackgroundService
+        {
+            private readonly IAmazonSQS _sqs;
+            private readonly IOptions<QueueSettings> _queueSettings;
+            private readonly IMediator _mediator;
+            private readonly ILogger<QueueConsumerService> _logger;
+
+            public QueueConsumerService(IAmazonSQS sqs, IOptions<QueueSettings> queueSettings, IMediator mediator, ILogger<QueueConsumerService> logger)
+            {
+                _sqs = sqs;
+                _queueSettings = queueSettings;
+                _mediator = mediator;
+                _logger = logger;
+            }
+            protected async override Task ExecuteAsync(CancellationToken stoppingToken)
+            {
+                var queueUrlResponse = await _sqs.GetQueueUrlAsync(_queueSettings.Value.Name, stoppingToken);
+                var receivedMessageRequest = new ReceiveMessageRequest
+                {
+                    QueueUrl = queueUrlResponse.QueueUrl,
+                    AttributeNames = new List<string> { "All"},
+                    MessageAttributeNames = new List<string> { "All"},
+                    MaxNumberOfMessages = 1
+                };
+
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    var response = await _sqs.ReceiveMessageAsync(receivedMessageRequest, stoppingToken);
+                    foreach (var message in response.Messages)
+                    {
+                        var messageType = message.MessageAttributes["MessageType"].StringValue;
+                        var type = Type.GetType($"CustomerConsumer.Api.Messages.{messageType}");
+                        if(type is null)
+                        {
+                            _logger.LogWarning("Unknown message type: {MessageType}", messageType);
+                            continue;
+                        }
+            
+                        try
+                        {
+                            var typedMessage = (ISqsMessage)JsonSerializer.Deserialize(message.Body, type);
+                            await _mediator.Send(typedMessage, stoppingToken);
+                        }
+                        catch(Exception ex)
+                        {
+                            _logger.LogError( ex, "Message failed");
+                            continue;
+                        }
+
+                        //await _sqs.DeleteMessageAsync(queueUrlResponse.QueueUrl, message.ReceiptHandle, stoppingToken);
+                        //    switch (messageType)
+                        //    {
+                        //        case nameof(CustomerCreated):
+                        //            var created = JsonSerializer.Deserialize<CustomerCreated>(message.Body);
+                        //            break;
+                        //    }
+
+                        await _sqs.DeleteMessageAsync(queueUrlResponse.QueueUrl, message.ReceiptHandle, stoppingToken);
+
+                    }
+
+                    await Task.Delay(1000, stoppingToken);
+                }
+            }
+        }
+    }
+    ```
+- Program.cs
+    ```c#
+   using Amazon.SQS;
+    using CustomerConsumer.Api;
+    using MediatR;
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    // Add services to the container.
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Services.Configure<QueueSettings>(builder.Configuration.GetSection(QueueSettings.Key));
+    builder.Services.AddSingleton<IAmazonSQS, AmazonSQSClient>();
+    builder.Services.AddHostedService<QueueConsumerService>();
+    builder.Services.AddMediatR(typeof(Program));
+    var app = builder.Build();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    //var summaries = new[]
+    //{
+    //    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    //};
+
+    //app.MapGet("/weatherforecast", async () =>
+    //{
+
+    //    //var service = app.Services.GetRequiredService<QueueConsumerService>();
+    //    //await service.ExecuteAsync(new CancellationToken());
+
+    //    var forecast =  Enumerable.Range(1, 5).Select(index =>
+    //        new WeatherForecast
+    //        (
+    //            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+    //            Random.Shared.Next(-20, 55),
+    //            summaries[Random.Shared.Next(summaries.Length)]
+    //        ))
+    //        .ToArray();
+    //    return forecast;
+    //})
+    //.WithName("GetWeatherForecast")
+    //.WithOpenApi();
+
+    app.Run();
+
+    //record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+    //{
+    //    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    //}
+    ```
+- A dead letter queue to handle messages with errors that return to the queue, failed to be processed and return to the queue again for all eternity. After certain amount of retries the message goes to the dead letter queue.
+- Create new queue (customers-dlc), extend retention period. 
+- Edit the customers queue -> find Dead-letter queue and select the customers-dlq from the dropdown.
+- Redrive dead messages: go to redrive allow policy. 

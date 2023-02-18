@@ -9,5 +9,7 @@ namespace SQSConsumer
 		public required string GitHubUsername { get; set; }
 		public required DateTime DateOfBirth { get; set; }
 	}
+
+	
 }
 
