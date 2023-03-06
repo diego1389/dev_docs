@@ -445,3 +445,26 @@
 - Create new queue (customers-dlc), extend retention period. 
 - Edit the customers queue -> find Dead-letter queue and select the customers-dlq from the dropdown.
 - Redrive dead messages: go to redrive allow policy. 
+
+## SNS (Simple Notification Service)
+
+- With SQS one consumer can consume only one message while with SNS the Topic can publish in as many queues as needed. 
+- Go to SNS, write Topic name (customers). 
+- When you publish a message on a topic and you don't have a suscription is like the message is lost. 
+- Create a subscription, specify the Topic (customers), the protocol (Amazon SQS) and the endpoint (customers queue from SQS example). Enable raw message delivery to avoid SNS wrapping the message.
+- Go to SQS customers queue -> Access policy  
+    ```json
+    	{
+		"Effect":"Allow",
+      	"Principal":{
+          "Service":"sns.amazonaws.com"
+        },
+       "Action":"sqs:SendMessage",
+       "Resource": "arn:aws:sqs:us-east-1:396064751663:customers",
+       "Condition":{
+        "ArnEquals":{
+            "aws:SourceArn":"arn:aws:sqs:us-east-1:396064751663:customers"
+        }
+       }
+	}
+    ```
