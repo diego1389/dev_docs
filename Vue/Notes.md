@@ -1,3 +1,92 @@
+## Vue exam notes:
+
+1. What is VueJS?
+    - Open-source progressive JS framework for building UI incrementally adoptable. 
+2. Major features of VueJS?
+    - **Virtual DOM:** uses virtual DOM similar to ReactJS. Light-weight in-memory tree representation of the original HTML DOM updating without affecting the DOM.
+    - **Components:** used to create reusable custom elements.
+    - **Templates:** HTML based templates that bind the DOM with the Vue instance data.
+    - **Routing:** Navigation between pages is achieved through a vue-router.
+    - **Light weight:** compared to other frameworks.
+3. Lifecycle hooks:
+    - **beforeCreate:** the very initialization of your component, observes data and initialization events (data properties are undefined here).
+    - **created:** invoked when Vue has set up events and data observation.
+    - **mounted:** most used hook since you will have full access to the reactive component, templates, and rendered DOM.
+    - **beforeUpdate:** after data changes on your component and the updaate cycle begins, before the DOM is patched and re-rendered.
+    - **updated:** runs after data changes on your component and the DOM re-renders.
+    - **destroyed:** after your component has been destroyed, directives have been unbound and its event listeners have been removed.
+4. What are conditional directives?
+    - **v-if:** adds or removes DOM elements based on the given expression.
+    - **v-else:** to display content only when the expression adjacent v-if resolves to false.
+    - **v-else-if:** when you need more than two options to be checked.
+    - **v-show:** similar to v-if but renders the elements and uses the CSS property to show/hide elements. v-if has higher cost while v-show has higher initial render cost. v-show has a performance advantage if the elements are switch on and off frequently.
+5. What is the purpose of the v-for directive?
+    - Allows to loop through items in an array or object. 
+6. What is a vue instance?
+    - Every vue application works by creating a new Vue instance with the Vue function:
+    ```js
+    var vm = new Vue({
+        //options
+    });
+    ```
+7. Why should not use if and for directives on the same element?
+    - Because v-for directive has a higher priority than v-if.
+    - Instead use a computed property to filter a list and then iterate it with v-for or move the condition to a parent by avoiding this check for each element.
+8. Why do you need to use key attribute on for directive?
+    - In order to track each node's identity and reuse and reorder existing elements.
+9. Array mutation methods which trigger view updates: push(), pop(), shift(), unshift(), splice(), sort() and reverse().
+10. Array detection non-mutation methods: filter(), concat() and slice().
+11. Caveats of array changes detection. Vue cannot detect changes for the array in the following two cases:
+    1. When you set an item directly with the index:
+    ```js
+    vm.todos[indexOfTodo] = newTodo;
+    ```
+    2. When you modify the length of the array:
+    ```js
+    vm.todos.length = todosLength;
+    ```
+    - You can overcome both using set and splice methods.
+    ```js
+    //first scenario
+    Vue.set(vm.todos, indexOfTodo, newTodo);
+
+    vm.todos.splice(indexOfTodo, 1, newTodo);
+
+    //second scenario
+    vm.todos.splice(todosLength);
+    ```
+
+- **Computed properties** are derived data. Often a subset of existing data used to move business logic out of the template.
+- Difference between **computed property and method**: reactivity. The computed properties will be recalculated anytime some data change in the component. Also computed properties don't receive parameters.
+- **Two ways to do two-way binding**: v-bind value and v-on method or just with v-model.
+    - With v-model you don't need to assign the value directly.
+- **Components:** reusable pieces of code. 
+- **Component props:** pass data to the components. 
+- You can use v-for directive in a component tag.
+- Child parameter communication with events:
+    ```js
+    //child
+    click(){
+        this.$emit('chosen', this.number);//number is a prop
+    }
+
+    //parent
+    <template>
+        <num v-on:chosen="addNumber"/>
+    </template>
+    
+    addNumber(number){
+        //To do: something with the number
+    }
+    ```
+- Style scoped: only applies to the component.
+- You can define props as an array of strings or as an object.
+- **Presentational component:** has no local state )it exists in the parent) and receives values via props and return back to the parent with this.$emit.
+- **created hook:** it hasn't rendered anything yet.
+- **mounted hook:** once it finishes rendering.
+- **Modular components with slot:** reuse the card component with other things besides Pokemon:
+
+## Vue course:
 - Create your first Vue Hello world.
 - Course source code: https://github.com/lmiller1990/complete-vuejs
 - index.html
@@ -4470,4 +4559,3 @@ export default {
         }
     }
     ```
-    - Vue.js COmposition API course
