@@ -55,6 +55,132 @@
     //second scenario
     vm.todos.splice(todosLength);
     ```
+12. Use a directive with range:
+    ```js
+    <div>
+        <span v-for="n in 20">{{n}}</span>
+    </div>
+    ```
+13. Access native event through event handler (to prevent default behaviour in this case).
+    ```js
+    <button v-on:click="show('Welcome to VueJS world', $event)">
+    Submit
+    </button>
+
+    methods: {
+    show: function (message, event) {
+        // now we have access to the native event
+        if (event) event.preventDefault()
+        console.log(message);
+    }
+    }
+    ```
+14. Event modifiers provided by vue: stop, prevent, capture, self, once, passive:
+    ```js
+    //<!-- the click event's propagation will be stopped -->
+    <a v-on:click.stop="methodCall"></a>
+    ```
+15. Key modifiers for handling keyboard events:
+    ```js
+    //<!-- only call `vm.show()` when the `keyCode` is 13 -->
+    <input v-on:keyup.13="show">
+    ```
+16. Use v-model directive to implement two-way binding on form input, text area and select elements. 
+    ```js
+    //<input v-model="message" placeholder="Enter input here">
+    <p>The message is: {{ message }}</p>
+    ```
+17. Supported modifiers on model:
+    1. lazy: by default v-model syncs the data after each input event. You can add the lazy modifier to instad sync after change events:
+    v-model.lazy
+    2. number: user input to automatically typecast as a number: v-model.number
+    3. trim: if you want user input to be trimmed automatically.
+
+18. In Vue.JS every component must have a single root element (usually the <div> tag).
+In Vue 3.x components can have multiple root nodes.
+19. Implement model on custom components:
+    - Bind the value attribute to a value prop
+    - On input, emit its own custom input event with the new value:
+    - Component input: 
+    ```js
+    Vue.component('custom-input', {
+        props: ['value'],
+        template: `
+            <input
+            v-bind:value="value"
+            v-on:input="$emit('input', $event.target.value)"
+            />
+        `
+    })
+    ```
+    - Now you can use v-model with this component:
+    ```js
+    <custom-input v-model="searchInput"></custom-input>
+    ```
+20. slots: content distribution outlets for dynamic content insertion:
+    ```js
+    Vue.component('alert', {
+        template: `
+            <div class="alert-box">
+            <strong>Error!</strong>
+            <slot></slot>
+            </div>
+        `
+    })
+    ```
+    - Now you can insert dynamic content as below:
+    ```js
+    <alert>
+        There is an issue with in application.
+    </alert>
+    ```
+21. Prop types: String, Number, Boolean, Array, Object.
+22. The child component should not mutate the prop. You can create a local variable and assign it the parent prop as default value and mutate that variable or you can use a computed property:
+    ```js
+    props: ['environment'],
+    computed: {
+    localEnvironment: function () {
+        return this.environment.trim().toUpperCase()
+    }
+    }
+    ```
+23. Props validations: Vue provides validations such as types, required fields, default values along with customized validations. 
+    ```js
+    Vue.component('user-profile', {
+    props: {
+        // Basic type check (`null` matches any type)
+        age: Number,
+        // Multiple possible types
+        identityNumber: [String, Number],
+        // Required string
+        email: {
+        type: String,
+        required: true
+        },
+        // Number with a default value
+        minBalance: {
+        type: Number,
+        default: 10000
+        },
+        // Object with a default value
+        message: {
+        type: Object,
+        // Object or array defaults must be returned from
+        // a factory function
+        default: function () {
+            return { message: 'Welcome to Vue' }
+        }
+        },
+        // Custom validator function
+        location: {
+        validator: function (value) {
+            // The value must match one of these strings
+            return ['India', 'Singapore', 'Australia'].indexOf(value) !== -1
+        }
+        }
+    }
+    })
+    ```
 
 - **Computed properties** are derived data. Often a subset of existing data used to move business logic out of the template.
 - Difference between **computed property and method**: reactivity. The computed properties will be recalculated anytime some data change in the component. Also computed properties don't receive parameters.
