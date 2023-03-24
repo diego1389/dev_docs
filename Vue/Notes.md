@@ -181,6 +181,153 @@ In Vue 3.x components can have multiple root nodes.
     }
     })
     ```
+23. What is Vue router?
+    - Official routing library for single-page applications designed for use with the framework.
+    - Features: nested route/view mappping, modular, component based router config, route params, etc.
+    **Steps to use it:**
+        1. Configure router link and router view in the template:
+        ```js
+        <script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+
+        <div id="app">
+        <h1>Welcome to Vue routing app!</h1>
+        <p>
+            <!-- use router-link component for navigation using `to` prop. It rendered as an `<a>` tag -->
+            <router-link to="/home">Home</router-link>
+            <router-link to="/services">Services</router-link>
+        </p>
+        <!-- route outlet in which component matched by the route will render here -->
+        <router-view></router-view>
+        </div>
+        ```
+        2. Import Vuew and VueRouter packages and then apply router:
+        ```js
+        import Vue from 'vue';
+        import VueRouter from 'vue-router';
+
+        Vue.use(VueRouter)
+        ```
+        3. Define or import route components:
+        ```js
+        const Home = { template: '<div>Home</div>' }
+        const Services = { template: '<div>Services</div>' }
+        ```
+        4. Define your route where each one maps to a component:
+        ```js
+        const routes = [
+        { path: '/home', component: Home },
+        { path: '/services', component: Services }
+        ]
+        ```
+        5. Create the router instance and pass the routes option
+        ```js
+        const router = new VueRouter({
+        routes // short for `routes: routes`
+        })
+        ```
+        6. Create and mount the root instance:
+        ```js
+        const app = new Vue({
+        router
+        }).$mount('#app')
+        ```
+24. Dynamic route matching based on a pattern (use a colon):
+    ```js
+    const User = {
+    template: '<div>User {{ $route.params.name }}, PostId: {{ route.params.postid }}</div>'
+    }
+
+    const router = new VueRouter({
+    routes: [
+        // dynamic segments start with a colon
+        { path: '/user/:name/post/:postid', component: User }
+    ]
+    })
+    ```
+25. Single file components: encapsulate the structure, styling and behaviour into one file:
+    ```js
+    <template>
+    <div>
+        <h1>Welcome {{ name }}!</h1>
+    </div>
+    </template>
+
+    <script>
+    module.exports = {
+    data: function() {
+        return {
+        name: 'John'
+        }
+    }
+    }
+    </script>
+
+    <style scoped>
+    h1 {
+    color: #34c779;
+    padding: 3px;
+    }
+    </style>
+    ```
+    - It solves common problems like: global definitions force unique names for every component, string templates lack syntax highlighting and require ugly slashes.
+26. What are filters? Used to apply common text formatting, they should be appended to the end of the Javascript expression, denoted by the pipe symbol (|).
+    - Define a local filter named capitalize:
+    ```js
+    filters: {
+    capitalize: function (value) {
+        if (!value) return ''
+            value = value.toString()
+            return value.charAt(0).toUpperCase() + value.slice(1)
+        }
+    }
+    ```
+    - Use the filter:
+    ```js
+    <!-- in mustaches -->
+    {{ username | capitalize }}
+
+    <!-- in v-bind -->
+    <div v-bind:id="username | capitalize"></div>
+    ```
+    - You can create local filters in the component options as the previous example and it is applicable to that specific component.
+    - You can also define a filter globally before creating the Vue instance. It is applicable to all the components:
+    ```js
+    Vue.filter('capitalize', function (value) {
+    if (!value) return ''
+        value = value.toString()
+        return value.charAt(0).toUpperCase() + value.slice(1)
+    })
+
+    new Vue({
+    // ...
+    })
+    ```
+    -  You can also chain filters one after another to perform multiple manipulations on the expression. The first filter takes the expression as a single argument and the result of the expression becomes an argument for the second filter and so on and so forth:
+    ```js
+    {{ birthday | dateFormat | uppercase }}
+    ```
+    - You can even pass arguments to a filter similar to a javascript function:
+    ```js
+    {{ 2 | exponentialStrength(10) }} <!-- prints 2 power 10 = 1024 -->
+    ```
+27. Plugins provide global-level functionality to Vue application. For example: add some global methods or properties, add one or more global assets (directives, filters, transitions), add some componen options by global mixin (for example vue router), 
+    - You can use a plugin by passing your plugin to Vue's global method
+    ```js
+    Vue.use(myPlugin);
+    ```
+28. What are mixings? A way to distribute reusable functionalities in Vue components. These reusable functions are merged with existing functions. 
+    ```js
+    const myMixin = {
+    created(){
+        console.log("Welcome to Mixins!")
+    }
+    }
+    var app = new Vue({
+    el: '#root',
+    mixins: [myMixin]
+    })
+    ```
 
 - **Computed properties** are derived data. Often a subset of existing data used to move business logic out of the template.
 - Difference between **computed property and method**: reactivity. The computed properties will be recalculated anytime some data change in the component. Also computed properties don't receive parameters.
