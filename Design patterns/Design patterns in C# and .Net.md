@@ -354,6 +354,7 @@
 - Interface segregation principle
     - Your interfaces should be segragated so that nobody who implements them has to implement functions that they don't actually need. 
     - YAGNI (you ain't going to need it). 
+    - Interfaces can inherit from interfaces.
     ```c#
     public interface IPrinter
     {
@@ -413,7 +414,7 @@
 - The dependency inversion principle:
     - The high level parts of the system should not depend on low level parts of the system directly. 
     - They should depend on some kind of abstraction. 
-    - The following example violates the dependency inversion principle because it exposes directly a property from the datastore to the high level research class and it cannot change (the tuples for a dictionary for example) without breaking research:
+    - The following example violates the dependency inversion principle because it exposes directly a property from the datastore to the high level research class and it cannot change (the tuples or a dictionary for example) without breaking research:
     ```c#
       public enum Relationship
     {
@@ -535,18 +536,21 @@
         }
     }
     ```
+### Gamma categorization:
+
+1. Creational patterns: deal with the creation (construction) of objects.
+    - Explicit (constructor) vs implicit (DI, reflection, etc).
+    - Wholesale (single statement) vs piecewise (step-by-step).
+2. Structural patterns: structure of the classes (class members).
+    - Many patterns are wrappers that mimic the underlying class interface.
+    - Good API design.
+3. Behavioral patterns:
+    - They are all different (no central theme).
+    - They solve a particular problem in a particular way.
+    - Strategy for example. 
+
 ## Builder
 
-- Gamma categorization:
-    1. Creational patterns: deal with the creation (construction) of objects.
-        - Explicit (constructor) vs implicit (DI, reflection, etc).
-        - Wholesale (single statement) vs piecewise (step-by-step).
-    2. Structural patterns: structure of the classes (class members).
-        - Many patterns are wrappers that mimic the underlying class interface.
-        - Good API design.
-    3. Behavioral patterns:
-        - They are all different (no central theme).
-        - They solve a particular problem in a particular way.
 - Builder: some objects are simple and can be created in a single constructor call, 
     - Other objects require a lot of ceremony to create.
     - Having an object with 10 constructor arguments is not productive.
@@ -813,6 +817,67 @@
         }
     }
     ```
+
+## Singleton 
+
+- For some components it only makes sense to have one in the system (database repository, object factory).
+- The constructor call is expensive. 
+- Need to take care of lazy instantiation and thread safety. 
+- Singleton implementation with lazy loading approach (instance is created only when GetPopulation method is called).
+- Use lazy initialization to defer the creation of a large or resource-intensive object, or the execution of a resource-intensive task, particularly when such creation or execution might not occur during the lifetime of the program.
+- Program.cs
+```c#
+// See https://aka.ms/new-console-template for more information
+using MoreLinq;
+
+namespace DesignPatterns
+{
+    public interface IDatabase
+    {
+        int GetPopulation(string name);
+    }
+
+    public class SingletonDatabase : IDatabase
+    {
+        private Dictionary<string, int> capitals;
+
+        private SingletonDatabase()
+        {
+            Console.WriteLine("Initializing database");
+            capitals = File.ReadAllLines("capitals.txt")
+                .Batch(2)
+                .ToDictionary(
+                    list => list.ElementAt(0).Trim(),
+                    List => int.Parse(List.ElementAt(1))
+                );
+        }
+
+        public int GetPopulation(string name)
+        {
+            return capitals[name];
+        }
+
+        private static Lazy<SingletonDatabase> instance = new Lazy<SingletonDatabase>(() => new SingletonDatabase());
+        public static SingletonDatabase Instance => instance.Value;
+    }
+
+
+    static class Program
+    {
+        static void Main(string[] args)
+        {
+            //var db = new SingletonDatabase();
+            var db = SingletonDatabase.Instance;
+            var city = "Tokyo";
+            Console.WriteLine($"{city} has population {db.GetPopulation(city)}"); //Tokyo has a population 13921000
+        }
+    }
+}
+```
+- 
+
+
+------------------------- Other source ---------------------
 ## State
 
 - A pattern in which the object's behaviour is determined by its state. An object transitions from one state to another. 

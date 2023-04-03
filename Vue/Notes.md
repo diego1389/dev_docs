@@ -317,6 +317,8 @@ In Vue 3.x components can have multiple root nodes.
     Vue.use(myPlugin);
     ```
 28. What are mixings? A way to distribute reusable functionalities in Vue components. These reusable functions are merged with existing functions. 
+- They can contain any component options. Multiple mixins can be specified in the mixin array of the component.
+
     ```js
     const myMixin = {
     created(){
@@ -328,7 +330,49 @@ In Vue 3.x components can have multiple root nodes.
     mixins: [myMixin]
     })
     ```
+- **Global mixins:** apply to all vue components available in our application (use them sparsely and carefully). Example:
+    ```js
+    Vue.mixin({
+        created(){
+            console.log('Write global mixins');
+        }
+    })
 
+    new Vue({
+        el: '#app'
+    })
+    ```
+29. Mixin mergin strategies:
+- When mixin and the component itself contain overlapping options:
+    - Data objects undergo a recursive merge, with the component's data taking priority over mixins in case of conflicts.
+    - Hook functions merged into an array so that all of them will be called. Mixin hooks will be called before the component's own hooks.
+30. Custom directives: tiny commands that you can attach to DOM elements, prefixed with v- to let the library know you're using a special bit of markup and to keep syntax consistent. Custom focus directive to provide focus on specific form element during page load-time:
+    ```js
+    // Register a global custom directive called `v-focus`
+    Vue.directive('focus', {
+    // When the bound element is inserted into the DOM...
+        inserted: function (el) {
+            // Focus the element
+            el.focus()
+        }
+    })
+    ```
+    - Use it:
+    ```js
+    <input v-focus>
+    ```
+    - YOu can register directives locally using directives option in component as below:
+    ```js
+    directives: {
+        focus: {
+            // directive definition
+            inserted: function (el) {
+            el.focus()
+            }
+        }
+    }
+    ```
+31. 
 - **Computed properties** are derived data. Often a subset of existing data used to move business logic out of the template.
 - Difference between **computed property and method**: reactivity. The computed properties will be recalculated anytime some data change in the component. Also computed properties don't receive parameters.
 - **Two ways to do two-way binding**: v-bind value and v-on method or just with v-model.
