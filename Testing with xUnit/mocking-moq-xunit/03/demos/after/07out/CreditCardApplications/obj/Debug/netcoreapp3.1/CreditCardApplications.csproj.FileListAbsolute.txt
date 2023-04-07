@@ -1,9 +1,0 @@
-/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/bin/Debug/netcoreapp3.1/CreditCardApplications.deps.json
-/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/bin/Debug/netcoreapp3.1/CreditCardApplications.dll
-/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/bin/Debug/netcoreapp3.1/CreditCardApplications.pdb
-/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/obj/Debug/netcoreapp3.1/CreditCardApplications.csprojAssemblyReference.cache
-/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/obj/Debug/netcoreapp3.1/CreditCardApplications.AssemblyInfoInputs.cache
-/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/obj/Debug/netcoreapp3.1/CreditCardApplications.AssemblyInfo.cs
-/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/obj/Debug/netcoreapp3.1/CreditCardApplications.csproj.CoreCompileInputs.cache
-/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/obj/Debug/netcoreapp3.1/CreditCardApplications.dll
-/Users/diego.guillen/Documents/GitHub/dev_docs/Testing with xUnit/mocking-moq-xunit/03/demos/after/07out/CreditCardApplications/obj/Debug/netcoreapp3.1/CreditCardApplications.pdb
