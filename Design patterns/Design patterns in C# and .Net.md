@@ -874,8 +874,355 @@ namespace DesignPatterns
     }
 }
 ```
-- 
+- Record finder class:
+```c#
+  public class SingletonRecordFinder{
+    public int GetTotalPopulation(IEnumerable<string> names)
+    {
+        int total = 0;
+        foreach(string name in names)
+            total += SingletonDatabase.Instance.GetPopulation(name);
 
+        return total;
+    }
+}
+```
+- You want to fake the entire database for testing purposes but having a singleton instance hard coded reference used in GetTotalPopulation method. Once you start using singleton you start to hard code the instance of that reference everywhere.
+```c#
+    [Test]
+    public void SingletonTotalPopulationTest() {
+        var rf = new SingletonRecordFinder();
+        var cities = new[] { "Tokyo", "Seoul" };
+        int tp = rf.GetTotalPopulation(cities);
+        Assert.That(tp, Is.EqualTo(150000 + 17000));//Needs to use real data because of singleton db reference
+    }
+```
+- To fix this you can use dependency injection:
+```c#
+public class ConfigurableRecordFinder
+{
+    private IDatabase database;
+
+    public ConfigurableRecordFinder(IDatabase database)
+    {
+        this.database = database ?? throw new ArgumentNullException(paramName: nameof(this.database));
+    }
+
+    public int GetTotalPopulation(IEnumerable<string> names)
+    {
+        int total = 0;
+        foreach (string name in names)
+            total += database.GetPopulation(name);
+
+        return total;
+    }
+}
+
+public class DummyDatabase : IDatabase
+{
+    public int GetPopulation(string name)
+    {
+        return new Dictionary<string, int>
+        {
+            ["alpha"] = 1,
+            ["beta"] = 2,
+            ["gamma"] = 3
+        }[name];
+    }
+}
+
+[Test]
+public void ConfigurableTotalPopulationTest()
+{
+    var rf = new ConfigurableRecordFinder(new DummyDatabase());
+    var cities = new[] { "alpha", "gamma" };
+    int tp = rf.GetTotalPopulation(cities);
+    Assert.That(tp, Is.EqualTo(4));
+}
+```
+
+- Typically you would have a non singleton database and you would rather use an IoC container to treat is a singleton.
+```c#
+using autofac;
+public class OrdinaryDatabase : IDatabase
+{
+    private Dictionary<string, int> capitals;
+    private OrdinaryDatabase()
+    {
+        Console.WriteLine("Initializing database");
+        capitals = File.ReadAllLines(
+                Path.Combine(new FileInfo(typeof(IDatabase).Assembly.Location).DirectoryName, "capitals.txt")
+            )
+                    .Batch(2)
+                    .ToDictionary(
+                        l => l.ElementAt(0),
+                        l => int.Parse(l.ElementAt(1))
+                        );
+    }
+    public int GetPopulation(string name)
+    {
+        return capitals[name];
+    }
+}
+
+[Test]
+public void DIPopulationTest()
+{
+    var cb = new ContainerBuilder();
+    cb.RegisterType<OrdinaryDatabase>()
+        .As<IDatabase>()
+        .SingleInstance();
+
+    cb.RegisterType<ConfigurableRecordFinder>();
+
+}
+```
+- Don't make everything static because it doesn't even have a constructor so you cannot use DI.
+- Monostate pattern
+- Lazy singleton allows to have one instance per application but you can also have a singleton per thread:
+```c#
+public sealed class PerThreadSingleton
+{
+    private static ThreadLocal<PerThreadSingleton> threadInstance = 
+        new ThreadLocal<PerThreadSingleton>(() => new PerThreadSingleton());
+
+    public int ThreadId;
+    private PerThreadSingleton()
+    {
+        ThreadId = Thread.CurrentThread.ManagedThreadId;
+    }
+
+    public static PerThreadSingleton Instance => threadInstance.Value;
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var t1 = Task.Factory.StartNew(() => {
+            Console.WriteLine("t1: " + PerThreadSingleton.Instance.ThreadId); //9
+        });
+        var t2 = Task.Factory.StartNew(() => {
+            Console.WriteLine("t2 a: " + PerThreadSingleton.Instance.ThreadId); //6
+            Console.WriteLine("t2 b: " + PerThreadSingleton.Instance.ThreadId); //6
+        });
+
+        Task.WaitAll(t1, t2);
+    }
+}
+```
+- Ambient context:
+    - height variable here is an ambient context.
+```c#
+public class Building
+{
+    public List<Wall> Walls = new List<Wall>();
+}
+
+public struct Point
+{
+    private int x, y;
+
+    public Point(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+public class Wall
+{
+    public Point Start, End;
+    public int Height;
+
+    public Wall(Point start, Point end, int height)
+    {
+        Start = start;
+        End = end;
+        Height = height;
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var house = new Building();
+        //ground 3000
+        var height = 3000;
+        house.Walls.Add(new Wall(new Point(0, 0), new Point(5000, 0), height));
+        house.Walls.Add(new Wall(new Point(0, 0), new Point(0, 4000), height));
+        //first floor 3500
+        height = 3500;
+        house.Walls.Add(new Wall(new Point(0, 0), new Point(6000, 0), height));
+        house.Walls.Add(new Wall(new Point(0, 0), new Point(0, 4000), height));
+        //ground 3000
+        height = 3000;
+        house.Walls.Add(new Wall(new Point(5000, 0), new Point(5000, 4000), height));
+    }
+}
+```
+
+- Ambient context approach (not thread safe):
+```c#
+public class BuildingContext
+{
+    public static int WallHeight;
+}
+public class Building
+{
+    public List<Wall> Walls = new List<Wall>();
+}
+
+public struct Point
+{
+    private int x, y;
+
+    public Point(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+public class Wall
+{
+    public Point Start, End;
+    public int Height;
+
+    public Wall(Point start, Point end)
+    {
+        Start = start;
+        End = end;
+        Height = BuildingContext.WallHeight;
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var house = new Building();
+        //ground 3000
+        BuildingContext.WallHeight = 3000;
+        house.Walls.Add(new Wall(new Point(0, 0), new Point(5000, 0)));
+        house.Walls.Add(new Wall(new Point(0, 0), new Point(0, 4000)));
+        //first floor 3500
+        BuildingContext.WallHeight = 3500;
+        house.Walls.Add(new Wall(new Point(0, 0), new Point(6000, 0)));
+        house.Walls.Add(new Wall(new Point(0, 0), new Point(0, 4000)));
+        //ground 3000
+        BuildingContext.WallHeight = 3000;
+        house.Walls.Add(new Wall(new Point(5000, 0), new Point(5000, 4000)));
+    }
+}
+```
+- Ambient context example:
+```c#
+public sealed class BuildingContext : IDisposable
+{
+    public int WallHeight;
+    private static Stack<BuildingContext> stack =
+        new Stack<BuildingContext>();
+
+    static BuildingContext() {
+        stack.Push(new BuildingContext(0));
+    }
+
+    public BuildingContext(int wallHeight)
+    {
+        WallHeight = wallHeight;
+        stack.Push(this);
+    }
+
+    public static BuildingContext Current => stack.Peek();
+    public void Dispose()
+    {
+        if (stack.Count > 1)
+            stack.Pop();
+    }
+}
+public class Building
+{
+    public List<Wall> Walls = new List<Wall>();
+
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
+        foreach (var wall in Walls)
+            sb.AppendLine(wall.ToString());
+
+        return sb.ToString();
+    }
+}
+
+public struct Point
+{
+    private int x, y;
+
+    public Point(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public override string ToString()
+    {
+        return $"{nameof(x)}:{x} {nameof(y)}:{y}";
+    }
+}
+public class Wall
+{
+    public Point Start, End;
+    public int Height;
+
+    public Wall(Point start, Point end)
+    {
+        Start = start;
+        End = end;
+        Height = BuildingContext.Current.WallHeight;
+    }
+
+    public override string ToString()
+    {
+        return $"{nameof(Start)}:{Start} {nameof(End)}:{End} {nameof(Height)}:{Height}";
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var house = new Building();
+        //ground 3000
+        //BuildingContext.WallHeight = 3000;
+        using(new BuildingContext(3000))
+        {
+            house.Walls.Add(new Wall(new Point(0, 0), new Point(5000, 0)));
+            house.Walls.Add(new Wall(new Point(0, 0), new Point(0, 4000)));
+
+            //first floor 3500
+            //BuildingContext.WallHeight = 3500;
+            using (new BuildingContext(3500))
+            {
+                house.Walls.Add(new Wall(new Point(0, 0), new Point(6000, 0)));
+                house.Walls.Add(new Wall(new Point(0, 0), new Point(0, 4000)));
+            }
+            //ground 3000
+            //  BuildingContext.WallHeight = 3000;
+            house.Walls.Add(new Wall(new Point(5000, 0), new Point(5000, 4000)));
+        }
+        Console.WriteLine(house);
+    }
+}
+/*
+Start:x:0 y:0 End:x:5000 y:0 Height:3000
+Start:x:0 y:0 End:x:0 y:4000 Height:3000
+
+Start:x:0 y:0 End:x:6000 y:0 Height:3500
+Start:x:0 y:0 End:x:0 y:4000 Height:3500
+
+Start:x:5000 y:0 End:x:5000 y:4000 Height:3000
+*/
+```
 
 ------------------------- Other source ---------------------
 ## State
