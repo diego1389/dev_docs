@@ -938,6 +938,7 @@ In Vue 3.x components can have multiple root nodes.
         }
     }
     ```
+    ----- Question 172
 - **Computed properties** are derived data. Often a subset of existing data used to move business logic out of the template.
 - Difference between **computed property and method**: reactivity. The computed properties will be recalculated anytime some data change in the component. Also computed properties don't receive parameters.
 - **Two ways to do two-way binding**: v-bind value and v-on method or just with v-model.
