@@ -938,7 +938,168 @@ In Vue 3.x components can have multiple root nodes.
         }
     }
     ```
-    ----- Question 172
+    - Compose actions: write multiple actions together to handler more complex async flows either by chaining promises or using async/await. 
+        ```js
+        actions: {
+            async actionOne ({ commit }) {
+                commit('first mutation', await getDataAsPromise())
+            },
+            async actionTwo ({ dispatch, commit }) {
+                await dispatch('actionOne') // wait for `actionA` to finish
+                commit('second mutation', await getSomeDataAsPromise())
+            }
+        }
+        ```
+64. What are modules in Vuex? When store get really bloated Vuex allows you to divide our store into modules. Each module can contain its own state, mutations, actions, getters and even nested modules. 
+    ```js
+    const moduleOne = {
+        state: { ... },
+        mutations: { ... },
+        actions: { ... },
+        getters: { ... }
+    }
+
+    const moduleTwo = {
+        state: { ... },
+        mutations: { ... },
+        actions: { ... },
+        getters: { ... }
+    }
+
+    const store = new Vuex.Store({
+        modules: {
+            one: moduleOne,
+            two: moduleTwo
+        }
+    })
+    //Access different modules
+    store.state.one // -> `moduleOne's state
+    store.state.two // -> `moduleTwo's state
+    ```
+65. Namespacing in Vuex? By default actions, mutations and getters inside modules are still registered under the global namespace. 
+66. Principles enforced by vuex?
+    - Application-level state needs to be centralized in the store.
+    - The state should be mutated by commiting mutations only (sync transactions).
+    - Actions should be used for async transactions. 
+67. How to use model directive with two way computed property?
+    ```js
+     <input v-model="username">
+    computed: {
+    username: {
+        get () {
+            return this.$store.state.user.username
+        },
+        set (value) {
+            this.$store.commit('updateProfile', value)
+        }
+    }
+    }
+    mutations: {
+        updateProfile (state, username) {
+            state.user.username = username
+        }
+    }
+    ```
+68. How do you install plugins in an existing Vue CLI project?
+    ```batch
+    vue add @vue/eslint
+    ```
+69. How do you create reactive objects in Vue 3?
+    ```js
+    const reactiveState = reactive({
+        count: 0
+    })
+    ```
+    - In Vue 2 you can create it them with Vue.observable() global API
+    ```js
+    const reactiveState = Vue.observable({
+        count: 0
+    })
+    ```
+70. New slot directive (v-slot) to replace old slot syntax:
+    ```js
+    <!-- old -->
+    <user>
+    <template slot="header" slot-scope="{ msg }">
+        text slot: {{ msg }}
+    </template>
+    </user>
+
+    <!-- new -->
+    <user>
+    <template v-slot:header="{ msg }">
+        text slot: {{ msg }}
+    </template>
+    </user>
+    ```
+71. What does nextTick do in VueJS?
+    - A way to execute a function after the data has been set and the DOM has been updated.
+    ```js
+    // modify data
+    vm.msg = 'Welcome to Vue'
+    // DOM not updated yet
+    Vue.nextTick(function () {
+    // DOM updated
+    })
+
+    // usage as a promise (2.1.0+)
+    Vue.nextTick()
+        .then(function () {
+            // DOM updated
+        })
+    ```
+72. Difference between method and computed property? CP are cached and invoke/change only when their dependencies change. A method will evaluate every time it's called.
+73. What is vuetify? framework that provides clean, semantic and reusable components that make building application easier. 
+74. How do you watch for nested data changes? You can use deep watcher by setting deep: true in the options object.
+    ```js
+    vm.$watch('someObject', callback, {
+        deep: true
+    })
+    vm.someObject.nestedValue = 123
+    // callback is fired
+    ```
+75. How do you watch route object changes? Setup a watcher on the $route in your component. 
+    ```js
+    watch:{
+        $route (to, from){
+            this.message = 'Welcome';
+        }
+    }
+    ```
+76. How can I use imported constants in template section? The variables need to be exposed on your data in order to use them in template section
+    ```js
+    <span>
+    CREATE: {{CREATE_PROP}}
+    UPDATE: {{UPDATE_PROP}}
+    DELETE: {{DELETE_PROP}}
+    </span>
+    <script>
+    import {CREATE_DATA, UPDATE_DATA, DELETE_DATA} from 'constants';
+    new Vue({
+        ...
+        data:{
+            CREATE_PROP: CREATE_DATA,
+            UPDATE_PROP: UPDATE_DATA,
+            DELETE_PROP: DELETE_DATA
+        }
+        ...
+    })
+    </script>
+    ```
+77. Why the component data must be a function? Because each instance needs to maintain an independed copy of the returned data object to not impact the data of all other instances when making changes to it.
+    ```js
+    data: { // Bad
+        message: 'Hello'
+    }
+    data: function () { //Good
+        return {
+            message: 'Hello'
+        }
+    }
+    ```
+78. Can I use composition api on Vue 2? Yes, you can do it running (npm install @vue/composition-api) command.
+79. What is composition Api? Set of additive, function-based APIs that allow flexible composition of component logic.
+80. What is the best way to re-render a component? Set :key on the component. Whenever the component to be re-rendered just change the value of the key.
 - **Computed properties** are derived data. Often a subset of existing data used to move business logic out of the template.
 - Difference between **computed property and method**: reactivity. The computed properties will be recalculated anytime some data change in the component. Also computed properties don't receive parameters.
 - **Two ways to do two-way binding**: v-bind value and v-on method or just with v-model.
