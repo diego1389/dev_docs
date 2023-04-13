@@ -64,9 +64,60 @@
     RIGHT JOIN: return values that are common to each other along with the complete records of the right table.
     FULL JOIN: return all table's records where there is a match between the two. 
     CROSS JOIN: cartesian join, returns all combinations of each join from the tables.
-27. Difference between JOIN and UNION? Join is the operator that combines data from many tables based on specific conditions and it creates new columns. In contrast, UNION combines data from many tables using SELECT statements creating new rows. 
+27. Difference between JOIN and UNION? Join is the operator that combines data from many tables based on specific conditions and it creates new columns. In contrast, UNION combines data from many tables using SELECT statements creating new rows. The join such as INNER JOIN or LEFT JOIN combines columns from two tables while the UNION combines rows from two queries. In other words, join appends the result sets horizontally while union appends the result set vertically.
     - SET operators (UNION, UNION ALL, INTERSECT and EXCEPT).
         - Two input queries must produce results with the same number of columns, and corresponding columns must have compatible data types. 
         - The names of the columns in the result are determined by the first query. 
+        - Two flavors: DISTINCT and ALL.
+            - DISTINCT aliminates duplicates and returns a set.
+            - ALL doesn't remove duplicates and returns a multiset.
+        - **UNION:** unifies the result of two input queries. If a row apears in any of the input sets it will appear in the result of the UNION Operator. 
+        - **UNION ALL:** Unifies two input query results without attemptin to remove duplicates. 
+        - **INTERSECT:** Returns only distinct rows that appear in both input query results. As long as a roew appears at least once on BOTH query results it's returnes only once in the operator's result.
+        - **EXCEPT:** Implements set differences. It operates on the roew results of two input queries and returns rows that appear in the first input but not in the second. 
+
         
 28. Clustered indexes? 
+    - Describes how data is stored in a table, and the table should have a key value. There can be only one clustered index for a table. When there is no clustered index in a table the data is stored in tables unstructured. 
+29. How can you use SCOPE_IDENTITY function? Returns the last identity value inserted into an identity column within the same scope (if two statements exist in the same sp or batch or function they are in the same scope).
+30. What is the use of WITH TIES? Adding one or more rows along with the rows limited by the TOP or similar statements
+    ```sql
+    [
+        TOP(expression)[PERCENT]
+        [WITH TIES]
+    ]
+    ```
+    - We have a table with 6 entires 1 to 4 and 5 twice. Running: 
+    ```sql
+    SELECT TOP 5 WITH TIES *
+    FROM MyTable 
+    ORDER BY ID;
+    ```
+    returns 6 rows, as the last row is tied (exists more than once.)
+31. How can Deadlocks in the sql server be resolved?
+    - It happens when two processes lock a single resource simultaneously and wait for the other to unlock the resource. Generaly the SQL engine notices this type of incident and ends one of the processes, it allows one process to complete successfully while stopping another process simultaneously.
+32. Local vs global temporary tables? Local are visible only to the table creators when connected to a sql instance. They are deleted once the user disconnects the sql instance.
+    - Global temporary tables are visible to any user. These are deleted only when any user referencing these tables gets disconnected from the sql instance. 
+33. SUBSTR vs CHARINDEX: substring extracts a substring from the specified string, CHARINDEX helps indentify a substring's position from the specified string.
+34. When to execute COMMIT AND ROLLBACK:
+    - COMMIT: executed to save the changes made on the current transaction, after that it becomes permanent.
+    - ROLLBACK: executed to delete the changes made on the current transaction after the last commit.
+35. GETDATE vs SYSDATETIME? Getdate returns date and time of a location, SYSDATETIME returns the date and time with the precision of 7 digits after the decimal point.
+36. What is SSMA in SQL Server? Microsoft SQL Server Migration Assistant. Automation tool that helps migrate from Access DB to SQL Server or Azure. It also supports DB2, MySQL, Oracle, etc.
+37. What are Data Quality Services? knowledge-driven data quality platform that supports carrying oout data quality tasks such as correction, enrichment, standarization and de-duplication. Analysis tool. 
+38. SQL Server integration services? platform for enterprise-level data integration and data transformation services. Copying and downloading files, loading data warehouses, cleaning and mining data to solve complex business problems. Built-in tasks, graphical tools. 
+39. Clustered index vs non-clustered index?
+    | Clustered      | Non-clustered |
+    | ----------- | ----------- |
+    | It describes the order in which data is stored in tables physically      | Doesn't sort tables physically inside a table but it creates a logical order for stored data       |
+    | Each table can have only one   | There could be many for a table        |
+    | Less storage is required|Non-clustered is stored in one location and data is stored in another. Large storage is required|
+    |Support faster operations|Decreaces the speed of performance due to extra lookup setup|
+40. Different levels of normalization:
+    1. First normal form: avoids data duplication in a table. It creates a specific table for the related data and uses PK to identify data.
+    2. Second form: It creates separate tables for the group of data that belongs to multiple records. Tables are linked with FK.
+    3. Third form: it eliminates the fields that are not related to keys.
+    4. Fourth normal form: it should be in the form 3 and there shouldn't be any multi-valued dependencies.
+        ---------
+        - Check page 7 book.
+        - Question 67

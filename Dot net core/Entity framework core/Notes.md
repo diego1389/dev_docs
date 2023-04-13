@@ -77,4 +77,184 @@
     - Dapper is more difficult to code, especially when multiple relashionships are involved.
 19. Explain POCO classes in EF. A class that contains no reference to the EF fw. Poco entities are known as available domain objects. A normal C# class that support LINQ queries, which are supported by entities derived from the entity object itself. 
 
---Question 26: https://www.interviewbit.com/entity-framework-interview-questions/
+20. How do you use SP in EF? YOu can use DbSet<TEntity>.FromSql() or DbContext.Database.ExecuteSqlCommand() methods. Some limitations:
+    - Result must be an entity type (must return all the columns).
+    - Results cannot contain related data (joined tables). 
+    ```c#
+    var context = new SchoolContext(); 
+    var param = new SqlParameter("@FirstName", "Bill");
+    //or
+    /*var param = new SqlParameter() {
+                        ParameterName = "@FirstName",
+                        SqlDbType =  System.Data.SqlDbType.VarChar,
+                        Direction = System.Data.ParameterDirection.Input,
+                        Size = 50,
+                        Value = "Bill"
+    };*/
+
+    var students = context.Students.FromSql("GetStudents @FirstName", param).ToList();
+    ```
+21. Database concurrency and the way to handle it? Multiple users can simultaneously modify the same data in one database. Optimistic locking is usually used to handle database concurrency. Right-click the EDMX designer and then change the concurrency mode to Fixed to implement locking. If there is a concurrency issue we will receive a positive concurrency exception error. 
+22. Types of loading:
+    - Eager loading.
+        - A query for one type of entity also loads related entities as part of the query. Use of the **Include method**:
+        ```c#
+        using (var context = new BloggingContext())
+        {
+            // Load all blogs and related posts.
+            var blogs1 = context.Blogs
+                                .Include(b => b.Posts)
+                                .ToList();
+
+            // Load one blog and its related posts.
+            var blog1 = context.Blogs
+                            .Where(b => b.Name == "ADO.NET Blog")
+                            .Include(b => b.Posts)
+                            .FirstOrDefault();
+
+            // Load all blogs and related posts
+            // using a string to specify the relationship.
+            var blogs2 = context.Blogs
+                                .Include("Posts")
+                                .ToList();
+
+            // Load one blog and its related posts
+            // using a string to specify the relationship.
+            var blog2 = context.Blogs
+                            .Where(b => b.Name == "ADO.NET Blog")
+                            .Include("Posts")
+                            .FirstOrDefault();
+        }
+        ```
+        - It is also possible to eagerly load multiple levels of related entities:
+        ```c#
+        using (var context = new BloggingContext())
+        {
+            // Load all blogs, all related posts, and all related comments.
+            var blogs1 = context.Blogs
+                                .Include(b => b.Posts.Select(p => p.Comments))
+                                .ToList();
+        }
+        ```
+
+    - Lazy loading
+        - Process whereby an entity or collection of entities is automatically loaded from the database the first time. Using POCO entity types, LL is achieved by creating instances of derived proxy types and then overriding virtual properties to add a loading hook. 
+        - When using the Blog entity class defined below, the related Posts will be loaded the first time the Posts navigation property is accessed
+        ```c#
+        public class Blog
+        {
+            public int BlogId { get; set; }
+            public string Name { get; set; }
+            public string Url { get; set; }
+            public string Tags { get; set; }
+
+            public virtual ICollection<Post> Posts { get; set; }
+        }
+        ```
+        - Good practice to turn lazy loading off before you serialize an entity (Lazy loading of the Posts collection can be turned off by making the Posts property non-virtual). or turned all for all entities:
+        ```c#
+        public class BloggingContext : DbContext
+        {
+            public BloggingContext()
+            {
+                this.Configuration.LazyLoadingEnabled = false;
+            }
+        }
+        ```
+    - Explicit loading: it is possible to lazily load related entities by explicitly loading. To do so you use the **Load method** on the related entity's entry:
+        ```c#
+        using (var context = new BloggingContext())
+        {
+            var post = context.Posts.Find(2);
+
+            // Load the blog related to a given post.
+            context.Entry(post).Reference(p => p.Blog).Load();
+
+            // Load the blog related to a given post using a string.
+            context.Entry(post).Reference("Blog").Load();
+
+            var blog = context.Blogs.Find(1);
+
+            // Load the posts related to a given blog.
+            context.Entry(blog).Collection(p => p.Posts).Load();
+
+            // Load the posts related to a given blog
+            // using a string to specify the relationship.
+            context.Entry(blog).Collection("Posts").Load();
+        }
+        ```
+23. Different types of inheritance supported by EF?
+    - Table per Hierarchy (TPH): shows one table per inheritance hierarchy class. 
+    - Table per type: Each domain class has its own table. 
+    - Table per Concrete class: a single table per concrete class but does not include the abstract class.
+24. Complex type in EF? Non-scalar properties of entity types that assist in organizing scalar properties within entities. Complex types have other complex type properties. 
+25. Micro ORM? Focus on working with db tables (not work with db schemas, tracking changes, etc).
+26. EF Data access arquitecture:
+    - Disconnected data access: possible with data adapter object. Datasets work independently of db and the data can be edited.
+        - Disconnected scenario is when an entity is retrieved from the database and modified in the different context. Let's suppose we want to display some data in a Presentation Layer and we are using some n-tier application, so it would be better to open the context, fetch the data and finally close the context. Since here we have fetched the data and closed the context, the entities that we have fetched are no longer tracked and this is the disconnected scenario.
+        ```c#
+        class Program {
+            static void Main(string[] args) {
+
+                var student = new Student {
+                    ID = 1001, 
+                    FirstMidName = "Wasim", 
+                    LastName = "Akram", 
+                    EnrollmentDate = DateTime.Parse( DateTime.Today.ToString())
+                };
+
+                using (var context = new MyContext()) {
+
+                    context.Students.Add(student);
+                    context.SaveChanges();
+
+                    //// Display all Students from the database
+
+                    var students = (from s in context.Students 
+                        orderby s.FirstMidName select s).ToList<Student>();
+
+                    Console.WriteLine("Retrieve all Students from the database:");
+
+                    foreach (var stdnt in students) {
+                        string name = stdnt.FirstMidName + " " + stdnt.LastName;
+                        Console.WriteLine("ID: {0}, Name: {1}", stdnt.ID, name);
+                    }
+
+                    Console.ReadKey();
+                }
+            }
+        }
+        ```
+    - Connected data access: A data reader object of a data provider allows you to access linked dta. Data can be accessed quickly but editing is not permited. 
+        - Connected scenario is when an entity is retrieved from the database and modified in the same context. For a connected scenario let us suppose we have a Windows service and we are doing some business operations with that entity so we will open the context, loop through all the entities, do our business operations and then save the changes with the same context that we opened in the beginning.
+        ```c#
+        class Program {
+            static void Main(string[] args) {
+
+                using (var context = new MyContext()) {
+
+                    var studentList = context.Students.ToList();
+
+                    foreach (var stdnt in studentList) {
+                        stdnt.FirstMidName = "Edited " + stdnt.FirstMidName;
+                    }
+
+                    context.SaveChanges();
+
+                    //// Display all Students from the database
+
+                    var students = (from s in context.Students
+                        orderby s.FirstMidName select s).ToList<Student>();
+
+                    Console.WriteLine("Retrieve all Students from the database:");
+
+                    foreach (var stdnt in students) {
+                        string name = stdnt.FirstMidName + " " + stdnt.LastName;
+                        Console.WriteLine("ID: {0}, Name: {1}", stdnt.ID, name);
+                    }
+
+                    Console.ReadKey();
+                }
+            }
+        }
+        ```
