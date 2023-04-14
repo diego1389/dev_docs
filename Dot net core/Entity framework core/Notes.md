@@ -258,3 +258,102 @@
             }
         }
         ```
+27. How to handle SQL injection attacks in EF? EF by default generates parameterized SQL commants that help prevent injections. Never combine user inputs with Entity SQL commands text. 
+28. What is the ObjectSet in EF? Specific type of data set that is commonly used to read, update, create and remove operations from existing entities. You create it using the ObjectContext. 
+29. EDM (Entity Data Model)? Entity-relationship prototype that assigns some basic prototypes fo the data using various modeling procedures. A link or connection created between the db and the prototype. Add -> New item -> ADO.Net Entity Data Model template.
+    - In-memory representation of metadata including the conceptual model, the storage model and mapping between them. 
+30. DbEntityEntry class? helps retrieve a variety of information about an entity. It is useful to set the EntityState (to set it to modified for example):
+```c#
+using(var context = new MyContext()){
+    context.Entry(student).State = System.Data.Entity.EntityState.Modified;
+}
+```
+    - An existing entity in context is represented by DbEntityEntry
+31. Data seeding?
+    - Populating a database with an initial set of data. 
+    - Three types:
+        - Model seed data
+            - EF core seeding can be associated with an entity type as part of the model configuration. 
+            - Add seed data OnModelCreating method using **HasData**:
+            ```c#
+            modelBuilder.Entity<Post>().HasData(
+            new Post { BlogId = 1, PostId = 1, Title = "First post", Content = "Test 1" });
+            ```
+        - Manual migration customization
+            - When a migration is added the changes to the data specified with HasData are transformed to callss to InsertData(), UpdateData(), DeleteData(). Manually add these calls to the migration:
+            ```c#
+            migrationBuilder.InsertData(
+            table: "Blogs",
+            columns: new[] { "Url" },
+            values: new object[] { "http://generated.com" });
+            ```
+        - Custom initialization logic
+            - Use DbContextSaveChanges() before the main application begins execution:
+            ```c#
+            using (var context = new DataSeedingContext())
+            {
+                context.Database.EnsureCreated();
+
+                var testBlog = context.Blogs.FirstOrDefault(b => b.Url == "http://test.com");
+                if (testBlog == null)
+                {
+                    context.Blogs.Add(new Blog { Url = "http://test.com" });
+                }
+
+                context.SaveChanges();
+            }
+            ```
+        - The seeding code should not be part of the normal app execution. 
+32. Manage migrations? 
+    - First install EF Core command-line tools (package manager console).
+    - Add a migration (migration name can be used like a commit message):
+    ```batch
+    dotnet ef migrations add AddBlogCreatedTimestamp
+    ```
+    - Three files are added to your project under the Migrations directory:
+        1. XXXXXXXXXXXXXX_AddCreatedTimestamp.cs: the main migrations file. Contains the operations necessary to apply the migration (Up) and to revert it (Down)
+        2. XXXXXXXXXXXXXX_AddCreatedTimestamp.Designer.cs: migrations metadata file. Information used by EF.
+        3. MyContextModelSnapshot.cs: a snapshot of your current model. Used to determine what changed when adding the next migration.
+    - You can move the migration files and change their namespace manually. You can specify also the directory at generation time:
+      ```batch
+        dotnet ef migrations add AddBlogCreatedTimestamp --output-dir My/Directory
+        ```
+    - Customize migration code: 
+        - Column renames (renaming a property for example Name to FullName you need to specify the newName otherwise EF Core will drop a column and add a new one for the FullName)
+        ```c#
+        migrationBuilder.RenameColumn(
+            name: "Name",
+            table: "Customers",
+            newName: "FullName");
+        ```
+        - If we want to replace FirstName and LastName with a single FullName property you need to add raw SQL (otherwise it will delete FirstName and LastName and create a new FullName column).
+        ```c#
+        migrationBuilder.AddColumn<string>(
+            name: "FullName",
+            table: "Customer",
+            nullable: true);
+
+        migrationBuilder.Sql(
+        @"
+            UPDATE Customer
+            SET FullName = FirstName + ' ' + LastName;
+        ");
+
+        migrationBuilder.DropColumn(
+            name: "FirstName",
+            table: "Customer");
+
+        migrationBuilder.DropColumn(
+            name: "LastName",
+            table: "Customer");
+        ```
+        - Arbitrary changes via raw sql use migrationBuilder.Sql (SPs, Full-Text Search, functions, triggers, views, etc)
+        ```c#
+        migrationBuilder.Sql(
+        @"
+            EXEC ('CREATE PROCEDURE getFullName
+                @LastName nvarchar(50),
+                @FirstName nvarchar(50)
+            AS
+                RETURN @LastName + @FirstName;')");
+        ```

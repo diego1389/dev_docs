@@ -115,9 +115,71 @@
     |Support faster operations|Decreaces the speed of performance due to extra lookup setup|
 40. Different levels of normalization:
     1. First normal form: avoids data duplication in a table. It creates a specific table for the related data and uses PK to identify data.
+     - 
     2. Second form: It creates separate tables for the group of data that belongs to multiple records. Tables are linked with FK.
+        - For every candidate key every nonkey has to be fully functionally dependent on the candidate key. 
+        - Example of violation:
+
+        | Orders      |    
+        | ----------- |    
+        | orderId PK      |   
+        | productId PK   |    
+        |orderDate|
+        |customerId|
+        |companyName|
+        |qty|
+        - Here you can find the orderDate and customerId just using the orderId.
+        - To fix it split your original relation into two relations:
+
+        | Orders|    
+        | ----------- |    
+        | orderId PK|    
+        |orderDate|
+        |customerId|
+        |companyName|
+
+        | OrderDetails|    
+        | ----------- |    
+        | orderId PK FK1|   
+        | productId PK   |   
+        |qty|
+
     3. Third form: it eliminates the fields that are not related to keys.
+        - All nonkey attributes must be mutually independent. In other words, one nonkey attribute cannot be dependent on another nonkey attribute (like customerId and companyName).
+        - To fix it add a Customers relations with the attributes customerId (as PK) and companyName:
+
+        | Orders|    
+        | ----------- |    
+        | orderId PK|    
+        |orderDate|
+        |customerId FK|
+
+
+        | OrderDetails|    
+        | ----------- |    
+        | orderId PK FK1|   
+        | productId PK   |   
+        |qty|
+
+        |Customers|
+        |-----------|
+        |customerId PK|
+        |companyName|
+
+
     4. Fourth normal form: it should be in the form 3 and there shouldn't be any multi-valued dependencies.
         ---------
-        - Check page 7 book.
-        - Question 67
+41. DELETE vs TRUNCATE? DELETE removes a row(s) from a table based on given condition whereas TRUNCATE removes the entire rows from a table. TRUNCATE changes are commited automatically (DELETE are not).
+42. Local vs global variables?
+
+    |Global variables|Local variables |
+    |-----------|---------|
+    |Declared outside of all functions|Declared inside a function and be called only by that function |
+    |Stored in fixed memory and not cleaned up automatically|Stored in stack memory and cleaned up automatically|
+43. FLOOR function? Returning the largest integer value which is less than or equal to the specified value.
+    ```sql
+    SELECT FLOOR (22.35) AS FloorValue --22
+    ```
+44. SQL server locks and what resources can be locked by server locks? Exclusive locks lock a row during a transaction other transaction have to wait to view or modify that row only when the lock is released. Locks reduce concurrency. Application, db, rows, table, keys, etc can be locked.
+45. SET NOCOUNT function? Stop the message that indicates how many rows are being affected by a statement. 
+--- Question 74
