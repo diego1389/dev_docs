@@ -182,4 +182,62 @@
     ```
 44. SQL server locks and what resources can be locked by server locks? Exclusive locks lock a row during a transaction other transaction have to wait to view or modify that row only when the lock is released. Locks reduce concurrency. Application, db, rows, table, keys, etc can be locked.
 45. SET NOCOUNT function? Stop the message that indicates how many rows are being affected by a statement. 
---- Question 74
+46. What are magic tables? Virtual tables that exist in two types (Inserted and deleted). They hold the information of the newly inserted deleted rows. INSERTED table and DELETED table.
+47. Prevent sql injection? 
+    1. Type-safe sql parameters.
+    2. Parameterized input with SP.
+    3. Filtering inputs.
+    4. Reviewing codes.
+48. Recovery model? Property that controls the transaction log maintenance in a db. Tracks logging of transactions and decides about neccesary backups. 
+    - Simple recovery model: no log backup.
+    - Full recovery model: requires log backups
+    - Bulk-logged model: requires log backups. It allows high-performance bulk-copy operations.
+49. Using HAVING and WHERE clauses in a single query? Where acts on individual rows whereas the having acts on groups. Where clause acts first and then the having acts on the groups.
+50. Types of UDF (User defined functions)?
+    1. Scalar.
+    2. Table-valued
+    3. System functions.
+51. Advantages of SP over dynamic SQL?
+    - SP is cached in server memory so it is faster.
+    - SP keep business logic separate from db logic. 
+    - Stored procedures with static SQL can detect errors before they run.
+52. SSRS in SQL server? SQL server reporting services. Provides a group of tools and services like: paginated reports, mobile reports and web portal.
+53. Isolation level? property of transactions which is used to isolate a SQL transaction from another one. Isolation feature helps lock a row during a transaction so no other transaction can access that row. 
+54. Triggers vs event notifications? Triggers respond to DML and DDL whereas events respond only to DDL events
+    - Event notifications don't run any codes. 
+55. FILESTREAM? Applications need to store unstructured data such as images and documents.
+56. Columstore index and why use it? Method of storing, retrieving and managing data using a columnar data format. 10x better performance than row-oriented storage. Used for large data warehouse tables.
+57. How to improve query performance in SQL server?
+    - Choosing right execution plan (avoid table scans).
+    - Avoiding cursors.
+    - Using partitioned views.
+    - Reducing table sizes and simplifying joins.
+    - Not using Select * 
+    - Using Exist() instead of Count()
+    - Creating indexes.
+    - Avoiding running queries in loops.
+    - Transaction need to be shorter to avoid deadlocks and blockings.
+58. Graph Db? You can create a graph using node or edge tables for a database. Node tables are a colection of similar types of nodes. Edge tables are a collction of similar types of edges. Node tables can be created based on a logical graph under any schema. 
+59. What is the use of views? Virtual db table created by selecting a few rows and columns from other tables. Used to simplify compex queries, restricting access to datga and summarising data from many tables. 
+    - System defined views
+    - User defined views.
+60. Extended stored procedures vs CLR integration?
+
+    |Stored procedure|CLR integration|
+    |--------|--------------|
+    |Support the functionalities that cannot work with T-SQL SP|Managed code with services such as cross-language integration, debugging and profiling |
+    |Devs need to write complex server-side logic| Provides an alternative to simplify coding|
+    |Codes can be written in C/C++ programming language|Code can be written in .NET programming languages|
+61. Two execution modes? 
+    1. Row-mode execution: data stored in row format, rows are read ony by one. 
+    2. Batch-mode execution: multiple modes are executed together as a batch in this mode. It offers better parallelism and faster performance. 
+62. Subquery restrictions?
+    1. ntext, image and text data types cannot be used.
+    2. If there is a column name in the WHERE clause of an outer query it should be join-compatible with the column in the subquery select list.
+    3. DISTINC cannot be used with subqueries that include GROUP By
+    4. COMPUTE and INTO clauses cannot be specified. 
+63. EXCEPT vs INTERCEPT commandds.
+    - Return distinct rows by comparing results of two separate queries. 
+    - EXCEPT: operator allows returning distinct rows from the left input query only.
+    - INTERCEPT: operator allows returning ditinct rows from both left and right input queries.
+64. Pattern matching? LIKE operator to identify wheter a character string matches a specified patternt. It consist of regular character as well as wildcard characters (% for example).

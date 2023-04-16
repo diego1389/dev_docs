@@ -1652,6 +1652,29 @@ EntityFrameworkEnum.ProductType (it changes the properties datatype from integer
     public EntityFrameworkEnums.Color ProductColor { get; set; }
     ```
 - If you dont have an Enum previously created you can create in convert to enum and add the value members. If you do it like this the entity framework will create a Enum.cs class with the properties.
+
+## Interview questions:
+
+1. IEnumerable vs IList?
+    - Both are interfaces and are part of System.Collection.
+    - IList inherits from IEnuerable (IList is extended version of IEnumerable). IList has Add, Remove, Contains, Count
+    - Both have deffered execution style (query will not give results until enumerated).
+    - IEnumerable is for read-only approach. It has further filter support. 
+    - IEnumerable has IEnumerator interface and GetEnumerator method.
+    - Both execute select query on the server side, loads data in-memory on the client-side and then filters.
+2. IEnumerable vs List?
+    - List is more efficient when you need to enumerate the data multiple times (cached). IEnumerable is more efficient if you need to enumerate only once.
+3. IEnumerable vs IQueryable?
+    - IQueryable exist in System.Linq namespaces, IEnuerable in System.Collection.
+    - IQueryable is suitable for querying data from out-memory collections (like remote db or service). IEnumerable is better for In-memory collection query.
+    - IQueryable executes select query and filters on server-side (only the required records are sent from the db). 
+    - IQueryable is beneficial for LINQ to SQL, whereas IEnuerable is beneficial for Linq to Object. 
+    - Both support deffered execution but IEnumerable doesn't support lazy loading (not suitable for paging like scenarios).
+    - IQueryable supports custom query using CreateQuery and Execute methods.
+    - IQueryable inherits from IEnumerable.
+    - IQueryable reduces network traffic and uses the power of SQL language (server-side filtering).
+
+
  
 
     
