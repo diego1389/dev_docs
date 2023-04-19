@@ -1,11 +1,11 @@
-- Query anytime type of collection as long as it implments IEnumerable<T>.
+- Query anytime type of collection as long as it implements IEnumerable<T>.
 - Query external datasources (xml, databases, JSON, csv, etc).
 - Unified approach for querying any type of objects.
 - Helps eliminate loops.
 
 |SQL |LINQ   |
 |---|---|
-|SELECT Name FROM Products WHERE ListPrice > 10   | from prod in Products where prod.ListPrice > select prod.Name   |
+|SELECT Name FROM Products WHERE ListPrice > 10   | from prod in Products where prod.ListPrice > 10 select prod.Name   |
 Two LINQ syntaxis
 
 |Query |Method   |
@@ -738,6 +738,65 @@ Two LINQ syntaxis
     //Method syntax
     Products = list1.Intersect(list2, pc).ToList();
     ```
+    ```c#
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
+
+    namespace LinqComparer
+    {
+        public static class Program
+        {
+            public static void Main(string[] args)
+            {
+                var pc = new ProductIdComparer();
+
+                var products1 = new List<Product>
+                {
+                    new(){Name = "Apple", Id = 1 },
+                    new(){Name = "Bee", Id = 2 },
+                    new(){Name = "Carrot", Id = 3 },
+                };
+
+                var products2 = new List<Product>
+                {
+                    new(){Name = "Bee", Id = 2 },
+                    new(){Name = "Carrot", Id = 3 },
+                    new(){Name = "Deviled Eggs", Id = 4 },
+                };
+
+                var commonProducts = products1.Intersect(products2, pc);
+                foreach (var prod in commonProducts)
+                {
+                    Console.WriteLine(prod);
+                }
+            }
+        }
+
+        public class Product
+        {
+            public string Name { get; set; }
+            public int Id { get; set; }
+
+            public override string? ToString()
+            {
+                return $"Name: {Name} Id: {Id}";
+            }
+        }
+
+        public class ProductIdComparer : EqualityComparer<Product>
+        {
+            public override bool Equals(Product x, Product y)
+            {
+                return (x.Id == y.Id);
+            }
+
+            public override int GetHashCode([DisallowNull] Product obj)
+            {
+                return obj.Id.GetHashCode();
+            }
+        }
+    }
+    ```
 - Union and Concat add the contents of two lists together. Union() checks for duplicates and Concat() does not. 
     ```c#
     //Querysyntax
@@ -1065,5 +1124,67 @@ foreach(var group in sizeGroup){
 - Always use the yield when creating custom extension methods to Linq.
 - For better performance first filter the data in one statement and apply order by in another one. 
 
+
+## Interview questions
+
+1. Linq provides straightforward data access from the in-memory XML documents, databases, objects, etc. 
+    - .Net component that links initial data querying abilities to the .NET languages. 
+    - Types: 
+        1. Linq to XML
+        2. Linq to objects
+        3. Linq to SQL
+        4. Linq to entities
+        5. Linq to Dataset
+2. Benefits?
+    - Fetching complicated queries in the dataset.
+    - Combining values from two separate data sets.
+    - More functionality than ADO.NET
+3. Different methods to write LINQ query syntax?
+    - Expression syntax (query syntax).
+    - Method extension syntax
+4. Define "Let" and  "Where" clauses:
+    - Let: define the variable and assign it to the value calculated from data values.
+    - Where: enables filters to the query.
+5. LINQ over stored procedure?
+    - Benefits: 
+        - Deployment is easier (compiled to DLL).
+        - Debugging (not easy to debug an SP).
+        - Type safety. 
+    - Draw-backs:
+        - SP is faster than Linq
+6. Linq standard query operators?
+    - Techniques that make the linq pattern. They offer query capabilities for the projection, aggregation, filtering, sorting, etc.
+    - One grop works on the IEnumerable<T> and other work on IQueryable<T>
+7. Explain PLIQ?
+    - Parallel linq it is the parallel execution of the LINQ to the objects. It endorses parallel programming and is closely associated with a parallel task library. 
+8.   First vs FirstOrDefault()? If there is not an element in the result .First() returns the exception. FirstOrDefault() will not throw it.
+9. Api? IQueryable or IEnumerable interfaces hosted in System.Linq namespace.
+10. Linq compiled queries?
+    - When need to execute a query repetedly linq enables us to create the query and compile it. 
+    ```c#
+    static readonly Func<AdventureWorksEntities, Decimal> s_compiledQuery3MQ = 
+    CompiledQuery.Compile<AdventureWorksEntities, Decimal>(ctx => ctx.Products.Average(product => product.ListPrice));
+
+    static void CompiledQuery3_MQ()
+    {
+
+        using (AdventureWorksEntities context = new AdventureWorksEntities())
+        {
+            Decimal averageProductPrice = s_compiledQuery3MQ.Invoke(context);
+
+            Console.WriteLine("The average of the product list prices is $: {0}", averageProductPrice);
+        }
+    }
+    ```
+11. Anonymous types?
+    - Types defined at run-time created by the compiler. We don't need to define a name but we can define properties` names and allocate values dynamically:
+    ```c#
+    var v = new {FirstProp = "1st prop"}
+    Console.WriteLine(V,FirstProp);
+    ```
+    - They are useful in LINQ to store intermediate results.
+12. Why SELECT clause comes after FROM?
+    - Queries must be defined first, the FROM clause specifies the range or condition for selecting records, therefore it should act before the SELECT.
+    -- Question 22
 
 
