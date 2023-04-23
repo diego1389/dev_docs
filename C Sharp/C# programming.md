@@ -1673,6 +1673,14 @@ EntityFrameworkEnum.ProductType (it changes the properties datatype from integer
     - IQueryable supports custom query using CreateQuery and Execute methods.
     - IQueryable inherits from IEnumerable.
     - IQueryable reduces network traffic and uses the power of SQL language (server-side filtering).
+4. Different types of errors?
+    - Syntax errors
+    - Runtime errors
+    - Logical errors (harder to track)
+5. FOR...NEXT loop? It is known in advance how many times the loop must be repeated. 
+6. Compiler? Unique program that can process statements which are written in a particular programming language and can turn them into machine language.
+7. Can multiple catch blocks be executed? No. Once the proper catch code executed the control is transferred to the finally block. 
+
 
 
  

@@ -1185,6 +1185,60 @@ foreach(var group in sizeGroup){
     - They are useful in LINQ to store intermediate results.
 12. Why SELECT clause comes after FROM?
     - Queries must be defined first, the FROM clause specifies the range or condition for selecting records, therefore it should act before the SELECT.
-    -- Question 22
+13. SelectMany() and Select() in LINQ?
+    - Projection operators. Select() operator for selecting a value from the collection while SelectMany() is for selecting the values from the group of a collection (the nested collection).
+14. Quantifier operators:
+    1. Any()
+    2. All()
+    3. Contains()
+15. Which extension method do we require to execute the parallel query?
+    - AsParallel
+16. Expression Lambda vs statement lambda?
+    - Expression lambda for the construction of the expression trees. We cannot use statement lambda for that purpose.
+17. Skip() vs SkipWhile() Skip() takes the integer argument and skips the top n numbers.
+    - SkipWhile() continues to skip the elements until the input condition is true. 
+18. Let clause for storing the result of the subexpression and using it in the consequent clauses. 
+19. Take(1) vs First(). Take(1) returns an enumerable that only has one value and will give you an empty enumerable if the initial enumerable is empty. First() will return the first OBJECT and will throw an exception if the initial enumerable is empty.
+20.  Action? Common delegates associated with the base class library of .NET. We can save only the methods with input parameters and void return types in Action.
+21. Predicate delegate? In the predicate we are enabled to save only the methods with the one input parameter and the bool return type. They are helpful in the scenarios where the filter is required.
+22. What are the sequence and query operators in LINQ?
+    - Sequence: collection class we have to query. The element is a single item in the collection class. 
+    - Query operators comprenhend the sequence as the input, impelement it and return the latest result sequence.
+23. Extension methods? 
+    - Static functions of the static class. We can invoke these methods the same as syntax of the instance method. We can use them when we don't need to modify the class. 
+24. Difference EF vs Linq to SQL? 
+    - Linq to Entities (EF) is an ORM that allows a wide definition of the object domain models and relashionships to varios ADO.NET data providers. 
+    - Linq to SQL supporst only 1 to 1 mapping of the database views, tables, functions and SPs in SQL server. It is great for rapid data access production. 
+25. Get a single row? Single() method. 
+    I'd illustrate why you should NOT use one, when you mean the other.
 
+    Note: In my code, I will typically use FirstOrDefault() and SingleOrDefault() but that's a different question.
+
+    Take, for example, a table that stores Customers in different languages using a Composite Key ( ID, Lang ):
+    ```c#
+    DBContext db = new DBContext();
+    Customer customer = db.Customers.Where( c=> c.ID == 5 ).First();
+    ```
+    This code above introduces a possible logic error ( difficult to trace ). It will return more than one record ( assuming you have the customer record in multiple languages ) but it will always return only the first one... which may work sometimes... but not others. It's unpredictable.
+
+    Since your intent is to return a Single Customer use Single();
+
+    The following would throw an exception ( which is what you want in this case ):
+    ```c#
+    DBContext db = new DBContext();
+    Customer customer = db.Customers.Where( c=> c.ID == 5 ).Single();
+        ```
+    Then, you simply hit yourself on the forehead and say to yourself... OOPS! I forgot the language field! Following is the correct version:
+    ```c#
+    DBContext db = new DBContext();
+    Customer customer = db.Customers.Where( c=> c.ID == 5 && c.Lang == "en" ).Single();
+    ```
+    First() is useful in the following scenario:
+    ```c#
+    DBContext db = new DBContext();
+    NewsItem newsitem = db.NewsItems.OrderByDescending( n => n.AddedDate ).First();
+    ```
+    It will return ONE object, and since you're using sorting, it will be the most recent record that is returned.
+
+    Using Single() when you feel it should explicitly always return 1 record will help you avoid logic errors.
 
