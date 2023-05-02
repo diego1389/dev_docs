@@ -5,21 +5,22 @@
 * Unit test: a single function or service (Mocha / Jest).
     - You can write them before the actual code (TDD).
     
-* **Component test:** a single component (functionality, Jest / Enzyme).
- * Great defense against regression.
- * Does not verify interactions between two components.
+* **Component test:** 
+    - a single component (functionality, Jest / Enzyme).
+    * Great defense against regression.
+    * Does not verify interactions between two components.
 * **Snapshot test:** a single component (regression), Jest. It protects a component from regression.
- * A subtype of a component test.
- * Generated automatically.
- * Verifies output matches a past record.
+    * A subtype of a component test.
+    * Generated automatically.
+    * Verifies output matches a past record.
 * **End-to-End Test:** interaction between multiple components (Cypress).
- * Measures the functionalty of the whole applications.
- * Virtual or headless browser.
+    * Measures the functionalty of the whole applications.
+    * Virtual or headless browser.
 * **Peformance tests (not JEST):** 
- * Idenfity bottlenecks.
+    * Idenfity bottlenecks.
 * **Coverage Tests:**
- * Tests for your tests.
- * Measures application code which is visited but not verified during tests. 
+    * Tests for your tests.
+    * Measures application code which is visited but not verified during tests. 
 
 ## Jest
  * Javascript library.

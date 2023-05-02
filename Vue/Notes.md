@@ -311,6 +311,114 @@ In Vue 3.x components can have multiple root nodes.
     ```js
     {{ 2 | exponentialStrength(10) }} <!-- prints 2 power 10 = 1024 -->
     ```
+- Examples:
+    - App.vue:
+    ```js
+    <template>
+    <div id="app">
+        <img alt="Vue logo" src="./assets/logo.png" width="25%" />
+        <HelloWorld msg="hello2 ">
+        {{ testData | toUpper | addStars }}
+        </HelloWorld>
+    </div>
+    </template>
+    <script>
+    import HelloWorld from "./components/HelloWorld";
+
+    export default {
+    name: "App",
+    data: function () {
+        return {
+        testData: "yello from df",
+        };
+    },
+    filters: {
+        capitalize: function (value) {
+        if (!value) return "";
+        const newVal = value;
+        return newVal.charAt(0).toUpperCase() + newVal.slice(1);
+        },
+        addStars: function (value) {
+        if (!value) return "";
+        return value.padEnd(25, "*");
+        },
+    },
+    components: {
+        HelloWorld,
+    },
+    };
+    </script>
+
+    <style>
+    #app {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+    }
+    </style>
+    ```
+    - main.js
+    ```js
+    import Vue from "vue";
+    import App from "./App.vue";
+
+    Vue.config.productionTip = false;
+    Vue.filter("toUpper", function (value) {
+        if (!value) return "";
+        return value.toUpperCase();
+    });
+
+    new Vue({
+    render: (h) => h(App)
+    }).$mount("#app");
+    ```
+    - HelloWorld.vue
+    ```js
+    <template>
+    <div class="alert-box">
+        <strong>Error!</strong>
+        <br />
+        <slot></slot>
+        <br />
+        {{ msg }}
+    </div>
+    </template>
+
+    <script>
+    export default {
+    name: "HelloWorld",
+    props: {
+        msg: {
+        required: true,
+        type: String,
+        },
+    },
+    };
+    </script>
+
+    <!-- Add "scoped" attribute to limit CSS to this component only -->
+    <style scoped>
+    h3 {
+    margin: 40px 0 0;
+    }
+    ul {
+    list-style-type: none;
+    padding: 0;
+    }
+    li {
+    display: inline-block;
+    margin: 0 10px;
+    }
+    a {
+    color: #42b983;
+    }
+    </style>
+
+    ```
+
 27. Plugins provide global-level functionality to Vue application. For example: add some global methods or properties, add one or more global assets (directives, filters, transitions), add some componen options by global mixin (for example vue router), 
     - You can use a plugin by passing your plugin to Vue's global method
     ```js
