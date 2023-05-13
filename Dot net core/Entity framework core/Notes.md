@@ -1,7 +1,7 @@
 ## Questions
 
 1. What is Entity framework? Is an open-source Object-relational mapper for .Net applications. It is a set of utilities and mechanisms that work towards optimizing data-driven applications. 
-    - Little coding and high level ob absorption when dealing with data (unlike ADO.Net).
+    - Little coding and high level of absorption when dealing with data (unlike ADO.Net).
     - It fits between the business entities (domain classes) and the database.
     - Cross platform: used on Linux, Windows or Mac
     - Modelling.
@@ -45,10 +45,10 @@
     - Model first: uses ORM to build model classes and their relationships. Following the successful creation of the model classes and relationships, the physical db is created using these models. 
   8. What is a navigation property? A foreign key relationship in the database is represented by the navigation property. It is possible to specify relationships between entities using this property type. 
   9. What are the different entity states?
-    - **Added:** entity exists within the context but does not exist within the database (SaveChanges generates INSERT SQL query).
-    - **Deleted:** entity is marked for deletion but not removed from the database (SaveChanges generates DELETE SQL). 
-    - **Modified:** Entity is modified. Also indicates the existence of the entity in the database. (SaveChanges generates UPDATE SQL).
-    - **Unchanged:** Entity is ignored by SaveChanges.
+- **Added:** entity exists within the context but does not exist within the database (SaveChanges generates INSERT SQL query).
+- **Deleted:** entity is marked for deletion but not removed from the database (SaveChanges generates DELETE SQL). 
+- **Modified:** Entity is modified. Also indicates the existence of the entity in the database. (SaveChanges generates UPDATE SQL).
+- **Unchanged:** Entity is ignored by SaveChanges.
     - **Detached:** Entity is not tracked by the DbContext. 
 10. Write the importance of T4 entity in EF. EDMX xml files are read by T4 code templates which generate C# behind code. The generated code consists only of your entity and context classes. (T4 generates entity classes).
 11. Explain the ways to increase performance in EF:

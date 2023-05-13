@@ -642,7 +642,7 @@ In Vue 3.x components can have multiple root nodes.
     }).$mount('#app')
     ```
 42. How to access parent instance? Use the $parent object to access the inmmediate outer scope. 
-43. **Vuex:** state management pattern + library for Vue.js applications. Serves as a centralized store for all the components in an applications, which rules to ensure the state can only be mutated in a predictable fasion. 
+43. **Vuex:** state management pattern + library for Vue.js applications. Serves as a centralized store for all the components in an applications, which rules to ensure the state can only be mutated in a predictable fashion. 
 44. Major components of State Management Pattern:
     1. **state:** the source of truth that drives our app.
     2. **view:** declarative mapping of data.
@@ -806,10 +806,97 @@ In Vue 3.x components can have multiple root nodes.
         store.commit('increment')
         console.log(store.state.count) // -> 1
         ```
-        - **Differences of vuex store and plain global object:**
-            1. Vuex stores are reactive (components will reactively get updated).
-            2. Cannot directly mutate the store's state. 
-        - We want to track application state in order to implement tools that can log every mutation, take state snapshots of even perform time travel debugging.
+- Code example:
+    - store.js
+    ```js
+    import Vuex from "vuex";
+
+    const store = new Vuex.Store({
+    state: { count: 0 },
+    mutations: {
+        increment(state) {
+        state.count++;
+        }
+    }
+    });
+
+    export default store;
+    ```
+    - App.vue:
+    ```js
+    <template>
+    <div id="app">
+        <div v-avatar="{ width: 500, height: 400 }"></div>
+        <button v-on:click="clickEvent">Test me!</button>
+        <Swatches v-model="color" />
+        <v-swatches
+        v-model="color"
+        shapes="circles"
+        swatch-size="30"
+        :swatches="swatches"
+        inline
+        ></v-swatches>
+    </div>
+    </template>
+
+    <script>
+    import store from "./store.js";
+    import VSwatches from "vue-swatches";
+    import Swatches from "./components/Swatches";
+    // Import the styles too, typically in App.vue or main.js
+    import "vue-swatches/dist/vue-swatches.css";
+
+    export default {
+    name: "App",
+    components: {
+        Swatches,
+        VSwatches,
+    },
+    data: () => ({
+        color: "#f00",
+        swatches: ["#f00", "#ccff00", "#eee", "#0f0"],
+    }),
+    methods: {
+        clickEvent(e) {
+            store.commit("increment");
+            console.log(store.state.count); // 1 2 ...
+        },
+    },
+    };
+    </script>
+
+    <style>
+    #app {
+    font-family: "Avenir", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    margin-top: 60px;
+    }
+    </style>
+    ```
+- main.js
+```js
+import Vue from "vue";
+import App from "./App.vue";
+import Vuex from "vuex";
+Vue.config.productionTip = false;
+Vue.directive("avatar", function (el, binding) {
+  console.log(binding.value.width);
+  console.log(binding.value.height);
+});
+Vue.use(Vuex);
+new Vue({
+  render: (h) => h(App)
+}).$mount("#app");
+
+```
+- https://codesandbox.io/s/vue-2-playground-forked-vq02p3?file=/src/main.js:0-305
+    - **Differences of vuex store and plain global object:**
+        1. Vuex stores are reactive (components will reactively get updated).
+        2. Cannot directly mutate the store's state. 
+    - We want to track application state in order to implement tools that can log every mutation, take state snapshots of even perform time travel debugging.
 54. How do you install vuex?
     ```batch
     npm install vuex --save
@@ -1237,6 +1324,7 @@ In Vue 3.x components can have multiple root nodes.
 - **created hook:** it hasn't rendered anything yet.
 - **mounted hook:** once it finishes rendering.
 - **Modular components with slot:** reuse the card component with other things besides Pokemon:
+81. 
 
 ## Vue course:
 - Create your first Vue Hello world.
