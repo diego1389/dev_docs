@@ -43,17 +43,18 @@
 19. **JIT**: reducir los tiempos de flujo dentro de la producción, así como los tiempos de respuesta de los proveedores y los clientes. Productos llegan poco antes de que se usan y solo en las cantidades necesarias.
 20. **SPT** (Sistema de Producción Toyota): sistema integral de producción. 
 21. **Kayzen** (mejora): mejora continua. También aplica para compras y logística. 
-22. **Bimodal -Gartner**: dos enfoques distintos pero coherentes.
+22. **Bimodal -Gartner**: dos enfoques distintos pero coherentes:
 
-    |  | Modo 1 | Modo 2  |  
-    |:-:|-|-|-|
-    | Meta | Confiabilidad |  Agilidad|  
-    | Valor  | Precio por rendimiento| Ingresos, marca, experiencia del cliente |  
-    | Enfoque  | Lineal, cascada, high ceremony  | Iterativo, low ceremony, kanban agile |  
-    | Gobernancia  | Planificado, base de aprobación | Empírica, continua, implícita en el enfoque  |  
-    | Talento  | Suministros empresariales, tratos de largos términos  |  Pequenos, vendedores nuevos|  
-    | Cultura  | IT céntrica  | Centrada en el negocio  |  
-    | Tiempos de ciclo  | Largos (meses)  | Cortos (días, semanas) |
+
+|  | Modo 1 | Modo 2  |  
+|-|-|-|-|
+| Meta | Confiabilidad |  Agilidad|  
+| Valor  | Precio por rendimiento| Ingresos, marca, experiencia del cliente |  
+| Enfoque  | Lineal, cascada, high ceremony  | Iterativo, low ceremony, kanban agile |  
+| Gobernancia  | Planificado, base de aprobación | Empírica, continua, implícita en el enfoque  |  
+| Talento  | Suministros empresariales, tratos de largos términos  |  Pequenos, vendedores nuevos|  
+| Cultura  | IT céntrica  | Centrada en el negocio  |  
+| Tiempos de ciclo  | Largos (meses)  | Cortos (días, semanas) |
 
 23. Si DevOps no presta atención a la seguridad puede facilitar la rápida introducción de las vulnerabilidades.
 24. **Scrum**: marco para desarrollar y mantener productos complejos. Consiste en roles Scrum, eventos, artefactos y las reglas que los unen.

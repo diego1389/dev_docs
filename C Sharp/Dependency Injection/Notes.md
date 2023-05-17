@@ -184,7 +184,7 @@ app.Run();
 ```
 - Dependency lifetimes:
 
-- **Transient:**  anytime you require a new instance of that class will be created (a new IdGenerator is created anytime you call it).
+- **Transient:**  anytime you require a **new instance of that class it will be created** (a new IdGenerator is created anytime you call it).
 - Program.cs (register IdGenerator as transient)
 ```csharp
 using WeatherApiTest.Filter;
@@ -248,7 +248,7 @@ namespace WeatherApiTest.Services
     }
 }
 ```
-- LifetimeIndicatorFilter.cs (new filter that works as middleware of the http request). First calls OnActionExecuting, then the Get method and finally the OnActionExecuted method. 
+- LifetimeIndicatorFilter.cs (new filter that works as middleware of the http request). First calls OnActionExecuting, then the Get method (GetId controller) and finally the OnActionExecuted method. 
 ```csharp
 using System;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -281,7 +281,7 @@ namespace WeatherApiTest.Filter
     }
 }
 ```
-- Since you registered the IdGenerator as transient when you call the Get method in Postman it returns a new Guid and the OnActionExecuting and ActionExecutedContext get a different Guid since it creates a new instance of IdGenerator for the filter class and another one for the get request (lifetimecontroller class). 
+- Since you registered the IdGenerator as transient when you call the Get method in Postman it returns a new Guid and the OnActionExecuting and ActionExecuted methods get a different Guid since it creates a new instance of IdGenerator for the filter class and another one for the get request (lifetimecontroller class). 
 - **Singleton lifetime:** a single instance of the class through the lifetime of the application. Thread safety issues. 
 - Program.cs
     ```csharp
@@ -363,7 +363,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped(provider =>
 {
     var logger = provider.GetRequiredService<ILogger<DurationLoggerFilter>>();
-    ret
+    return new DurationLoggerFilter(logger);
+}
 ```
 - Resolving dependencies from the method (not recommended unless you really only need the dependency for that method):
 - WeatherForecastController.cs
@@ -586,7 +587,7 @@ public class ServiceToInject
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHostedService<BackgroundTicker>();
 ```
-- Background Ticker
+- Background Service
 ```c#
 namespace ResolvingDeps.WebApi.HostedServices;
 
@@ -611,7 +612,7 @@ public class BackgroundTicker : BackgroundService
 ```
 ## Deep dive
 
-- You don't everything needs to be dependency injected. Only the dependencies need to use interfaces. 
+- Not everything needs to be dependency injected. Only the dependencies need to use interfaces. 
 - Don't hide business logic inside the mappers. 
 - Mappers should not be injected and should not use an interface. Use that only for required dependencies. 
 - Program.cs
@@ -881,55 +882,6 @@ namespace MultiFunction.ConsoleApp.Handlers
     }
 }
 ```
-- HandlerOrchestator
-```c#
-using System;
-using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace MultiFunction.ConsoleApp.Handlers
-{
-	public class HandlerOrchestator
-	{
-		private readonly Dictionary<string, Type> _handlerTypes = new();
-
-		private readonly IServiceScopeFactory _serviceScopeFactory;
-
-		public HandlerOrchestator(IServiceScopeFactory serviceScopeFactory)
-		{
-			_serviceScopeFactory = serviceScopeFactory;
-			RegisterCommandHandler();
-		}
-
-        public IHandler? GetHandlerForCommandName(string command)
-		{
-			var handlerType = _handlerTypes.GetValueOrDefault(command);
-			if (handlerType is null)
-				return null;
-
-			using var serviceScope = _serviceScopeFactory.CreateScope();
-			return (IHandler) serviceScope.ServiceProvider.GetRequiredService(handlerType);
-		}
-
-        private void RegisterCommandHandler()
-        {
-			//Assembly scanning...
-			var handlerTypes = HandlerExtensions.GetHandlerTypesForAssembly(typeof(IHandler).Assembly);
-
-			foreach (var handlerType in handlerTypes)
-			{
-				var commandNameAttribute = handlerType.GetCustomAttribute<CommandNameAttribute>();
-				if(commandNameAttribute is null)
-				{
-					continue;
-				}
-				var commandName = commandNameAttribute.CommandName;
-				_handlerTypes[commandName] = handlerType;
-			}
-        }
-    }
-}
-```
 - CommandNameAttribute
 ```c#
 using System;
@@ -975,6 +927,55 @@ namespace MultiFunction.ConsoleApp.Handlers
                 && typeof(IHandler).IsAssignableFrom(x));
 
             return handlerTypes;
+        }
+    }
+}
+```
+- HandlerOrchestator
+```c#
+using System;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace MultiFunction.ConsoleApp.Handlers
+{
+	public class HandlerOrchestator
+	{
+		private readonly Dictionary<string, Type> _handlerTypes = new();
+
+		private readonly IServiceScopeFactory _serviceScopeFactory;
+
+		public HandlerOrchestator(IServiceScopeFactory serviceScopeFactory)
+		{
+			_serviceScopeFactory = serviceScopeFactory;
+			RegisterCommandHandler();
+		}
+
+        public IHandler? GetHandlerForCommandName(string command)
+		{
+			var handlerType = _handlerTypes.GetValueOrDefault(command);
+			if (handlerType is null)
+				return null;
+
+			using var serviceScope = _serviceScopeFactory.CreateScope();
+			return (IHandler) serviceScope.ServiceProvider.GetRequiredService(handlerType);
+		}
+
+        private void RegisterCommandHandler()
+        {
+			//Assembly scanning...
+			var handlerTypes = HandlerExtensions.GetHandlerTypesForAssembly(typeof(IHandler).Assembly);
+
+			foreach (var handlerType in handlerTypes)
+			{
+				var commandNameAttribute = handlerType.GetCustomAttribute<CommandNameAttribute>();
+				if(commandNameAttribute is null)
+				{
+					continue;
+				}
+				var commandName = commandNameAttribute.CommandName;
+				_handlerTypes[commandName] = handlerType;
+			}
         }
     }
 }
@@ -1221,7 +1222,7 @@ public class OpenWeatherService : IWeatherService
     //        provider.GetRequiredService<ILogger<IWeatherService>>()));
     builder.Services.Decorate<IWeatherService, LoggedWeatherService>();
     ```
-- Refactoring lecture (bette way to handle the Stopwatch approach from previous lessons).
+- Refactoring lecture (better way to handle the Stopwatch approach from previous lessons).
 - Create TimedLogOperation class:
 ```c#
 using System;
@@ -1383,7 +1384,7 @@ void PrintRegisteredService(IServiceCollection serviceCollection)
 IExampleBService -> ExampleBService as Singleton
 IExampleCService -> ExampleCService as Singleton */
 ```
-- You can also cange the filter:
+- You can also change the filter:
 ```c#
 using Microsoft.Extensions.DependencyInjection;
 using ScrutorScanning.ConsoleApp.Services;
