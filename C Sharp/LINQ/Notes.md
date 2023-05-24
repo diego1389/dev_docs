@@ -1,4 +1,4 @@
-- Query anytime type of collection as long as it implements IEnumerable<T>.
+- Query any type of collection as long as it implements IEnumerable<T>.
 - Query external datasources (xml, databases, JSON, csv, etc).
 - Unified approach for querying any type of objects.
 - Helps eliminate loops.
@@ -435,39 +435,37 @@ Two LINQ syntaxis
     ```c#
     public void ForEach()
     {
-    if (UseQuerySyntax) {
-                // Query Syntax
-                Products = (from prod in Products
-                            let tmp = prod.NameLength = prod.Name.Length
-                            select prod).ToList();
+        if (UseQuerySyntax) {
+            // Query Syntax
+            Products = (from prod in Products
+                        let tmp = prod.NameLength = prod.Name.Length
+                        select prod).ToList();
 
-    }
-    else {
-                // Method Syntax
-                Products.ForEach(prod => prod.NameLength = prod.Name.Length);
+        }
+        else {
+            // Method Syntax
+            Products.ForEach(prod => prod.NameLength = prod.Name.Length);
 
-    }
-
-    ResultText = $"Total Products: {Products.Count}";
+        }
+        ResultText = $"Total Products: {Products.Count}";
     }
     ```
 - Calling a method to set a property
     ```c#
-        public void ForEachCallingMethod()
+    public void ForEachCallingMethod()
     {
     if (UseQuerySyntax) {
-                Products = (from prod in Products
-                            let tmp = prod.TotalSales = SalesForProduct(prod)
-                            select prod).ToList();
-
-            }
-    else {
-        // Method Syntax
-            Products.ForEach(prod => prod.TotalSales = SalesForProduct(prod));
+        Products = (from prod in Products
+                    let tmp = prod.TotalSales = SalesForProduct(prod)
+                    select prod).ToList();
 
     }
+    else {
+        // Method Syntax
+        Products.ForEach(prod => prod.TotalSales = SalesForProduct(prod));
+    }
 
-    ResultText = $"Total Products: {Products.Count}";
+        ResultText = $"Total Products: {Products.Count}";
     }
 
     /// <summary>
@@ -486,18 +484,18 @@ Two LINQ syntaxis
     public void Take()
     {
     if (UseQuerySyntax) {
-                // Query Syntax
-                Products = (from prod in Products
-                            orderby prod.Name
-                            select prod).Take(5).ToList();
+        // Query Syntax
+        Products = (from prod in Products
+                    orderby prod.Name
+                    select prod).Take(5).ToList();
 
     }
     else {
-                // Method Syntax
-                Products = Products.OrderBy(prod => prod.Name).Take(5).ToList();
+        // Method Syntax
+        Products = Products.OrderBy(prod => prod.Name).Take(5).ToList();
     }
 
-    ResultText = $"Total Products: {Products.Count}";
+        ResultText = $"Total Products: {Products.Count}";
     }
     ```
 - Using TakeWhile() to select a certain amount of elements while condition is true:
@@ -1242,3 +1240,179 @@ foreach(var group in sizeGroup){
 
     Using Single() when you feel it should explicitly always return 1 record will help you avoid logic errors.
 
+26. FirstOrDefault() vs SingleOrDefault()?
+    - If your result set returns 0 records:
+        - SingleOrDefault returns the default value for the type (e.g. default for int is 0)
+        - FirstOrDefault returns the default value for the type
+    - If you result set returns 1 record:
+        - SingleOrDefault returns that record
+        - FirstOrDefault returns that record
+    - **If your result set returns many records:**
+        - SingleOrDefault throws an exception
+        - FirstOrDefault returns the first record
+
+
+## Practice
+
+https://dotnetfiddle.net/qqYNum
+```c#
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+
+public class Product{
+	public int Id {get; set;}
+	public string Name {get; set;}
+	public double Price {get; set;}
+	public string Color{get; set;}
+	public int NameLength{get;set;}
+}	
+public static class ProductHelper{
+	public static IEnumerable<Product> ByColor(this IEnumerable<Product> query, string color){
+		return query.Where(prod => prod.Color == color);
+	}
+}
+public class Program
+{
+	public static void Main()
+	{
+		// Data source
+		var products = new List<Product>{
+			new Product{Id = 1, Name = "Soup", Price = 2000, Color="Yellow"},
+			new Product{Id = 2, Name = "Rice", Price = 2300, Color="White"},
+			new Product{Id = 3, Name = "Water", Price = 850, Color = "Blue"},
+			new Product{Id = 4, Name = "Soap", Price = 1000, Color="White"}
+		};
+		
+		bool useQuerySyntax = false;
+        IEnumerable<Product> result = new List<Product>();
+		// LINQ Query 
+		if(useQuerySyntax){
+			//Using TakeWhile to select a certain amount of elements while condition is true
+			result = (from prod in products
+					  orderby prod.Price descending //need to order by price first
+					  select prod).TakeWhile(p => p.Price >= 1000);
+			//Get a specific amount of items using Take()
+			/*result = (from prod in products
+					 select prod).Take(2);
+			//Assign values to properties using foreach (set operator set property value to an entire collection)
+			result = (from prod in products
+					  let tmp = prod.NameLength = prod.Name.Length
+					  select prod).ToList();
+			//Select a single item
+			var singleItem = (from prod in products
+							  select prod).Single(p => p.Color == "White"); 
+			//Run-time exception (line 34): Sequence contains more than one matching element
+			
+			Console.WriteLine(singleItem.Name);
+			//Select last item
+			var lastItem = (from prod in products
+							select prod).Last(p => p.Color == "White");
+			
+			Console.WriteLine(lastItem.Name);
+			//Select first item
+			var singleItem = (from prod in products
+					  select prod).FirstOrDefault(p => p.Color == "White");
+			
+			Console.WriteLine(singleItem.Name);
+			//Using extension methods
+			result = (from prod in products
+					select prod).ByColor("White");
+			//Using where expression with two fields:
+			result = from prod in products
+				where prod.Name.Contains("a") && prod.Price >= 1000
+				select prod;
+			//Filtering data using where expression
+			result = from prod in products
+					where prod.Name.Contains("a")
+					select prod;
+			//Ordering using multiple fields:
+			result = from prod in products
+					orderby prod.Name descending, prod.Price
+					select prod;
+			//Ordering data in descending order
+			result = from prod in products
+					orderby prod.Name descending
+					select prod;
+			//Ordering data
+			result = from prod in products
+						orderby prod.Name
+						select prod;
+			//anonymous objects
+			var anonymousProducts = (from prod in products
+									select new{
+										Identifier = prod.Id,
+										NewName = prod.Name
+									}).ToList();
+			
+			foreach(var p in anonymousProducts)
+				Console.WriteLine("Name: {0} Identifier: {1}", p.NewName, p.Identifier );
+				
+			//Get specific columns
+			result = (from prod in products
+					  select new Product{
+						  Id = prod.Id * 2,
+						  Name = prod.Name
+					  }).ToList();
+					  
+			//Using query syntax example:
+			result =  from p in products
+				select p;*/
+		}else{
+			//Using TakeWhile to select a certain amount of elements while condition is true
+			result = products.Select(p => p).OrderByDescending(p => p.Price).TakeWhile(p=>p.Price >= 1000);
+			//Get a specific amount of items using Take()
+			/*result = products.Select(p=>p).Take(2);
+			//Assign values to properties using foreach (set operator set property value to an entire collection)
+			//ForEach in method syntax is void (does not return a collection)
+			products.ForEach(p => p.NameLength = p.Name.Length); 
+			foreach (var p in products)
+            	Console.WriteLine("Name: {0} Id: {1} NameLength: {2}", p.Name, p.Id, p.NameLength);
+			//Select a single item
+			var singleItem = products.Select(p => p).Single(p => p.Color == "White");
+			//Run-time exception (line 93): Sequence contains more than one matching element
+			Console.WriteLine(singleItem.Name);
+			//Select lastItem
+			var lastItem = products.Select(p=>p).Last(p => p.Color == "White");
+			Console.WriteLine(lastItem.Name);
+			//Select a single item
+			var singleItem = products.Select(p => p).FirstOrDefault();
+			Console.WriteLine(singleItem.Name);
+			//Using extension methods
+			result = products.Select(p => p).ByColor("Yellow");
+			//Using where expression with two fields:
+			result = products.Select(p=>p).Where(p => p.Name.Contains("a") && p.Price >= 1000);
+			//Filtering data using where expression
+			result = products.Select(p => p).Where(p => p.Name.Contains("a"));
+			//Ordering using multiple fields:
+			result = products.Select(p => p).OrderByDescending(p => p.Name).ThenBy(p=>p.Price).ToList();
+			//order by descending
+			result = products.Select(p => p).OrderByDescending(p=> p.Name);
+			//ordering data		
+			result = products.Select(p => p).OrderBy(p => p.Name);
+			//anonymous objects
+			var anonymousProducts = products.Select(prod => new{
+				Identifier = prod.Id,
+				NewName = prod.Name
+			}).ToList();
+			
+			foreach(var p in anonymousProducts)
+				Console.WriteLine("Name: {0} Identifier: {1}", p.NewName, p.Identifier );
+			
+			//Get specific columns
+			result = products.Select(prod => new Product{
+				Id = prod.Id * 3,
+				Name = prod.Name
+			}).ToList();
+			
+			//Using method syntax
+			result = products.Select(p => p);*/
+		}
+       
+		// Query execution
+        foreach (var p in result)
+            Console.WriteLine("Name: {0} Id: {1} NameLength: {2} Price: {3}", p.Name, p.Id, p.NameLength, p.Price);
+	}
+}
+```

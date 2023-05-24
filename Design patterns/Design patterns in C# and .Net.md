@@ -352,7 +352,7 @@
     Width: 4 Height: 4 has area of: 16*/
     ```
 - Interface segregation principle
-    - Your interfaces should be segragated so that nobody who implements them has to implement functions that they don't actually need. 
+    - Your interfaces should be segregated so that nobody who implements them has to implement functions that they don't actually need. 
     - YAGNI (you ain't going to need it). 
     - Interfaces can inherit from interfaces.
     ```c#
@@ -472,7 +472,7 @@
         }
     }
     ```
-    - To fix it we can define an interface and implement it in the low level and also pass it as an argument in the high level instead of passing the class implementation directly. Now relationships can change the way it stores the information without breaking research because it is never exposed to the direct level module directly. 
+    - To fix it we can define an interface and implement it in the low level and also pass it as an argument to the high level instead of passing the class implementation directly. Now relationships can change the way it stores the information without breaking research because it is never exposed to the direct level module directly. 
     ```c#
      public enum Relationship
     {

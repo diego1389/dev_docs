@@ -107,7 +107,7 @@ public class PlayerCharacterShould{
             Assert.NotEqual(0, sut.Health);
         }
         [Fact]
-        public void IncreaseHealthAfterSpeeling()
+        public void IncreaseHealthAfterSleeping()
         {
             PlayerCharacter sut = new PlayerCharacter();
             sut.Sleep();
@@ -335,7 +335,7 @@ public class PlayerCharacterShould{
          dotnet tests --filter Category=Enemy --logger:trx
         ```
     * REduce code duplication (a global instances instead of one per method).
-    * To share context between test methods because isntance creation is expensive.
+    * To share context between test methods because instance creation is expensive.
     * Create new class GameStateFixture:
         ```cs
         public class GameStateFixture : IDisposable
@@ -460,7 +460,7 @@ public class PlayerCharacterShould{
     ```
     * Data-driven tests: when you have to execute the same test method but with different data. Test case n.
     * Test data sources: inline attribute, property, field attribute, external data.
-    *  [Theory] attribute means the test should be execute it multiple times. The test has to be provide it with some test data (that we pass as parameters). With inline we cannot share data across multiple test classes or tests.
+    *  [Theory] attribute means the test should be executed it multiple times. The test has to be provide it with some test data (that we pass as parameters). With inline we cannot share data across multiple test classes or tests.
         ```cs
         [Theory]
         [InlineData(0,100)]
