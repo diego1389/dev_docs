@@ -1273,6 +1273,17 @@ public static class ProductHelper{
 		return query.Where(prod => prod.Color == color);
 	}
 }
+public class ProductIdComparer : EqualityComparer<Product>
+{
+	public override bool Equals(Product x, Product y)
+	{
+		return (x.Id == y.Id);
+	}
+	
+	public override int GetHashCode(Product obj){
+		return obj.Id.GetHashCode();
+	}
+}
 public class Program
 {
 	public static void Main()
@@ -1285,16 +1296,64 @@ public class Program
 			new Product{Id = 4, Name = "Soap", Price = 1000, Color="White"}
 		};
 		
+		var collection1 = new List<Product>{
+			new Product{Id = 1, Name = "Cookies", Price = 3000, Color="Black"},
+			new Product{Id = 2, Name = "Bleach", Price = 2500, Color="White"},
+		};
+		var collection2 = new List<Product>{
+			new Product{Id = 1, Name = "Cookies", Price = 3000, Color="Black"},
+			new Product{Id = 2, Name = "Bleach", Price = 2500, Color="White"},
+		};
+		var collection3 = new List<Product>{
+			new Product{Id = 2, Name = "Bleach", Price = 2500, Color="White"},
+			new Product{Id = 5, Name = "Apple", Price = 200, Color="Red"}
+		};
+		ProductIdComparer pc = new ProductIdComparer();
 		bool useQuerySyntax = false;
         IEnumerable<Product> result = new List<Product>();
 		// LINQ Query 
 		if(useQuerySyntax){
+			//Except: find all values that are in one list but not in the other:
+			/*result = (from prod in collection3
+					  select prod).Except(collection2, pc);
+					  
+			//Compare two collections for equality
+			ProductIdComparer pc = new ProductIdComparer();
+			
+			var value = (from prod in collection1
+						 select prod).SequenceEqual(collection2, pc);
+			
+			Console.WriteLine(value);	
+			//Equality Comparer
+			ProductIdComparer pc = new ProductIdComparer();
+			Product prodToFind = new Product {Id = 2};
+			var value = (from prod in products
+						 select prod).Contains(prodToFind, pc);
+			Console.WriteLine(value);
+			
+			//Using Any() to check if items match condition
+			var value = (from prod in products
+						 select prod).Any(p=>p.Color == "Red");
+			Console.WriteLine(value);
+			//Using All to see if all items match a condition
+			var value = (from prod in products
+						 select prod).All(p => p.Price > 0);
+			Console.WriteLine(value);
+			//Getting unique values from a collection using distinct
+			var uniqueColors = (from prod in products
+					  select prod.Color).Distinct();
+			foreach(var color in uniqueColors)
+				Console.WriteLine(color);
+			//Using Skip() and SkipeWhile to pass over items
+			result = (from prod in products
+					 	select prod
+					 ).OrderBy(p=>p.Price).SkipWhile(p => p.Price <= 2000);
 			//Using TakeWhile to select a certain amount of elements while condition is true
 			result = (from prod in products
 					  orderby prod.Price descending //need to order by price first
 					  select prod).TakeWhile(p => p.Price >= 1000);
 			//Get a specific amount of items using Take()
-			/*result = (from prod in products
+			result = (from prod in products
 					 select prod).Take(2);
 			//Assign values to properties using foreach (set operator set property value to an entire collection)
 			result = (from prod in products
@@ -1360,10 +1419,33 @@ public class Program
 			result =  from p in products
 				select p;*/
 		}else{
+			//Except: find all values that are in one list but not in the other:
+			/*result = collection3.Except(collection2, pc);
+			//Compare two collections for equality
+			ProductIdComparer pc = new ProductIdComparer();
+			var value = collection1.SequenceEqual(collection2, pc);
+			Console.WriteLine(value);
+			//Equality Comparer
+			ProductIdComparer pc = new ProductIdComparer();
+			Product prodToFind = new Product {Id = 2};
+			var value = products.Contains(prodToFind, pc);
+			Console.WriteLine(value);
+			//Using Any() to check if items match condition
+			var val = products.Any(p=>p.Color == "Red");
+			Console.WriteLine(val);
+			//Using All to see if all items match a condition
+			var value = products.All(p=>p.Price > 0);
+			Console.WriteLine(value);
+			//Getting unique values from a collection using distinct
+			var uniqueColors = products.Select(p=>p.Color).Distinct();			
+			foreach(var color in uniqueColors)
+				Console.WriteLine(color);
+			//Using Skip() and SkipeWhile to pass over items
+			result = products.Select(p=>p).OrderBy(p=>p.Price).SkipWhile(p=>p.Price <= 2000);
 			//Using TakeWhile to select a certain amount of elements while condition is true
 			result = products.Select(p => p).OrderByDescending(p => p.Price).TakeWhile(p=>p.Price >= 1000);
 			//Get a specific amount of items using Take()
-			/*result = products.Select(p=>p).Take(2);
+			result = products.Select(p=>p).Take(2);
 			//Assign values to properties using foreach (set operator set property value to an entire collection)
 			//ForEach in method syntax is void (does not return a collection)
 			products.ForEach(p => p.NameLength = p.Name.Length); 
