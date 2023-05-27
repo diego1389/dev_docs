@@ -357,3 +357,5 @@ using(var context = new MyContext()){
             AS
                 RETURN @LastName + @FirstName;')");
         ```
+33. Is it usefu to implement repository pattern in entity framework?
+    - No, the repository/unit-of-work pattern (shortened to Rep/UoW) isn't useful with EF Core. EF Core already implements a Rep/UoW pattern, so layering another Rep/UoW pattern on top of EF Core isn't helpful.

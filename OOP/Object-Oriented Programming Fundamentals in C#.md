@@ -102,7 +102,7 @@
             }
         }
     ```
-- The diference between a private setter is that it can be changed inside the class but with no set (like FullName) it cannot be set at all. 
+- The diference between a private setter is that it can be changed inside the class but with no setter (like FullName) it cannot be set at all. 
 
 ```cs
 /*Public to call it from other by any external component*/

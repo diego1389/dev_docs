@@ -796,6 +796,7 @@ Two LINQ syntaxis
     }
     ```
 - Union and Concat add the contents of two lists together. Union() checks for duplicates and Concat() does not. 
+    - Union can receive an EqualityComparer as a second argument
     ```c#
     //Querysyntax
     Products = (from prod in list1 select prod).Union(list2, pc).ToList();
@@ -1268,6 +1269,13 @@ public class Product{
 	public string Color{get; set;}
 	public int NameLength{get;set;}
 }	
+
+public class Sale{
+	public int Id {get; set;}
+	public int ProductId {get; set;}
+	public int BuyerId {get; set;}
+}
+	
 public static class ProductHelper{
 	public static IEnumerable<Product> ByColor(this IEnumerable<Product> query, string color){
 		return query.Where(prod => prod.Color == color);
@@ -1296,6 +1304,11 @@ public class Program
 			new Product{Id = 4, Name = "Soap", Price = 1000, Color="White"}
 		};
 		
+		var sales = new List<Sale>{
+			new Sale{Id = 1, ProductId = 2, BuyerId = 1},
+			new Sale{Id = 2, ProductId = 2, BuyerId = 2},
+			new Sale{Id = 3, ProductId = 3, BuyerId = 3},
+		};
 		var collection1 = new List<Product>{
 			new Product{Id = 1, Name = "Cookies", Price = 3000, Color="Black"},
 			new Product{Id = 2, Name = "Bleach", Price = 2500, Color="White"},
@@ -1308,14 +1321,44 @@ public class Program
 			new Product{Id = 2, Name = "Bleach", Price = 2500, Color="White"},
 			new Product{Id = 5, Name = "Apple", Price = 200, Color="Red"}
 		};
+		
 		ProductIdComparer pc = new ProductIdComparer();
 		bool useQuerySyntax = false;
         IEnumerable<Product> result = new List<Product>();
 		// LINQ Query 
 		if(useQuerySyntax){
+			//Inner join to join two collections using one field (one to many relationship)
+			/*var query = (from prod in products join sale in sales
+						 on prod.Id equals sale.ProductId
+						 select new {ProdId = prod.Id,
+									 SaleId = sale.Id});
+			foreach(var item in query)
+				Console.WriteLine("ProdId {0} : SaleId {1}", item.ProdId, item.SaleId);
+			//ProdId 2 : SaleId 1
+			//ProdId 2 : SaleId 2
+			//ProdId 3 : SaleId 3
+			
+			//UNION add the contents of two lists together (REMOVES duplicates). Can receive pc as second argument
+			result = (from prod in collection2
+					  select prod).Union(collection3, pc);
+			//Name: Cookies Id: 1 NameLength: 0 Price: 3000
+			//Name: Bleach Id: 2 NameLength: 0 Price: 2500
+			//Name: Apple Id: 5 NameLength: 0 Price: 200
+			
+			//Concat add the contents of two lists together (DOES NOT CHECK FOR duplicates)
+			result = (from prod in collection2
+					  select prod).Concat(collection3);
+			//Name: Cookies Id: 1 NameLength: 0 Price: 3000
+			//Name: Bleach Id: 2 NameLength: 0 Price: 2500
+			//Name: Bleach Id: 2 NameLength: 0 Price: 2500
+			//Name: Apple Id: 5 NameLength: 0 Price: 200
+			
+			//Intersect: Get common elements that exist in both lists
+			result = (from prod in collection2
+					  select prod).Intersect(collection3,pc);
 			//Except: find all values that are in one list but not in the other:
-			/*result = (from prod in collection3
-					  select prod).Except(collection2, pc);
+			result = (from prod in collection2
+					  select prod).Except(collection3, pc); //cookies
 					  
 			//Compare two collections for equality
 			ProductIdComparer pc = new ProductIdComparer();
@@ -1419,60 +1462,109 @@ public class Program
 			result =  from p in products
 				select p;*/
 		}else{
+			//Inner join to join two collections using one field (one to many relationship)
+			/*var query = products.Join(sales, prod => prod.Id, sale => sale.ProductId,
+									 (prod, sale)=> new{
+									 	ProdId = prod.Id,
+										SaleId = sale.Id
+									 });
+			foreach(var item in query)
+				Console.WriteLine("ProductId {0} : SaleId {1}", item.ProdId, item.SaleId);
+			
+			//ProductId 2 : SaleId 1
+			//ProductId 2 : SaleId 2
+			//ProductId 3 : SaleId 3
+			
+			//UNION add the contents of two lists together (REMOVES duplicates). Can receive pc as second argument
+			result = collection2.Union(collection3, pc);
+			//Name: Cookies Id: 1 NameLength: 0 Price: 3000
+			//Name: Bleach Id: 2 NameLength: 0 Price: 2500
+			//Name: Apple Id: 5 NameLength: 0 Price: 200
+			
+			//Concat add the contents of two lists together (DOES NOT CHECK FOR duplicates)
+			result = collection2.Concat(collection3);
+			//Name: Cookies Id: 1 NameLength: 0 Price: 3000
+			//Name: Bleach Id: 2 NameLength: 0 Price: 2500
+			//Name: Bleach Id: 2 NameLength: 0 Price: 2500
+			//Name: Apple Id: 5 NameLength: 0 Price: 200
+
+			//Intercept: Get common elements that exist in both lists
+			result = collection3.Intersect(collection2, pc);
+			
 			//Except: find all values that are in one list but not in the other:
-			/*result = collection3.Except(collection2, pc);
+			result = collection3.Except(collection2, pc);
+			
 			//Compare two collections for equality
 			ProductIdComparer pc = new ProductIdComparer();
 			var value = collection1.SequenceEqual(collection2, pc);
 			Console.WriteLine(value);
+			
 			//Equality Comparer
 			ProductIdComparer pc = new ProductIdComparer();
 			Product prodToFind = new Product {Id = 2};
 			var value = products.Contains(prodToFind, pc);
 			Console.WriteLine(value);
+			
 			//Using Any() to check if items match condition
 			var val = products.Any(p=>p.Color == "Red");
 			Console.WriteLine(val);
+			
 			//Using All to see if all items match a condition
 			var value = products.All(p=>p.Price > 0);
 			Console.WriteLine(value);
+			
 			//Getting unique values from a collection using distinct
 			var uniqueColors = products.Select(p=>p.Color).Distinct();			
 			foreach(var color in uniqueColors)
 				Console.WriteLine(color);
+				
 			//Using Skip() and SkipeWhile to pass over items
 			result = products.Select(p=>p).OrderBy(p=>p.Price).SkipWhile(p=>p.Price <= 2000);
+			
 			//Using TakeWhile to select a certain amount of elements while condition is true
 			result = products.Select(p => p).OrderByDescending(p => p.Price).TakeWhile(p=>p.Price >= 1000);
+			
 			//Get a specific amount of items using Take()
 			result = products.Select(p=>p).Take(2);
+			
 			//Assign values to properties using foreach (set operator set property value to an entire collection)
 			//ForEach in method syntax is void (does not return a collection)
 			products.ForEach(p => p.NameLength = p.Name.Length); 
 			foreach (var p in products)
             	Console.WriteLine("Name: {0} Id: {1} NameLength: {2}", p.Name, p.Id, p.NameLength);
+				
 			//Select a single item
 			var singleItem = products.Select(p => p).Single(p => p.Color == "White");
+			
 			//Run-time exception (line 93): Sequence contains more than one matching element
 			Console.WriteLine(singleItem.Name);
+			
 			//Select lastItem
 			var lastItem = products.Select(p=>p).Last(p => p.Color == "White");
 			Console.WriteLine(lastItem.Name);
+			
 			//Select a single item
 			var singleItem = products.Select(p => p).FirstOrDefault();
 			Console.WriteLine(singleItem.Name);
+			
 			//Using extension methods
 			result = products.Select(p => p).ByColor("Yellow");
+			
 			//Using where expression with two fields:
 			result = products.Select(p=>p).Where(p => p.Name.Contains("a") && p.Price >= 1000);
+			
 			//Filtering data using where expression
 			result = products.Select(p => p).Where(p => p.Name.Contains("a"));
+			
 			//Ordering using multiple fields:
 			result = products.Select(p => p).OrderByDescending(p => p.Name).ThenBy(p=>p.Price).ToList();
+			
 			//order by descending
 			result = products.Select(p => p).OrderByDescending(p=> p.Name);
+			
 			//ordering data		
 			result = products.Select(p => p).OrderBy(p => p.Name);
+			
 			//anonymous objects
 			var anonymousProducts = products.Select(prod => new{
 				Identifier = prod.Id,
