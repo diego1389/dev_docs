@@ -421,7 +421,7 @@
     console.log(second);//6
     console.log(others);//[12, 15]
     ```
-- Regular javscript "constructure". This instance variable (cannot use destructuring here).
+- Regular javscript "constructor". This instance variable (cannot use destructuring here).
     - Every time you create a new hero it will create a new copy of the "static" goodHero property and the powerUp function. 
     ```js
     function Hero(name, weapon, strength){
@@ -592,7 +592,7 @@
         ```
     - Map will push and return an array.
     - Array.from = creates an array from an array-like or iterable object.
-        - You can also passs a map function to call on every element of the array
+        - You can also pass a map function to call on every element of the array
 
         ```js
         const array = Array.from(`Diego`);
@@ -680,6 +680,7 @@
         console.log(glazedTopping); //{ id: '5002', type: 'Glazed' }
         console.log(glazedToppingIndex); //1
         ```
+----STOPPED HERE-----
 - All datatypes are primitives and objects. 
     - Primitives: string, number, bool, null, undefined and Symbol.
     ```js

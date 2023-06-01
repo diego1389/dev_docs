@@ -1154,7 +1154,7 @@ foreach(var group in sizeGroup){
 6. Linq standard query operators?
     - Techniques that make the linq pattern. They offer query capabilities for the projection, aggregation, filtering, sorting, etc.
     - One grop works on the IEnumerable<T> and other work on IQueryable<T>
-7. Explain PLIQ?
+7. Explain PLINQ?
     - Parallel linq it is the parallel execution of the LINQ to the objects. It endorses parallel programming and is closely associated with a parallel task library. 
 8.   First vs FirstOrDefault()? If there is not an element in the result .First() returns the exception. FirstOrDefault() will not throw it.
 9. Api? IQueryable or IEnumerable interfaces hosted in System.Linq namespace.
@@ -1206,7 +1206,7 @@ foreach(var group in sizeGroup){
 23. Extension methods? 
     - Static functions of the static class. We can invoke these methods the same as syntax of the instance method. We can use them when we don't need to modify the class. 
 24. Difference EF vs Linq to SQL? 
-    - Linq to Entities (EF) is an ORM that allows a wide definition of the object domain models and relashionships to varios ADO.NET data providers. 
+    - Linq to Entities (EF) is an ORM that allows a wide definition of the object domain models and relationships to various ADO.NET data providers. 
     - Linq to SQL supporst only 1 to 1 mapping of the database views, tables, functions and SPs in SQL server. It is great for rapid data access production. 
 25. Get a single row? Single() method. 
     I'd illustrate why you should NOT use one, when you mean the other.

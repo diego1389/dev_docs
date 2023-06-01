@@ -31,7 +31,7 @@
         - Storage: Database design model that is composed of tables, keys, SPs, views and related relationships.
       - **LINQ to Entities:** query language used to write queries against the object model. 
     - **Entity SQL:** Another query language (more difficult than L2E).
-    - **Entity Client Data Provider:** Convert E-SQL / L2E queries into SQL queries that the database understands. 
+    - **Entity Client Data Provider:** Converts E-SQL / L2E queries into SQL queries that the database understands. 
     - **Net Data Provider:** Uses standard ADO.NET to enable interaction with the database.
     - **Object Service:** Facilitates access to a database, and returns data for analysis when necessary. 
 5. Explain what the .edmx file contains:
@@ -74,7 +74,7 @@
 18. Dapper vs EF:
     - Dapper is a micro ORM that allows you to perform database operations. It is faster than EF (almost as fast as ADO.NET data readers).
     - A set of .NET APIs. It is Microsoft's official tool for accessing data.
-    - Dapper is more difficult to code, especially when multiple relashionships are involved.
+    - Dapper is more difficult to code, especially when multiple relationships are involved.
 19. Explain POCO classes in EF. A class that contains no reference to the EF fw. Poco entities are known as available domain objects. A normal C# class that support LINQ queries, which are supported by entities derived from the entity object itself. 
 
 20. How do you use SP in EF? YOu can use DbSet<TEntity>.FromSql() or DbContext.Database.ExecuteSqlCommand() methods. Some limitations:
@@ -280,7 +280,7 @@ using(var context = new MyContext()){
             new Post { BlogId = 1, PostId = 1, Title = "First post", Content = "Test 1" });
             ```
         - Manual migration customization
-            - When a migration is added the changes to the data specified with HasData are transformed to callss to InsertData(), UpdateData(), DeleteData(). Manually add these calls to the migration:
+            - When a migration is added the changes to the data specified with HasData are transformed to calls to InsertData(), UpdateData(), DeleteData(). Manually add these calls to the migration:
             ```c#
             migrationBuilder.InsertData(
             table: "Blogs",
