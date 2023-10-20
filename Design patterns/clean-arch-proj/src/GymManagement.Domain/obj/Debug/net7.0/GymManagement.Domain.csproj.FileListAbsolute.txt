@@ -1,0 +1,12 @@
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/bin/Debug/net7.0/GymManagement.Domain.deps.json
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/bin/Debug/net7.0/GymManagement.Domain.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/bin/Debug/net7.0/GymManagement.Domain.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/obj/Debug/net7.0/GymManagement.Domain.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/obj/Debug/net7.0/GymManagement.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/obj/Debug/net7.0/GymManagement.Domain.AssemblyInfoInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/obj/Debug/net7.0/GymManagement.Domain.AssemblyInfo.cs
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/obj/Debug/net7.0/GymManagement.Domain.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/obj/Debug/net7.0/GymManagement.Domain.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/obj/Debug/net7.0/refint/GymManagement.Domain.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/obj/Debug/net7.0/GymManagement.Domain.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/obj/Debug/net7.0/ref/GymManagement.Domain.dll

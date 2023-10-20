@@ -1,0 +1,15 @@
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/bin/Debug/net7.0/GymManagement.Application.deps.json
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/bin/Debug/net7.0/GymManagement.Application.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/bin/Debug/net7.0/GymManagement.Application.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/bin/Debug/net7.0/GymManagement.Domain.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/bin/Debug/net7.0/GymManagement.Domain.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/GymManagement.Application.csproj.AssemblyReference.cache
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/GymManagement.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/GymManagement.Application.AssemblyInfoInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/GymManagement.Application.AssemblyInfo.cs
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/GymManagement.Application.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/GymManagement.Application.csproj.CopyComplete
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/GymManagement.Application.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/refint/GymManagement.Application.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/GymManagement.Application.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/obj/Debug/net7.0/ref/GymManagement.Application.dll
