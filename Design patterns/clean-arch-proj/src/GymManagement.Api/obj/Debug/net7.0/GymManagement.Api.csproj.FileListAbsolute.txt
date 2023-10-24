@@ -35,3 +35,5 @@
 /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/obj/Debug/net7.0/GymManagement.Api.pdb
 /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/obj/Debug/net7.0/GymManagement.Api.genruntimeconfig.cache
 /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/obj/Debug/net7.0/ref/GymManagement.Api.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/bin/Debug/net7.0/GymManagement.Contracts.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/bin/Debug/net7.0/GymManagement.Contracts.pdb

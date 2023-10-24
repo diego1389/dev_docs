@@ -121,6 +121,16 @@
           "bin/placeholder/GymManagement.Application.dll": {}
         }
       },
+      "GymManagement.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/GymManagement.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GymManagement.Contracts.dll": {}
+        }
+      },
       "GymManagement.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
@@ -489,6 +499,11 @@
       "path": "../GymManagement.Application/GymManagement.Application.csproj",
       "msbuildProject": "../GymManagement.Application/GymManagement.Application.csproj"
     },
+    "GymManagement.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../GymManagement.Contracts/GymManagement.Contracts.csproj",
+      "msbuildProject": "../GymManagement.Contracts/GymManagement.Contracts.csproj"
+    },
     "GymManagement.Domain/1.0.0": {
       "type": "project",
       "path": "../GymManagement.Domain/GymManagement.Domain.csproj",
@@ -498,6 +513,7 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "GymManagement.Application >= 1.0.0",
+      "GymManagement.Contracts >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 7.0.7",
       "Swashbuckle.AspNetCore >= 6.5.0"
     ]
@@ -531,6 +547,9 @@
           "projectReferences": {
             "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/GymManagement.Application.csproj": {
               "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/GymManagement.Application.csproj"
+            },
+            "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Contracts/GymManagement.Contracts.csproj": {
+              "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Contracts/GymManagement.Contracts.csproj"
             }
           }
         }
