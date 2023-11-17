@@ -89,3 +89,106 @@ dotnet run --project src/GymManagement.Api/
 ```http
 GET http://localhost:5215/WeatherForecast
 ```
+## Implementation layer
+
+- Contracts project is the implementation of the API with the client. Standalone project to publish it as a nuget package. Clients can use this nuget package instead of defining the API themselves. 
+- Add new project:
+```bash
+dotnet new classlib -o GymManagement.Contracts
+```
+- Add a reference from the Api project to the contracts project. 
+```bash
+dotnet add GymManagement.Api/ reference GymManagement.Contracts/
+```
+Responsabilities of presentation layer:
+1. Handling interactions with the outside world.
+2. Presenting or displaying data.
+3. Translating data from the user and convert it to the language of the application core logic. 
+4. Managing UI and framework-related elements.
+5. Manipulating the application layer. 
+
+- Create CreateSubscriptionRequest, SubscriptionType and SubscriptionResponse contracts on the contracts project.
+
+- Create a new controller in the Api project:
+```c#
+using GymManagement.Contracts.Subscriptions;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GymManagement.Api.Controllers;
+[ApiController]
+[Route("[controller]")]
+public class SubscriptionsController : ControllerBase{
+    [HttpPost]
+    public IActionResult CreateSubscription(CreateSubscriptionRequest request){
+        return Ok(request);
+    }
+}
+```
+
+- Add a new CreateSubscription http file:
+```http
+@host=http://localhost:5215
+@adminId=6b7be891-d74d-48ff-b0ec-8627eb35eab3
+POST {{host}}/Subscriptions
+Content-Type: application/json
+
+{
+    "SubscriptionType":"Free",
+    "AdminId": "{{adminId}}"
+}
+
+# {
+#     "Id": "{{adminId}}"
+#     "SubscriptionType":"Free",
+# }
+```
+ 
+- Create Subscriptions folder in GymManagement.Application project. 
+- Create CreateSubscription class. 
+
+- We're not adding a reference to the Contracts project into the application layer so we cannot simply pass the request from the presentation layer to the application layer as its coming. We must transform into the language wichi is the core of the application (application and domain layers).
+
+* Responsabilities:
+- Execute the application's use cases (actions that user can do on the system, features of the application).
+    - Fetch domain objects. 
+    - Manipulate domain objects.
+
+- We don't want to register the dependencies to the Program.cs / GymManagement.Api project so we're going to create an DependencyInjeciton file on the Infraestructure project (layer) and the Application project (layer) which will be invoked during startup (addInfrastructure and addApplicatin methods). 
+- Application layer has the interfaces and Infrastructure has the concrete implementation.
+- Add a reference from the api project to the infrastructure project but making methods internal except for DI which are public.
+```bash
+dotnet add src/GymManagement.Api reference src/GymManagement.Infrastructure/
+```
+
+- CQRS: Command Query Responsability Segregation
+    - split reads from writes.
+    - Commands (writes, f.e: createsubscription, deletesubscription, deleteroom, etc).
+        - Write manipulates state and is void.
+    - Queries (reads, f.e: getSubscription, getRoom, etc).
+        - Read doesn't manipulate state and returns value. 
+
+- Mediator Pattern.
+    - Interaction between objects is encapsulated through a Mediator.
+    - Reduces coupling. 
+
+```bash
+dotnet add src/GymManagement.Application/ package MediatR
+```
+
+- Subscriptions controller is intercting directly with the subscription service on the application layer. Now we're going to use the MediatR to know which logic it will invoke. 
+- Splitting by feature vs splitting by type
+    - splitting by feature increases the cohesion. Subscriptions feature folder in the application, infrastructure, presentation, etc. 
+
+## Result Pattern.
+
+- Exception handling gives a wrapper around the result. A result object. It returns the actual value or the exception. 
+- It's very useful and common in clean architectures. 
+- ErrorOr package to implement result pattern.
+- Add package:
+```bash
+dotnet add src/GymManagement.Application/ package ErrorOr
+``` 
+
+## Repository & Unit of work
+
+- 
