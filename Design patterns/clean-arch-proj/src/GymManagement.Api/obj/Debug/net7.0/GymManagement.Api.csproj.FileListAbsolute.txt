@@ -37,3 +37,8 @@
 /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/obj/Debug/net7.0/ref/GymManagement.Api.dll
 /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/bin/Debug/net7.0/GymManagement.Contracts.dll
 /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/bin/Debug/net7.0/GymManagement.Contracts.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/bin/Debug/net7.0/MediatR.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/bin/Debug/net7.0/MediatR.Contracts.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/bin/Debug/net7.0/GymManagement.Infrastructure.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/bin/Debug/net7.0/GymManagement.Infrastructure.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/bin/Debug/net7.0/ErrorOr.dll

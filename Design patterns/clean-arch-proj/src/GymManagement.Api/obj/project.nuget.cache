@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "iGR+esohn20XMR+f2Nmj8OBmOgl0i0CFAakyXT4QVuaukqfi4SoZZVobfqTLi/1JQ0ARzgP6gPdmNy1Mh5ta/g==",
+  "dgSpecHash": "AElykEkaOkZCYa5Yf4MEiSGOVUUMQYQ0jogJe/ZWXTuY5kLf/bgQ2nrXcD+0mXAQqhKjsnphw1kyT7HhfkuR+Q==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/GymManagement.Api.csproj",
   "expectedPackageFiles": [
+    "/Users/diego.guillen/.nuget/packages/erroror/1.3.0/erroror.1.3.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/mediatr/12.1.1/mediatr.12.1.1.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/microsoft.aspnetcore.openapi/7.0.7/microsoft.aspnetcore.openapi.7.0.7.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/7.0.0/microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/microsoft.openapi/1.4.3/microsoft.openapi.1.4.3.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/swashbuckle.aspnetcore/6.5.0/swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/swashbuckle.aspnetcore.swagger/6.5.0/swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",

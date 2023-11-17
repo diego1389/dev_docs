@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "02SWuXiPt81x9zBvHDE3g20dkVkFsc04j0pZLeZ9Z7segpksiXMW59CXo4j/z7NW/VmqMVQwg47LONWnBqDTgA==",
+  "dgSpecHash": "cSva6gZLRHPge58A5z6T2kYinI8H3JgiFNZ38rRRF68q73sU1bSjK5f0tnEAzOm0cKmYSRsGrXf4D92UnHR7rg==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Application/GymManagement.Application.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/Users/diego.guillen/.nuget/packages/erroror/1.3.0/erroror.1.3.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/mediatr/12.1.1/mediatr.12.1.1.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/7.0.0/microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
