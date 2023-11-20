@@ -191,4 +191,14 @@ dotnet add src/GymManagement.Application/ package ErrorOr
 
 ## Repository & Unit of work
 
-- 
+- Repository gives us an illusion as if we're working with objects in memory even if we're working with persisted data. 
+- Better unit testing. 
+- Db is an implementation detail (business point of view should't care which db we're using).
+- We create that illusion in the application layer (the interfaces) and the implementation of the repositories is going to be in the infrastucture layer. 
+- It is also common to place the repository definition in the domain layer (domai -driving design). 
+
+## Unit of work pattern.
+
+- Unit of work starts a transaction and commits with CommitChangesAsync().
+
+ 

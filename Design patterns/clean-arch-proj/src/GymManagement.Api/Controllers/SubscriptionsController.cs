@@ -33,7 +33,7 @@ public class SubscriptionsController : ControllerBase{
         );
         return Ok(response);*/
         return createSubscriptionResult.MatchFirst(
-            guid => Ok(new SubscriptionResponse(guid, request.SubscriptionType)),
+            subscription => Ok(new SubscriptionResponse(subscription.Id, request.SubscriptionType)),
             Error => Problem());
     }
 }
