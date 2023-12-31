@@ -201,4 +201,13 @@ dotnet add src/GymManagement.Application/ package ErrorOr
 
 - Unit of work starts a transaction and commits with CommitChangesAsync().
 
+## Infrastructure layer:
+
+- Interacting with the persistence solution.
+- Interacting with other services (web clients, message brokers, etc).
+- Interacting with the underlying machine (system clock, files, etc).
+- Identity concerns.
+
+
  
+

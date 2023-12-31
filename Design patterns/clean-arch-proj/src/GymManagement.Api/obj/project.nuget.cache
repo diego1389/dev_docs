@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AElykEkaOkZCYa5Yf4MEiSGOVUUMQYQ0jogJe/ZWXTuY5kLf/bgQ2nrXcD+0mXAQqhKjsnphw1kyT7HhfkuR+Q==",
+  "dgSpecHash": "K9KVR7oL448u/WkgfOGFIiiyV2mwNZluEKq1htSPeTilrvy2OWA/XLmWVa4EJWSPLeCRPgxFyMkH4tzxwHQ55w==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Api/GymManagement.Api.csproj",
   "expectedPackageFiles": [

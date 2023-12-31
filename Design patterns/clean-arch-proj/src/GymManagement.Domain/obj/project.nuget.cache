@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "oCjTP+CSXBixtDqWUizSMmM7XOGsf/471FZZgvjb6zb+v/7MrXvcDPcukZ4Ogt+7sLjZx2Q086TlsdB69nS/Wg==",
+  "dgSpecHash": "dJSmza8S7WAmCFkDndPB07UcPSW4XeakDTwZK2rUbCTGKbVK1NRPWlwkRU8pyrU6yzis4s+dHgY7alxuvR3Few==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/clean-arch-proj/src/GymManagement.Domain/GymManagement.Domain.csproj",
   "expectedPackageFiles": [],
