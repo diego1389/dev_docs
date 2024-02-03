@@ -1,0 +1,12 @@
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/bin/Debug/net8.0/GymManagement.Contracts.deps.json
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/bin/Debug/net8.0/GymManagement.Contracts.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/bin/Debug/net8.0/GymManagement.Contracts.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/obj/Debug/net8.0/GymManagement.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/obj/Debug/net8.0/GymManagement.Contracts.AssemblyInfoInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/obj/Debug/net8.0/GymManagement.Contracts.AssemblyInfo.cs
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/obj/Debug/net8.0/GymManagement.Contracts.csproj.CoreCompileInputs.cache
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/obj/Debug/net8.0/GymManagement.Contracts.sourcelink.json
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/obj/Debug/net8.0/GymManagement.Contracts.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/obj/Debug/net8.0/refint/GymManagement.Contracts.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/obj/Debug/net8.0/GymManagement.Contracts.pdb
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/obj/Debug/net8.0/ref/GymManagement.Contracts.dll
