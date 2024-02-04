@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "dRlqZXshgLOwPf1QkkYvtCxAtOYP2lhXP8FYsjV1Dlj5i8IDa3/tD7UWdCUL/8udU0aSMSxSvZ044YC9DtPUig==",
+  "dgSpecHash": "zn++QG1emd3eYahgJJj7oyMJ8DBor3K0LtGs1ehgereqmVVryvipcwoFQjdNNGmPbnJTUa8b2pb+E6y2aJ5lBQ==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Api/GymManagement.Api.csproj",
   "expectedPackageFiles": [
+    "/Users/diego.guillen/.nuget/packages/erroror/1.9.0/erroror.1.9.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/microsoft.aspnetcore.openapi/8.0.0/microsoft.aspnetcore.openapi.8.0.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
