@@ -632,7 +632,80 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
 - Interacting with other services (web clients, message brokers, etc).
 - Interacting with the underlying machine (system clock, files, etc).
 - Identity concerns.
+- Implementing the Repository pattern in the infrastructure layer:
+- Create folder Subscriptions/Persistence
+- Implement SubscriptionRepository.cs:
+```c#
+using GymManagement.Application.Common.Interfaces;
+using GymManagement.Domain.Subscriptions;
 
+namespace GymManagement.Infrastructure.Subscriptions.Persistence;
 
+public class SubscriptionsRepository : ISubscriptionsRepository
+{
+    private readonly List<Subscription> _subscriptions = new();
+
+    public Task AddSubscriptionAsync(Subscription subscription)
+    {
+        //Add the subscription to the database
+        _subscriptions.Add(subscription);
+        return Task.CompletedTask;
+    }
+}
+```
+- Wire up everything together in the DependencyInjection file:
+```c#
+using GymManagement.Application.Common.Interfaces;
+using GymManagement.Infrastructure.Subscriptions.Persistence;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace GymManagement.Infrastructure
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        {
+            services.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
+            return services;
+        }
+    }
+}
+```
+    - Notice that the Interface comes from Application layer whereas the implementation comes from the Infrastructure layer (usings).
+- Comment out the Unit of work bit just for testing (CreateSubscriptionCommandHandler.cs)
+
+```c#
+using ErrorOr;
+using GymManagement.Application.Common.Interfaces;
+using GymManagement.Domain.Subscriptions;
+using MediatR;
+
+namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand, ErrorOr<Subscription>>
+{
+    private readonly ISubscriptionsRepository _subscriptionsRepository;
+    //private readonly IUnitOfWork _unitOfWork;
+
+    public CreateSubscriptionCommandHandler(ISubscriptionsRepository subscriptionsRepository)//,
+        //IUnitOfWork unitOfWork)
+    {
+        _subscriptionsRepository = subscriptionsRepository;
+        //_unitOfWork = unitOfWork;
+    }
+  
+    public async Task<ErrorOr<Subscription>> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
+    {
+        //Create a Subscription
+        var subscription = new Subscription{
+            Id = Guid.NewGuid()
+        };
+        //Add it to the db
+        await _subscriptionsRepository.AddSubscriptionAsync(subscription);
+        //await _unitOfWork.CommitChangesAsync();
+        return subscription;
+    }
+}
+```
  
 
