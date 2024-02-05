@@ -2,8 +2,11 @@
 
 - Virtual machines look a like. 
 - Phisycal machine -> Host Operating System -> Containers (a lot more lightweight than VM).
-- Running one thing like API, Web App. Just one app running in each container.
+- Container running just one thing like API, Web App. Just one app running in each container.
+- Con
 - VM: multiple apps running on each VM.
+- Container: a virtualized OS sharing host kernel.
+    - It has its own virtualized file system and network stack. 
 - You can open a shell on a container. 
 - Container use cases:
     - One primary process (your app).
@@ -17,7 +20,8 @@
 
 - Container is an instance of an image (live instances of an image).
 - You can create multiple containers from the same image (they will be identical). It is a template but when you modify the container it will diverge from the other containers.
-- 
+- The image is just like a template from when that container is first created.
+
 
 ## Container registries and Docker Hub
 
@@ -167,23 +171,27 @@ docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=DiegoGH#123" -p 1433:1433 mc
 ## Dockerfile
 
 - Add new Dockerfile to web api project
+    - multi phase dockerfile:
+        - the first is for uses the sdk which is heavier than aspnet base image but the sdk is needed to build the project so the base phase copies the build from the first phase.
+- docker build . defines the docker build context directory (in this case  the . means current dir).
+- 
 
 ```dockerfile
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-COPY ["DockerCourseApi/DockerCourseApi.csproj", "DockerCourseApi/"]
-RUN dotnet restore "DockerCourseApi/DockerCourseApi.csproj"
-COPY . .
-WORKDIR "/src/DockerCourseApi"
-RUN dotnet publish "DockerCourseApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build #Create base image. In this case the api project is based on dotnet/sdk. Create intermediate container from that image.
+WORKDIR /src #Create a directory and change current dir to /src
+COPY ["DockerCourseApi/DockerCourseApi.csproj", "DockerCourseApi/"] #Copies .csproj file (context) into src/DockerCourseApi/ subfolder
+RUN dotnet restore "DockerCourseApi/DockerCourseApi.csproj" #Run executes any command. In this case the dotnet command. In this case install packages specified in .csproj
+COPY . . #Copy everything else from the docker build context
+WORKDIR "/src/DockerCourseApi" #changes current dir
+RUN dotnet publish "DockerCourseApi.csproj" -c Release -o /app/publish /p:UseAppHost=false #publish the application
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 5292
+EXPOSE 5292 # Documentation, it doesnt actually exposes the code
 EXPOSE 80
 EXPOSE 443
-COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "DockerCourseApi.dll"]
+COPY --from=build /app/publish . # copies everything from the first phase named build into app/publish directory
+ENTRYPOINT ["dotnet", "DockerCourseApi.dll"] #this is what runs when you spinup your container.
 
 ```
 - Run the following command to build the image:
@@ -260,3 +268,54 @@ docker run -p 1235:80 frontend
 ```
 
 - Open browser and navigate to localhost:1235 and it should show the fronend project. 
+- Docker compose YAML to spinup multiple containers at the same time:
+ - Run docker compose up --build
+ - You can use docker compose -d for detach.
+ - Docker compose logs, etc.
+ - docker compopse down (remove containers, different than ctrl + C).
+
+```yaml
+services:
+  frontend:
+    build:
+      context: ./DockerCourseFrontend/DockerCourseFrontend/.
+    image: frontend
+    container_name: frontend
+    ports:
+      - 1234:80
+
+  api:
+    build:
+      context: ./DockerCourseApi/.
+      dockerfile: DockerCourseApi/Dockerfile
+    image: api
+    container_name: api
+    ports:
+      - 17860:80
+
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: database
+    environment:
+      - ACCEPT_EULA=true
+      - MSSQL_SA_PASSWORD=Dometrain#123
+    ports:
+      - 1433:1433
+
+  database-seed:
+    depends_on: [ database ]
+    build:
+      context: Database/
+      dockerfile: Dockerfile
+    container_name: database-seed
+```
+# Push images to Docker Hub
+
+- Each of the service names (frontend, api, database) are a dns entry. Change localhost to database on api to communicate with database container.
+- CI / CD will push the image to a container registry.
+- Kubernetes will pull the image from the container registry.
+
+# Other use-cases
+- Lifetime of the volume is beyond lifetime of the container. You can delete a container and create a new container referencing the same volume and dta will still be there.
+
+

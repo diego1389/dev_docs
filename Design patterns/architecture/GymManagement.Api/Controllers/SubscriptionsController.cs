@@ -1,5 +1,6 @@
 using GymManagement.Application.Subscriptions.Commands.CreateSubscription;
 using GymManagement.Contracts.Subscriptions;
+using GymManagement.Domain.Subscriptions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +25,7 @@ public class SubscriptionsController : ControllerBase
         var createSubscriptionResult = await _mediator.Send(command);
         
         return createSubscriptionResult.MatchFirst(
-            guid => Ok(new SubscriptionResponse(guid, request.SubscriptionType)),
+            subscription => Ok(new SubscriptionResponse(subscription.Id, request.SubscriptionType)),
             error => Problem()
         );
     }

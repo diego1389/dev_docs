@@ -1,9 +1,10 @@
-* Architecture: it's how we structure our software.
+* Software Architecture: it's how we structure our software.
 * Blueprint. 
-    - Costly decisions.
+    - The choices that we make on how to organize the code are costly decisions.
 
 - Architectural patterns:
     - A general, reusable resolution to a commonly occurring problem in software architecture within a given context.
+    - A known solution to a common problem.
     - Examples:
         - N-tier/Layered architectural.
         - Hexagonal/Ports and adapters architecture.
@@ -12,7 +13,7 @@
         - Service-oriented architecture.
         - Modular monolith architecture.
         - Event-driven architecture.
-        - MVC - MVVC
+        - MVC - MVVM
 
 ## Layered architecture (N-tier)
 - 4 tiers.
@@ -27,17 +28,19 @@
 
 ## Domain-centric architecture
 
-- Business logic is independent from DA layer. It is in the center. It should have any dependencies. 
+- Business logic is independent from DA layer. It is in the center. It should have any dependencies (self-contained). 
     - Clean
     - Hexagonal / Ports and adapters
     - Onion architecture.
 
 ## Clean architecture.
-    - Domain and application compose the business logic.
+    - Domain and Application compose the business logic (layer) of the application.
     - Infrastructure (other things + interacting to DB).
     - All dependencies point towards the core of the application (application and domain layers).
-    - Define interface in the application layer and in the domain layer and the other layers will interact with the interfaces without caring about the implementation details.
+    - Define interfaces in the application layer and in the domain layer and the other layers will interact with the interfaces without caring about the implementation details.
+        - The implementation itself will be defined in the Infrastructure layer.
     - Inner layers contain business logic and outer layers contain infrastructure and interaction with the outside world.
+        - Inner layers define interfaces and outer layers define implementation.
 
 - Create projects (one project for each layer of clean architecture):
 
@@ -62,10 +65,11 @@ dotnet add GymManagement.Application/ reference GymManagement.Domain/
 ```
 
 [Presentation Layer]                [Infrastructure Layer]
-                
+               |                     | 
                 [Application Layer]        
-                
-                    [Domain Layer]    
+                        |
+                    [Domain Layer]
+                        
 - Create the actual project solution:
 ```bash
 dotnet new sln --name "GymManagement"
@@ -89,6 +93,14 @@ dotnet run --project src/GymManagement.Api/
 ```http
 GET http://localhost:5215/WeatherForecast
 ```
+## Presentation layer
+
+- Outmost layer. What's presented to the outside world.
+- Take data as it arrives from the user and convert it to the language of the actual application.
+- The room in the API doesn't neccesary match a room represented in the application layer. 
+- Presenting or displaying data.
+- Translating data. 
+
 ## Implementation layer
 
 - Contracts project is the implementation of the API with the client. Standalone project to publish it as a nuget package. Clients can use this nuget package instead of defining the API themselves. 
@@ -100,6 +112,26 @@ dotnet new classlib -o GymManagement.Contracts
 ```bash
 dotnet add GymManagement.Api/ reference GymManagement.Contracts/
 ```
+- Update requests file to represent the CreateSubscriptionRequest:
+- requests/Subscriptions/CreateSubscription.http:
+    ```http
+    @host =..
+    @adminId=..
+    POST {{host}}/Subscriptions
+
+    Content-Type: application/json
+    {
+        "SubscriptionType" : "Free", //"Starter", "Pro"
+        "AdminId": "{{adminId}}"
+    }
+
+    # Content-Type: : application/json
+    # {
+    #     "Id": {{adminId}}
+    #     "SubscriptionType" : "Free", //"Starter", "Pro"
+    # }
+    ```
+
 Responsabilities of presentation layer:
 1. Handling interactions with the outside world.
 2. Presenting or displaying data.
@@ -107,19 +139,48 @@ Responsabilities of presentation layer:
 4. Managing UI and framework-related elements.
 5. Manipulating the application layer. 
 
-- Create CreateSubscriptionRequest, SubscriptionType and SubscriptionResponse contracts on the contracts project.
+- Create CreateSubscriptionRequest, SubscriptionType and SubscriptionResponse contracts on the contracts project (Subscriptions folder).
+- CreateSubscriptionRequest:
+```c#
+namespace GymManagement.Contracts.Subscriptions;
 
-- Create a new controller in the Api project:
+public record CreateSubscriptionRequest(SubscriptionType SubscriptionType, Guid AdminId);
+
+```
+- SubscriptionResponse:
+```c#
+namespace GymManagement.Contracts.Subscriptions;
+
+public record SubscriptionResponse(Guid Id, SubscriptionType SubscriptionType);
+```
+- SubscriptionType:
+```c#
+using System.Text.Json.Serialization;
+namespace GymManagement.Contracts.Subscriptions;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
+public enum SubscriptionType
+{
+    Free,
+    Starter,
+    Pro
+}
+```
+
+- Create a new controller in the Api project (SubscriptionsController):
 ```c#
 using GymManagement.Contracts.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymManagement.Api.Controllers;
+
 [ApiController]
 [Route("[controller]")]
-public class SubscriptionsController : ControllerBase{
+public class SubscriptionsController : ControllerBase
+{
     [HttpPost]
-    public IActionResult CreateSubscription(CreateSubscriptionRequest request){
+    public IActionResult CreateSubscription([FromBody]CreateSubscriptionRequest request)
+    {
         return Ok(request);
     }
 }
@@ -143,19 +204,139 @@ Content-Type: application/json
 # }
 ```
  
+ ## Application Layer
+
 - Create Subscriptions folder in GymManagement.Application project. 
 - Create CreateSubscription class. 
 
-- We're not adding a reference to the Contracts project into the application layer so we cannot simply pass the request from the presentation layer to the application layer as its coming. We must transform into the language wichi is the core of the application (application and domain layers).
+- We're not adding a reference to the Contracts project into the application layer so we cannot simply pass the request from the presentation layer to the application layer as its coming (because the Contracts project is part of the Presentation layer). We must transform into the language wichi is the core of the application (application and domain layers).
 
 * Responsabilities:
 - Execute the application's use cases (actions that user can do on the system, features of the application).
     - Fetch domain objects. 
-    - Manipulate domain objects.
+    - Manipulate domain objects (creating the gym domain object and call add gym method are responsability of the application layer).
+    - Examples: create subscription, delete subscription, create gym, list gyms, delete gym, etc.
+- Define SubscriptionsService.cs class and interface in services folder (this will be refactored later).
 
-- We don't want to register the dependencies to the Program.cs / GymManagement.Api project so we're going to create an DependencyInjeciton file on the Infraestructure project (layer) and the Application project (layer) which will be invoked during startup (addInfrastructure and addApplicatin methods). 
+- ISubscriptionService.cs
+```c#
+namespace GymManagement.Application.Services;
+
+public interface ISubscriptionService
+{
+    Guid CreateSubscription(string subscriptionType, Guid adminId);
+}
+```
+- SubscriptionService
+```c#
+namespace GymManagement.Application.Services;
+
+public class SubscriptionService : ISubscriptionService
+{
+    public Guid CreateSubscription(string subscriptionType, Guid adminId)
+    {
+        return Guid.NewGuid();
+    }
+}
+```
+- Notice that you need to translate SubstriptionType from enum to string because there is no dependency from the Application layer to the contracts project (presentation layer).
+
+- SubscriptionsController.cs
+```c#
+using GymManagement.Application.Services;
+using GymManagement.Contracts.Subscriptions;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GymManagement.Api.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class SubscriptionsController : ControllerBase
+{
+    private readonly ISubscriptionService _subscriptionService;
+
+    public SubscriptionsController(ISubscriptionService subscriptionService)
+    {
+        _subscriptionService = subscriptionService;
+    }
+
+    [HttpPost]
+    public IActionResult CreateSubscription([FromBody]CreateSubscriptionRequest request)
+    {
+        var subscriptionId = _subscriptionService.CreateSubscription(
+            request.SubscriptionType.ToString(), 
+            request.AdminId);
+        
+        var response = new SubscriptionResponse(subscriptionId, request.SubscriptionType);
+        return Ok(response);
+    }
+}
+```
+- Clean architecture and Dependency Injection:
+- We don't want to register the dependencies to the Program.cs / GymManagement.Api project (because it would have to resolve dependencies from the application and the infrastructure layers) so we're going to create an DependencyInjeciton file on the Infraestructure project (layer) and the Application project (layer) which will be invoked during startup from the presentation layer Program.cs file (addInfrastructure and addApplicatin methods). 
 - Application layer has the interfaces and Infrastructure has the concrete implementation.
-- Add a reference from the api project to the infrastructure project but making methods internal except for DI which are public.
+
+- DependencyInjection.cs (GymManagement.Application layer):
+```c#
+using Microsoft.Extensions.DependencyInjection;
+using GymManagement.Application.Services;
+
+namespace GymManagement.Application
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddApplication(this IServiceCollection services)
+        {
+            services.AddScoped<ISubscriptionService, SubscriptionService>();
+            return services;
+        }
+    }
+}
+```
+- Modify api Program.cs:
+```c#
+using GymManagement.Application;
+
+var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddApplication();
+}
+...
+```
+- Copy DependencyInjection.cs file from Application and paste in the infraestructure layer:
+
+```c#
+using Microsoft.Extensions.DependencyInjection;
+
+namespace GymManagement.Infrastructure
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        {
+            return services;
+        }
+    }
+}
+```
+- Modify api Program.cs. This won't compile because there is no reference to the Infrastructure layer from the Presentation layer.
+```c#
+using GymManagement.Application;
+
+var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Services
+        .AddApplication()
+        .AddInfrastructure();
+}
+```
+- The only thing needed in the Presentation layer from the Infrastrucuture layer is the DI. Add a reference from the api project to the infrastructure project but making methods internal except for DI which are public.
 ```bash
 dotnet add src/GymManagement.Api reference src/GymManagement.Infrastructure/
 ```
@@ -166,16 +347,81 @@ dotnet add src/GymManagement.Api reference src/GymManagement.Infrastructure/
         - Write manipulates state and is void.
     - Queries (reads, f.e: getSubscription, getRoom, etc).
         - Read doesn't manipulate state and returns value. 
-
+- Implementing CQRS in the application:
+    - Change ISubscriptionService interface name for ISubscriptionWriteService all over the place.
 - Mediator Pattern.
     - Interaction between objects is encapsulated through a Mediator.
-    - Reduces coupling. 
+    - Reduces coupling. Class A doesn't need to know the implementation details of class C.
+        - Class A has an instance of Mediator class and Mediator calls implementation in class C.
 
 ```bash
 dotnet add src/GymManagement.Application/ package MediatR
 ```
 
-- Subscriptions controller is intercting directly with the subscription service on the application layer. Now we're going to use the MediatR to know which logic it will invoke. 
+- Subscriptions controller (presentation) is interacting directly with the SubscriptionWriteService on the application layer. Now we're going to use the MediatR to know which logic it will invoke. 
+- Replace SubscriptionService with MediatR request and request handlers.
+- Change SubscriptionsController to use Mediator:
+```c#
+using GymManagement.Contracts.Subscriptions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GymManagement.Api.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class SubscriptionsController : ControllerBase
+{
+    private readonly ISender _mediator;
+    public SubscriptionsController(ISender mediator)
+    {
+        _mediator = mediator;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateSubscription([FromBody]CreateSubscriptionRequest request)
+    {
+
+        var command = new CreateSubscriptionCommand(request.SubscriptionType.ToString(), request.AdminId);
+        
+        //This will invoke the corresponding request handler
+        var subscriptionId = await _mediator.Send(command);
+        
+        var response = new SubscriptionResponse(subscriptionId, request.SubscriptionType);
+        return Ok(response);
+    }
+}
+```
+- Remove Services folder from the GymManagement.Application project.
+- Create new MediatR request (folder Subscriptions/Commands/CreateSubscription (CreateSubscriptionCommand.cs)):
+```c#
+using MediatR;
+
+namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+public record CreateSubscriptionCommand(string SubscriptionType, Guid AdminId) : IRequest<Guid>; //Guid here is to specify the response value 
+```
+- Create a handler for that request (CreateSubscriptionCommandHandler.cs). 
+Request handler:
+```c#
+using MediatR;
+
+namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+//First type specifies the command that we're handling (CreateSubscriptionCommand)
+//Second type is for the response value.
+public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand, Guid>
+{
+    public Task<Guid> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
+    {
+        return Task.FromResult(Guid.NewGuid())   ;
+    }
+}
+```
+- Fix Dependency injection (wire up MediatR):
+    -options: scan the assembly where the DependencyInjection type is (in this case the Application project) for all the IRequest and IRequestHandler interfaces and wire up everything together.
+
+
 - Splitting by feature vs splitting by type
     - splitting by feature increases the cohesion. Subscriptions feature folder in the application, infrastructure, presentation, etc. 
 
@@ -188,21 +434,200 @@ dotnet add src/GymManagement.Application/ package MediatR
 ```bash
 dotnet add src/GymManagement.Application/ package ErrorOr
 ``` 
+- Change mediator request CreateSubscriptionCommand to support ErrorOr:
+```c#
+using ErrorOr;
+using MediatR;
 
+namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+public record CreateSubscriptionCommand(
+    string SubscriptionType, 
+    Guid AdminId) : IRequest<ErrorOr<Guid>> ;
+```
+- Change mediator request handler to support ErrorOr
+```c#
+using ErrorOr;
+using MediatR;
+
+namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand, ErrorOr<Guid>>
+{
+    public async Task<ErrorOr<Guid>> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
+    {
+        return Guid.NewGuid();
+    }
+}
+```
+
+- Change the CreateSubscription controller to handle erroror response using MatchFirst method to return successful responses or errors more concisely.
+```c#
+using GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+using GymManagement.Contracts.Subscriptions;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+
+namespace GymManagement.Api.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class SubscriptionsController : ControllerBase
+{
+    private readonly ISender _mediator;
+    public SubscriptionsController(ISender mediator)
+    {
+        _mediator = mediator;
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateSubscription([FromBody]CreateSubscriptionRequest request)
+    {
+
+        var command = new CreateSubscriptionCommand(request.SubscriptionType.ToString(), request.AdminId);
+        
+        var createSubscriptionResult = await _mediator.Send(command);
+        
+        return createSubscriptionResult.MatchFirst(
+            guid => Ok(new SubscriptionResponse(guid, request.SubscriptionType)),
+            error => Problem()
+        );
+    }
+}
+```
+- Use Match instead of MatchFirst to return the whole list of errors not just the first.
 ## Repository & Unit of work
 
 - Repository gives us an illusion as if we're working with objects in memory even if we're working with persisted data. 
 - Better unit testing. 
 - Db is an implementation detail (business point of view should't care which db we're using).
 - We create that illusion in the application layer (the interfaces) and the implementation of the repositories is going to be in the infrastucture layer. 
-- It is also common to place the repository definition in the domain layer (domai -driving design). 
+- It is also common to place the repository definition in the domain layer (domai -driving design).
 
+- Modify Command and Command classes to implement Repository Pattern:
+
+- CreateSubscriptionCommand.cs
+```c#
+using ErrorOr;
+using GymManagement.Domain.Subscriptions;
+using MediatR;
+
+namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+public record CreateSubscriptionCommand(
+    string SubscriptionType, 
+    Guid AdminId) : IRequest<ErrorOr<Subscription>> ;
+```
+- CreateSubscriptionCommandHandler.cs:
+```c#
+using ErrorOr;
+using GymManagement.Domain.Subscriptions;
+using MediatR;
+
+namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand, ErrorOr<Subscription>>
+{
+    private readonly ISubscriptionsRepository _subscriptionsRepository;
+
+    public CreateSubscriptionCommandHandler(ISubscriptionsRepository subscriptionsRepository)
+    {
+        _subscriptionsRepository = subscriptionsRepository;
+    }
+  
+    public async Task<ErrorOr<Subscription>> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
+    {
+        //Create a Subscription
+        var subscription = new Subscription{
+            Id = Guid.NewGuid()
+        };
+        //Add it to the db
+        await _subscriptionsRepository.AddSubscriptionAsync(subscription);
+
+        return subscription;
+    }
+}
+```
+- Add subscription model to the Domain layer (Subscriptions/Subscription.cs):
+```c#
+namespace GymManagement.Domain.Subscriptions;
+
+public class Subscription
+{
+    public Guid Id { get; set;}
+}
+```
+- Create new folder in Application layer Common/Interfaces for all the interfaces that are gonna be implemented by Infrastructure layer
+- Add ISubscriptionsRepository interface:
+```c#
+using GymManagement.Domain.Subscriptions;
+
+namespace GymManagement.Application.Common.Interfaces;
+
+public interface ISubscriptionsRepository
+{
+    Task AddSubscriptionAsync(Subscription subscription);
+}
+```
+- Small change in SubscriptionsController to receive Subscription instead of Guid:
+```c#
+...
+  return createSubscriptionResult.MatchFirst(
+            subscription => Ok(new SubscriptionResponse(subscription.Id, request.SubscriptionType)),
+            error => Problem()
+        );
+...
+```
 ## Unit of work pattern.
 
-- Unit of work starts a transaction and commits with CommitChangesAsync().
+- Unit of work starts a transaction and commits with CommitChangesAsync()
+    - Implement transaction in CommandHandler to make sure all changes or none are applied to the db.
+- Implement Unit of work pattern:
+- Application/Common/Interfaces/IUnitOfWork.cs:
+```c#
+namespace GymManagement.Application.Common.Interfaces;
 
+public interface IUnitOfWork
+{
+    Task CommitChangesAsync();
+}
+```
+- Implement UnitOfWork in CreateSubscriptionCommandHandler.cs:
+```c#
+using ErrorOr;
+using GymManagement.Application.Common.Interfaces;
+using GymManagement.Domain.Subscriptions;
+using MediatR;
+
+namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand, ErrorOr<Subscription>>
+{
+    private readonly ISubscriptionsRepository _subscriptionsRepository;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public CreateSubscriptionCommandHandler(ISubscriptionsRepository subscriptionsRepository,
+        IUnitOfWork unitOfWork)
+    {
+        _subscriptionsRepository = subscriptionsRepository;
+        _unitOfWork = unitOfWork;
+    }
+  
+    public async Task<ErrorOr<Subscription>> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
+    {
+        //Create a Subscription
+        var subscription = new Subscription{
+            Id = Guid.NewGuid()
+        };
+        //Add it to the db
+        await _subscriptionsRepository.AddSubscriptionAsync(subscription);
+        await _unitOfWork.CommitChangesAsync();
+        return subscription;
+    }
+}
+```
 ## Infrastructure layer:
-
+- It is time to implement the interfaces defined in the application layer in the Infrastructure layer.
 - Interacting with the persistence solution.
 - Interacting with other services (web clients, message brokers, etc).
 - Interacting with the underlying machine (system clock, files, etc).
