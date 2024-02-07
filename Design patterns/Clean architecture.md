@@ -707,5 +707,293 @@ public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscripti
     }
 }
 ```
- 
+- Retrieve subscription:
 
+    - Modify SubscriptionsController.cs in the presentation project:
+    ```c#
+    using GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+    using GymManagement.Application.Subscriptions.Queries.GetSubscription;
+    using GymManagement.Contracts.Subscriptions;
+    using GymManagement.Domain.Subscriptions;
+    using MediatR;
+    using Microsoft.AspNetCore.Mvc;
+
+    namespace GymManagement.Api.Controllers;
+
+    [ApiController]
+    [Route("[controller]")]
+    public class SubscriptionsController : ControllerBase
+    {
+        private readonly ISender _mediator;
+        public SubscriptionsController(ISender mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSubscription([FromBody]CreateSubscriptionRequest request)
+        {
+
+            var command = new CreateSubscriptionCommand(request.SubscriptionType.ToString(), request.AdminId);
+            
+            var createSubscriptionResult = await _mediator.Send(command);
+            
+            return createSubscriptionResult.MatchFirst(
+                subscription => Ok(new SubscriptionResponse(subscription.Id, request.SubscriptionType)),
+                error => Problem()
+            );
+        }
+
+        [HttpGet("{subscriptionId:guid}")]
+        public async Task<IActionResult> GetSubscription(Guid subscriptionId)
+        {
+            var query = new GetSubscriptionQuery(subscriptionId);
+
+            var getSubscriptionResult = await _mediator.Send(query);
+
+            return getSubscriptionResult.MatchFirst(
+                subscription => Ok(new SubscriptionResponse(
+                    subscription.Id, 
+                    Enum.Parse<SubscriptionType>(subscription.SubscriptionType))),
+                    error => Problem()
+            );
+        }
+    }
+    ```
+    - Modify Application layer to add new command query and command query handler:
+    - Application/Queries/GetSubscriptionQuery.cs
+    ```c#
+    using ErrorOr;
+    using GymManagement.Domain.Subscriptions;
+    using MediatR;
+
+    namespace GymManagement.Application.Subscriptions.Queries.GetSubscription;
+
+    public record GetSubscriptionQuery(Guid SubscriptionId) : IRequest<ErrorOr<Subscription>>;
+    ```
+    - Application/Queries/GetSubscriptionQueryHandler.cs
+    ```c#
+    using ErrorOr;
+    using GymManagement.Application.Common.Interfaces;
+    using GymManagement.Domain.Subscriptions;
+    using MediatR;
+
+    namespace GymManagement.Application.Subscriptions.Queries.GetSubscription;
+
+    public class GetSubscriptionQueryHandler : IRequestHandler<GetSubscriptionQuery, ErrorOr<Subscription>>
+    {
+        private readonly ISubscriptionsRepository _subscriptionsRepository;
+        public GetSubscriptionQueryHandler(ISubscriptionsRepository subscriptionsRepository)
+        {
+            _subscriptionsRepository = subscriptionsRepository;
+        }
+
+        public async Task<ErrorOr<Subscription>> Handle(GetSubscriptionQuery query, CancellationToken cancellationToken)
+        {
+            var subscription = await _subscriptionsRepository.GetByIdAsync(query.SubscriptionId);
+            
+            return subscription is null 
+                ? Error.NotFound(description:"Subscription not found.") 
+                : subscription;
+        }
+    }   
+    ```
+    - Entity framework implementation to persist and retrieve subscription data.
+    - Add EntityFrameworkCore the the infrastructure layer:
+    ```bash
+    dotnet add GymManagement.Infrastructure/ package Microsoft.EntityFrameworkCore
+    ```
+    - Create Common/Persistence/ folder in the Infrastructure layer and create the dbcontext there (GymManagementDbContext.cs):
+    ```c#
+    using GymManagement.Domain.Subscriptions;
+    using Microsoft.EntityFrameworkCore;
+
+    namespace GymManagement.Infrastructure.Common.Persistence;
+
+    public class GymManagementDbContext : DbContext
+    {
+        public DbSet<Subscription> Subscriptions { get; set; } = null!;
+        
+        public GymManagementDbContext(DbContextOptions<GymManagementDbContext> options) : base(options)
+        {
+            
+        }
+    }
+    ```
+    - Modify the SubscriptionRepository (Infrastructure layer) and change the static list of Subscriptions for dbContext:
+    ```c#
+    using GymManagement.Application.Common.Interfaces;
+    using GymManagement.Domain.Subscriptions;
+    using GymManagement.Infrastructure.Common.Persistence;
+
+    namespace GymManagement.Infrastructure.Subscriptions.Persistence;
+
+    public class SubscriptionsRepository : ISubscriptionsRepository
+    {
+        private readonly GymManagementDbContext _dbContext;
+
+        public SubscriptionsRepository(GymManagementDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+    
+        public async Task AddSubscriptionAsync(Subscription subscription)
+        {
+            //Add the subscription to the database
+            await _dbContext.Subscriptions.AddAsync(subscription);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<Subscription?> GetByIdAsync(Guid subscriptionId)
+        {
+            //Get the subscription from the database
+            var subscription = await _dbContext.Subscriptions.FindAsync(subscriptionId);
+            return subscription;
+        }
+    }
+    ```
+    - Configure the dbcontext in the dependency injection of the infrastructure layer:
+    ```c#
+    using GymManagement.Application.Common.Interfaces;
+    using GymManagement.Infrastructure.Common.Persistence;
+    using GymManagement.Infrastructure.Subscriptions.Persistence;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.DependencyInjection;
+
+    namespace GymManagement.Infrastructure
+    {
+        public static class DependencyInjection
+        {
+            public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+            {
+                services.AddDbContext<GymManagementDbContext>(options =>
+                    options.UseSqlite("Data Source=GymManagement.db"));
+                    
+                services.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
+                return services;
+            }
+        }
+    }
+    ```
+    - Add sqllite to infrastructure layer:
+    ```bash
+    dotnet add GymManagement.Infrastructure/ package Microsoft.EntityFrameworkCore.Sqlite
+    ```
+    - To create migrations you need to install Design to the Api:
+    ```bash
+    dotnet add GymManagement.Api/ package Microsoft.EntityFrameworkCore.Design
+    ```
+
+    - Create a new migration (-p: project that contains the dbcontext, -s: entry point of the project)
+    ```bash
+    dotnet ef migrations add InitialCreate -p GymManagement.Infrastructure/ -s GymManagement.Api/
+    ```
+    - Execute the migration:
+    ```bash
+    dotnet ef database update -p GymManagement.Infrastructure/ -s GymManagement.Api/
+    ```
+    - Note: you can install Sqllite extension in VS Code to show database (check Sqllite explorer and open GymManagement.db)
+
+### Implement the Unit of work pattern:
+
+    - Implement IUnitOfWork interface in the dbcontext:
+    (EntityFrameworkCore already implements the unit of work pattern)
+
+    ```c#
+    using GymManagement.Application.Common.Interfaces;
+    using GymManagement.Domain.Subscriptions;
+    using Microsoft.EntityFrameworkCore;
+
+    namespace GymManagement.Infrastructure.Common.Persistence;
+
+    public class GymManagementDbContext : DbContext, IUnitOfWork
+    {
+        public DbSet<Subscription> Subscriptions { get; set; } = null!;
+        
+        public GymManagementDbContext(DbContextOptions<GymManagementDbContext> options) : base(options)
+        {
+            
+        }
+
+        public async Task CommitChangesAsync()
+        {
+            await base.SaveChangesAsync();
+        }
+    }
+    ```
+    - Remove savechanges from the repository:
+
+    ```c#
+    //...
+    public async Task AddSubscriptionAsync(Subscription subscription)
+    {
+        //Add the subscription to the database
+        await _dbContext.Subscriptions.AddAsync(subscription);
+    } 
+    //...
+    ```
+    - Uncomment unitofwork implementation from Application/.../CreateSubscriptionCommandHandler.cs:
+
+    ```c#
+    using ErrorOr;
+    using GymManagement.Application.Common.Interfaces;
+    using GymManagement.Domain.Subscriptions;
+    using MediatR;
+
+    namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+    public class CreateSubscriptionCommandHandler : IRequestHandler<CreateSubscriptionCommand, ErrorOr<Subscription>>
+    {
+        private readonly ISubscriptionsRepository _subscriptionsRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        public CreateSubscriptionCommandHandler(ISubscriptionsRepository subscriptionsRepository,
+            IUnitOfWork unitOfWork)
+        {
+            _subscriptionsRepository = subscriptionsRepository;
+            _unitOfWork = unitOfWork;
+        }
+    
+        public async Task<ErrorOr<Subscription>> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
+        {
+            //Create a Subscription
+            var subscription = new Subscription{
+                Id = Guid.NewGuid(),
+                SubscriptionType = request.SubscriptionType
+            };
+            //Add it to the db
+            await _subscriptionsRepository.AddSubscriptionAsync(subscription);
+            await _unitOfWork.CommitChangesAsync();
+            return subscription;
+        }
+    }
+    ```
+- Specify in the dependencyinjection (infrastructure) to use dbcontext as unit of work:
+    
+```c#
+using GymManagement.Application.Common.Interfaces;
+using GymManagement.Infrastructure.Common.Persistence;
+using GymManagement.Infrastructure.Subscriptions.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace GymManagement.Infrastructure
+{
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        {
+            services.AddDbContext<GymManagementDbContext>(options =>
+                options.UseSqlite("Data Source=GymManagement.db"));
+
+            services.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
+            services.AddScoped<IUnitOfWork>(services => services.GetRequiredService<GymManagementDbContext>());
+            return services;
+        }
+    }
+}
+```
+### EF Core and repository pattern:
+
+- Wrapping entityframework repository implementation with a custom repository in the infrastructure layer. 
+- Sometime the EF queries are complex so it is best to keep them in a wrapper in the infrastructure layer instead of calling the Add and SaveChanges from EF directly in the application layer.
