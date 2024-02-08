@@ -10,3 +10,4 @@
 /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/obj/Debug/net8.0/refint/GymManagement.Domain.dll
 /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/obj/Debug/net8.0/GymManagement.Domain.pdb
 /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/obj/Debug/net8.0/ref/GymManagement.Domain.dll
+/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/obj/Debug/net8.0/GymManagement.Domain.csproj.AssemblyReference.cache

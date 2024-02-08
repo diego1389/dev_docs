@@ -1,13 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "aXS9NQQ1Y1kAjMlkMaF5KKTM7ZiiErFM9nQL64MF9QG9Lo+4n84M6MT2TqoCwQSyISLeHeNpKiRwHiem6+c1aw==",
+  "dgSpecHash": "UfpxCB0VVD0g8GPun3ZJwr8DeDqsX5qZNVdWCmju0s24liZbcDGRgaVrWKHXS0lPD3lO/7fZSLPDKY1tZ2JEQA==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj",
   "expectedPackageFiles": [
+    "/Users/diego.guillen/.nuget/packages/ardalis.smartenum/8.0.0/ardalis.smartenum.8.0.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/erroror/1.9.0/erroror.1.9.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/mediatr.contracts/2.0.1/mediatr.contracts.2.0.1.nupkg.sha512",
-    "/Users/diego.guillen/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512"
+    "/Users/diego.guillen/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/system.componentmodel.annotations/5.0.0/system.componentmodel.annotations.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }

@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "OLTplT7xo2PgaAyVDcOUHSW5JWqfEVo3DbPvNjFbMG6vwZQOVnm5ZdXfTNK8fXdzuVwnCC5USH1EKzuY3wH9Tw==",
+  "dgSpecHash": "XLfRwqoj2dK/wOYseTtLitZdDz85bBln0LQPUFBzMMN4ZHZOjOAPH5XFqn5kaCLNXyLGPHHk8gmM7RX580KEwQ==",
   "success": true,
   "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Api/GymManagement.Api.csproj",
   "expectedPackageFiles": [
+    "/Users/diego.guillen/.nuget/packages/ardalis.smartenum/8.0.0/ardalis.smartenum.8.0.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/erroror/1.9.0/erroror.1.9.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/mediatr/12.2.0/mediatr.12.2.0.nupkg.sha512",
@@ -46,6 +47,7 @@
     "/Users/diego.guillen/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.4.0/swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.codedom/4.4.0/system.codedom.4.4.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.collections.immutable/6.0.0/system.collections.immutable.6.0.0.nupkg.sha512",
+    "/Users/diego.guillen/.nuget/packages/system.componentmodel.annotations/5.0.0/system.componentmodel.annotations.5.0.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.composition/6.0.0/system.composition.6.0.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.composition.attributedmodel/6.0.0/system.composition.attributedmodel.6.0.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/system.composition.convention/6.0.0/system.composition.convention.6.0.0.nupkg.sha512",

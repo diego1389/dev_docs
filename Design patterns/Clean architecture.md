@@ -997,3 +997,270 @@ namespace GymManagement.Infrastructure
 
 - Wrapping entityframework repository implementation with a custom repository in the infrastructure layer. 
 - Sometime the EF queries are complex so it is best to keep them in a wrapper in the infrastructure layer instead of calling the Add and SaveChanges from EF directly in the application layer.
+
+### Domain-Driven Design vs Clean Architecture:
+
+- Developing Complex systems. 
+- Complex ideas (domains) and break them up on smaller chunks. 
+- A set of practices, guidelines and concepts. 
+- Makes the code base easier to work with, more maintable.
+- Domain models:
+    - Object that contain properties and behaviour. Model model: Gym.
+    - Rich vs anemic domain models:
+        - Anemic: expose data and rely on external manipulation of this data (anti pattern)
+        - Example:
+        - Gym.cs
+        ```c#
+        public class Gym{
+            public List<Room> Rooms{get; set;}
+        }
+        ```
+        - GymHandler.cs
+        ```c#
+        public void AddRoomHandler(Gym gym, Room room){
+            gym.Rooms.Add(room);
+        }
+        ```
+
+        - Rich: contain inside not only the data but the behaviour. The more behaviour the richer:
+        Example: Gym.cs
+        ```c#
+        public class Gym{
+            private readonly int _maxRooms = 3;
+            private readonly List<Guid> _roomsIds = new();
+
+            public ErrorOr<Sucess> AddRoom(Room room){
+                if(_rooms.Cotnains(room.Id))
+                    return Error.Conflict();
+                if(_rooms.Count > _maxRooms)
+                    return Error.Validation();
+                
+                _roomsIds.Add(room.Id);
+
+                return Result.Success;
+            }
+
+        }
+        ```
+    - Rich Domain Modeling Guidelines:
+        - Private fields and properties by default.
+        - Expose only when needed.
+        - Expose only what's needed. 
+    - Always valid Domain Models:
+        - Always in a valid state. 
+    - Persistence Ignorance:
+        - Modeling the domain without taking into account how the domain objects will be persisted.
+        - Repository pattern (abstract behind the repository the db implementation details)
+
+## Domain layer:
+
+- In the future you might want to start your application from the Domain layer instead of the presentation. 
+Responsabilities:
+    - Defining domain models.
+    - Defining domain errors (business errors, business rules to enforce). Well defined to identify what went wrong.
+    - Executing business logic. 
+    - Enforcing business rules.
+- Implementing strongly typed enums (we want to control the data). We dont want the value to be anything:
+    - Install smartenum nuget package in the domain layer:
+    ```bash
+    dotnet add GymManagement.Domain/ package Ardalis.SmartEnum
+    ```
+    - Create /Domain/Subscriptions/SubscriptionType.cs
+    ```c#   
+    using Ardalis.SmartEnum;
+
+    namespace GymManagement.Domain.Subscriptions;
+
+    public class SubscriptionType : SmartEnum<SubscriptionType>
+
+    {
+        public static readonly SubscriptionType Free = new(nameof(Free), 0);
+        public static readonly SubscriptionType Starter = new(nameof(Starter), 1);
+        public static readonly SubscriptionType Pro = new(nameof(Pro), 2);
+        public SubscriptionType(string name, int value) : base(name, value)
+        {
+        }
+    }
+    ```
+    - Change the Subscription.cs to use SubscriptionType instead of string:
+    ```c#
+    namespace GymManagement.Domain.Subscriptions;
+
+    public class Subscription
+    {
+        public Guid Id { get; set;}
+        public SubscriptionType SubscriptionType { get; set; } = null!;
+    }
+    ```
+
+- Implementing (Rich) Domain models:
+- Change Subscription.cs class:
+```c#
+namespace GymManagement.Domain.Subscriptions;
+
+public class Subscription
+{
+    private readonly Guid _adminId;
+    public Guid Id { get; }
+    public SubscriptionType SubscriptionType { get; }
+
+    public Subscription(
+        SubscriptionType subscriptionType,
+        Guid adminId,
+        Guid? id = null)
+    {
+        SubscriptionType = subscriptionType;
+        _adminId = adminId;
+        Id = id ?? Guid.NewGuid();
+    }
+}
+```
+- Change CreateSubscriptionCommand to use enum instead of string:
+```c#
+using ErrorOr;
+using GymManagement.Domain.Subscriptions;
+using MediatR;
+
+namespace GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+
+public record CreateSubscriptionCommand(
+    SubscriptionType SubscriptionType, 
+    Guid AdminId) : IRequest<ErrorOr<Subscription>> ;
+
+```
+- Modify the CreateSubscriptionCommandHandler to use the constructor to get the Subscription object from the Domain.
+```c#
+    //...
+    public async Task<ErrorOr<Subscription>> Handle(CreateSubscriptionCommand request, CancellationToken cancellationToken)
+    {
+        //Create a Subscription
+        var subscription = new Subscription(
+            request.SubscriptionType,
+            request.AdminId
+        );
+        //Add it to the db
+        await _subscriptionsRepository.AddSubscriptionAsync(subscription);
+        await _unitOfWork.CommitChangesAsync();
+        return subscription;
+    }
+    //...
+``` 
+- Need to transform the Controller subscription type because the Contacts subscriptiontype enum is different than the domain subscriptiontype. 
+    - Presentation layer is responsible for converting data from the presentation language to the internal language of the application (Domain layer).
+    ```c#
+    using GymManagement.Application.Subscriptions.Commands.CreateSubscription;
+    using GymManagement.Application.Subscriptions.Queries.GetSubscription;
+    using GymManagement.Contracts.Subscriptions;
+    using MediatR;
+    using Microsoft.AspNetCore.Mvc;
+    using DomainSubscriptionType = GymManagement.Domain.Subscriptions.SubscriptionType;
+    using SubscriptionType = GymManagement.Contracts.Subscriptions.SubscriptionType;
+
+    namespace GymManagement.Api.Controllers;
+
+    [ApiController]
+    [Route("[controller]")]
+    public class SubscriptionsController : ControllerBase
+    {
+        private readonly ISender _mediator;
+        public SubscriptionsController(ISender mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSubscription([FromBody]CreateSubscriptionRequest request)
+        {
+
+            if(!DomainSubscriptionType.TryFromName(
+                request.SubscriptionType.ToString(), out var subscriptionType))
+                {
+                    return Problem(statusCode: StatusCodes.Status400BadRequest, detail: "Invalid subscription type");
+                }
+
+            var command = new CreateSubscriptionCommand(
+                    subscriptionType, 
+                    request.AdminId);
+            
+            var createSubscriptionResult = await _mediator.Send(command);
+            
+            return createSubscriptionResult.MatchFirst(
+                subscription => Ok(new SubscriptionResponse(subscription.Id, request.SubscriptionType)),
+                error => Problem()
+            );
+        }
+
+        [HttpGet("{subscriptionId:guid}")]
+        public async Task<IActionResult> GetSubscription(Guid subscriptionId)
+        {
+            var query = new GetSubscriptionQuery(subscriptionId);
+
+            var getSubscriptionResult = await _mediator.Send(query);
+
+            return getSubscriptionResult.MatchFirst(
+                subscription => Ok(new SubscriptionResponse(
+                    subscription.Id, 
+                    Enum.Parse<SubscriptionType>(subscription.SubscriptionType.Name))),
+                    error => Problem()
+            );
+        }
+    }
+
+
+    ```
+## Implementing domain model EF core config
+- Create Infrastructure/Subscriptions/SubscriptionConfiguration.cs
+```c#
+using GymManagement.Domain.Subscriptions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace GymManagement.Infrastructure.Subscriptions.Persistence;
+
+public class SubscriptionConfiguration : IEntityTypeConfiguration<Subscription>{
+    public void Configure(EntityTypeBuilder<Subscription> builder)
+    {
+        builder.HasKey(x => x.Id);
+        builder.Property(s => s.Id).ValueGeneratedNever();
+        builder.Property("_adminId")
+            .HasColumnName("AdminId");
+        
+        builder.Property(s => s.SubscriptionType)
+            .HasConversion(
+                subscriptionType => subscriptionType.Value,
+                value => SubscriptionType.FromValue(value));
+
+    }
+}
+```
+
+- Update dbcontext, create new migration and update db:
+```c#
+using System.Reflection;
+using GymManagement.Application.Common.Interfaces;
+using GymManagement.Domain.Subscriptions;
+using Microsoft.EntityFrameworkCore;
+
+namespace GymManagement.Infrastructure.Common.Persistence;
+
+public class GymManagementDbContext : DbContext, IUnitOfWork
+{
+    public DbSet<Subscription> Subscriptions { get; set; } = null!;
+    
+    public GymManagementDbContext(DbContextOptions<GymManagementDbContext> options) : base(options)
+    {
+        
+    }
+
+    public async Task CommitChangesAsync()
+    {
+        await base.SaveChangesAsync();
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        base.OnModelCreating(modelBuilder);
+    }
+}
+```

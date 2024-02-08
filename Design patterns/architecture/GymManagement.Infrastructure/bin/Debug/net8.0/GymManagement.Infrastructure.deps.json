@@ -16,6 +16,17 @@
           "GymManagement.Infrastructure.dll": {}
         }
       },
+      "Ardalis.SmartEnum/8.0.0": {
+        "dependencies": {
+          "System.ComponentModel.Annotations": "5.0.0"
+        },
+        "runtime": {
+          "lib/net8.0/Ardalis.SmartEnum.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.0.0"
+          }
+        }
+      },
       "ErrorOr/1.9.0": {
         "runtime": {
           "lib/net6.0/ErrorOr.dll": {
@@ -359,6 +370,7 @@
           }
         }
       },
+      "System.ComponentModel.Annotations/5.0.0": {},
       "System.Memory/4.5.3": {},
       "System.Text.Encodings.Web/8.0.0": {},
       "System.Text.Json/8.0.0": {
@@ -378,6 +390,9 @@
         }
       },
       "GymManagement.Domain/1.0.0": {
+        "dependencies": {
+          "Ardalis.SmartEnum": "8.0.0"
+        },
         "runtime": {
           "GymManagement.Domain.dll": {}
         }
@@ -389,6 +404,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Ardalis.SmartEnum/8.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qGIfpKhSQeLouycBLosGD4qFqgPa5NKzzkH/59oSHyfs3FSbaO6JChpNEMnkslOyQRLbRXj2ImkA0uZdX19IZA==",
+      "path": "ardalis.smartenum/8.0.0",
+      "hashPath": "ardalis.smartenum.8.0.0.nupkg.sha512"
     },
     "ErrorOr/1.9.0": {
       "type": "package",
@@ -557,6 +579,13 @@
       "sha512": "sha512-PQ2Oq3yepLY4P7ll145P3xtx2bX8xF4PzaKPRpw9jZlKvfe4LE/saAV82inND9usn1XRpmxXk7Lal3MTI+6CNg==",
       "path": "sqlitepclraw.provider.e_sqlite3/2.1.6",
       "hashPath": "sqlitepclraw.provider.e_sqlite3.2.1.6.nupkg.sha512"
+    },
+    "System.ComponentModel.Annotations/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg==",
+      "path": "system.componentmodel.annotations/5.0.0",
+      "hashPath": "system.componentmodel.annotations.5.0.0.nupkg.sha512"
     },
     "System.Memory/4.5.3": {
       "type": "package",
