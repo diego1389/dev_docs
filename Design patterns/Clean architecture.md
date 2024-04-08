@@ -1264,3 +1264,43 @@ public class GymManagementDbContext : DbContext, IUnitOfWork
     }
 }
 ```
+
+## Error handling
+
+- Different types of errors for different layers.
+    - Presentation:
+        - Convertion errors (invalid data). Return an error without invoking the core of the application.
+        - For example: invalid subscription type cast.
+        - Client trying to interact with endpoint that doesnt exists or navigate to a page that doesnt exists.
+        - Authentication 401 error in the presentation layer.
+        - Take errors and present them to the user (converting application & domain errors to presentation errors).
+        - What's the actual response?
+            - View
+            - Error code
+            - Depends of the technology.
+
+    - Application:
+        - Domain object cannot be found.
+        - Data passed from the presentation to the application layer is valid.
+        - Manipulation on domain object but current user is not authorized. 
+            - Take errors from the domain layer and convert them to a different error that the application wants to propagate to the presentation layer.
+    - Domain:
+        - Invariants: things that need to be true all times in our object (no more than 3 rooms allowed for example).
+        - Propagate upwards that a business rule was applied.
+        - Requested action will violate a business rule.
+        - Unexpected manipulation on domain objects.
+    
+    - Error handling approaches in Clean architecture:
+        1. Exceptions: when something goes wrong we throw an exception.
+            - Exceptions defined in the domain layer (business rules).
+            - Some exceptions from the domain layer we want to capture in the application layer and change them before sending them to the presentation layer.
+        2. The result pattern:
+            - Explicit about the errors and the specific flow.
+            - For things that are not supposed to happen just throw an exception.
+            - When it is expected use result pattern. 
+
+# Implement errors in the domain layer:
+
+```c#
+
+```
