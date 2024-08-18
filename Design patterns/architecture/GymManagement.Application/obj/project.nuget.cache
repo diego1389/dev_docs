@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "UfpxCB0VVD0g8GPun3ZJwr8DeDqsX5qZNVdWCmju0s24liZbcDGRgaVrWKHXS0lPD3lO/7fZSLPDKY1tZ2JEQA==",
+  "dgSpecHash": "d3Z4DK9W9zL3wMsn8gZBkr55O8FKGDNyVm8RsrAdHGM5ZLqgPpPk0FStHGZcZfh6hzUHOuQsrHaTgczyFO8JvA==",
   "success": true,
-  "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj",
+  "projectFilePath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj",
   "expectedPackageFiles": [
     "/Users/diego.guillen/.nuget/packages/ardalis.smartenum/8.0.0/ardalis.smartenum.8.0.0.nupkg.sha512",
     "/Users/diego.guillen/.nuget/packages/erroror/1.9.0/erroror.1.9.0.nupkg.sha512",

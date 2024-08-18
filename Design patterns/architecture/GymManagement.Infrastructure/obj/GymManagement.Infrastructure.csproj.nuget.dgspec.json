@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj": {}
+    "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj": {}
   },
   "projects": {
-    "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj": {
+    "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj",
+        "projectUniqueName": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj",
         "projectName": "GymManagement.Application",
-        "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj",
+        "projectPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj",
         "packagesPath": "/Users/diego.guillen/.nuget/packages/",
-        "outputPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/obj/",
+        "outputPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/diego.guillen/.nuget/NuGet/NuGet.Config"
@@ -27,8 +27,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj": {
-                "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj"
+              "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj": {
+                "projectPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj"
               }
             }
           }
@@ -76,14 +76,14 @@
         }
       }
     },
-    "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj": {
+    "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj",
+        "projectUniqueName": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj",
         "projectName": "GymManagement.Domain",
-        "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj",
+        "projectPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Domain/GymManagement.Domain.csproj",
         "packagesPath": "/Users/diego.guillen/.nuget/packages/",
-        "outputPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Domain/obj/",
+        "outputPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Domain/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/diego.guillen/.nuget/NuGet/NuGet.Config"
@@ -136,14 +136,14 @@
         }
       }
     },
-    "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj": {
+    "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj",
+        "projectUniqueName": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj",
         "projectName": "GymManagement.Infrastructure",
-        "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj",
+        "projectPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj",
         "packagesPath": "/Users/diego.guillen/.nuget/packages/",
-        "outputPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Infrastructure/obj/",
+        "outputPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Infrastructure/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/diego.guillen/.nuget/NuGet/NuGet.Config"
@@ -159,8 +159,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj": {
-                "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj"
+              "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj": {
+                "projectPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj"
               }
             }
           }

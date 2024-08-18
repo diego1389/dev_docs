@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = GymManagement.Application
-build_property.ProjectDir = /Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/
+build_property.ProjectDir = /Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

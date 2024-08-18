@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "M6Fnfy4cUvUD+G+IMzONOjAhzmlBHx5EDwdnMYyLxLvQ77kt9ODCs0Q5mjx2U9fcQ3Z6MTTvod4QwKZN+FhR7g==",
+  "dgSpecHash": "0pnIemZfgXqqyKQHphDHTnTYQdeHwOrJpFyhr+RQkgSkQI6oQ+RDsJ8CC4uWlb/4/QHr4XLeIXdkta0FSarDAA==",
   "success": true,
-  "projectFilePath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/GymManagement.Contracts.csproj",
+  "projectFilePath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Contracts/GymManagement.Contracts.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

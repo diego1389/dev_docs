@@ -3285,11 +3285,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Api/GymManagement.Api.csproj",
+      "projectUniqueName": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Api/GymManagement.Api.csproj",
       "projectName": "GymManagement.Api",
-      "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Api/GymManagement.Api.csproj",
+      "projectPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Api/GymManagement.Api.csproj",
       "packagesPath": "/Users/diego.guillen/.nuget/packages/",
-      "outputPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Api/obj/",
+      "outputPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Api/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/diego.guillen/.nuget/NuGet/NuGet.Config"
@@ -3305,14 +3305,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj": {
-              "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj"
+            "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj": {
+              "projectPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Application/GymManagement.Application.csproj"
             },
-            "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/GymManagement.Contracts.csproj": {
-              "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Contracts/GymManagement.Contracts.csproj"
+            "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Contracts/GymManagement.Contracts.csproj": {
+              "projectPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Contracts/GymManagement.Contracts.csproj"
             },
-            "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj": {
-              "projectPath": "/Users/diego.guillen/Documents/Github/dev_docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj"
+            "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj": {
+              "projectPath": "/Users/diego.guillen/Documents/Github/Docs/Design patterns/architecture/GymManagement.Infrastructure/GymManagement.Infrastructure.csproj"
             }
           }
         }
