@@ -536,7 +536,7 @@ In writing, it is generally preferable to use the active voice. The active voice
 * notice
 * to accentuate
 
-#### Language focus ####
+#### Language focus
 
 Conjunctions / connectors to link bad and good news, and softeners with bad news. For example: Although our prices are slightly higher this year, our packages are bigger.
 
@@ -594,7 +594,7 @@ Infinitive of purpose (for reporting). For example: Paula called to tell you tha
 
 # Level 8
 
-### Unit 1 (Describe a company’s vision and mission) ####
+### Unit 1 (Describe a company’s vision and mission)
 
 * vision
 * mission
@@ -604,12 +604,14 @@ Infinitive of purpose (for reporting). For example: Paula called to tell you tha
 * to spell out
 * succinct
 * inspirational
-* to attain
+* to attain (succeed in achieving (something that one desires and has worked for))
 * practically
 * folk
 * tunnel
+* chip in (to contribute something, such as money or time, to a cause or fund)
+* nefarious (typically of an action or activity wicked or criminal)
 
-#### Grammar item ####a
+#### Grammar item ####
 
 to be + infinitive. For example: Our mission is to provide patients the highest quality diagnostic testing. We are to discuss it at next week’s meeting.
 
@@ -632,3 +634,71 @@ to be + infinitive. For example: Our mission is to provide patients the highest 
 * CONDITIONS
     * If we are to achieve our mission, we must innovate.
     * If they are to turn things around, they must act soon.
+
+### Unit 2 (Describe a company’s culture)
+
+* culture
+* community-oriented
+* foundation (an organization that has been created in order to provide money for a particular group of people in need of help or for a particular type of study)
+* progressive
+* lateral
+* directive
+* collaborative
+* potential
+* to realize (to achieve things you hope for or plan for e.g. "They finally realized their goal of buying a summer home.")
+* diversity
+* insight
+* to indicate
+* indicative
+* to reflect on (to affect other people's opinion of someone or something, especially in a bad way e.g "When one player behaves disgracefully, it reflects (badly) on the whole team.")
+* to foster (encourage or promote the development of (something, typically something regarded as good))
+* cubicle
+
+#### Language focus ####
+
+Terms related to company culture
+
+Adjective endings: -ic / -ical (extension)
+
+### Unit 3 (Discuss ways to implement change)
+
+* to overhear
+* to catch
+* to find out
+* to transform
+* transformation
+* unknown
+* element (of uncertainty)
+* to run high (If feelings are running high, people are angry or excited.)
+* open communication
+* to speculate
+* speculation
+* agent of change
+* role model
+* to talk the talk (to talk just for the talk sake)
+* to walk the walk (to actually do something)
+* to embrace
+* to lead by example
+* momentum
+* overnight
+* to wear off (lose effectiveness or intensity. e.g. "the effects of the drug were wearing off")
+* to backslide (slip back UK) (relapse into bad ways or error)
+* to keep the ball rolling
+* to (re)invigorate
+* workflow
+* transition
+* stubbornly
+* cutting edge (the latest or most advanced stage in the development of something e.g.
+"researchers at the cutting edge of molecular biology")
+* revolutionary
+* sharp (= smart)
+* patience
+* to wear thin
+
+#### Language focus ####
+
+* a. makes me (feel) + adjective (sad)
+* b. makes me feel like + gerund (singing)
+* c. makes me wonder whether + clause (I need to change)	d. makes me + verb (think)
+* e. makes me want to + verb (cry)
+* f. makes me wonder + interrogative clause (how many others there are)
