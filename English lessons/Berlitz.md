@@ -702,3 +702,113 @@ Adjective endings: -ic / -ical (extension)
 * c. makes me wonder whether + clause (I need to change)	d. makes me + verb (think)
 * e. makes me want to + verb (cry)
 * f. makes me wonder + interrogative clause (how many others there are)
+
+### Unit 4 (Conduct a meeting)
+
+* to discuss
+* to solve
+* controller
+* PR (= public relations)
+* to triple
+* largely
+* to work out
+* to hold up (= delay)
+* slump (undergo a sudden severe or prolonged fall in price, value, or amount)
+* flextime (flexi-time UK)
+* statutory (relating to, or of the nature of a statute. prescribed or authorized by statute. conforming to statute. (of an offense) recognized by statute; legally punishable)
+* implication
+* to enact (make (a bill or other proposal) law. eg. "legislation was enacted in 1987 to attract international companies")
+* informational meeting
+* to address
+* merit
+* public speaking
+* aim
+* item
+* to cover (= go over)
+
+#### Language focus ####
+
+References with of which, whose
+
+FORMAL / WRITTEN:
+The Board has made a decision, the impact of which will be felt soon.	
+
+INFORMAL / SPOKEN:
+The Board has made a decision whose impact will be felt soon.
+
+Verbs that collocate with meeting. For example: to adjourn a meeting. (extension)
+
+### Unit 5 (Involve participants in a meeting or discussion)
+
+* to contribute
+* off track
+* flow
+* proper
+* to hand (someone) the floor
+* to hand the floor over to (someone)
+* receptive
+* to have (your) say
+* hesitant
+* foolish
+* peer
+* nonthreatening
+* to monopolize (monopolise UK)
+* to jot down (to write something quickly on a piece of paper so that you remember)
+* remarks
+* to give (someone) the floor
+* embarrassing
+* cross-cultural (training)
+
+#### Language focus
+
+Uses of to make. For example: to make sense, to make up (your) mind, to make a fool of yourself, to make a decision, to make a suggestion.
+
+### Unit 6 (Handle meeting disruptions)
+
+* disruption
+* to fill (someone) in on (something) (to give someone extra or missing information e.g "I filled her in on the latest gossip")
+* to digress
+* digression
+* to hang on
+* horrendous
+
+#### Language focus
+
+When we use please to make a demand or request, it matters whether we put it at the beginning or the end of the sentence. It can sound more formal and more demanding at the beginning than it does at the end.
+
+Can you turn off your cell phones, please? (polite request)
+
+Please can you turn off your cell phones! (demand)
+
+### Unit 7 (Wrap up a meeting)
+
+* next steps
+* other business (= discussion point)
+* contributor
+* get-together (informal meeting)
+* to look into
+* to put forward (submit a plan, proposal, or theory for consideration. e.g.
+"the authority put forward positive proposals")
+* say (adv.) (about, approximately e.g. "the property is worth, say, four million dollars")
+* to call it a day (to finish)
+* to assign
+* consensus
+* to get (restless) (extension activity)
+* furthermore (extension activity)
+* to run over (= go late) (extension activity)
+* wrap-up (the conclusion of something, such as the final scene of a movie in which you find out what happens to all the characters)
+* handout (printed information provided free of charge, especially to accompany a lecture or advertise something)
+* sellout (all tickets were sold)
+* crackdown (evere measures to restrict or discourage undesirable or illegal people or behavior e.g. "a crackdown on crime and corruption")
+* holdover (a person or thing surviving from an earlier time)
+* intake (the action of taking something in) 
+* letdown (disappointment)
+
+----------------------------------
+
+
+### Additional vocabulary and expressions
+
+* mixed bag (a diverse assortment of things or people)
+
+
