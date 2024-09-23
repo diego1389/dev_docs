@@ -886,4 +886,142 @@ Gerunds as subjects. For example: Licensing would give us access to a bigger mar
 
 * mixed bag (a diverse assortment of things or people)
 
+### Unit 11 (Draft a proposal letter)
+
+* obstacle
+* to overcome
+* scrap (a small piece or amount of something, especially one that is left over after the greater part has been used. e.g. "I scribbled her address on a scrap of paper")
+* significantly
+* toner
+* alone
+* double-sided
+* default (setting)
+* considerable
+* sum
+* postage (the money that you pay for sending letters and parcels through the post)
+* to record
+* to audit
+* measure
+* to go a long way toward + -ing
+* to strengthen
+
+### Language focus ###
+
+Expressions used in proposals: considering, owing to, moreover, furthermore
+
+THE SITUATION NOW
+
+    Right now, …
+    At present / At the moment, …
+    Currently / Presently,
+    Considering that …
+    Bearing in mind
+
+THE PROPOSAL
+
+    An alternative would be …
+    One way of doing this …
+    One / The solution to this …
+
+CAUSE AND EFFECT
+
+    As a result, …
+    Because of …
+    Owing to …
+    So, …
+    By (doing this)
+
+FOR EXAMPLE	
+
+    Such as …	
+    For instance, …	
+    A case in point …	
+    One example of this …	
+    In this way...	 
+AND	
+
+    Also, …	
+    In addition, …	
+    Furthermore, …
+    Moreover, …	
+    Not only ..., but also ...	
+BUT
+
+    However, …
+    Although …
+	Despite / In spite of …
+    On the other hand, …
+
+Only if vs. even if
+
+    We will meet with them only if we’re ready.
+    We won’t meet with them if we’re not ready.
+
+
+    We will meet with them even if we’re not ready.
+    We will meet with them whether we’re ready or not.
+
+### Unit 12 (Suggest ways to promote innovation in the workplace)
+
+* novel
+* genius
+* ingenious
+* to crunch the numbers (o process numbers : to examine and analyze numbers, especially to determine exactly how much money is available, needed, etc)
+* rank and file
+* loads of
+* If it ain’t broke, don’t fix it.
+* entrepreneur
+* academic
+* to spread the word
+* to devote
+* of one’s own choosing
+
+### Grammar item
+
+Placement of frequency adverbs
+
+
+Frequency adverbs come after the present and past forms of to be and the (first) auxiliary verb (can, have, etc.):
+
+    We are always interested in new ideas. They were never asked for their opinion.
+    Mary can usually find a solution. We have occasionally had complaints.
+    My son would generally have had breakfast before leaving for school.
+
+They come before the present and past tense of all other verbs:
+
+    Frank frequently participated in our meetings. I rarely submitted proposals.
+
+In questions, the frequency adverb comes after the subject:
+
+    Is Bill generally so quiet? Have you ever seen him angry? Must bills always be paid on time?
+
+### Unit 13 (Discuss innovation strategy)
+
+* cautious
+* to commit oneself (to)
+* to probe
+* to smooth (the way)
+* to question (= challenge)
+* to outsource
+* to integrate
+* competency
+* power (= authority)
+* visionary
+* explorer
+* experimenter
+* modifier
+* investor
+* status quo
+* pet
+* to treat (an illness)
+* mobile (clinic)
+* hay (a small sum of money)
+* to strike (= hit) (extension activity)
+* to snooze (have a short, light sleep, especially during the day)
+* in haste ( do it quickly and hurriedly, and sometimes carelessly..)
+* to repent (to regret something)
+
+### Language focus
+
+Questioning the status quo
 
