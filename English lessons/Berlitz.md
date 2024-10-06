@@ -1025,3 +1025,76 @@ In questions, the frequency adverb comes after the subject:
 
 Questioning the status quo
 
+Present progressive and simple past practices
+
+https://test-english.com/grammar-points/b1/past-simple-present-perfect/
+
+### Unit 14 (Discuss product life cycles)
+
+### Unit 17 (Make an after-sales service call)
+
+https://www.liveworksheets.com/w/en/english-second-language-esl/45037
+
+* after-sales service
+* live chat
+* hotline
+* to entail
+* to troubleshoot
+* on the spot (inmmediately)
+* further down the line (farther in the future)
+* to cover / bear the cost (of)
+* built into the cost or price
+* word-of-mouth
+* reactive
+* proactive
+* to expire
+* unusual (activity)
+
+### Language focus
+
+Phrases for making an after-sales call
+
+Gerunds with possessives. For example: Would our sending you a full refund fix the problem? The managers liked Henry’s handling of the situation.
+
+You took the time to complete our online survey. We appreciate that.
+→ We appreciate your taking the time to complete our online survey.
+
+I would like to ask you a few questions. Would you mind (that)?
+→ Would you mind my asking you a few questions? 
+
+They didn’t contact us about the product recall. We were upset about that.
+→ We were upset about their not contacting us about the product recall.
+
+### Unit 18 (Present ideas for using social media for business)
+
+* sales platform
+* to engage (with) (= involve)
+* chitchat
+* idle (chitchat)
+* downright
+* to stick in one’s mind
+* to upload
+* cause
+* microblogging
+
+### Language focus
+
+few (Countable, less than a few) vs. a few ()
+little vs. a little (Uncountable more than little)
+
+### Unit 19 (Describe export strategy)
+
+* billion
+* trillion
+* to drive down
+* economies of scale
+* wire transfer
+* letter of credit
+* drastically
+* seasonal slowdown
+* to fill orders passively
+* indistinguishable
+* to engage the services of someone
+* to constitute
+* to commit
+* commitment
