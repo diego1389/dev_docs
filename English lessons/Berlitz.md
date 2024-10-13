@@ -1098,3 +1098,86 @@ little vs. a little (Uncountable more than little)
 * to constitute
 * to commit
 * commitment
+
+REview
+
+https://test-english.com/grammar-points/b1/past-simple-present-perfect/
+
+
+### Unit 21 (Discuss the effects of free trade)
+* (trade) talks
+* pact
+* to conclude (a deal)
+* free-trade area
+* to dig in (research)
+* restriction
+* to discriminate
+* monopoly
+* duopoly
+* oligopoly
+* to distort
+* (trade) barrier
+* tariff
+* fledgling (industry) (a person or organization that is immature, inexperienced, or underdeveloped)
+* struggling 
+* emerging market
+* to source
+* standard of living
+* to deplete
+* two sides of the same coin
+* sizable
+* referendum
+
+### Language focus 
+
+**Presenting an argument using by + -ing**
+
+*by increasing ..., by not imposing ..., by doing ..., by not accepting ...*
+
+By encouraging free trade, we have improved the market for the customer.
+
+By not agreeing to update their systems, the company has put itself at a disadvantage.
+
+By speaking so rudely to Mr. Hutton, you have actually put your job at risk!
+
+### Unit 22 (Network at a trade show)
+
+* literature (brochures and company info)
+* trade show
+* (sales) lead (potential sale, future)
+* to cross-sell
+* competitive intelligence
+* contact details
+* decision-maker
+* agent
+* co-op
+* principality (ruled by a princ)
+* I couldn’t help + -ing
+* Funny you should (ask) … (funny that you mention it)
+* Why, yes! (strong yes)
+
+### Grammar focus
+
+**Simple present**
+
+* We use the simple present to talk about facts or routines: 
+    * Jennifer studies at West University.
+    * Stephan works for a technology company.
+
+**Present progressive**
+
+* We use the present progressive to talk about what’s happening now.
+    * Jennifer is studying economics at the university.
+    * Stephan is working on a new project this month. 
+
+**Present Perfect**
+
+* We use the present perfect to talk about something that began in the past but may change in the future.
+    * She has studied there for six months.
+    * Stephan has worked on many new projects this year.
+
+**Present Perfect progressive**
+
+* We use the present perfect progressive to talk about a current activity that began in the past
+    * Jennifer has been studying economics since September.
+    * Stephan has been working at the company for three years.
