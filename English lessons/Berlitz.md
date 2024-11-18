@@ -1181,3 +1181,47 @@ By speaking so rudely to Mr. Hutton, you have actually put your job at risk!
 * We use the present perfect progressive to talk about a current activity that began in the past
     * Jennifer has been studying economics since September.
     * Stephan has been working at the company for three years.
+
+### Unit 23 (Assess and follow up on a lead)
+
+* to nurture
+* hot (prospect)
+* out of one’s league
+* It checks (ticks UK) all our boxes.
+* to fit the bill
+* to be eager (keen UK) to
+* to stand out
+* prospect (= opportunity)
+* tea caddy
+* selection
+* decor (or décor)
+
+### Language focus
+
+**Multiword phrasal verbs**
+
+I can’t wait to get through with this report—it’s taken ages to write!
+
+Please make sure to follow up on your meeting with the new client by calling them.
+
+I’m afraid, we will be discontinuing the product. Last year’s sales did not live up to our expectations.
+
+When Melanie returns to the office, can you please ask her to get back to me?
+
+We took too long to respond to their offer and missed out on a great deal.
+
+### Unit 24 ()
+
+I think the boss doesn’t like me; he’s always giving me a hard time.
+
+Before you blame anyone else, you should take a long, hard look at your own actions.
+
+I made a lot of mistakes when I started here. I really had to learn the hard way.
+
+I´m really sorry about what I said yesterday. I hope there are no hard feelings.
+
+Jean is a hard-nosed­ manager who handles the toughest situations practically and efficiently.
+
+
+* swarming: moving in or forming a large or dense group.
+
