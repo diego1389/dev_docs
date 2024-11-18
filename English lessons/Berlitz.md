@@ -1225,3 +1225,46 @@ Jean is a hard-nosed­ manager who handles the toughest situations practically a
 
 * swarming: moving in or forming a large or dense group.
 
+### Unit 36 (Describe the attributes of a leader)
+
+* to have what it takes
+* (super)hero
+* trait (feature, characteristic)
+* mentor
+* charisma
+* compassion
+* courage
+* integrity
+* open-minded
+* correlation
+* outrage against (injustice)
+* to empower
+* invariably (in every case or on every occasion; always e.g "the meals here are invariably big and hearty")
+* moral compass
+* diligent
+* persistent
+* reflective
+* sound (decision)
+* to lay the blame
+* to look out for (someone’s) well-being
+
+### Unit 37 (Describe leadership styles)
+
+* to mentor
+* to be cut out to be / for (to have the qualities and abilities needed for something. e.g "He's not cut out for teaching." )
+* to show promise
+* as we speak
+* to direct
+* bossy
+* to have the final say (in …)
+* to be regarded as
+* hands-off (not involving or requiring direct involvement or intervention. e.g "the administration took a much more hands-off approach to business and let corporations operate largely unregulated")
+* a shambles (a chaos)
+* bunch (many)
+* to figure (something) out
+* to bicker (argue about petty and trivial matters)
+
+### Language focus
+
+Terms to describe styles of leadership: authoritarian, participative, delegative 
+Giving advice
