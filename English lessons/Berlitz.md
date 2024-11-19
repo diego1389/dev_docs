@@ -601,7 +601,7 @@ Infinitive of purpose (for reporting). For example: Paula called to tell you tha
 * compass
 * interchangeable
 * distinct
-* to spell out
+* to spell out (explain something in detail. e.g "I'll spell out the problem again")
 * succinct
 * inspirational
 * to attain (succeed in achieving (something that one desires and has worked for))
@@ -645,7 +645,7 @@ to be + infinitive. For example: Our mission is to provide patients the highest 
 * directive
 * collaborative
 * potential
-* to realize (to achieve things you hope for or plan for e.g. "They finally realized their goal of buying a summer home.")
+* to realize (to achieve things you hope for or plan. e.g. "They finally realized their goal of buying a summer home.")
 * diversity
 * insight
 * to indicate
@@ -699,7 +699,8 @@ Adjective endings: -ic / -ical (extension)
 
 * a. makes me (feel) + adjective (sad)
 * b. makes me feel like + gerund (singing)
-* c. makes me wonder whether + clause (I need to change)	d. makes me + verb (think)
+* c. makes me wonder whether + clause (I need to change)	
+* d. makes me + verb (think)
 * e. makes me want to + verb (cry)
 * f. makes me wonder + interrogative clause (how many others there are)
 
@@ -767,9 +768,9 @@ Uses of to make. For example: to make sense, to make up (your) mind, to make a f
 
 * disruption
 * to fill (someone) in on (something) (to give someone extra or missing information e.g "I filled her in on the latest gossip")
-* to digress
+* to digress (leave the main subject temporarily in speech or writing. e.g."I have digressed a little from my original plan")
 * digression
-* to hang on
+* to hang on (wait for a short period of time)
 * horrendous
 
 #### Language focus
@@ -879,12 +880,6 @@ Gerunds as subjects. For example: Licensing would give us access to a bigger mar
     It would be a mistake not to accept their offer.
     Not accepting their offer would be a mistake.
 
-----------------------------------
-
-
-### Additional vocabulary and expressions
-
-* mixed bag (a diverse assortment of things or people)
 
 ### Unit 11 (Draft a proposal letter)
 
@@ -1031,6 +1026,106 @@ https://test-english.com/grammar-points/b1/past-simple-present-perfect/
 
 ### Unit 14 (Discuss product life cycles)
 
+* life cycle
+* to go a long way
+* maturity
+* mainstream
+* to break even
+* initially
+* to fend off (defend oneself from a blow, attack, or attacker. e.g. "Meredith tried frantically to fend him off")
+* cash cow
+* to milk something for all it’s worth
+* to kill off (a product)
+* to discontinue
+* to fall through (extension activity)
+
+### Grammar item
+
+The future in the past
+
+It’s Monday. We are going to launch our new service today.
+It’s now Tuesday. We were going to launch our new service yesterday, but we encountered some unexpected technical difficulties.
+
+It’s March 31st. They are predicting a 20% increase in sales during the 2nd quarter.
+It’s now June 30th. They were predicting a 20% increase, but in fact, there was only a 10% increase.
+
+Present time. We’ve just started the new venture. We don’t know how successful it will be.
+It’s now two years later. When we started the new venture, we didn’t know how successful it would be.
+
+### Unit 15 (Describe the development of new products)
+
+* storage
+* pharmaceutical
+* to synthesize
+* synthesis
+* clinical trial
+* side effect
+* to paint a picture (to describe or show something in a particular way. e.g: "The statistics do not paint an optimistic picture.")
+* to match
+* to skyrocket
+* to flesh out (to add more information or details to something to make it more complete. e.g. ""She fleshes out the characters in her novels very well)
+* key stakeholder
+* to give the go-ahead
+* mock-up
+* to commercialize (commercialise UK)
+* unfeasible (inconvenient or impractical)
+
+### Language focus
+
+What are the figures?
+
+10–12 months =
+Testing of a new product may take ten to twelve months.
+Testing of a new product may take ten months to a year.
+
+1:100 inventions =
+(Only) one out of a hundred inventions makes it to market.
+(Only) one in a hundred inventions makes it to market.
+
+2 men: 1 woman =
+The ratio of men to women accountants in our firm is two to one.
+There are two men for every one woman.
+ 
+8/10 new businesses =
+Eight out of ten new businesses fail within the first five years.
+Eighty percent of new businesses fail within the first five years.
+
+### Unit 16 (Place a service call)
+
+* paper jam (an instance of paper becoming stuck in a printer, photocopier, etc. e.g. "No one likes a paper jam at the office")
+* out of the ordinary
++ Not that I am aware of.
+* out of order ((of an electrical or mechanical device) not working properly or at all. e.g. "the elevator was out of order")
+* access key
+* to (de- / re-) activate
+* to let someone in
+* sound
+* noise
+
+### Grammar item
+
+Simple past vs present perfect vs past perfect
+
+#### Past Simple:
+
+1. The past simple is used to express an action which started and finished at a specific time in the past. 
+    For example: – We played violin for years when I was a child. 
+
+2. We also use it to list a series of actions that happened in the past.
+    For example: – She woke up, got dressed, caught the bus and went to school.
+
+#### Present Perfect:
+
+1. Just remember that the present perfect is used when an action happened at an unspecified time. 
+    For example: – I have been to Lithuania.
+
+#### Past Perfect:
+
+1. The past perfect is used when we want to express an ACTION that OCCURRED BEFORE ANOTHER action IN THE PAST. 
+    For example: – I did not have any money because I had lost my wallet.
+
+Describing sounds and noises. For example: beep, buzz, squeak, bang, click, grind, hum, ping, thump, whir.
+
 ### Unit 17 (Make an after-sales service call)
 
 https://www.liveworksheets.com/w/en/english-second-language-esl/45037
@@ -1038,7 +1133,7 @@ https://www.liveworksheets.com/w/en/english-second-language-esl/45037
 * after-sales service
 * live chat
 * hotline
-* to entail
+* to entail (involve (something) as a necessary or inevitable part or consequence. e.g. "a situation that entails considerable risks")
 * to troubleshoot
 * on the spot (inmmediately)
 * further down the line (farther in the future)
@@ -1123,7 +1218,7 @@ https://test-english.com/grammar-points/b1/past-simple-present-perfect/
 * emerging market
 * to source
 * standard of living
-* to deplete
+* to deplete (use up the supply or resources of. e.g. "reservoirs have been depleted by years of drought")
 * two sides of the same coin
 * sizable
 * referendum
@@ -1151,7 +1246,7 @@ By speaking so rudely to Mr. Hutton, you have actually put your job at risk!
 * decision-maker
 * agent
 * co-op
-* principality (ruled by a princ)
+* principality (ruled by a prince)
 * I couldn’t help + -ing
 * Funny you should (ask) … (funny that you mention it)
 * Why, yes! (strong yes)
@@ -1210,7 +1305,30 @@ When Melanie returns to the office, can you please ask her to get back to me?
 
 We took too long to respond to their offer and missed out on a great deal.
 
-### Unit 24 ()
+### Unit 24 (Decide on an approach to a negotiation)
+* to drive a hard bargain
+* to handle … with kid gloves
+* terms and conditions
+* negotiable
+* non-negotiable
+* adversary
+* to yield (1. produce or provide (a natural, agricultural, or industrial product). e.g. "the land yields grapes and tobacco"
+2. give way to arguments, demands, or pressure. e.g "the Western powers now yielded when they should have resisted")
+* to dig in one’s heels (stubborn)
+* ploy (a cunning plan or action designed to turn a situation to one's own advantage. e.g. "this was widely interpreted as a ploy to buy time in order to consolidate his position")
+* to penalize
+* to insult
+* to take something personally
+* to bluff
+* to call someone’s bluff
+* to be a joke (= ridiculous)
+* swarming: moving in or forming a large or dense group.
+
+### Language focus
+
+Responding to ploys
+
+Idioms and expressions with hard. For example: no hard feelings, to learn the hard way, to take a hard look.
 
 I think the boss doesn’t like me; he’s always giving me a hard time.
 
@@ -1222,8 +1340,234 @@ I´m really sorry about what I said yesterday. I hope there are no hard feelings
 
 Jean is a hard-nosed­ manager who handles the toughest situations practically and efficiently.
 
+### Unit 25 (State the objectives of a negotiation)
 
-* swarming: moving in or forming a large or dense group.
+* vendor
+* to knock off (1. stop work. e.g "they usually knock off at 5pm" 2. produce a piece of work quickly and easily, especially to order. e.g. "I could knock the article off in half an hour")
+* top- / bottom-line objective
+* target objective
+* walk-away position
+* BATNA
+* purely
+* to (be) looking to …
+* interest
+* mutually beneficial
+* to bargain
+* bargaining table
+* greedy
+* to reframe (an issue)
+* high marks
+
+
+### Unit 26 (Make and respond to offers)
+
+* to observe niceties
+* preliminaries
+* counterpart
+* to talk (politics)
+* to test the water
+* within / out of the range
+* to divulge
+* justification
+* to hold someone to something
+* off-the-record
+* reservation price
+* to haggle
+
+### Unit 27 (Overcome obstacles during a negotiation)
+
+* take-it-or-leave-it (offer)
+* to offend
+* motive
+* prepared
+* to iron out (to resolve or work out a solution to. e.g. "ironed out their differences")
+* more or less
+* to hammer out (laboriously work out the details of a plan or agreement)
+* deadlock
+* (at an) impasse
+* once-over
+* noncommittal
+* to build momentum
+* to put yourself in someone’s shoes
+* rebate (a partial refund to someone who has paid too much money for tax, rent, or a utility. Similar to refund)
+* tension
+* to regulate
+* poker (extension activity)
+* winner-take-all (card game) (extension activity)
+
+### Unit 28 (Discuss changes in the workplace)
+
+* to pull up (to get information to show on a computer screen)
+* a growing number
+* collaboration
+* to disappear
+* communal
+* shift work
+* casual labor (labour UK)
+* isolation
+* isolated
+* secure
+* stability
+
+### Language focus
+
+Adding information: furthermore, moreover, besides (that). For example: The typical 9-to-5 workday will disappear. Furthermore, more employees will work from home.
+
+### Unit 29 (Discuss changes and trends in the job market)
+
+* STEM
+* rosy
+* mining
+* agriculture
+* social assistance
+* aging
+* information security analyst
+* physician (doctor)
+* susceptible
+* susceptibility
+* logistics
+* substantial
+* to characterize (characterise UK)
+
+### Language focus
+
+Making suppositions
+
+It’s interesting to note that so many jobs will come from the health-care sector. I suppose that’s because the population is aging.
+I imagine that more information security analysts will be needed as greater numbers of people conduct their everyday and business transactions online.
+The increase in the need for nurse practitioners may be due to a shortage of doctors in the future.
+Growth in the construction industry could be a result of people moving out of the cities to the suburbs.
+Perhaps globalization is driving the increased demand for more interpreters and translators.
+
+### Unit 31 (Discuss the impact of external factors)
+
+* nationalization (nationalisation UK)
+* privatization (privatisation UK)
+* basis point
+* belt-tightening
+* external environmental factor
+* PEST analysis (politics, economics, science and tech)
+* political stability
+* population growth
+* age distribution
+* lifestyle trends
+* intellectual property rights
+* respective
+* an arm and a leg (extension activity)
+* to jump on the bandwagon (extension activity) (join others in doing or supporting something fashionable or likely to be successful.)
+* Your guess is as good as mine.(extension activity) (something you say when you do not know the answer to a question)
+* to cut corners (extension activity) (to do something in the easiest, cheapest, or fastest way, often by ignoring rules or leaving something out)
+* on the ball (extension activity)
+* a hot potato (extension activity) (a situation or subject that people disagree strongly about and that no one wants to deal with. e.g "The issue of immigration became a political hot potato.")
+
+Grammar item
+
+Describing implications: modals + adverbs. For example: If we increase prices, customers may possibly shop elsewhere.
+
+### Unit 32 (Discuss global trends)
+* podcast
+* by all means
+* rooted in something
+* to gain momentum
+* to touch on
+* to come into one's own
+* established
+* twenty-odd
+* 20 plus
+* rapid
+* to blur the boundaries
+* cleantech
+* to mainstream
+* sustainability
+* to surpass
+* digital information
+* purchasing power
+* situated
+* to tap into
+* know-how
+* think tank
+
+### Grammar focus
+
+Future perfect
+
+By 2050, the world’s population will have surpassed 9.5 billion people.
+By the time Bill gets here, Mary won’t have finished her report.
+By this time next year, we will have fully implemented our strategy.
+Come December, the company will have been in business for 150 years.
+
+### Unit 33 (Assess options while considering business ethics)
+
+* ethics
+* spec’d
+* to cost a bundle (expensive)
+* to beef up (give more substance or strength to something. e.g "cost-cutting measures are planned to beef up performance")
+* We’ll cross that bridge when we come to it.
+* When in Rome, do as the Romans do.
+* to prohibit
+* to ban
+* dilemma
+* to pad (an expense account)
+* reference
+* domestic
+* harm
+* to benefit
+* minimal
+* to be in line with
+* headhunter
+
+### Unit 34 (Discuss the benefits of corporate social responsibility)
+
+* corporate social responsibility (CSR)
+* conscientious
+* downside
+* over and above
+* compliance
+* wider society
+* philanthropy
+* greenhouse gas emissions
+* higher caliber (calibre UK) 
+* shelter
+* outreach
+* to be charged with
+* adoption
+* cooperative
+* gender equality
+* to throw away
+* diapers (nappies UK)
+* toilet paper
+* roof tiles
+* upholstery filling
+* turf
+
+### Unit 35 (Discuss attitudes toward whistle blowing)
+
+* whistle-blowing
+* whistle-blower
+* to disclose
+* disclosure
+* wrongdoing
+* to misappropriate
+* misappropriation
+* to cover up (someone's wrongdoings)
+* former
+* to leak (information)
+* to indict (charge UK)
+* to rock the boat (move things around in the company. WHen you whistle blow you rock the boat)
+* to retaliate ()
+* retaliation
+* stigma
+* traitor
+* to blacklist
+* chain of command
+* magnitude
+* to land
+* libel
+* anonymous(ly)
+
+### Language focus
+
+Stating circumstances: Review of unless, if and only if, (not) even if, under no circumstances, by no means
 
 ### Unit 36 (Describe the attributes of a leader)
 
@@ -1268,3 +1612,78 @@ Jean is a hard-nosed­ manager who handles the toughest situations practically a
 
 Terms to describe styles of leadership: authoritarian, participative, delegative 
 Giving advice
+
+### Unit 38 (Offer and respond to congratulations)
+
+* to congratulate
+* to deserve
+* to toast (celebrate with a glass)
+* house brand (own brand UK) (e.g Great Value, Sabemas)
+* in order (deserved. e.g. "Congratulations are in order.")
+* to honor (honour UK) a commitment 
+* to stink (up)
+* at the helm (in control. e.g. "Once you'll be at the helm things will improve for sure.")
+
+### Language focus
+
+Prepositions (review): for, in, of, on, through, up, with, within (extension)
+* in:  
+    * We use in to talk about a place that is inside a bigger space, such as a box, a house, a city or a country. e.g:
+    "My grandmother was born in Sweden." "The children are playing in the park." "The clothes are in the wardrobe."
+    * We also use in with other physical locations. e.g. "in the world" "in water / the sea / a river / a lake / a pool
+    in the mountains / the countryside / a valley / the forest"
+    "in a car / a taxi"
+* on: 
+    * We use on to talk about location on a surface. e.g. "The books are on the desk." "There are pictures on the wall."
+    * We also use on for some types of public transport.
+    "He's on the bus now." "You can't make phone calls on a plane.""
+    "They go to school on the train."
+    * We also use on for lines (including rivers, borders, streets, etc.) and islands.
+    "There's a market on James Street." "The Pyrenees are on the border of Spain and France."
+* at:
+    * We use at in many common phrases, especially when we are talking about a place for a specific activity. e.g. "I'm at work" "The children are at school."
+    * We also use at for addresses or exact positions. e.g. "I live at 15 Craig Street."
+
+* Note: (In this answer, I’ll treat “good job,” “good work,” “great job,” and “great work,” as the same word. They all mean pretty much the same exact thing.)
+
+”On” is the most natural word almost all of the time. It connects the “Good job” to what you did a good job on.
+
+“I did a good job on the test” = I scored well on the test
+“They were doing a good job on the drawing” = Their drawing was good
+“Great job on the field!” = You built/tilled a field and it is well-done
+“Good work on choir class!” = You designed a choir class syllabus and it is well-done
+“In” might be useful as in the following examples:
+
+“I did a good job in the position” = While in the position, I did a good job
+“They did a good job in their time here.” = While they were here, they did a good job
+“Great work in the field!” = While in the field, you did a good job (saving lives/building houses/planting wheat)
+“Good job in choir class!” = While in choir class, you did a good job (singing/teaching/doodling)
+
+### Unit 39 (Bid farewell to colleagues)
+
+* to bid farewell
+* farewell party
+* to throw (a party)
+* to hear … through the grapevine
+* to beat around (about UK) the bush
+* to get the wrong end of the stick (misunderstood something)
+* a little bird(ie) told me
+* to drop (someone) a line (write)
+* to give (someone) a ring (call)
+* Have you got another job lined up?
+* You bet!
+* to fill someone’s shoes
+* to put one's foot in one's mouth (extension activity)
+* to talk at cross purposes (extension activity)
+* to get your wires crossed (extension activity)
+* a slip of the tongue (extension activity)
+* to do something on the q.t. (extension activity) (secretly)
+* touchy subject (extension activity)
+
+
+----------------------------------
+
+
+### Additional vocabulary and expressions
+
+* mixed bag (a diverse assortment of things or people)
