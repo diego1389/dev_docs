@@ -1680,10 +1680,103 @@ Prepositions (review): for, in, of, on, through, up, with, within (extension)
 * to do something on the q.t. (extension activity) (secretly)
 * touchy subject (extension activity)
 
+# Level 9
+
+### Unit 1
+
 
 ----------------------------------
-
 
 ### Additional vocabulary and expressions
 
 * mixed bag (a diverse assortment of things or people)
+
+# Level 10
+
+## Unit 1 
+
+* to deem (regard or consider in a specified way. "the event was deemed a great success")
+* out of left field (unexpected, odd)
+* to barge in (to intrude or interrupt rudely or akwardly. e.g. "sorry to barge in on your cozy evening")
+* the (right) frame of mind
+* to weigh on someone’s mind
+* to broach (raise (a sensitive or difficult subject) for discussion. e.g. "he broached the subject he had been avoiding all evening")
+* to work up the courage
+* to steel (oneself)  
+* to gain insight  
+* Spit it out! (extension activity)
+* to bite someone’s head off (extension activity) (to yell at someone)
+
+## Unit 2
+
+* to mediate
+* mediator
+* go-between (intermediator)
+* dispute (n., v.)
+* to intervene
+* shouting match
+* to blow up
+* blow-up (noun)
+* to pull the plug (on)
+* Over my dead body!
+* from the ground up
+* to micromanage (extension
+
+## Unit 3
+
+* to shuffle (a walking pattern where a person drags their feet instead of lifting them properly)
+* to slip out (of a remark) be uttered inadvertently e.g "the question slipped out before I'd considered the wisdom of it")
+* to pry open (to open something by using a tool, like a crowbar, to force it open or separate)
+* to throw open (make something accessible. e.g "the market was thrown open to any supplier to compete for contracts")
+* sliding door
+* to slide open/closed (move a door or something similar along a track or surface to make it open)
+* refuse (= garbage)
+* receptacle
+* law enforcement officer
+* to apprehend
+* to detain (keep (someone) from proceeding; hold back. e.g "she made to open the door, but he detained her")
+
+## Unit 4
+
+* to harp on (to dwell on or keep talking about something repeatedly, often in an annoying or persistent way)
+* for fear of doing (to avoid the risk of a particular thing happening. e.g "no one dared refuse the order for fear of losing their job")
+* to dread (anticipate with great apprehension or fear. e.g. "Jane was dreading the party")
+
+## Unit 5 
+
+* segue (move without interruption)
+* To defeat the purpose of (means to make something pointless or to fail to achieve the intended result)
+* smirk (smile in an irritatingly smug, conceited, or silly way)
+* pull off (succeed in achieving or winning something difficult.)
+* dispel make (a doubt, feeling, or belief) disappear. 
+* innuendo (an allusive or oblique remark or hint,)
+* deadpan (expressionless)
+
+* to stick (your) neck out (Make oneself vulnerable, take a risk,)
+* to throw caution to the wind (o act without considering the potential dangers or negative consequences)
+* to play with fire
+* to turn back time
+* to dwell (live in or at a specified place.)
+* to play devil’s advocate
+* to refute
+* to turn a blind eye (pretend not to notice
+* to sweep under the rug (carpet UK) (extension activity)
+* to bury your head in the sand (extension activity)
+* out of sight, out of mind (extension activity))
+* to sweep under the rug (carpet UK) (extension activity)
+* to bury your head in the sand (extension activity)
+* out of sight, out of mind (extension activity)
+* thriving (grow or develp florish)
+* dissent (disagree)
+* to maintain the status quo
+* to have (no) skin in the game
+* To flesh out" means to make something more substantial or complete by adding more details and informatio
+* To keep someone on schedule (means to help them stay on time and adhere to their planned activities)
+* to wing it (to do or try to do something without much practice or preparation e.g. I hadn't practiced the part, so I got up there and winged it)
+* To dole out (means to distribute or give something, often in small portions or shares, to a group of people. e.g dole out office supplies)
+* scope creep
+* to lay the groundwork (o do the necessary preparatory work for something, providing the foundational conditions or steps needed for something to succeed or be possible.)
+* become less pleasant or attractive; turn out badly. e.g. "the case concerns a property deal that turned sour"
+* to weather the storm (to be able to continue doing something despite serious problems)
+* to marshal (arrange or assemble (a group of people, especially soldiers) in order. e.g. "the general marshaled his troops")
+* to size up (o evaluate or assess someone or something carefully, often to form an opinion or decide how to act.)
